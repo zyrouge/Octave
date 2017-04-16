@@ -118,6 +118,7 @@ class Bot(val token: String, val numShards: Int) {
 
             shards[id] = Shard(id, jda, this)
         }
+
         log.info("Discord bot shards have now restarted.")
     }
 
@@ -126,7 +127,6 @@ class Bot(val token: String, val numShards: Int) {
      */
     fun stop() {
         shards.forEach(Shard::shutdown)
-        shards.clear()
         System.gc()
 
         log.info("Bot is now disconnected from Discord.")

@@ -66,10 +66,10 @@ public class Area {
     public boolean moveToHere() {
         if (this.newLocation) {
             this.newLocation = false;
-            System.out.println("New location. ID: " + getRelatedAdventure().getAreasFound());
+            //System.out.println("New location. ID: " + getRelatedAdventure().getAreasFound());
             if (getRelatedAdventure().getAreasFound() == 4) {
                 relatedEvent = new FirstBagEvent();
-                System.out.println("Created an Event!");
+                //System.out.println("Created an Event!");
             }
             if (getRelatedAdventure().getAreasFound() > 6) {
                 if (random.nextInt() * 100 > 80) {

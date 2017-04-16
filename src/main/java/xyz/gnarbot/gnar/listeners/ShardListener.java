@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.DisconnectEvent;
+import net.dv8tion.jda.core.events.ExceptionEvent;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.ResumedEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
@@ -28,7 +29,7 @@ public class ShardListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (bot.getBlocked().contains(event.getAuthor().getId())) {
+        if (bot.getBlocked().contains(event.getAuthor().getIdLong())) {
             event.getChannel().sendMessage("You are not allowed to use this bot.").queue();
             return;
         }
@@ -105,6 +106,17 @@ public class ShardListener extends ListenerAdapter {
 
     @Override
     public void onDisconnect(DisconnectEvent event) {
-        bot.getLog().info("JDA " + shard.getId() + " has disconnected.");
+        if (event.isClosedByServer()) {
+            bot.getLog().info("JDA " + shard.getId() + " has disconnected. Code: "
+                    + event.getServiceCloseFrame().getCloseCode() + event.getCloseCode());
+        } else {
+            bot.getLog().info("JDA " + shard.getId() + " has disconnected. Code: "
+                    + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
+        }
+    }
+
+    @Override
+    public void onException(ExceptionEvent event) {
+        if (!event.isLogged()) bot.getLog().error("Error thrown by JDA.", event.getCause());
     }
 }

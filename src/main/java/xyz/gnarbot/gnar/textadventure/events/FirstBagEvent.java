@@ -40,7 +40,7 @@ public class FirstBagEvent extends Event {
 
     @Override
     public void parseResponse(Adventure adventure, Message message, String response) {
-        System.out.println("Got event response");
+        //System.out.println("Got event response");
         if (!(response.equalsIgnoreCase("pick it up") || response.equalsIgnoreCase("leave it") || response
                 .equalsIgnoreCase("examine it"))) {
             super.sendMessage(message, "I'm unsure of how to react to that response. Please try again!~");

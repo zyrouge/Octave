@@ -43,7 +43,7 @@ public class FirstSwordLewdEvent extends Event {
 
     @Override
     public void parseResponse(Adventure adventure, Message msg, String response) {
-        System.out.println("Got event response");
+        //System.out.println("Got event response");
         if (!(response.equalsIgnoreCase("pick it up") || response.equalsIgnoreCase("leave it") || response
                 .equalsIgnoreCase("examine it") || response
                 .equalsIgnoreCase("use it"))) {

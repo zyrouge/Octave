@@ -16,16 +16,21 @@ public class PingCommand extends CommandExecutor {
     public void execute(Message message, String[] args) {
         OffsetDateTime sentTime = message.getCreationTime();
 
+        long receiveTime = Math.abs(OffsetDateTime.now().until(sentTime, ChronoUnit.MILLIS));
+
         message.respond().embed("Ping")
                 .setColor(Constants.COLOR)
                 .setDescription("Checking ping...")
-                .rest().queue(msg -> msg.editMessage(new EmbedBuilder().setTitle("Ping")
-                        .setColor(Constants.COLOR)
-                        .field("Response Time", true, () -> {
-                            long ping = Math.abs(sentTime.until(msg.getCreationTime(), ChronoUnit.MILLIS));
-                            return ping + " ms";
-                        })
-                        .field("Discord API", true, () -> getJDA().getPing() + " ms")
-                        .build()).queue());
+                .rest().queue(msg -> msg.editMessage(
+                        new EmbedBuilder().setTitle("Ping")
+                                .setColor(Constants.COLOR)
+                                .field("Receive Time", true, () -> receiveTime + " ms")
+                                .field("Response Time", true, () -> {
+                                    long ping = Math.abs(sentTime.until(msg.getCreationTime(), ChronoUnit.MILLIS));
+                                    return ping + " ms";
+                                })
+                                .field("Discord API", true, () -> getJDA().getPing() + " ms")
+                                .build())
+                .queue());
     }
 }

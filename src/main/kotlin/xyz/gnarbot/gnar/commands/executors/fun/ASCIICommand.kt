@@ -9,7 +9,6 @@ import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Utils
-import java.util.*
 
 @Command(
         aliases = arrayOf("ascii"),
@@ -27,7 +26,7 @@ class ASCIICommand : CommandExecutor() {
             val query = StringUtils.join(args, "+")
 
             if (query.length > 15) {
-                message.respond().error("The query has too many characters. `15 at most.`").queue()
+                message.respond().error("The query has too many characters. 15 at most.").queue()
                 return
             }
 
@@ -60,13 +59,11 @@ class ASCIICommand : CommandExecutor() {
             text = cell.text()
         }
 
-        text?.let { Utils.stringSplit(it, '\n') }?.let {
-            val b = StringJoiner("\n")
-
-            it.filterNot(String::isNullOrBlank)
-                    .forEach { b.add(it) }
-
-            text = b.toString()
+        text = text?.let { Utils.stringSplit(it, '\n') }?.let {
+            buildString {
+                it.filterNot(String::isNullOrBlank)
+                        .forEach { appendln(it) }
+            }
         }
 
         return text

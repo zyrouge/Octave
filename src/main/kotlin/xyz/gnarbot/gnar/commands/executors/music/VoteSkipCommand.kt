@@ -6,101 +6,99 @@ import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.guilds.GuildData
-import xyz.gnarbot.gnar.music.MusicManager
+import xyz.gnarbot.gnar.commands.Scope
 import java.util.concurrent.TimeUnit
 
 @Command(
         aliases = arrayOf("voteskip"),
         description = "Vote to skip the current music track.",
+        scope = Scope.VOICE,
         category = Category.MUSIC
 )
 class VoteSkipCommand : CommandExecutor() {
-
     override fun execute(message: Message, args: Array<String>) {
         val manager = guildData.musicManager
 
         val member = guild.getMember(message.author)
 
-        if (member.voiceState.channel !== null && manager.player.playingTrack !== null) {
-            if (member.voiceState.isDeafened) {
-                message.respond().error("You actually have to be listening to the song to start a vote... Tsk tsk...").queue { msg ->
-                    msg.delete().queueAfter(5, TimeUnit.SECONDS)
-                }
-                return
-            }
-            if (manager.isVotingToSkip) {
-                message.respond().error("There is already a vote going on!").queue { msg ->
-                    msg.delete().queueAfter(5, TimeUnit.SECONDS)
-                }
-                return
-            }
-            if ((System.currentTimeMillis() - manager.lastVoteTime) < 30000) {
-                message.respond().error("You must wait 30 seconds before starting a new vote!").queue()
-                return
-            }
-            if ((manager.player.playingTrack.duration - manager.player.playingTrack.position) <= 30) {
-                message.respond().error("By the time the vote finishes, the song will be over!").queue()
-                return
-            }
-
-            manager.lastVoteTime = System.currentTimeMillis()
-            manager.isVotingToSkip = true
-
-            message.respond().embed("Vote Skip") {
-                color = Constants.MUSIC_COLOR
-                description {
-                    buildString {
-                        append(b(message.author.name))
-                        append(" has voted to **skip** the current track!")
-                        appendln("React with :thumbsup: or :thumbsdown:")
-                        append("Whichever has the most votes in 30 seconds will win!")
-                    }
-                }
-            }.rest().queue { msg ->
-                msg.addReaction("👍").queue()
-                msg.addReaction("👎").queue()
-
-                msg.delete().queueAfter(30, TimeUnit.SECONDS) {
-                    checkVictory(msg, guildData, manager)
-                }
-            }
-        } else {
-            message.respond().error("You're not in the Music Channel!\n*or there isn't a song playing...*").queue()
+        if (manager.player.playingTrack == null) {
+            message.respond().error("There isn't a song playing.").queue()
+            return
         }
-    }
 
-    fun checkVictory(msg: Message, guildData: GuildData, manager: MusicManager) {
-        msg.channel.getMessageById(msg.id).queue { _msg ->
-            if (_msg.reactions[0].count > _msg.reactions[1].count) {
-                msg.respond().embed("Vote Skip") {
-                    color = Constants.MUSIC_COLOR
-                    description {
-                        buildString {
-                            append("The vote has passed! ")
-                            append(_msg.reactions[0].count - 1).append(" to ").appendln(_msg.reactions[1].count - 1)
-                            append("The song has been skipped!")
-                        }
-                    }
-                }.rest().queue()
-
-                if (manager.scheduler.queue.isEmpty()) {
-                    guildData.resetMusicManager()
-                } else {
-                    manager.scheduler.nextTrack()
-                }
-            } else {
-                msg.respond().embed("Vote Skip") {
-                    color = Constants.MUSIC_COLOR
-                    description {
-                        buildString {
-                            appendln("The vote has failed! ")
-                            append("The song will stay!")
-                        }
-                    }
-                }.rest().queue()
+        if (member.voiceState.isDeafened) {
+            message.respond().error("You actually have to be listening to the song to start a vote... Tsk tsk...").queue {
+                it.delete().queueAfter(5, TimeUnit.SECONDS)
             }
-            manager.isVotingToSkip = false
+            return
+        }
+        if (manager.isVotingToSkip) {
+            message.respond().error("There is already a vote going on!").queue { msg ->
+                msg.delete().queueAfter(5, TimeUnit.SECONDS)
+            }
+            return
+        }
+        if (System.currentTimeMillis() - manager.lastVoteTime < 30000) {
+            message.respond().error("You must wait 30 seconds before starting a new vote.").queue()
+            return
+        }
+        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= 30) {
+            message.respond().error("By the time the vote finishes, the song will be over.").queue()
+            return
+        }
+
+        manager.lastVoteTime = System.currentTimeMillis()
+        manager.isVotingToSkip = true
+
+        message.respond().embed("Vote Skip") {
+            color = Constants.MUSIC_COLOR
+            description {
+                buildString {
+                    append(b(message.author.name))
+                    append(" has voted to **skip** the current track!")
+                    appendln(" React with :thumbsup: or :thumbsdown:")
+                    append("Whichever has the most votes in 30 seconds will win!")
+                }
+            }
+        }.rest().queue {
+            it.addReaction("👍").queue()
+            it.addReaction("👎").queue()
+
+            it.editMessage(it.embeds[0].edit().apply {
+                description = "Voting has ended! Check the newer messages for results."
+                clearFields()
+            }.build()).queueAfter(30, TimeUnit.SECONDS) {
+
+                var skip = 0
+                var stay = 0
+
+                it.reactions.forEach {
+                    if (it.emote.name == "👍") skip = it.count - 1
+                    if (it.emote.name == "👎") stay = it.count - 1
+                }
+
+                it.respond().embed("Vote Skip") {
+                    color = Constants.MUSIC_COLOR
+                    description {
+                        buildString {
+                            if (skip > stay) {
+                                appendln("The vote has passed! The song has been skipped.")
+                                if (manager.scheduler.queue.isEmpty()) {
+                                    guildData.resetMusicManager()
+                                } else {
+                                    manager.scheduler.nextTrack()
+                                }
+                            } else {
+                                appendln("The vote has failed! The song will stay.")
+                            }
+                        }
+                    }
+                    field("Results") {
+                        "__$skip Skip Votes__ — __$stay Stay Votes__"
+                    }
+                }.rest().queue()
+                manager.isVotingToSkip = false
+            }
         }
     }
 }

@@ -16,7 +16,6 @@ public class Event {
         this.eventDescription = eventDescription;
         this.eventName = eventName;
         this.eventID = eventID;
-        System.out.println(this.toString());
     }
 
     public String getEventID() {

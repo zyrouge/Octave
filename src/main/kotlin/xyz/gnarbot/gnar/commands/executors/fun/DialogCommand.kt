@@ -9,70 +9,62 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.util.*
 
 @Command(aliases = arrayOf("dialog"),
-        usage = "-words...",
+        usage = "(words...)",
         description = "Make some of that Windows ASCII art!")
 class DialogCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
-        val joiner = StringJoiner("\n", "```", "```")
-        joiner.add("﻿ ___________________________ ")
-        joiner.add("| Dialog          [_][☐][✕]|")
-        joiner.add("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|")
-
         val lines = WordUtils
-                .wrap(StringUtils.join(args, ' ').replace("```", ""), 25)
+                .wrap(StringUtils.join(args, ' ').replace("```", ""), 25, null, true)
                 .split("\n")
 
-        lines.forEach {
-            val builder = StringBuilder()
+        message.respond().embed {
+            color = Constants.COLOR
+            description = buildString {
+                appendln("```")
+                appendln("﻿ ___________________________ ")
+                appendln("| Window          [_][☐][✕]|")
+                appendln("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|")
 
-            repeat(25 - it.trim().length) { builder.append(' ') }
+                lines.map(String::trim)
+                        .map {
+                            it + buildString {
+                                kotlin.repeat(25 - it.length) { append(' ') }
+                            }
+                        }
+                        .map { "| $it |" }
+                        .forEach { appendln(it) }
 
-            var str = it.trim()
+                when (Random().nextInt(5)) {
+                    0 -> {
+                        appendln("|   _________    ________   |")
+                        appendln("|  |   Yes   |  |   No   |  |")
+                        appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
+                    }
+                    1 -> {
+                        appendln("|  _____    ______    ____  |")
+                        appendln("| | Yes |  | Help |  | No | |")
+                        appendln("|  ‾‾‾‾‾    ‾‾‾‾‾‾    ‾‾‾‾  |")
+                    }
+                    2 -> {
+                        appendln("|   _________    ________   |")
+                        appendln("|  |  Maybe  |  |( ͡° ͜ʖ ͡°)|  |")
+                        appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
+                    }
+                    3 -> {
+                        appendln("|   _____________________   |")
+                        appendln("|  |     Confirm     | X |  |")
+                        appendln("|   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   |")
+                    }
+                    4 -> {
+                        appendln("|   ___________   _______   |")
+                        appendln("|  | HELLA YES | | PUSSY |  |")
+                        appendln("|   ‾‾‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾   |")
+                    }
+                }
 
-            if (str.length > 25) {
-                str = "${str.substring(0, 22)}..."
+                appendln(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
+                appendln("```")
             }
-
-            joiner.add("| $str$builder |")
-        }
-
-        when (Random().nextInt(5)) {
-            0 -> {
-                joiner.add("|   _________    ________   |")
-                joiner.add("|  |   Yes   |  |   No   |  |")
-                joiner.add("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
-            }
-            1 -> {
-                joiner.add("|  _____    ______    ____  |")
-                joiner.add("| | Yes |  | What |  | No | |")
-                joiner.add("|  ‾‾‾‾‾    ‾‾‾‾‾‾    ‾‾‾‾  |")
-            }
-            2 -> {
-                joiner.add("|   _________    ________   |")
-                joiner.add("|  |  Maybe  |  |( ͡° ͜ʖ ͡°)|  |")
-                joiner.add("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
-            }
-            3 -> {
-                joiner.add("|   _____________________   |")
-                joiner.add("|  |     Confirm     | X |  |")
-                joiner.add("|   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   |")
-            }
-            4 -> {
-                joiner.add("|   ___________   _______   |")
-                joiner.add("|  | HELLA YES | | PUSSY |  |")
-                joiner.add("|   ‾‾‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾   |")
-            }
-        }
-
-        joiner.add(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
-
-        try {
-            message.respond().embed {
-                color = Constants.COLOR
-                description = joiner.toString()
-            }.rest().queue()
-        } catch (e: UnsupportedOperationException) {
-            message.respond().error("Message was too long or something... no memes for you.").queue()
-        }
+        }.rest().queue()
     }
 }
