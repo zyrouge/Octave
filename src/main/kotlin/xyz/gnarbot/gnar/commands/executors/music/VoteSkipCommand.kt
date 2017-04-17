@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import b
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category

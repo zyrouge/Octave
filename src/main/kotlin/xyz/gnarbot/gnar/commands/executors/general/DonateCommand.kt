@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import b
-import link
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -18,8 +18,8 @@ class DonateCommand : CommandExecutor() {
             description {
                 buildString {
                     appendln("Want to donate to support Gnar?")
-                    appendln(b(link("PayPal", "https://gnarbot.xyz/donate")))
-                    appendln(b(link("Patreon", "https://www.patreon.com/gnarbot")))
+                    appendln(b("PayPal" link "https://gnarbot.xyz/donate"))
+                    appendln(b("Patreon" link "https://www.patreon.com/gnarbot"))
                 }
             }
         }.rest().queue()

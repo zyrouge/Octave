@@ -1,10 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import b
 import com.google.common.collect.Lists
-import link
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -103,15 +103,15 @@ class HelpCommand : CommandExecutor() {
 
                 field("Contact", true) {
                     buildString {
-                        appendln(b(link("Website", "http://gnarbot.xyz")))
-                        appendln(b(link("Discord Server", "http://discord.gg/NQRpmr2")))
+                        appendln(b("Website" link "http://gnarbot.xyz"))
+                        appendln(b("Discord Server" link "http://discord.gg/NQRpmr2"))
                     }
                 }
 
                 field("Donations", true) {
                     buildString {
-                        appendln(b(link("PayPal", "https://gnarbot.xyz/donate")))
-                        appendln(b(link("Patreon", "https://www.patreon.com/gnarbot")))
+                        appendln(b("PayPal" link "https://gnarbot.xyz/donate"))
+                        appendln(b("Patreon" link "https://www.patreon.com/gnarbot"))
                     }
                 }
             }.rest().queue()

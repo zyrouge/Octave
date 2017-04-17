@@ -20,7 +20,7 @@ class PauseCommand : CommandExecutor() {
         val manager = guildData.musicManager
 
         if (manager.player.playingTrack == null) {
-            message.respond().error("Can not pause or resume player because there is no track loaded for playing.")
+            message.respond().error("Can not pause or resume player because there is no track loaded for playing.").queue()
             return
         }
 

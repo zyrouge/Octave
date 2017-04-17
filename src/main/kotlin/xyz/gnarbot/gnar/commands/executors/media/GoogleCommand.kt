@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import b
-import link
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.link
 import org.jsoup.Jsoup
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
@@ -59,7 +59,7 @@ class GoogleCommand : CommandExecutor() {
                             val st = block.select(".st")
                             if (!st.isEmpty()) desc = st[0].text()
 
-                            appendln(b(link(title, url))).appendln(desc)
+                            appendln(b(title link url)).appendln(desc)
                             count++
                         }
                     }

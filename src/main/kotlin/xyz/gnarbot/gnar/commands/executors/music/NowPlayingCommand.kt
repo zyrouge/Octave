@@ -18,7 +18,7 @@ class NowPlayingCommand : CommandExecutor() {
         val track = guildData.musicManager.player.playingTrack
 
         if (track == null) {
-            message.respond().error("The player is not currently playing anything.")
+            message.respond().error("The player is not currently playing anything.").queue()
             return
         }
 

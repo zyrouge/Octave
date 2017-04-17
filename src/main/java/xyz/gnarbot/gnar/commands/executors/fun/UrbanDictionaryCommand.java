@@ -32,7 +32,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
             JSONArray words = json.getJSONArray("list");
 
             if (words.length() < 1) {
-                message.respond().error("Could not find that word, rip u");
+                message.respond().error("Could not find that word, rip u").queue();
                 return;
             }
 

@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Queue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    public static final int QUEUE_LIMIT = 30;
-
     private final GuildData guildData;
     private final AudioPlayer player;
 

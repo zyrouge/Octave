@@ -9,8 +9,6 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Scope;
 
-import java.util.Arrays;
-
 @Command(
         aliases = {"tts"},
         usage = "(string)",
@@ -29,7 +27,7 @@ public class TextToSpeechCommand extends CommandExecutor {
 
         MessageBuilder builder = new MessageBuilder();
         builder.setTTS(true);
-        builder.append(StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
+        builder.append(StringUtils.join(args, " "));
 
         message.getChannel().sendMessage(builder.build()).queue();
     }

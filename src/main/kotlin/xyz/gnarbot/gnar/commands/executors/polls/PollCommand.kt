@@ -17,7 +17,7 @@ class PollCommand : CommandExecutor() {
             message.respond().error("Please offer more options for the poll.").queue()
             return
         }
-
+        
         message.respond().embed("Poll") {
             description = "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!"
             field("Options") {

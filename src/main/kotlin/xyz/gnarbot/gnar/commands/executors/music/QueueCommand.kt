@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageEmbed
-import u
+import net.dv8tion.jda.core.u
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -36,14 +36,14 @@ class QueueCommand : CommandExecutor() {
             field("Queue", false) {
                 buildString {
                     if (queue.isEmpty()) {
-                        append(u("Empty queue.")).append("Add some music with `_play url|YT search`.")
+                        append(u("Empty queue.") + " Add some music with `_play url|YT search`.")
                     } else for (track in queue) {
                         queueLength += track.duration
                         trackCount++
 
                         appendln("**$trackCount** `[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__")
 
-                        if (length >= MessageEmbed.VALUE_MAX_LENGTH - 100) {
+                        if (length >= MessageEmbed.VALUE_MAX_LENGTH - 200) {
                             append("... and **${queue.size - trackCount}** more tracks.")
                             break
                         }

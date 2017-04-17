@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import link
 import net.dv8tion.jda.core.OnlineStatus
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -69,7 +69,7 @@ class BotInfoCommand : CommandExecutor() {
             inline {
                 field("Requests", requests)
                 field("Requests Per Hour", requests / if (h == 0L) 1 else h)
-                field("Website", link("gnarbot.xyz", "https://gnarbot.xyz"))
+                field("Website", "gnarbot.xyz" link "https://gnarbot.xyz")
 
                 field("Text Channels", textChannels)
                 field("Voice Channels", voiceChannels)

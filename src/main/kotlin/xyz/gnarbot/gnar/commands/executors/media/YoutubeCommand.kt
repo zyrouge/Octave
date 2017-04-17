@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import b
-import link
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.link
 import org.json.JSONException
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -49,7 +49,7 @@ class YoutubeCommand : CommandExecutor() {
                                 firstUrl = url
                             }
 
-                            appendln(b(link(title, url))).appendln(desc)
+                            appendln(b(title link url)).appendln(desc)
                         }
                     }
                 }

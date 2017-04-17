@@ -25,7 +25,7 @@ import kotlin.jvm.JvmStatic as static
  * @param numShards Number of shards to request.
  */
 class Bot(val token: String, val numShards: Int) {
-    /** @returns The SLF4J logger instance of the bot. */
+    /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
 
     /** @returns The global token of the bot. */

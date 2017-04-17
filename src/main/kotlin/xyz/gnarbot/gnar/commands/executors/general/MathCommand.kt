@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import b
+import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.Constants
