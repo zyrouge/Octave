@@ -161,7 +161,7 @@ public class CommandRegistry {
         }
 
         CommandEntry entry = new CommandEntry(cls);
-        for (String alias : entry.meta.aliases()) {
+        for (String alias : entry.info.aliases()) {
             registerCommand(alias, entry);
         }
     }
@@ -210,11 +210,11 @@ public class CommandRegistry {
 
     public static class CommandEntry {
         public final Class<? extends CommandExecutor> cls;
-        public final Command meta;
+        public final Command info;
 
         CommandEntry(Class<? extends CommandExecutor> cls) {
             this.cls = cls;
-            this.meta = cls.getAnnotation(Command.class);
+            this.info = cls.getAnnotation(Command.class);
         }
     }
 }

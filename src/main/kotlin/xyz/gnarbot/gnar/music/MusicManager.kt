@@ -16,27 +16,27 @@ import java.time.Duration
 class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) {
 
     /**
-     * Audio player for the guild.
+     * @return Audio player for the guild.
      */
     val player: AudioPlayer = playerManager.createPlayer()
 
     /**
-     * Track scheduler for the player.
+     * @return Track scheduler for the player.
      */
     val scheduler: TrackScheduler = TrackScheduler(guildData, player)
 
     /**
-     * Wrapper around AudioPlayer to use it as an AudioSendHandler.
+     * @return Wrapper around AudioPlayer to use it as an AudioSendHandler.
      */
     val sendHandler: AudioPlayerSendHandler = AudioPlayerSendHandler(player)
 
     /**
-     * Voting Cooldown
+     * @return Voting cooldown.
      */
     var lastVoteTime: Long = 0L
 
     /**
-     * Boolean to check whether there is a vote to skip the song or not
+     * @return Whether there is a vote to skip the song or not.
      */
     var isVotingToSkip = false
 

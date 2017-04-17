@@ -20,7 +20,7 @@ class DisableCommand : CommandExecutor() {
         val disabled = args
                 .map(guildData.commandHandler::disableCommand)
                 .filterNotNull()
-                .map { it.meta.aliases[0] }
+                .map { it.info.aliases[0] }
 
         message.respond().embed("Disabling Commands") {
             color = Constants.COLOR

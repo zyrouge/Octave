@@ -20,7 +20,7 @@ class EnableCommand : CommandExecutor() {
         val enabled = args
                 .map(guildData.commandHandler::enableCommand)
                 .filterNotNull()
-                .map { it.meta.aliases[0] }
+                .map { it.info.aliases[0] }
 
         message.respond().embed("Enabling Commands") {
             color = Constants.COLOR

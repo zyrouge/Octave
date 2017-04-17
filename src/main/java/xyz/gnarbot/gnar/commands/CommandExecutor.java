@@ -1,40 +1,25 @@
 package xyz.gnarbot.gnar.commands;
 
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.Shard;
+import xyz.gnarbot.gnar.guilds.GuildData;
 
 /**
  * Abstract class that is extended when creating a command.
  */
 public abstract class CommandExecutor {
-    JDA jda;
-
-    Shard shard;
-
-    Guild guild;
+    Command commandInfo;
 
     GuildData guildData;
 
-    CommandHandler commandHandler;
-
-    Bot bot;
-
-    Command commandMeta;
-
-    public JDA getJDA() {
-        return jda;
-    }
-
     public Shard getShard() {
-        return shard;
+        return guildData.getShard();
     }
 
     public Guild getGuild() {
-        return guild;
+        return guildData.getGuild();
     }
 
     public GuildData getGuildData() {
@@ -42,11 +27,11 @@ public abstract class CommandExecutor {
     }
 
     public Bot getBot() {
-        return bot;
+        return getGuildData().getBot();
     }
 
-    public Command getMeta() {
-        return commandMeta;
+    public Command getInfo() {
+        return commandInfo;
     }
 
     /**

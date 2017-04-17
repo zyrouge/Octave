@@ -34,16 +34,16 @@ class HelpCommand : CommandExecutor() {
             message.respond().embed("Command Information") {
                 color = Constants.COLOR
 
-                field("Aliases", true, entry.meta.aliases.joinToString(separator = ", ${bot.prefix}", prefix = bot.prefix))
-                field("Usage", true, "${bot.prefix}${entry.meta.aliases[0].toLowerCase()} ${entry.meta.usage}")
+                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${bot.prefix}", prefix = bot.prefix))
+                field("Usage", true, "${bot.prefix}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
                 field(true)
 
-                if (entry.meta.permissions.isNotEmpty())
-                    field("Guild Permission", true, "${entry.meta.scope} ${entry.meta.permissions.map(Permission::getName)}")
+                if (entry.info.permissions.isNotEmpty())
+                    field("Guild Permission", true, "${entry.info.scope} ${entry.info.permissions.map(Permission::getName)}")
 
 
 
-                field("Description", false, entry.meta.description)
+                field("Description", false, entry.info.description)
 
             }.rest().queue()
 
@@ -61,7 +61,7 @@ class HelpCommand : CommandExecutor() {
                     if (!category.show) continue
 
                     val filtered = cmds.filter {
-                        it.meta.category == category
+                        it.info.category == category
                     }
                     if (filtered.isEmpty()) continue
 
@@ -75,7 +75,7 @@ class HelpCommand : CommandExecutor() {
                         field("", true) {
                             buildString {
                                 page.forEach {
-                                    append("**[").append(bot.prefix).append(it.meta.aliases[0]).appendln("]()**")
+                                    append("**[").append(bot.prefix).append(it.info.aliases[0]).appendln("]()**")
                                 }
                             }
                         }

@@ -22,7 +22,7 @@ class JavascriptCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
         val engine = ScriptEngineManager().getEngineByName("javascript")
 
-        engine.put("jda", jda)
+        engine.put("shard", shard)
         engine.put("message", message)
         engine.put("guild", guild)
         engine.put("channel", message.channel)

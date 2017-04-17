@@ -57,7 +57,7 @@ class BotInfoCommand : CommandExecutor() {
             guildData += shard.guildData.size
         }
 
-        val commandSize = registry.entries.count { it.meta.category.show }
+        val commandSize = registry.entries.count { it.info.category.show }
 
         val requests = bot.shards
                 .flatMap { it.guildData.values }

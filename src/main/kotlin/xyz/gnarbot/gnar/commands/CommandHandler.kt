@@ -8,7 +8,6 @@ import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Utils
 
 class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
-
     /** @returns Enabled command entries. */
     val enabled get() = bot.commandRegistry.entries.apply { removeAll(disabled) }
 
@@ -46,34 +45,33 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
         }
 
         val cls = entry.cls
-
-        val meta = entry.meta
+        val info = entry.info
 
         val member = message.member
 
-        if (meta.administrator) {
+        if (info.administrator) {
             if (!bot.admins.contains(member.idLong)) {
                 message.respond().error("This command is for bot administrators only.").queue()
                 return false
             }
         }
-        if (meta.serverOwner) {
+        if (info.guildOwner) {
             if (message.guild.owner != member) {
                 message.respond().error("This command is for server owners only.").queue()
                 return false
             }
         }
 
-        if (meta.permissions.isNotEmpty()) {
-            if (meta.scope == Scope.VOICE) {
+        if (info.permissions.isNotEmpty()) {
+            if (info.scope == Scope.VOICE) {
                 if (member.voiceState.channel == null) {
                     message.respond().error("This command requires you to be in a voice channel.").queue()
                     return false
                 }
             }
-            if (!meta.scope.checkPermission(message, member, *meta.permissions)) {
-                val requirements = entry.meta.permissions.map(Permission::getName)
-                message.respond().error("You lack the following permissions: `$requirements` in " + when (meta.scope) {
+            if (!info.scope.checkPermission(message, member, *info.permissions)) {
+                val requirements = entry.info.permissions.map(Permission::getName)
+                message.respond().error("You lack the following permissions: `$requirements` in " + when (info.scope) {
                     Scope.GUILD -> "the guild `${message.guild.name}`."
                     Scope.TEXT -> "the text channel `${message.textChannel.name}`."
                     Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
@@ -86,13 +84,8 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
             requests++
             val cmd = cls.newInstance()
 
-            cmd.jda = guildData.shard
-            cmd.shard = guildData.shard
-            cmd.guild = guildData.guild
             cmd.guildData = guildData
-            cmd.commandHandler = this
-            cmd.bot = bot
-            cmd.commandMeta = meta
+            cmd.commandInfo = info
 
             cmd.execute(message, args)
             return true
@@ -132,7 +125,7 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
      */
     fun disableCommand(cmd: CommandRegistry.CommandEntry) : CommandRegistry.CommandEntry? {
         if (disabled.contains(cmd)) return null
-        if (!cmd.meta.disableable) return null
+        if (!cmd.info.disableable) return null
         disabled += cmd
         return cmd
     }

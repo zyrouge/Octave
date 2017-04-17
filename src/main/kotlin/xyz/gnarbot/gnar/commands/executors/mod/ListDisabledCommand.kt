@@ -23,7 +23,7 @@ class ListDisabledCommand : CommandExecutor() {
                 else buildString {
                     guildData.commandHandler.disabled.forEach {
                         append("• ")
-                        appendln(it.meta.aliases.joinToString())
+                        appendln(it.info.aliases.joinToString())
                     }
                 }
             }

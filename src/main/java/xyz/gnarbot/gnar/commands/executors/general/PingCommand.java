@@ -27,7 +27,7 @@ public class PingCommand extends CommandExecutor {
                                     long ping = Math.abs(sentTime.until(msg.getCreationTime(), ChronoUnit.MILLIS));
                                     return ping + " ms";
                                 })
-                                .field("Discord API", true, () -> getJDA().getPing() + " ms")
+                                .field("Discord API", true, () -> getShard().getPing() + " ms")
                                 .build())
                 .queue());
     }

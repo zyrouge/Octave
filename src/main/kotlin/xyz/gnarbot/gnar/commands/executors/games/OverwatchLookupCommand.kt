@@ -15,7 +15,7 @@ class OverwatchLookupCommand : CommandExecutor() {
 
     public override fun execute(message: Message, args: Array<String>) {
         if (args.isEmpty()) {
-            message.respond().error("Insufficient arguments. `${meta.usage}`.").queue()
+            message.respond().error("Insufficient arguments. `${info.usage}`.").queue()
             return
         }
 
