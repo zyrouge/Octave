@@ -3,19 +3,19 @@ package xyz.gnarbot.gnar
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.jda
-import org.json.JSONArray
-import org.json.JSONTokener
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
-import java.io.File
+import xyz.gnarbot.gnar.listeners.UserListener
 import kotlin.jvm.JvmStatic as static
 
 /**
@@ -25,21 +25,9 @@ import kotlin.jvm.JvmStatic as static
  * @param numShards Number of shards to request.
  */
 class Bot(val token: String, val numShards: Int) {
+
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
-
-    /** @returns The global token of the bot. */
-    val prefix = "_" //default token
-
-    // FILES
-    val dataFile = File("data").takeIf(File::exists)
-            ?: throw IllegalStateException("`data` folder does not exist.")
-    val adminsFile = File(dataFile, "administrators.json").takeIf(File::exists)
-            ?: throw IllegalStateException("`administrators.json` does not exist.")
-    val blockedFile = File(dataFile, "blocked.json").takeIf(File::exists)
-            ?: throw IllegalStateException("`blocked.json` does not exist.")
-
-    val guildCountListener = GuildCountListener(this)
 
     val commandRegistry = CommandRegistry(this)
 
@@ -48,50 +36,39 @@ class Bot(val token: String, val numShards: Int) {
         registerSourceManager(SoundCloudAudioSourceManager())
         registerSourceManager(VimeoAudioSourceManager())
         registerSourceManager(BandcampAudioSourceManager())
-        //registerSourceManager(TwitchStreamAudioSourceManager())
+        registerSourceManager(TwitchStreamAudioSourceManager())
+        registerSourceManager(BeamAudioSourceManager())
     }
 
     /** @return Sharded JDA instances of the bot.*/
     val shards = mutableListOf<Shard>()
 
-    /** @return Administrator users of the bot. */
-    val admins = mutableSetOf<Long>().apply {
-        JSONArray(JSONTokener(adminsFile.reader())).forEach {
-            add(it as Long)
-        }
-    }
-
-    val blocked = mutableSetOf<Long>().apply {
-        JSONArray(JSONTokener(blockedFile.reader())).forEach {
-            add(it as Long)
-        }
-    }
-
-    val startTime = System.currentTimeMillis()
-    /** @return how many milliseconds since the bot have been up. */
-    val uptime: Long get() = System.currentTimeMillis() - startTime
-
-    /**
-     * Start the bot.
-     */
+    /** Start the bot. */
     fun start() {
         log.info("Initializing the Discord bot.")
-        log.info("Requesting $numShards shards.")
 
-        log.info("There are ${admins.size} administrators registered for the bot.")
-        log.info("There are ${blocked.size} blocked users registered for the bot.")
+        log.info("Name:\t${BotConfig.NAME}")
+        log.info("Shards:\t$numShards")
+        log.info("Prefix:\t${BotConfig.PREFIX}")
+        log.info("Admins:\t${BotConfig.ADMINISTRATORS.size}")
+        log.info("Blocked:\t${BotConfig.BLOCKED_USERS.size}")
+
+        val guildCountListener = GuildCountListener(this)
+        val userListener = UserListener()
 
         for (id in 0 until numShards) {
             val jda = jda(token, id, numShards) {
                 setToken(token)
                 setAutoReconnect(true)
+                addEventListener(guildCountListener)
+                addEventListener(userListener)
                 setGame(Game.of("$id | _help"))
                 setAudioEnabled(true)
             }
 
             log.info("JDA $id is ready.")
 
-            jda.selfUser.manager.setName("Gnarr").queue()
+            jda.selfUser.manager.setName(BotConfig.NAME).queue()
 
             shards += Shard(id, jda, this)
         }

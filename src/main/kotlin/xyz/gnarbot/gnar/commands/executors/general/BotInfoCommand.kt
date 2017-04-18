@@ -3,9 +3,10 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.OnlineStatus
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import java.lang.management.ManagementFactory
 
 @Command(
         aliases = arrayOf("info", "botinfo"),
@@ -16,7 +17,7 @@ class BotInfoCommand : CommandExecutor() {
         val registry = bot.commandRegistry
 
         // Uptime
-        val s = bot.uptime / 1000
+        val s = ManagementFactory.getRuntimeMXBean().uptime / 1000
         val m = s / 60
         val h = m / 60
         val d = h / 24
@@ -64,7 +65,7 @@ class BotInfoCommand : CommandExecutor() {
                 .sumBy { it.commandHandler.requests }
 
         message.respond().embed("Bot Information") {
-            color = Constants.COLOR
+            color = BotConfig.COLOR
 
             inline {
                 field("Requests", requests)
@@ -77,7 +78,7 @@ class BotInfoCommand : CommandExecutor() {
 
                 field("Guilds", guilds)
                 field("Guild Data", guildData)
-                field("Uptime", "${d}d ${h}h ${m}m ${s}s")
+                field("Uptime", "${d}d ${h % 24}h ${m % 60}m ${s % 60}s")
 
                 field("Users") {
                     buildString {

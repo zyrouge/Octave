@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -32,10 +32,10 @@ class HelpCommand : CommandExecutor() {
             }
 
             message.respond().embed("Command Information") {
-                color = Constants.COLOR
+                color = BotConfig.COLOR
 
-                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${bot.prefix}", prefix = bot.prefix))
-                field("Usage", true, "${bot.prefix}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
+                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${BotConfig.PREFIX}", prefix = BotConfig.PREFIX))
+                field("Usage", true, "${BotConfig.PREFIX}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
                 field(true)
 
                 if (entry.info.permissions.isNotEmpty())
@@ -54,7 +54,7 @@ class HelpCommand : CommandExecutor() {
 
         message.author.openPrivateChannel().queue {
             it.send().embed("Documentation") {
-                color = Constants.COLOR
+                color = BotConfig.COLOR
                 description = "This is all of Gnar's currently registered commands."
 
                 for (category in Category.values()) {
@@ -75,7 +75,7 @@ class HelpCommand : CommandExecutor() {
                         field("", true) {
                             buildString {
                                 page.forEach {
-                                    append("**[").append(bot.prefix).append(it.info.aliases[0]).appendln("]()**")
+                                    append("**[").append(BotConfig.PREFIX).append(it.info.aliases[0]).appendln("]()**")
                                 }
                             }
                         }
@@ -85,7 +85,7 @@ class HelpCommand : CommandExecutor() {
                 field(true)
                 field("Additional Information") {
                     buildString {
-                        append("To view a command's description, do `").append(bot.prefix).appendln("help [command]`.")
+                        append("To view a command's description, do `").append(BotConfig.PREFIX).appendln("help [command]`.")
                         append("__The commands that requires a named role must be created by you and assigned to a member in your guild.__")
                     }
                 }

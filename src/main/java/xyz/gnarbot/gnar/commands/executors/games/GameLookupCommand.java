@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -45,7 +45,7 @@ public class GameLookupCommand extends CommandExecutor {
             String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
             message.respond().embed(title)
-                    .setColor(Constants.COLOR)
+                    .setColor(BotConfig.COLOR)
                     .setThumbnail(thumb)
                     //.field("Publisher", true, publisher)
                     .field("Score", true, score)

@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import net.dv8tion.jda.core.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -56,7 +56,7 @@ public class ExplosmCommand extends CommandExecutor {
             String logo = "http://explosm.net/img/logo.png";
 
             message.respond().embed("Cyanide and Happiness")
-                    .setColor(Constants.COLOR)
+                    .setColor(BotConfig.COLOR)
                     .setDescription("No: **" + rand + "**\n")
                     .setThumbnail(logo)
                     .setImage(url)

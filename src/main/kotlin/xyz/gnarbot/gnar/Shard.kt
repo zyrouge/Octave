@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.Guild
 import xyz.gnarbot.gnar.api.data.ShardInfo
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.listeners.ShardListener
-import xyz.gnarbot.gnar.listeners.UserListener
 
 /**
  * Individual shard instances of [JDA] of the bot that contains all the [GuildData] for each guild.
@@ -15,10 +14,6 @@ class Shard(val id: Int, private val jda: JDA, val bot: Bot) : JDA by jda {
 
     init {
         jda.addEventListener(ShardListener(this, bot))
-        jda.addEventListener(UserListener())
-        jda.addEventListener(bot.guildCountListener)
-
-        //Logger.getLogger("org.apache.http.client.protocol.ResponseProcessCookies").level = Level.OFF
     }
 
     fun getGuildData(id: Long) : GuildData {
@@ -66,4 +61,3 @@ class Shard(val id: Int, private val jda: JDA, val bot: Bot) : JDA by jda {
         }
     }
 }
-

@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -39,7 +39,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
             JSONObject word = words.getJSONObject(0);
 
             message.respond().embed("Urban Dictionary")
-                    .setColor(Constants.COLOR)
+                    .setColor(BotConfig.COLOR)
                     .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
                     .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
                     .field("Definition", true, word.optString("definition"))

@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
 import org.jsoup.Jsoup
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.io.IOException
@@ -37,7 +37,7 @@ class GoogleCommand : CommandExecutor() {
             }
 
             message.respond().embed {
-                color = Constants.COLOR
+                color = BotConfig.COLOR
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
                 thumbnail = "https://gnarbot.xyz/assets/img/google.png"
 

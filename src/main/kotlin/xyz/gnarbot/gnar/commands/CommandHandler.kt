@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Utils
 
@@ -28,12 +29,12 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
      */
     fun callCommand(message: Message) : Boolean {
         val content = message.content
-        if (!content.startsWith(bot.prefix)) return false
+        if (!content.startsWith(BotConfig.PREFIX)) return false
 
         // Tokenize the message.
         val tokens = Utils.stringSplit(content, ' ')
 
-        val label = tokens[0].substring(bot.prefix.length).toLowerCase()
+        val label = tokens[0].substring(BotConfig.PREFIX.length).toLowerCase()
 
         val args = tokens.copyOfRange(1, tokens.size) //tokens.subList(1, tokens.size)
         
@@ -50,7 +51,7 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
         val member = message.member
 
         if (info.administrator) {
-            if (!bot.admins.contains(member.idLong)) {
+            if (!BotConfig.ADMINISTRATORS.contains(member.idLong)) {
                 message.respond().error("This command is for bot administrators only.").queue()
                 return false
             }

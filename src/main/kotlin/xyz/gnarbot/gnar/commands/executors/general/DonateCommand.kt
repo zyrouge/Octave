@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 
@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 class DonateCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
         message.respond().embed("Donations") {
-            color = Constants.COLOR
+            color = BotConfig.COLOR
             description {
                 buildString {
                     appendln("Want to donate to support Gnar?")

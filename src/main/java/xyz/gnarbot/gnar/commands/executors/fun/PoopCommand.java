@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -48,7 +48,7 @@ public class PoopCommand extends CommandExecutor {
         joiner.add("░░░░░░░░░░░░░░░░░░░░░░░");
 
         message.respond().embed("Pooping Memes")
-                .setColor(Constants.COLOR)
+                .setColor(BotConfig.COLOR)
                 .setDescription(joiner.toString())
                 .rest().queue();
     }

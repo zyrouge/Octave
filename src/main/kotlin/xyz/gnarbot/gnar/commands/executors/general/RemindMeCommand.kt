@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.util.concurrent.TimeUnit
@@ -26,13 +26,13 @@ class RemindMeCommand : CommandExecutor() {
 
             if (time > 0) {
                 message.respond().embed("Reminder Scheduled") {
-                    color = Constants.COLOR
+                    color = BotConfig.COLOR
                     description = "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__."
                 }.rest().queue()
 
                 message.author.openPrivateChannel().queue {
                     it.send().embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
-                        color = Constants.COLOR
+                        color = BotConfig.COLOR
                         description = string
                     }.rest().queueAfter(time.toLong(), timeUnit)
                 }

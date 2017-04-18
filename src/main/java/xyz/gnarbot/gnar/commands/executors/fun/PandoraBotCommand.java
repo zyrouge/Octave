@@ -6,7 +6,7 @@ import com.google.code.chatterbotapi.ChatterBotSession;
 import com.google.code.chatterbotapi.ChatterBotType;
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -33,7 +33,7 @@ public class PandoraBotCommand extends CommandExecutor {
 
             String output = session.think(input);
             message.respond().embed("PandoraBot")
-                    .setColor(Constants.COLOR)
+                    .setColor(BotConfig.COLOR)
                     .setDescription(output)
                     .rest().queue();
 

@@ -1,0 +1,11 @@
+// Bot name.
+name : Gnarr
+
+// Command token.
+prefix : _
+
+// Discord ID of bot administrators.
+administrators = []
+
+// Discord ID of blocked users.
+blocked = []

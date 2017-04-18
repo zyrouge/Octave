@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Registry unique to each Shard.
+ * A registry storing CommandExecutor entries for the bot.
  */
 public class CommandRegistry {
     private final Bot bot;
@@ -196,7 +196,6 @@ public class CommandRegistry {
     public Set<CommandEntry> getEntries() {
         return new LinkedHashSet<>(commandEntryMap.values());
     }
-
 
     /**
      * Get the command based on the key.

@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import org.apache.commons.lang3.StringUtils
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfig
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Utils
@@ -20,7 +20,7 @@ class MathCommand : CommandExecutor() {
         }
 
         message.respond().embed("Math") {
-            color = Constants.COLOR
+            color = BotConfig.COLOR
 
             val exp = ExpressionBuilder()
             val lines = Utils.stringSplit(StringUtils.join(args, ' '), ';')

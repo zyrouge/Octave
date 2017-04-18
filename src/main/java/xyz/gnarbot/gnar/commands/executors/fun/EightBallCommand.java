@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfig;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -26,7 +26,7 @@ public class EightBallCommand extends CommandExecutor {
         }
 
         message.respond().embed("8-Ball")
-                .setColor(Constants.COLOR)
+                .setColor(BotConfig.COLOR)
                 .setDescription(responses[random.nextInt(responses.length)])
                 .rest().queue();
     }
