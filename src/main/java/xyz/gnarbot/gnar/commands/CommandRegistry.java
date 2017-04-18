@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands;
 
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.GarbageCollectCommand;
 import xyz.gnarbot.gnar.commands.executors.admin.JavascriptCommand;
 import xyz.gnarbot.gnar.commands.executors.admin.RestartShardsCommand;
@@ -32,16 +31,10 @@ import java.util.Set;
  * A registry storing CommandExecutor entries for the bot.
  */
 public class CommandRegistry {
-    private final Bot bot;
-
-    /**
-     * The mapped registry of invoking key to the classes.
-     */
+    /** The mapped registry of invoking key to the classes. */
     private final Map<String, CommandEntry> commandEntryMap = new LinkedHashMap<>();
 
-    public CommandRegistry(Bot bot) {
-        this.bot = bot;
-
+    public CommandRegistry() {
         register(HelpCommand.class);
         register(InviteBotCommand.class);
         register(PingCommand.class);

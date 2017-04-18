@@ -16,6 +16,7 @@ import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
 import xyz.gnarbot.gnar.listeners.UserListener
+import java.io.File
 import kotlin.jvm.JvmStatic as static
 
 /**
@@ -29,7 +30,20 @@ class Bot(val token: String, val numShards: Int) {
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
 
-    val commandRegistry = CommandRegistry(this)
+    /** @returns The global token of the bot. */
+    val prefix = "_" //default token
+
+    // FILES
+    val dataFile = File("data").takeIf(File::exists)
+            ?: throw IllegalStateException("`data` folder does not exist.")
+    val adminsFile = File(dataFile, "administrators.json").takeIf(File::exists)
+            ?: throw IllegalStateException("`administrators.json` does not exist.")
+    val blockedFile = File(dataFile, "blocked.json").takeIf(File::exists)
+            ?: throw IllegalStateException("`blocked.json` does not exist.")
+
+    val guildCountListener = GuildCountListener(this)
+
+    val commandRegistry = CommandRegistry()
 
     val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
         registerSourceManager(YoutubeAudioSourceManager())

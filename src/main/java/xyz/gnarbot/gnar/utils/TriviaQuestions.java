@@ -47,8 +47,8 @@ public class TriviaQuestions {
         }
     }
 
-    public static boolean isSetup() {
-        return questions.size() > 0;
+    public static boolean isNotSetup() {
+        return questions.size() <= 0;
     }
 
     public static String getRandomQuestion() {
