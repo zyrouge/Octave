@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 
@@ -20,7 +20,7 @@ public class TextToBrickCommand extends CommandExecutor {
         }
 
         message.respond().embed("Text to Brick")
-                .setColor(BotConfig.COLOR)
+                .setColor(Constants.COLOR)
                 .description(() -> {
                     StringBuilder sb = new StringBuilder();
                     for (String a : StringUtils.join(args, " ").split("")) {

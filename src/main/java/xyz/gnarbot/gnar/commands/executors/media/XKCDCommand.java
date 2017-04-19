@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.entities.Message;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -60,7 +60,7 @@ public class XKCDCommand extends CommandExecutor {
                     String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
 
                     message.respond().embed(title)
-                            .setColor(BotConfig.COLOR)
+                            .setColor(Constants.COLOR)
                             .setDescription("No: " + num)
                             .setThumbnail(logo)
                             .setImage(url)

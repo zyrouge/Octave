@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -13,7 +13,7 @@ public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         message.respond().embed("Coin Flip")
-                .setColor(BotConfig.COLOR)
+                .setColor(Constants.COLOR)
                 .setDescription(new Random().nextInt(2) == 0 ? "Heads" : "Tails!")
                 .rest().queue();
     }

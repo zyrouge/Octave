@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -23,7 +23,7 @@ class NowPlayingCommand : CommandExecutor() {
         }
 
         message.respond().embed("Now Playing") {
-            color = BotConfig.MUSIC_COLOR
+            color = Constants.MUSIC_COLOR
 
             field("Now Playing", false, "__[${track.info.title}](${track.info.uri})__")
 

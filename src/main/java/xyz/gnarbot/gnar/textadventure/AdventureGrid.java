@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.textadventure;
 
 import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.textadventure.enums.DIRECTION;
 import xyz.gnarbot.gnar.textadventure.enums.LOCATION;
 
@@ -206,7 +206,7 @@ public class AdventureGrid {
         }
 
         public File runBuilder() {
-            final File mapFile = new File(BotConfig.DATA_FOLDER, "temp/adventures/maps/_map.png");
+            final File mapFile = new File(Constants.DATA_FOLDER, "temp/adventures/maps/_map.png");
             if (!mapFile.exists()) {
                 if(!mapFile.mkdirs()) {
                     return null;
@@ -227,22 +227,22 @@ public class AdventureGrid {
                         Area a = getAreaAtLocation(curX, curY);
                         if (curY == currentY && curX == currentX) {
                             Image img = ImageIO.read(
-                                    new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/position-marker.png"));
+                                    new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/position-marker.png"));
                             setImg(img).setX(printX).setY(printY).paintComponent(graphics);
                         } else {
                             if (a != null) {
                                 if (a.isDiscovered()) {
                                     Image img = ImageIO.read(
-                                            new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/" +
+                                            new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/" +
                                             a.getType().getFile() + ".png"));
                                     setImg(img).setX(printX).setY(printY).paintComponent(graphics);
                                 } else {
                                     Image img = ImageIO.read(
-                                            new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/unknown.png"));
+                                            new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/unknown.png"));
                                     setImg(img).setX(printX).setY(printY).paintComponent(graphics);
                                 }
                             } else {
-                                Image img = ImageIO.read(new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/unknown" +
+                                Image img = ImageIO.read(new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/unknown" +
                                         ".png"));
                                 setImg(img).setX(printX).setY(printY).paintComponent(graphics);
                             }
@@ -252,12 +252,12 @@ public class AdventureGrid {
                     printX = 0;
                     printY += 64;
                 }
-                Image img = ImageIO.read(new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/position-marker.png"));
+                Image img = ImageIO.read(new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/position-marker.png"));
                 setImg(img).setX(8).setY(8).paintComponent(graphics);
                 graphics.drawString(" This is you! Current area: " + getAreaAtLocation(getCurrentX(), getCurrentY())
                         .getType()
                         .getName(), 16, 32);
-                Image img2 = ImageIO.read(new File(BotConfig.DATA_FOLDER, "resources/adventure/icons/64/" + getAreaAtLocation
+                Image img2 = ImageIO.read(new File(Constants.DATA_FOLDER, "resources/adventure/icons/64/" + getAreaAtLocation
                         (getCurrentX(), getCurrentY())
                         .getType()
                         .getFile() + ".png"));

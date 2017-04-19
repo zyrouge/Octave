@@ -10,9 +10,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.exceptions.PermissionException
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.guilds.GuildData
-import java.util.concurrent.TimeUnit
 
 class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) {
 
@@ -48,20 +47,20 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
     fun loadAndPlay(message: Message, trackUrl: String) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
-                if (scheduler.queue.size >= BotConfig.QUEUE_LIMIT) {
-                    message.respond().error("The queue can not exceed ${BotConfig.QUEUE_LIMIT} songs.").queue(null) {
+                if (scheduler.queue.size >= Constants.QUEUE_LIMIT) {
+                    message.respond().error("The queue can not exceed ${Constants.QUEUE_LIMIT} songs.").queue(null) {
                         if (it is PermissionException) {
-                            message.respond().text("The queue can not exceed ${BotConfig.QUEUE_LIMIT} songs.").queue()
+                            message.respond().text("The queue can not exceed ${Constants.QUEUE_LIMIT} songs.").queue()
                         }
                     }
                     return
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    if (track.duration > TimeUnit.HOURS.toMillis(2)) {
-                        message.respond().error("The track can not exceed 2 hour.").queue(null) {
+                    if (track.duration > Constants.DURATION_LIMIT.toMillis()) {
+                        message.respond().error("The track can not exceed ${Constants.DURATION_LIMIT_TEXT}.").queue(null) {
                             if (it is PermissionException) {
-                                message.respond().text("The track can not exceed 2 hour.").queue()
+                                message.respond().text("The track can not exceed ${Constants.DURATION_LIMIT_TEXT}.").queue()
                             }
                         }
                         return
@@ -71,7 +70,7 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
                 scheduler.queue(track)
 
                 message.respond().embed("Music Queue") {
-                    color = BotConfig.MUSIC_COLOR
+                    color = Constants.MUSIC_COLOR
                     description = "Added __**[${track.info.title}](${track.info.uri})**__ to queue."
                 }.rest().queue()
             }
@@ -81,10 +80,10 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
 
                 var added = 0
                 for (track in tracks) {
-                    if (scheduler.queue.size >= BotConfig.QUEUE_LIMIT) {
-                        message.respond().info("Ignored ${tracks.size - added} songs as the queue can not exceed ${BotConfig.QUEUE_LIMIT} songs.").queue(null) {
+                    if (scheduler.queue.size >= Constants.QUEUE_LIMIT) {
+                        message.respond().info("Ignored ${tracks.size - added} songs as the queue can not exceed ${Constants.QUEUE_LIMIT} songs.").queue(null) {
                             if (it is PermissionException) {
-                                message.respond().text("Ignored ${tracks.size - added} songs as the queue can not exceed ${BotConfig.QUEUE_LIMIT} songs.").queue()
+                                message.respond().text("Ignored ${tracks.size - added} songs as the queue can not exceed ${Constants.QUEUE_LIMIT} songs.").queue()
                             }
                         }
                         break
@@ -95,7 +94,7 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
                 }
 
                 message.respond().embed("Music Queue") {
-                    color = BotConfig.MUSIC_COLOR
+                    color = Constants.MUSIC_COLOR
                     description = "Added `$added` tracks to queue from playlist `${playlist.name}`."
                 }.rest().queue(null) {
                     if (it is PermissionException) {

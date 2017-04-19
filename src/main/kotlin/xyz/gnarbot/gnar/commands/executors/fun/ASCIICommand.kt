@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Utils
@@ -35,7 +35,7 @@ class ASCIICommand : CommandExecutor() {
             val element = document.getElementsByTag("body")[0]
 
             message.respond().embed("ASCII Text") {
-                color = BotConfig.COLOR
+                color = Constants.COLOR
                 description = "```\n${getText(element)}```"
             }.rest().queue()
 

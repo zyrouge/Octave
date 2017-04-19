@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -34,14 +34,14 @@ class PlayCommand : CommandExecutor() {
             if (manager.player.isPaused) {
                 manager.player.isPaused = false
                 message.respond().embed("Play Music") {
-                    color = BotConfig.MUSIC_COLOR
+                    color = Constants.MUSIC_COLOR
                     description = "Music is now playing."
                 }.rest().queue()
             } else if (manager.player.playingTrack != null) {
                 message.respond().error("Music is already playing.").queue()
             } else if (manager.scheduler.queue.isEmpty()) {
                 message.respond().embed("Empty Queue") {
-                    color = BotConfig.MUSIC_COLOR
+                    color = Constants.MUSIC_COLOR
                     description = "There is no music queued right now. Add some songs with `play -song|url`."
                 }.rest().queue()
             }
@@ -74,7 +74,7 @@ class PlayCommand : CommandExecutor() {
             guild.audioManager.openAudioConnection(userChannel)
 
             message.respond().embed("Music Playback") {
-                color = BotConfig.MUSIC_COLOR
+                color = Constants.MUSIC_COLOR
                 description = "Joined channel `${userChannel.name}`."
             }.rest().queue()
         }

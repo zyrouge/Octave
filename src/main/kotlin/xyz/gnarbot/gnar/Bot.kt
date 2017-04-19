@@ -16,7 +16,6 @@ import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
 import xyz.gnarbot.gnar.listeners.UserListener
-import java.io.File
 import kotlin.jvm.JvmStatic as static
 
 /**
@@ -29,19 +28,6 @@ class Bot(val token: String, val numShards: Int) {
 
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
-
-    /** @returns The global token of the bot. */
-    val prefix = "_" //default token
-
-    // FILES
-    val dataFile = File("data").takeIf(File::exists)
-            ?: throw IllegalStateException("`data` folder does not exist.")
-    val adminsFile = File(dataFile, "administrators.json").takeIf(File::exists)
-            ?: throw IllegalStateException("`administrators.json` does not exist.")
-    val blockedFile = File(dataFile, "blocked.json").takeIf(File::exists)
-            ?: throw IllegalStateException("`blocked.json` does not exist.")
-
-    val guildCountListener = GuildCountListener(this)
 
     val commandRegistry = CommandRegistry()
 
@@ -61,11 +47,11 @@ class Bot(val token: String, val numShards: Int) {
     fun start() {
         log.info("Initializing the Discord bot.")
 
-        log.info("Name:\t${BotConfig.NAME}")
+        log.info("Name:\t${Constants.BOT_NAME}")
         log.info("Shards:\t$numShards")
-        log.info("Prefix:\t${BotConfig.PREFIX}")
-        log.info("Admins:\t${BotConfig.ADMINISTRATORS.size}")
-        log.info("Blocked:\t${BotConfig.BLOCKED_USERS.size}")
+        log.info("Prefix:\t${Constants.PREFIX}")
+        log.info("Admins:\t${Constants.ADMINISTRATORS.size}")
+        log.info("Blocked:\t${Constants.BLOCKED_USERS.size}")
 
         val guildCountListener = GuildCountListener(this)
         val userListener = UserListener()
@@ -76,13 +62,15 @@ class Bot(val token: String, val numShards: Int) {
                 setAutoReconnect(true)
                 addEventListener(guildCountListener)
                 addEventListener(userListener)
-                setGame(Game.of("$id | _help"))
+                setGame(Game.of(Constants.BOT_GAME.format(id)))
                 setAudioEnabled(true)
             }
 
+
+
             log.info("JDA $id is ready.")
 
-            jda.selfUser.manager.setName(BotConfig.NAME).queue()
+            jda.selfUser.manager.setName(Constants.BOT_NAME).queue()
 
             shards += Shard(id, jda, this)
         }

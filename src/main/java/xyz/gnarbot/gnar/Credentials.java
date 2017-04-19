@@ -6,7 +6,7 @@ import com.typesafe.config.ConfigFactory;
 import java.io.File;
 
 public class Credentials {
-    private final static Config credentials_config = ConfigFactory.parseFile(new File(BotConfig.DATA_FOLDER, "credentials.conf"));
+    private final static Config credentials_config = ConfigFactory.parseFile(new File(Constants.DATA_FOLDER, "credentials.conf"));
 
     public final static String PRODUCTION = credentials_config.getString("token.production");
     public final static String BETA = credentials_config.getString("token.beta");

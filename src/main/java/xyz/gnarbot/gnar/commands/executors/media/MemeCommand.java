@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -116,7 +116,7 @@ public class MemeCommand extends CommandExecutor {
                     .getJSONObject("data");
 
             message.respond().embed("Meme Generator")
-                    .setColor(BotConfig.COLOR)
+                    .setColor(Constants.COLOR)
                     .setImage(response.optString("url"))
                     .rest().queue();
 

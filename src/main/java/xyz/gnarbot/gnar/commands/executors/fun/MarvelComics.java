@@ -6,7 +6,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -52,7 +52,7 @@ public class MarvelComics extends CommandExecutor {
             JSONObject thumb = (JSONObject) j.get("thumbnail");
 
             message.respond().embed("Marvel Characters")
-                    .setColor(BotConfig.COLOR)
+                    .setColor(Constants.COLOR)
                     .setDescription(StringUtils.capitalize(s.toLowerCase().replaceAll("\\+", " ")))
                     .setImage(thumb.optString("path") + "." + thumb.optString("extension"))
                     .rest().queue();

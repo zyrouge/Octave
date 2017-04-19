@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -51,7 +51,7 @@ class VoteSkipCommand : CommandExecutor() {
         manager.isVotingToSkip = true
 
         message.respond().embed("Vote Skip") {
-            color = BotConfig.MUSIC_COLOR
+            color = Constants.MUSIC_COLOR
             description {
                 buildString {
                     append(b(message.author.name))
@@ -78,7 +78,7 @@ class VoteSkipCommand : CommandExecutor() {
                 }
 
                 it.respond().embed("Vote Skip") {
-                    color = BotConfig.MUSIC_COLOR
+                    color = Constants.MUSIC_COLOR
                     description {
                         buildString {
                             if (skip > stay) {

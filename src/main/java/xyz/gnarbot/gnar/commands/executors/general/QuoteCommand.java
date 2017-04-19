@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import xyz.gnarbot.gnar.BotConfig;
+import xyz.gnarbot.gnar.Constants;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 
@@ -29,7 +29,7 @@ public class QuoteCommand extends CommandExecutor {
                 try {
                     final TextChannel _targetChannel = targetChannel;
                     message.getChannel().getMessageById(id).queue(msg -> _targetChannel.send().embed()
-                            .setColor(BotConfig.COLOR)
+                            .setColor(Constants.COLOR)
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
                             .rest().queue());

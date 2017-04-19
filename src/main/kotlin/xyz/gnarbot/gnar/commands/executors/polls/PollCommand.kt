@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.BotConfig
+import xyz.gnarbot.gnar.Constants
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.util.concurrent.TimeUnit
@@ -37,7 +37,7 @@ class PollCommand : CommandExecutor() {
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 it.respond().embed("Poll Results") {
-                    color = BotConfig.COLOR
+                    color = Constants.COLOR
                     description = "Voting has ended! Here are the results!"
 
                     var topVotes = 0
