@@ -19,8 +19,6 @@ import xyz.gnarbot.gnar.commands.executors.music.dj.*;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestEmbedCommand;
-import xyz.gnarbot.gnar.textadventure.AdventureCommand;
-import xyz.gnarbot.gnar.textadventure.StartAdventureCommand;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -86,11 +84,6 @@ public class CommandRegistry {
         //Testing Commands
         register(TestCommand.class);
         //End Testing Commands
-
-        //Text Adventure Commands
-        register(AdventureCommand.class);
-        register(StartAdventureCommand.class);
-        //End Text Adventure Commands
 
         //Game Commands
         register(OverwatchLookupCommand.class);
