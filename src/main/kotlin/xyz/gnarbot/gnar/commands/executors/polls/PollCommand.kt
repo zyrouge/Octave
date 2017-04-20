@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.util.concurrent.TimeUnit
@@ -14,11 +14,11 @@ class PollCommand : CommandExecutor() {
         val options = args.joinToString(" ").split(',').map(String::trim)
 
         if (options.size <= 1) {
-            message.respond().error("Please offer more options for the poll.").queue()
+            message.send().error("Please offer more options for the poll.").queue()
             return
         }
         
-        message.respond().embed("Poll") {
+        message.send().embed("Poll") {
             description = "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!"
             field("Options") {
                 buildString {
@@ -36,8 +36,8 @@ class PollCommand : CommandExecutor() {
                 description = "Voting has ended! Check the results in the newer messages!"
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
-                it.respond().embed("Poll Results") {
-                    color = Constants.COLOR
+                it.send().embed("Poll Results") {
+                    color = BotConfiguration.ACCENT_COLOR
                     description = "Voting has ended! Here are the results!"
 
                     var topVotes = 0

@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.lang.management.ManagementFactory
@@ -14,8 +14,8 @@ class UptimeCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        message.respond().embed("Bot Uptime") {
-            color = Constants.COLOR
+        message.send().embed("Bot Uptime") {
+            color = BotConfiguration.ACCENT_COLOR
             description = "$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds"
         }.rest().queue()
     }

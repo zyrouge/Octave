@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 
@@ -15,7 +15,7 @@ public class QuoteCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("Provide a message id.").queue();
+            message.send().error("Provide a message id.").queue();
             return;
         }
 
@@ -29,14 +29,14 @@ public class QuoteCommand extends CommandExecutor {
                 try {
                     final TextChannel _targetChannel = targetChannel;
                     message.getChannel().getMessageById(id).queue(msg -> _targetChannel.send().embed()
-                            .setColor(Constants.COLOR)
+                            .setColor(BotConfiguration.ACCENT_COLOR)
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
                             .rest().queue());
 
                 } catch (Exception e) {
                     try {
-                        message.respond()
+                        message.send()
                                 .error("Could not find a message with the ID " + id + " within this channel.")
                                 .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
                     } catch (Exception ignore) {}
@@ -44,7 +44,7 @@ public class QuoteCommand extends CommandExecutor {
             }
         }
 
-        message.respond().info("Sent quotes to the " + targetChannel.getName() + " channel!")
+        message.send().info("Sent quotes to the " + targetChannel.getName() + " channel!")
                 .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
     }
 }

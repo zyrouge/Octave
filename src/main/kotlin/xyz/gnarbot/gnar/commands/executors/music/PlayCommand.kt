@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -21,27 +21,27 @@ class PlayCommand : CommandExecutor() {
         val userChannel = guild.getMember(message.author).voiceState.channel
 
         if (botChannel != null && botChannel != userChannel) {
-            message.respond().error("The getBot is already playing music in another channel.").queue()
+            message.send().error("The getBot is already playing music in another channel.").queue()
             return
         }
 
         if (userChannel == null) {
-            message.respond().error("You must be in a voice channel to play music.").queue()
+            message.send().error("You must be in a voice channel to play music.").queue()
             return
         }
 
         if (args.isEmpty()) {
             if (manager.player.isPaused) {
                 manager.player.isPaused = false
-                message.respond().embed("Play Music") {
-                    color = Constants.MUSIC_COLOR
+                message.send().embed("Play Music") {
+                    color = BotConfiguration.MUSIC_COLOR
                     description = "Music is now playing."
                 }.rest().queue()
             } else if (manager.player.playingTrack != null) {
-                message.respond().error("Music is already playing.").queue()
+                message.send().error("Music is already playing.").queue()
             } else if (manager.scheduler.queue.isEmpty()) {
-                message.respond().embed("Empty Queue") {
-                    color = Constants.MUSIC_COLOR
+                message.send().embed("Empty Queue") {
+                    color = BotConfiguration.MUSIC_COLOR
                     description = "There is no music queued right now. Add some songs with `play -song|url`."
                 }.rest().queue()
             }
@@ -61,7 +61,7 @@ class PlayCommand : CommandExecutor() {
             val results = YouTube.search(query, 1)
 
             if (results.isEmpty()) {
-                message.respond().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+                message.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
                 return
             }
 
@@ -73,8 +73,8 @@ class PlayCommand : CommandExecutor() {
             guild.audioManager.sendingHandler = manager.sendHandler
             guild.audioManager.openAudioConnection(userChannel)
 
-            message.respond().embed("Music Playback") {
-                color = Constants.MUSIC_COLOR
+            message.send().embed("Music Playback") {
+                color = BotConfiguration.MUSIC_COLOR
                 description = "Joined channel `${userChannel.name}`."
             }.rest().queue()
         }

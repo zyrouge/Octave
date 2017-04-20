@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -32,7 +32,7 @@ public class GameLookupCommand extends CommandExecutor {
             JSONArray jsa = response.getBody().getArray();
 
             if (jsa.length() == 0) {
-                message.respond().error("No game found with that title.").queue();
+                message.send().error("No game found with that title.").queue();
                 return;
             }
 
@@ -44,8 +44,8 @@ public class GameLookupCommand extends CommandExecutor {
             String desc = jso.optString("summary");
             String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
-            message.respond().embed(title)
-                    .setColor(Constants.COLOR)
+            message.send().embed(title)
+                    .setColor(BotConfiguration.ACCENT_COLOR)
                     .setThumbnail(thumb)
                     //.field("Publisher", true, publisher)
                     .field("Score", true, score)

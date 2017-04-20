@@ -4,13 +4,13 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Utils
 
 class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
     /** @returns Enabled command entries. */
-    val enabled get() = bot.commandRegistry.entries.apply { removeAll(disabled) }
+    val enabled: List<CommandRegistry.CommandEntry> get() = bot.commandRegistry.entries.apply { removeAll(disabled) }.toList()
 
     /** @returns Disabled command entries. */
     val disabled: MutableList<CommandRegistry.CommandEntry> = mutableListOf()
@@ -29,19 +29,19 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
      */
     fun callCommand(message: Message) : Boolean {
         val content = message.content
-        if (!content.startsWith(Constants.PREFIX)) return false
+        if (!content.startsWith(BotConfiguration.PREFIX)) return false
 
         // Tokenize the message.
         val tokens = Utils.stringSplit(content, ' ')
 
-        val label = tokens[0].substring(Constants.PREFIX.length).toLowerCase()
+        val label = tokens[0].substring(BotConfiguration.PREFIX.length).toLowerCase()
 
         val args = tokens.copyOfRange(1, tokens.size) //tokens.subList(1, tokens.size)
         
         val entry = bot.commandRegistry.getEntry(label) ?: return false
 
         if (disabled.contains(entry)) {
-            message.respond().error("This command is disabled by the server owner.").queue()
+            message.send().error("This command is disabled by the server owner.").queue()
             return false
         }
 
@@ -51,14 +51,14 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
         val member = message.member
 
         if (info.administrator) {
-            if (!Constants.ADMINISTRATORS.contains(member.idLong)) {
-                message.respond().error("This command is for bot administrators only.").queue()
+            if (!BotConfiguration.ADMINISTRATORS.contains(member.idLong)) {
+                message.send().error("This command is for bot administrators only.").queue()
                 return false
             }
         }
         if (info.guildOwner) {
             if (message.guild.owner != member) {
-                message.respond().error("This command is for server owners only.").queue()
+                message.send().error("This command is for server owners only.").queue()
                 return false
             }
         }
@@ -66,13 +66,13 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
         if (info.permissions.isNotEmpty()) {
             if (info.scope == Scope.VOICE) {
                 if (member.voiceState.channel == null) {
-                    message.respond().error("This command requires you to be in a voice channel.").queue()
+                    message.send().error("This command requires you to be in a voice channel.").queue()
                     return false
                 }
             }
             if (!info.scope.checkPermission(message, member, *info.permissions)) {
                 val requirements = entry.info.permissions.map(Permission::getName)
-                message.respond().error("You lack the following permissions: `$requirements` in " + when (info.scope) {
+                message.send().error("You lack the following permissions: `$requirements` in " + when (info.scope) {
                     Scope.GUILD -> "the guild `${message.guild.name}`."
                     Scope.TEXT -> "the text channel `${message.textChannel.name}`."
                     Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
@@ -91,9 +91,9 @@ class CommandHandler(private val guildData: GuildData, private val bot: Bot) {
             cmd.execute(message, args)
             return true
         } catch (e: PermissionException) {
-            message.respond().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
+            message.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
         } catch (e: RuntimeException) {
-            message.respond().error("**Exception**: " + e.message).queue()
+            message.send().error("**Exception**: " + e.message).queue()
             e.printStackTrace()
         }
         return false

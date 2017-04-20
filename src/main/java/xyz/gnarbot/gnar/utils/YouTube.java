@@ -91,6 +91,7 @@ public class YouTube {
         return length;
     }
 
+    @SuppressWarnings("unused")
     public static class Result {
         private final String title;
         private final String author;

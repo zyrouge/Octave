@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -19,22 +19,22 @@ public class RollCommand extends CommandExecutor {
         try {
             if (args.length >= 1) {
                 if (!(Integer.valueOf(args[0]) > 0)) {
-                    message.respond().error("Number need to be > 0.").queue();
+                    message.send().error("Number need to be > 0.").queue();
                     return;
                 }
 
-                message.respond().embed("Roll a Number")
-                        .setColor(Constants.COLOR)
+                message.send().embed("Roll a Number")
+                        .setColor(BotConfiguration.ACCENT_COLOR)
                         .description(() -> "You rolled a **"
                                 + new Random().nextInt(Integer.valueOf(args[0]))
                                 + "** from range **[0 to " + args[0]+ "]**.")
                         .rest().queue();
 
             } else {
-                message.respond().error("Insufficient amount of arguments.").queue();
+                message.send().error("Insufficient amount of arguments.").queue();
             }
         } catch (Exception e) {
-            message.respond().error("Only numbers are allowed.\n\n**Example:**\n\n[_roll 10]()").queue();
+            message.send().error("Only numbers are allowed.\n\n**Example:**\n\n[_roll 10]()").queue();
         }
     }
 }

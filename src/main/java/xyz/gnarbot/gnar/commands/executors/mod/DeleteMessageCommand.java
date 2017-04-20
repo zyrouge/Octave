@@ -21,20 +21,20 @@ public class DeleteMessageCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("Please input message ID(s) to queue them for deletion.").queue();
+            message.send().error("Please input message ID(s) to queue them for deletion.").queue();
             return;
         }
 
         if (args.length > 3) {
-            message.respond().error("Use `_prune` instead if you're going to delete more than 3 messages.").queue();
+            message.send().error("Use `_prune` instead if you're going to delete more than 3 messages.").queue();
             return;
         }
 
         for (String id : args) {
-            message.respond().getChannel().getMessageById(id).queue(msg -> msg.delete().queue());
+            message.send().getChannel().getMessageById(id).queue(msg -> msg.delete().queue());
         }
 
-        message.respond().info("Deleted the message.\nDeleting this message in **5** seconds.")
+        message.send().info("Deleted the message.\nDeleting this message in **5** seconds.")
                 .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
     }
 }

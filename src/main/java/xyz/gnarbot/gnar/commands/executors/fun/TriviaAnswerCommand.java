@@ -18,9 +18,9 @@ public class TriviaAnswerCommand extends CommandExecutor {
         }
 
         try {
-            message.respond().info(TriviaQuestions.getAnswer(Integer.valueOf(args[0]))).queue();
+            message.send().info(TriviaQuestions.getAnswer(Integer.valueOf(args[0]))).queue();
         } catch (Exception e) {
-            message.respond().error("Please enter a number.").queue();
+            message.send().error("Please enter a number.").queue();
         }
     }
 

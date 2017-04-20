@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -35,8 +35,8 @@ public class LeetifyCommand extends CommandExecutor {
             s = s.replaceAll(entry.getKey(), entry.getValue());
         }
 
-        message.respond().embed("Leet it")
-                .setColor(Constants.COLOR)
+        message.send().embed("Leet it")
+                .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(s)
                 .rest().queue();
     }

@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.`fun`
 import net.dv8tion.jda.core.entities.Message
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.util.*
@@ -17,8 +17,8 @@ class DialogCommand : CommandExecutor() {
                 .wrap(StringUtils.join(args, ' ').replace("```", ""), 25, null, true)
                 .split("\n")
 
-        message.respond().embed {
-            color = Constants.COLOR
+        message.send().embed {
+            color = BotConfiguration.ACCENT_COLOR
             description = buildString {
                 appendln("```")
                 appendln("﻿ ___________________________ ")

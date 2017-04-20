@@ -17,7 +17,7 @@ import java.awt.Color
 class YoutubeCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
         if (args.isEmpty()) {
-            message.respond().error("Gotta put something to search YouTube.").queue()
+            message.send().error("Gotta put something to search YouTube.").queue()
             return
         }
 
@@ -27,12 +27,12 @@ class YoutubeCommand : CommandExecutor() {
             val results = YouTube.search(query, 3)
 
             if (results.isEmpty()) {
-                message.respond().error("No search results for `$query`.").queue()
+                message.send().error("No search results for `$query`.").queue()
                 return
             }
             var firstUrl: String? = null
 
-            message.respond().embed {
+            message.send().embed {
                 setAuthor("YouTube Results", "https://www.youtube.com", "https://s.ytimg.com/yts/img/favicon_144-vflWmzoXw.png")
                 thumbnail = "https://gnarbot.xyz/assets/img/youtube.png"
                 color = Color(141, 20, 0)
@@ -55,12 +55,12 @@ class YoutubeCommand : CommandExecutor() {
                 }
             }.rest().queue()
 
-            message.respond().text("**First Video:** $firstUrl").queue()
+            message.send().text("**First Video:** $firstUrl").queue()
         } catch (e: JSONException) {
-            message.respond().error("Unable to get YouTube results.").queue()
+            message.send().error("Unable to get YouTube results.").queue()
             e.printStackTrace()
         } catch (e: NullPointerException) {
-            message.respond().error("Unable to get YouTube results.").queue()
+            message.send().error("Unable to get YouTube results.").queue()
             e.printStackTrace()
         }
     }

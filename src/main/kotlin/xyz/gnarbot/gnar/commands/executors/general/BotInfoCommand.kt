@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.OnlineStatus
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.lang.management.ManagementFactory
@@ -64,8 +64,8 @@ class BotInfoCommand : CommandExecutor() {
                 .flatMap { it.guildData.values }
                 .sumBy { it.commandHandler.requests }
 
-        message.respond().embed("Bot Information") {
-            color = Constants.COLOR
+        message.send().embed("Bot Information") {
+            color = BotConfiguration.ACCENT_COLOR
 
             inline {
                 field("Requests", requests)

@@ -43,7 +43,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("Please provide an image link.").queue();
+            message.send().error("Please provide an image link.").queue();
             return;
         }
 
@@ -76,7 +76,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
                 }
             } catch (Exception e) {
                 if (eyesJSON.isEmpty()) {
-                    message.respond().error("The API did not detect any eyes/facial features.").queue();
+                    message.send().error("The API did not detect any eyes/facial features.").queue();
                     return;
                 }
             }
@@ -107,7 +107,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
 
             //event.getChannel().sendMessage(mb.build());
         } catch (Exception e) {
-            message.respond().error("An unexpected error occurred, did you provide a proper link?").queue();
+            message.send().error("An unexpected error occurred, did you provide a proper link?").queue();
             e.printStackTrace();
         }
     }

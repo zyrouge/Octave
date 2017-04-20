@@ -16,9 +16,6 @@ import xyz.gnarbot.gnar.commands.Scope;
 public class UnbanCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
-        Member author = message.getMember();
-
-
         message.getGuild().getController().getBans().queue(bans -> {
             Member target = null;
 
@@ -33,12 +30,12 @@ public class UnbanCommand extends CommandExecutor {
                 target = getGuildData().getMemberByName(args[0], true);
             }
             if (target == null) {
-                message.respond().error("Could not find user.").queue();
+                message.send().error("Could not find user.").queue();
                 return;
             }
 
             getGuild().getController().unban(target).queue();
-            message.respond().info(target.getEffectiveName() + " has been unbanned.").queue();
+            message.send().info(target.getEffectiveName() + " has been unbanned.").queue();
         });
     }
 }

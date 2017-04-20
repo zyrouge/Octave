@@ -21,7 +21,7 @@ public class TextToSpeechCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("Please provide a query.").queue();
+            message.send().error("Please provide a query.").queue();
             return;
         }
 

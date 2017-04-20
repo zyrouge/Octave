@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 
@@ -16,12 +16,12 @@ public class PingCommand extends CommandExecutor {
     public void execute(Message message, String[] args) {
         OffsetDateTime sentTime = message.getCreationTime();
 
-        message.respond().embed("Ping")
-                .setColor(Constants.COLOR)
+        message.send().embed("Ping")
+                .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription("Checking ping...")
                 .rest().queue(msg -> msg.editMessage(
                         new EmbedBuilder().setTitle("Ping")
-                                .setColor(Constants.COLOR)
+                                .setColor(BotConfiguration.ACCENT_COLOR)
                                 //.field("Receive Time", true, () -> receiveTime + " ms")
                                 .field("Response Time", true, () -> {
                                     long ping = Math.abs(sentTime.until(msg.getCreationTime(), ChronoUnit.MILLIS));

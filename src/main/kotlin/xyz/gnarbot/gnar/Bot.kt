@@ -25,7 +25,6 @@ import kotlin.jvm.JvmStatic as static
  * @param numShards Number of shards to request.
  */
 class Bot(val token: String, val numShards: Int) {
-
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
 
@@ -45,13 +44,14 @@ class Bot(val token: String, val numShards: Int) {
 
     /** Start the bot. */
     fun start() {
+        check(!token.isNullOrEmpty()) { "Bot token can not be null." }
+
         log.info("Initializing the Discord bot.")
 
-        log.info("Name:\t${Constants.BOT_NAME}")
+        log.info("Name:\t${BotConfiguration.BOT_NAME}")
         log.info("Shards:\t$numShards")
-        log.info("Prefix:\t${Constants.PREFIX}")
-        log.info("Admins:\t${Constants.ADMINISTRATORS.size}")
-        log.info("Blocked:\t${Constants.BLOCKED_USERS.size}")
+        log.info("Prefix:\t${BotConfiguration.PREFIX}")
+        log.info("Admins:\t${BotConfiguration.ADMINISTRATORS.size}")
 
         val guildCountListener = GuildCountListener(this)
         val userListener = UserListener()
@@ -62,15 +62,13 @@ class Bot(val token: String, val numShards: Int) {
                 setAutoReconnect(true)
                 addEventListener(guildCountListener)
                 addEventListener(userListener)
-                setGame(Game.of(Constants.BOT_GAME.format(id)))
+                setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
                 setAudioEnabled(true)
             }
 
-
-
             log.info("JDA $id is ready.")
 
-            jda.selfUser.manager.setName(Constants.BOT_NAME).queue()
+            jda.selfUser.manager.setName(BotConfiguration.BOT_NAME).queue()
 
             shards += Shard(id, jda, this)
         }
@@ -78,25 +76,29 @@ class Bot(val token: String, val numShards: Int) {
         log.info("The bot is now fully connected to Discord.")
     }
 
+    fun restart(id : Int) {
+        log.info("Restarting the Discord bot shard $id.")
+
+        shards[id].shutdown()
+
+        val jda = jda(token, id, numShards) {
+            setToken(token)
+            setAutoReconnect(true)
+            setGame(Game.of("$id | _help"))
+            setAudioEnabled(true)
+        }
+
+        log.info("JDA $id has restarted.")
+
+        jda.selfUser.manager.setName("Gnarr").queue()
+
+        shards[id] = Shard(id, jda, this)
+    }
+
     fun restart() {
         log.info("Restarting the Discord bot shards.")
 
-        for (id in 0 until shards.size) {
-            shards[id].shutdown()
-
-            val jda = jda(token, id, numShards) {
-                setToken(token)
-                setAutoReconnect(true)
-                setGame(Game.of("$id | _help"))
-                setAudioEnabled(true)
-            }
-
-            log.info("JDA $id has restarted.")
-
-            jda.selfUser.manager.setName("Gnarr").queue()
-
-            shards[id] = Shard(id, jda, this)
-        }
+        (0 until shards.size).forEach(this::restart)
 
         log.info("Discord bot shards have now restarted.")
     }
@@ -106,7 +108,6 @@ class Bot(val token: String, val numShards: Int) {
      */
     fun stop() {
         shards.forEach(Shard::shutdown)
-        System.gc()
 
         log.info("Bot is now disconnected from Discord.")
     }

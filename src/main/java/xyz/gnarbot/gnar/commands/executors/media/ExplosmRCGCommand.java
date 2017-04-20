@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -28,15 +28,15 @@ public class ExplosmRCGCommand extends CommandExecutor {
 
             String logo = "http://explosm.net/img/logo.png";
 
-            message.respond().embed("Cyanide and Happiness")
-                    .setColor(Constants.COLOR)
+            message.send().embed("Cyanide and Happiness")
+                    .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription("**Random Comic Generator**")
                     .setImage(url)
                     .setThumbnail(logo)
                     .rest().queue();
 
         } catch (Exception e) {
-            message.respond().error("Unable to grab random Cyanide and Happiness comic.").queue();
+            message.send().error("Unable to grab random Cyanide and Happiness comic.").queue();
             e.printStackTrace();
         }
     }

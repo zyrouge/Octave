@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 public class LeagueLookupCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
-        message.respond().error("This command is borked. Blame Rito for their crap API.").queue();
+        message.send().error("This command is borked. Blame Rito for their crap API.").queue();
 
         /*
         StringJoiner joiner = new StringJoiner("");

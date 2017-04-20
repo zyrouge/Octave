@@ -19,7 +19,7 @@ public class WhoIsCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("You did not mention a user.").queue();
+            message.send().error("You did not mention a user.").queue();
             return;
         }
 
@@ -34,11 +34,11 @@ public class WhoIsCommand extends CommandExecutor {
         }
 
         if (member == null) {
-            message.respond().error("You did not mention a valid user.").queue();
+            message.send().error("You did not mention a valid user.").queue();
             return;
         }
 
-        message.respond().embed("Who is " + member.getName() + "?")
+        message.send().embed("Who is " + member.getName() + "?")
                 .setColor(member.getColor())
                 .setThumbnail(member.getAvatarUrl())
                 .field("Name", true, member.getName())

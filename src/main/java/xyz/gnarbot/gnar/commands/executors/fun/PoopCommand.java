@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -39,7 +39,7 @@ public class PoopCommand extends CommandExecutor {
             try {
                 poopArt.setCharAt(7 + i, poop.charAt(i));
             } catch (IndexOutOfBoundsException e) {
-                message.respond().error("Poop is too big. Constipation occurred.").queue();
+                message.send().error("Poop is too big. Constipation occurred.").queue();
                 return;
             }
         }
@@ -47,8 +47,8 @@ public class PoopCommand extends CommandExecutor {
         joiner.add(poopArt);
         joiner.add("░░░░░░░░░░░░░░░░░░░░░░░");
 
-        message.respond().embed("Pooping Memes")
-                .setColor(Constants.COLOR)
+        message.send().embed("Pooping Memes")
+                .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(joiner.toString())
                 .rest().queue();
     }

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Utils
@@ -18,7 +18,7 @@ import xyz.gnarbot.gnar.utils.Utils
 class ASCIICommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
         if (args.isEmpty()) {
-            message.respond().error("Please provide a query.").queue()
+            message.send().error("Please provide a query.").queue()
             return
         }
 
@@ -26,7 +26,7 @@ class ASCIICommand : CommandExecutor() {
             val query = StringUtils.join(args, "+")
 
             if (query.length > 15) {
-                message.respond().error("The query has too many characters. 15 at most.").queue()
+                message.send().error("The query has too many characters. 15 at most.").queue()
                 return
             }
 
@@ -34,13 +34,13 @@ class ASCIICommand : CommandExecutor() {
 
             val element = document.getElementsByTag("body")[0]
 
-            message.respond().embed("ASCII Text") {
-                color = Constants.COLOR
+            message.send().embed("ASCII Text") {
+                color = BotConfiguration.ACCENT_COLOR
                 description = "```\n${getText(element)}```"
             }.rest().queue()
 
         } catch (e: Exception) {
-            message.respond().error("Unable to generate ASCII art.").queue()
+            message.send().error("Unable to generate ASCII art.").queue()
             e.printStackTrace()
         }
 

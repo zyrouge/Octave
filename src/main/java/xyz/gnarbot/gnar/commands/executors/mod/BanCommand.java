@@ -25,15 +25,15 @@ public class BanCommand extends CommandExecutor {
         }
 
         if (target == null) {
-            message.respond().error("Could not find user.").queue();
+            message.send().error("Could not find user.").queue();
             return;
         }
         if (!author.canInteract(target)) {
-            message.respond().error("Sorry, that user has an equal or higher role.").queue();
+            message.send().error("Sorry, that user has an equal or higher role.").queue();
             return;
         }
 
         getGuild().getController().ban(target, 2).queue();
-        message.respond().info(target.getEffectiveName() + " has been banned.").queue();
+        message.send().info(target.getEffectiveName() + " has been banned.").queue();
     }
 }

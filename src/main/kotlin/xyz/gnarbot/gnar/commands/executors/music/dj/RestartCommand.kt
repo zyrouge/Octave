@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -27,14 +27,14 @@ class RestartCommand : CommandExecutor() {
 
         if (track != null) {
 
-            message.respond().embed("Restart Song") {
-                color = Constants.MUSIC_COLOR
+            message.send().embed("Restart Song") {
+                color = BotConfiguration.MUSIC_COLOR
                 description = "Restarting track: `${track.info.title}`."
             }.rest().queue()
 
             manager.player.playTrack(track.makeClone())
         } else {
-            message.respond().error("No track has been previously started.").queue()
+            message.send().error("No track has been previously started.").queue()
         }
     }
 }

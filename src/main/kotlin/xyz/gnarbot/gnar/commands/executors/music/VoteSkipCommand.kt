@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -22,36 +22,36 @@ class VoteSkipCommand : CommandExecutor() {
         val member = guild.getMember(message.author)
 
         if (manager.player.playingTrack == null) {
-            message.respond().error("There isn't a song playing.").queue()
+            message.send().error("There isn't a song playing.").queue()
             return
         }
 
         if (member.voiceState.isDeafened) {
-            message.respond().error("You actually have to be listening to the song to start a vote... Tsk tsk...").queue {
+            message.send().error("You actually have to be listening to the song to start a vote... Tsk tsk...").queue {
                 it.delete().queueAfter(5, TimeUnit.SECONDS)
             }
             return
         }
         if (manager.isVotingToSkip) {
-            message.respond().error("There is already a vote going on!").queue { msg ->
+            message.send().error("There is already a vote going on!").queue { msg ->
                 msg.delete().queueAfter(5, TimeUnit.SECONDS)
             }
             return
         }
-        if (System.currentTimeMillis() - manager.lastVoteTime < 30000) {
-            message.respond().error("You must wait 30 seconds before starting a new vote.").queue()
+        if (System.currentTimeMillis() - manager.lastVoteTime < BotConfiguration.VOTE_SKIP_COOLDOWN.toMillis()) {
+            message.send().error("You must wait ${BotConfiguration.VOTE_SKIP_COOLDOWN_TEXT} before starting a new vote.").queue()
             return
         }
         if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= 30) {
-            message.respond().error("By the time the vote finishes, the song will be over.").queue()
+            message.send().error("By the time the vote finishes, the song will be over.").queue()
             return
         }
 
         manager.lastVoteTime = System.currentTimeMillis()
         manager.isVotingToSkip = true
 
-        message.respond().embed("Vote Skip") {
-            color = Constants.MUSIC_COLOR
+        message.send().embed("Vote Skip") {
+            color = BotConfiguration.MUSIC_COLOR
             description {
                 buildString {
                     append(b(message.author.name))
@@ -77,8 +77,8 @@ class VoteSkipCommand : CommandExecutor() {
                     if (it.emote.name == "👎") stay = it.count - 1
                 }
 
-                it.respond().embed("Vote Skip") {
-                    color = Constants.MUSIC_COLOR
+                it.send().embed("Vote Skip") {
+                    color = BotConfiguration.MUSIC_COLOR
                     description {
                         buildString {
                             if (skip > stay) {

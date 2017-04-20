@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -14,8 +14,8 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 )
 class GarbageCollectCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
-        message.respond().embed("Garbage Collection") {
-            color = Constants.COLOR
+        message.send().embed("Garbage Collection") {
+            color = BotConfiguration.ACCENT_COLOR
             val interrupt = if (!args.isEmpty()) args[0].toBoolean() else false
 
             bot.shards.forEach { it.clearData(interrupt) }

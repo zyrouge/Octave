@@ -26,25 +26,25 @@ public class PruneCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length == 0) {
-            message.respond().error("Insufficient amount of arguments.").queue();
+            message.send().error("Insufficient amount of arguments.").queue();
             return;
         }
         
         message.delete().queue();
 
-        MessageHistory history = message.respond().getChannel().getHistory();
+        MessageHistory history = message.send().getChannel().getHistory();
 
         int amount;
         try {
             amount = Integer.parseInt(args[0]);
             amount = Math.min(amount, 100);
         } catch (NumberFormatException e) {
-            message.respond().error("Improper arguments supplies, must be a number.").queue();
+            message.send().error("Improper arguments supplies, must be a number.").queue();
             return;
         }
 
         if (amount < 2) {
-            message.respond().error("You need to delete 2 or more messages to use this command.").queue();
+            message.send().error("You need to delete 2 or more messages to use this command.").queue();
             return;
         }
 
@@ -66,7 +66,7 @@ public class PruneCommand extends CommandExecutor {
 
             message.getTextChannel().deleteMessages(msgs).queue();
 
-            message.respond().info("Attempted to delete **[" + msgs.size() + "]()** messages.\nDeleting this message in **5** seconds.")
+            message.send().info("Attempted to delete **[" + msgs.size() + "]()** messages.\nDeleting this message in **5** seconds.")
                     .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
         });
     }

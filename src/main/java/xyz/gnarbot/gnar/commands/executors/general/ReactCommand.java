@@ -15,7 +15,7 @@ public class ReactCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
         if (args.length < 2) {
-            message.respond().error("Insufficient arguments. `" + getInfo().usage() + "`").queue();
+            message.send().error("Insufficient arguments. `" + getInfo().usage() + "`").queue();
             return;
         }
 
@@ -28,7 +28,7 @@ public class ReactCommand extends CommandExecutor {
                 String[] reactions = Arrays.copyOfRange(args, 1, args.length);
 
                 if (reactions.length == 0) {
-                    message.respond().error("No reactions detected, robot.").queue();
+                    message.send().error("No reactions detected, robot.").queue();
                     return;
                 }
 

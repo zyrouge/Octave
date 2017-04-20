@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.api.data
 import net.dv8tion.jda.core.JDA
 import xyz.gnarbot.gnar.Shard
 
+@Suppress("unused")
 class ShardInfo(shard: Shard) {
     val requests: Int = shard.guildData.values.map { it.commandHandler.requests }.sum()
     val id: Int = shard.id

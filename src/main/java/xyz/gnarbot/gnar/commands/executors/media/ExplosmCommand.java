@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import net.dv8tion.jda.core.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -33,7 +33,7 @@ public class ExplosmCommand extends CommandExecutor {
                     input = Integer.valueOf(args[0]);
 
                     if (input > max || input < 100) {
-                        message.respond().error("Explosm does not have a comic for that number.").queue();
+                        message.send().error("Explosm does not have a comic for that number.").queue();
                     }
 
                     rand = String.valueOf(input);
@@ -41,7 +41,7 @@ public class ExplosmCommand extends CommandExecutor {
                     if (args[0].equalsIgnoreCase("latest")) {
                         rand = "latest";
                     } else {
-                        message.respond().error("You didn't enter a proper ID number.").queue();
+                        message.send().error("You didn't enter a proper ID number.").queue();
                         return;
                     }
                 }
@@ -55,15 +55,15 @@ public class ExplosmCommand extends CommandExecutor {
 
             String logo = "http://explosm.net/img/logo.png";
 
-            message.respond().embed("Cyanide and Happiness")
-                    .setColor(Constants.COLOR)
+            message.send().embed("Cyanide and Happiness")
+                    .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription("No: **" + rand + "**\n")
                     .setThumbnail(logo)
                     .setImage(url)
                     .rest().queue();
 
         } catch (Exception e) {
-            message.respond().error("Unable to grab Cyanide and Happiness comic.").queue();
+            message.send().error("Unable to grab Cyanide and Happiness comic.").queue();
             e.printStackTrace();
         }
     }

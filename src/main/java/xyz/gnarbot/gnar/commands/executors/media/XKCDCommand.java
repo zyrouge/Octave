@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.entities.Message;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -32,7 +32,7 @@ public class XKCDCommand extends CommandExecutor {
                         input = Integer.valueOf(args[0]);
 
                         if (input > max || input < 1) {
-                            message.respond().error("xkcd does not have a comic for that number.").queue();
+                            message.send().error("xkcd does not have a comic for that number.").queue();
                         }
 
                         rand = input;
@@ -40,7 +40,7 @@ public class XKCDCommand extends CommandExecutor {
                         if (args[0].equalsIgnoreCase("latest")) {
                             rand = max;
                         } else {
-                            message.respond().error("You didn't enter a proper number.").queue();
+                            message.send().error("You didn't enter a proper number.").queue();
                             return;
                         }
                     }
@@ -59,8 +59,8 @@ public class XKCDCommand extends CommandExecutor {
 
                     String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
 
-                    message.respond().embed(title)
-                            .setColor(Constants.COLOR)
+                    message.send().embed(title)
+                            .setColor(BotConfiguration.ACCENT_COLOR)
                             .setDescription("No: " + num)
                             .setThumbnail(logo)
                             .setImage(url)
@@ -70,7 +70,7 @@ public class XKCDCommand extends CommandExecutor {
                 }
             }
 
-            message.respond().error("Unable to grab xkcd comic.").queue();
+            message.send().error("Unable to grab xkcd comic.").queue();
         } catch (Exception e) {
             e.printStackTrace();
         }

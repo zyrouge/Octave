@@ -57,7 +57,6 @@ public class CommandRegistry {
         register(GoodShitCommand.class);
         register(EightBallCommand.class);
         register(LeetifyCommand.class);
-        register(MarvelComics.class);
         //register(ProgressionCommand.class);
         register(GoogleyEyesCommand.class);
         //register(ServersSharedCommand.class);

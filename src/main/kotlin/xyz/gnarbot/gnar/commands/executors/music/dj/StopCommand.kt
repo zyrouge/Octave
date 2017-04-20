@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -24,8 +24,8 @@ class StopCommand : CommandExecutor() {
         manager.player.isPaused = false
         guild.audioManager.closeAudioConnection()
 
-        message.respond().embed("Stop Playback") {
-            color = Constants.MUSIC_COLOR
+        message.send().embed("Stop Playback") {
+            color = BotConfiguration.MUSIC_COLOR
             description = "Playback has been completely stopped and the queue has been cleared."
         }.rest().queue()
     }

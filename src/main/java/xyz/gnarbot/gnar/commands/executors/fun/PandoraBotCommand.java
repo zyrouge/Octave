@@ -6,7 +6,7 @@ import com.google.code.chatterbotapi.ChatterBotSession;
 import com.google.code.chatterbotapi.ChatterBotType;
 import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -26,19 +26,19 @@ public class PandoraBotCommand extends CommandExecutor {
             if (bot == null) {
                 bot = factory.create(ChatterBotType.PANDORABOTS, "b0dafd24ee35a477");
                 session = bot.createSession();
-                message.respond().info("Pandora-Bot session created for the server.").queue();
+                message.send().info("Pandora-Bot session created for the server.").queue();
             }
 
             String input = StringUtils.join(args, " ");
 
             String output = session.think(input);
-            message.respond().embed("PandoraBot")
-                    .setColor(Constants.COLOR)
+            message.send().embed("PandoraBot")
+                    .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription(output)
                     .rest().queue();
 
         } catch (Exception e) {
-            message.respond().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();
+            message.send().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();
             bot = null;
         }
     }

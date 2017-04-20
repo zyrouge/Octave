@@ -1,6 +1,8 @@
 package xyz.gnarbot.gnar.utils;
 
 
+import xyz.gnarbot.gnar.BotConfiguration;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,7 +20,7 @@ public class TriviaQuestions {
     private static final ArrayList<String> answers = new ArrayList<>();
 
     public static void init() {
-        File f = new File("_DATA/trivia");
+        File f = new File(BotConfiguration.DATA_FOLDER, "trivia");
         if (!f.exists()) {
             System.out.println("No trivia folder detected.");
         }

@@ -6,23 +6,18 @@ import com.typesafe.config.ConfigFactory;
 import java.io.File;
 
 public class Credentials {
-    private final static Config credentials_config = ConfigFactory.parseFile(new File(Constants.DATA_FOLDER, "credentials.conf"));
+    private final static Config CONFIG = ConfigFactory.parseFile(new File(BotConfiguration.DATA_FOLDER, "credentials.conf"))
+            .withFallback(ConfigFactory.load("credentials.conf"));
 
-    public final static String PRODUCTION = credentials_config.getString("token.production");
-    public final static String BETA = credentials_config.getString("token.beta");
+    public final static String PRODUCTION = CONFIG.getString("token.production");
+    public final static String BETA = CONFIG.getString("token.beta");
 
-    public final static String MARVEL_PU = credentials_config.getString("marvel.pu");
-    public final static String MARVEL_PR = credentials_config.getString("marvel.pr");
+    public final static String ABAL_URL = CONFIG.getString("abal.url");
+    public final static String ABAL_TOKEN = CONFIG.getString("abal.token");
+    public final static String CARBONITEX = CONFIG.getString("carbonitex");
 
-    public final static String ABAL_URL = credentials_config.getString("abal.url");
-    public final static String ABAL_TOKEN = credentials_config.getString("abal.token");
-
-    public final static String LEAUGE = credentials_config.getString("leauge");
-    public final static String IMGFLIP = credentials_config.getString("imgflip");
-
-    public final static String CARBONITEX = credentials_config.getString("carbonitex");
-
-    public final static String MASHAPE = credentials_config.getString("mashape");
+    public final static String IMGFLIP = CONFIG.getString("imgflip");
+    public final static String MASHAPE = CONFIG.getString("mashape");
 
     private Credentials() {}
 }

@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -22,8 +22,8 @@ class EnableCommand : CommandExecutor() {
                 .filterNotNull()
                 .map { it.info.aliases[0] }
 
-        message.respond().embed("Enabling Commands") {
-            color = Constants.COLOR
+        message.send().embed("Enabling Commands") {
+            color = BotConfiguration.ACCENT_COLOR
             description {
                 if (enabled.isNotEmpty()) {
                     "Enabled `$enabled` command(s) on this server."

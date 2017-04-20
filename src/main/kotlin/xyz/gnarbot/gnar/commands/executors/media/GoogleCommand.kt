@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
 import org.jsoup.Jsoup
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import java.io.IOException
@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets
 class GoogleCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
         if (args.isEmpty()) {
-            message.respond().error("Gotta have something to search Google.").queue()
+            message.send().error("Gotta have something to search Google.").queue()
             return
         }
 
@@ -32,12 +32,12 @@ class GoogleCommand : CommandExecutor() {
                     .select(".g")
 
             if (blocks.isEmpty()) {
-                message.respond().error("No search results for `$query`.").queue()
+                message.send().error("No search results for `$query`.").queue()
                 return
             }
 
-            message.respond().embed {
-                color = Constants.COLOR
+            message.send().embed {
+                color = BotConfiguration.ACCENT_COLOR
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
                 thumbnail = "https://gnarbot.xyz/assets/img/google.png"
 
@@ -66,7 +66,7 @@ class GoogleCommand : CommandExecutor() {
                 }
             }.rest().queue()
         } catch (e: IOException) {
-            message.respond().error("Caught an exception while trying to Google stuff.").queue()
+            message.send().error("Caught an exception while trying to Google stuff.").queue()
             e.printStackTrace()
         }
     }

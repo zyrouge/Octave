@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -30,12 +30,12 @@ class JavascriptCommand : CommandExecutor() {
         val script = args.joinToString(" ")
 
         if (blocked.any { script.contains(it, true) }) {
-            message.respond().error("JavaScript eval Expression may be malicious, canceling.").queue()
+            message.send().error("JavaScript eval Expression may be malicious, canceling.").queue()
             return
         }
 
-        message.respond().embed("JavaScript") {
-            color = Constants.COLOR
+        message.send().embed("JavaScript") {
+            color = BotConfiguration.ACCENT_COLOR
 
             field("Running", false, script)
             field("Result", false, try {

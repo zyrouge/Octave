@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -14,8 +14,8 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 )
 class ListDisabledCommand : CommandExecutor() {
     override fun execute(message: Message, args: Array<String>) {
-        message.respond().embed("Disabled Commands") {
-            color = Constants.COLOR
+        message.send().embed("Disabled Commands") {
+            color = BotConfiguration.ACCENT_COLOR
             description {
                 if (guildData.commandHandler.disabled.isEmpty()) {
                     "There isn't any command disabled on this server."

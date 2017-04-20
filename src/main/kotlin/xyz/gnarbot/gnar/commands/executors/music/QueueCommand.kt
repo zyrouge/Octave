@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageEmbed
 import net.dv8tion.jda.core.u
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -22,8 +22,8 @@ class QueueCommand : CommandExecutor() {
         var trackCount = 0
         var queueLength = 0L
 
-        message.respond().embed("Music Queue") {
-            color = Constants.MUSIC_COLOR
+        message.send().embed("Music Queue") {
+            color = BotConfiguration.MUSIC_COLOR
 
             guildData.musicManager.player.playingTrack?.let {
                 field("Now Playing", false, if (it.sourceManager.sourceName.contains("youtube")) {

@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.b
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -27,15 +27,15 @@ class HelpCommand : CommandExecutor() {
             val entry = registry.getEntry(target)
 
             if (entry == null) {
-                message.respond().error("There is no command named `$target`. :cry:").queue()
+                message.send().error("There is no command named `$target`. :cry:").queue()
                 return
             }
 
-            message.respond().embed("Command Information") {
-                color = Constants.COLOR
+            message.send().embed("Command Information") {
+                color = BotConfiguration.ACCENT_COLOR
 
-                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${Constants.PREFIX}", prefix = Constants.PREFIX))
-                field("Usage", true, "${Constants.PREFIX}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
+                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${BotConfiguration.PREFIX}", prefix = BotConfiguration.PREFIX))
+                field("Usage", true, "${BotConfiguration.PREFIX}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
                 field(true)
 
                 if (entry.info.permissions.isNotEmpty())
@@ -54,7 +54,7 @@ class HelpCommand : CommandExecutor() {
 
         message.author.openPrivateChannel().queue {
             it.send().embed("Documentation") {
-                color = Constants.COLOR
+                color = BotConfiguration.ACCENT_COLOR
                 description = "This is all of Gnar's currently registered commands."
 
                 for (category in Category.values()) {
@@ -75,7 +75,7 @@ class HelpCommand : CommandExecutor() {
                         field("", true) {
                             buildString {
                                 page.forEach {
-                                    append("**[").append(Constants.PREFIX).append(it.info.aliases[0]).appendln("]()**")
+                                    append("**[").append(BotConfiguration.PREFIX).append(it.info.aliases[0]).appendln("]()**")
                                 }
                             }
                         }
@@ -85,7 +85,7 @@ class HelpCommand : CommandExecutor() {
                 field(true)
                 field("Additional Information") {
                     buildString {
-                        append("To view a command's description, do `").append(Constants.PREFIX).appendln("help [command]`.")
+                        append("To view a command's description, do `").append(BotConfiguration.PREFIX).appendln("help [command]`.")
                         append("__The commands that requires a named role must be created by you and assigned to a member in your guild.__")
                     }
                 }
@@ -117,6 +117,6 @@ class HelpCommand : CommandExecutor() {
             }.rest().queue()
         }
 
-        message.respond().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
+        message.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
     }
 }

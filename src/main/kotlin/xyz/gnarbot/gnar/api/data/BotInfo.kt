@@ -4,6 +4,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
 import java.util.*
 
+@Suppress("unused")
 class BotInfo(bot: Bot) {
     val requests = bot.shards.flatMap { it.guildData.values }.sumBy { it.commandHandler.requests }
     val totalShards = bot.shards.size

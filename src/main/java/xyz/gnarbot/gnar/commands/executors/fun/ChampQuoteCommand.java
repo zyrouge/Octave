@@ -48,7 +48,7 @@ public class ChampQuoteCommand extends CommandExecutor {
                 for (String s : names) {
                     championsList.append(", ").append(s);
                 }
-                message.respond().text(championsList.toString().replaceFirst(", ", "")).queue();
+                message.send().text(championsList.toString().replaceFirst(", ", "")).queue();
                 return;
             }
 
@@ -76,7 +76,7 @@ public class ChampQuoteCommand extends CommandExecutor {
 
                 br = new BufferedReader(new FileReader(new File("_DATA/quotes/" + maybe + ".txt")));
 
-                message.respond().info("I think you meant **" + maybe + "**? Here's a quote from them!").queue();
+                message.send().info("I think you meant **" + maybe + "**? Here's a quote from them!").queue();
                 champ = maybe;
             }
 
@@ -87,10 +87,10 @@ public class ChampQuoteCommand extends CommandExecutor {
             }
 
             //Pull a random quote and send
-            message.respond().text("`" + quotes.get(new Random().nextInt(quotes.size())) + "` - **" + champ + "**").queue();
+            message.send().text("`" + quotes.get(new Random().nextInt(quotes.size())) + "` - **" + champ + "**").queue();
 
         } catch (Exception e) {
-            message.respond().text("Odd, you should have never got here. For getting here and some how butchering that " +
+            message.send().text("Odd, you should have never got here. For getting here and some how butchering that " +
                     "champions name so bad, here's a cookie :cookie:").queue();
             e.printStackTrace();
         }

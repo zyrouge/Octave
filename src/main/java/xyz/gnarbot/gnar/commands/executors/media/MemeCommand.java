@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.Constants;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -71,7 +71,7 @@ public class MemeCommand extends CommandExecutor {
                 if (page > pages) page = pages;
 
                 int _page = page;
-                message.respond().embed("Meme List")
+                message.send().embed("Meme List")
                         .description(() -> {
                             StringBuilder sb = new StringBuilder();
                             int i = 0;
@@ -115,13 +115,13 @@ public class MemeCommand extends CommandExecutor {
                     .getObject()
                     .getJSONObject("data");
 
-            message.respond().embed("Meme Generator")
-                    .setColor(Constants.COLOR)
+            message.send().embed("Meme Generator")
+                    .setColor(BotConfiguration.ACCENT_COLOR)
                     .setImage(response.optString("url"))
                     .rest().queue();
 
         } catch (Exception e) {
-            message.respond().error(
+            message.send().error(
                     "**Please supply more arguments. Example Usage:**\n\n" +
                     "[_meme Spongegar | Top Text | Bottom Text]()\n\n" +
                     "**For a list of memes, type:**\n\n" +

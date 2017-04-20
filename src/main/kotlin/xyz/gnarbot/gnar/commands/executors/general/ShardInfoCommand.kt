@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -20,8 +20,8 @@ class ShardInfoCommand : CommandExecutor() {
             1
         }
 
-        message.respond().embed("Shard Information") {
-            color = Constants.COLOR
+        message.send().embed("Shard Information") {
+            color = BotConfiguration.ACCENT_COLOR
 
             val pages = Lists.partition(bot.shards.toList(), 12)
 

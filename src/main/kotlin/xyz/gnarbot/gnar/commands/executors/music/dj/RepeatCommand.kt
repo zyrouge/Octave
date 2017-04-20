@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
-import xyz.gnarbot.gnar.Constants
+import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -21,8 +21,8 @@ class RepeatCommand : CommandExecutor() {
 
         manager.scheduler.isRepeating = !manager.scheduler.isRepeating
 
-        message.respond().embed("Repeat Queue") {
-            color = Constants.MUSIC_COLOR
+        message.send().embed("Repeat Queue") {
+            color = BotConfiguration.MUSIC_COLOR
             description = "Music player was set to __${if (manager.scheduler.isRepeating) "repeat" else "not repeat"}__."
         }.rest().queue()
     }

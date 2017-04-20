@@ -15,6 +15,6 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 public class TestCommand extends CommandExecutor {
     @Override
     public void execute(Message message, String[] args) {
-        message.respond().text("wow").queue();
+        message.send().text("wow").queue();
     }
 }
