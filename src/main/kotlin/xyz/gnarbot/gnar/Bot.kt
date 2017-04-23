@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar
 
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
@@ -62,6 +63,7 @@ class Bot(val token: String, val numShards: Int) {
                 setAutoReconnect(true)
                 addEventListener(guildCountListener)
                 addEventListener(userListener)
+                setAudioSendFactory(NativeAudioSendFactory())
                 setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
                 setAudioEnabled(true)
             }
