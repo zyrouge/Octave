@@ -1,21 +1,21 @@
 bot {
-  name : Gnarr
-  game : %d | _help
+  name: Gnar
+  game: %d | _help
 }
 
 commands {
-  prefix : _
-  administrators : []
+  prefix: _
+  administrators: []
 }
 
 colors {
-  accent : 0x0050af
-  alternate : 0x00dd58
+  accent: 0x0050af
+  alternate: 0x00dd58
 }
 
 music {
-  enabled : true
-  queue limit : 50
-  duration limit : 2 hours
-  vote skip cooldown : 30 seconds
+  enabled: true
+  queue limit: 50
+  duration limit: 2 hours
+  vote skip cooldown: 30 seconds
 }

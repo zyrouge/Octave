@@ -48,12 +48,7 @@ class PlayCommand : CommandExecutor() {
             return
         }
 
-        val url = if (args[0].contains("https://")
-                || args[0].contains("http://")
-                && args[0].contains("yout")
-                || args[0].contains("vimeo")
-                || args[0].contains("twitch.tv")
-                || args[0].contains("soundcloud.com")) {
+        val url = if ("https://" in args[0] || "http://" in args[0]) {
             args[0]
         } else {
             val query = args.joinToString("+")

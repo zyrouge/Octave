@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import net.dv8tion.jda.core.entities.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -86,13 +87,13 @@ public class GoogleyEyesCommand extends CommandExecutor {
 
             Graphics graphics = targetImg.getGraphics();
             for (JSONObject json : eyesJSON) {
-                eye = ImageIO.read(new File("_DATA/resources/eye" + new Random().nextInt(2) + ".png"));
+                eye = ImageIO.read(new File(BotConfiguration.DATA_FOLDER, "resources/eye" + new Random().nextInt(2) + ".png"));
                 resizedEye = resize(eye, (int) json.get("width"), (int) json.get("height"));
                 graphics.drawImage(resizedEye, (int) json.get("x"), (int) json.get("y"), null);
             }
 
             //writing the file
-            File outputFile = new File("_DATA/output_image.png");
+            File outputFile = new File(BotConfiguration.DATA_FOLDER, "output_image.png");
             try {
                 if (ImageIO.write(targetImg, "jpg", outputFile)) {
                     //send if success

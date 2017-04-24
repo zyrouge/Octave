@@ -34,9 +34,7 @@ class Shard(val id: Int, private val jda: JDA, val bot: Bot) : JDA by jda {
     /**
      * @return The string representation of the shard.
      */
-    override fun toString(): String {
-        return "Shard(id=$id, guilds=${jda.guilds.size})"
-    }
+    override fun toString() = "Shard(id=$id, guilds=${jda.guilds.size})"
 
     /**
      * @return JSON data on the shard.
