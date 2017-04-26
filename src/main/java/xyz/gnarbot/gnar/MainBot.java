@@ -8,7 +8,7 @@ package xyz.gnarbot.gnar;
  * <p>
  * Do not modify.
  *
- * @author Avarel, Maeyrl
+ * @author Avarel, Xevryll
  */
 public class MainBot {
     public static void main(String[] args) {
