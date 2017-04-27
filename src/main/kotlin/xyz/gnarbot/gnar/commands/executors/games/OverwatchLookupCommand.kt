@@ -200,6 +200,6 @@ class OverwatchLookupCommand : CommandExecutor() {
 
             color = sideColor
             thumbnail = avatar
-        }.rest().queue()
+        }.action().queue()
     }
 }

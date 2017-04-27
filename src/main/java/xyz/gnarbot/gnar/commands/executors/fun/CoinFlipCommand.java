@@ -15,6 +15,6 @@ public class CoinFlipCommand extends CommandExecutor {
         context.send().embed("Coin Flip")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(new Random().nextInt(2) == 0 ? "Heads" : "Tails!")
-                .rest().queue();
+                .action().queue();
     }
 }

@@ -50,7 +50,7 @@ public class GameLookupCommand extends CommandExecutor {
                     //.field("Publisher", true, publisher)
                     .field("Score", true, score)
                     .field("Description", false, desc)
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -65,6 +65,6 @@ class DialogCommand : CommandExecutor() {
                 appendln(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
                 appendln("```")
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

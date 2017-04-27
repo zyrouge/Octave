@@ -27,6 +27,6 @@ class StopCommand : CommandExecutor() {
         context.send().embed("Stop Playback") {
             color = BotConfiguration.MUSIC_COLOR
             description = "Playback has been completely stopped and the queue has been cleared."
-        }.rest().queue()
+        }.action().queue()
     }
 }

@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import net.dv8tion.jda.core.b
 import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.b
 import xyz.hexav.aje.AJEException
 import xyz.hexav.aje.ExpressionBuilder
 import java.awt.Color
@@ -42,6 +42,6 @@ class MathCommand : CommandExecutor() {
                 }
                 color = Color.RED
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

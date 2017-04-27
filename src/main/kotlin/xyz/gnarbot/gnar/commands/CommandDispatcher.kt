@@ -29,7 +29,7 @@ class CommandDispatcher(private val bot: Bot) {
 
         val label = tokens[0].substring(BotConfiguration.PREFIX.length).toLowerCase()
 
-        val args = tokens.copyOfRange(1, tokens.size) //tokens.subList(1, tokens.size)
+        val args = tokens.copyOfRange(1, tokens.size)
         
         val cmd = bot.commandRegistry.getCommand(label) ?: return false
 
@@ -73,13 +73,12 @@ class CommandDispatcher(private val bot: Bot) {
         }
 
         try {
-            bot.requests++
             cmd.execute(context, args)
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
         } catch (e: RuntimeException) {
-            context.send().error("**Exception**: " + e.message).queue()
+            context.send().exception(e).queue()
             e.printStackTrace()
         }
         return false

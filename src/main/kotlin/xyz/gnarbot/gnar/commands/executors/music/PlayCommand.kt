@@ -36,14 +36,14 @@ class PlayCommand : CommandExecutor() {
                 context.send().embed("Play Music") {
                     color = BotConfiguration.MUSIC_COLOR
                     description = "Music is now playing."
-                }.rest().queue()
+                }.action().queue()
             } else if (manager.player.playingTrack != null) {
                 context.send().error("Music is already playing.").queue()
             } else if (manager.scheduler.queue.isEmpty()) {
                 context.send().embed("Empty Queue") {
                     color = BotConfiguration.MUSIC_COLOR
                     description = "There is no music queued right now. Add some songs with `play -song|url`."
-                }.rest().queue()
+                }.action().queue()
             }
             return
         }
@@ -71,7 +71,7 @@ class PlayCommand : CommandExecutor() {
             context.send().embed("Music Playback") {
                 color = BotConfiguration.MUSIC_COLOR
                 description = "Joined channel `${userChannel.name}`."
-            }.rest().queue()
+            }.action().queue()
         }
 
         manager.loadAndPlay(context, url)

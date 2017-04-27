@@ -1,12 +1,13 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.link
 import org.jsoup.Jsoup
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.link
+import xyz.gnarbot.gnar.utils.ln
 import java.io.IOException
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -59,12 +60,12 @@ class GoogleCommand : CommandExecutor() {
                             val st = block.select(".st")
                             if (!st.isEmpty()) desc = st[0].text()
 
-                            appendln(b(title link url)).appendln(desc)
+                            append(b(title link url)).ln().append(desc).ln()
                             count++
                         }
                     }
                 }
-            }.rest().queue()
+            }.action().queue()
         } catch (e: IOException) {
             context.send().error("Caught an exception while trying to Google stuff.").queue()
             e.printStackTrace()

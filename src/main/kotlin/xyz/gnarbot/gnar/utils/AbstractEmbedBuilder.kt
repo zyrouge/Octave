@@ -546,55 +546,49 @@ abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
         @JvmField val URL_PATTERN = Regex("""\s*(https?|attachment)://.+\..{2,}\s*""", RegexOption.IGNORE_CASE)
     }
     
-    inline var AbstractEmbedBuilder<*>.title
+    inline var AbstractEmbedBuilder<*>.title : String?
         get() = this.getTitle()
         set(value) {
             this.setTitle(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.url
+    inline var AbstractEmbedBuilder<*>.url : String?
         get() = this.getUrl()
         set(value) {
             this.setTitle(getTitle(), value)
         }
 
-    inline var AbstractEmbedBuilder<*>.author
-        get() = this.getAuthor()
-        set(value) {
-            this.setAuthor(value?.name, value?.url, value?.iconUrl)
-        }
-
-    inline var AbstractEmbedBuilder<*>.color
+    inline var AbstractEmbedBuilder<*>.color : Color?
         get() = this.getColor()
         set(value) {
             this.setColor(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.description
+    inline var AbstractEmbedBuilder<*>.description : String?
         get() = this.getDescription()
         set(value) {
             this.setDescription(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.footer
+    inline var AbstractEmbedBuilder<*>.footer : String?
         get() = this.getFooter()?.text
         set(value) {
             this.setFooter(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.image
+    inline var AbstractEmbedBuilder<*>.image : String?
         get() = this.getImage()
         set(value) {
             this.setImage(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.thumbnail
+    inline var AbstractEmbedBuilder<*>.thumbnail : String?
         get() = this.getThumbnail()
         set(value) {
             this.setThumbnail(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.timestamp
+    inline var AbstractEmbedBuilder<*>.timestamp : OffsetDateTime?
         get() = this.getTimestamp()
         set(value) {
             this.setTimestamp(value)

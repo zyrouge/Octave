@@ -11,7 +11,7 @@ Gnar provides various features including musicManager playback, fun and moderati
 ## Dependencies
 This project uses **Java 8**.
 
-* [JDA_K](https://github.com/Gnar-Team/JDA_K) superset of [JDA 3](https://github.com/DV8FromTheWorld/JDA)
+* [JDA 3](https://github.com/DV8FromTheWorld/JDA)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [Pippo Framework](https://github.com/decebals/pippo)
 * [Kotlin](https://kotlinlang.org/)

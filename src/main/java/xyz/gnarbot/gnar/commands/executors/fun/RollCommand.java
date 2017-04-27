@@ -28,7 +28,7 @@ public class RollCommand extends CommandExecutor {
                         .description(() -> "You rolled a **"
                                 + new Random().nextInt(Integer.valueOf(args[0]))
                                 + "** from range **[0 to " + args[0]+ "]**.")
-                        .rest().queue();
+                        .action().queue();
 
             } else {
                 context.send().error("Insufficient amount of arguments.").queue();

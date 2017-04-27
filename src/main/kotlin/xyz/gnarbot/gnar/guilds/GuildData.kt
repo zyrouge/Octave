@@ -61,6 +61,8 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
     }
 
     override fun handleCommand(context: Context) {
-        commandHandler.callCommand(context)
+        if(commandHandler.callCommand(context)) {
+            bot.requests++
+        }
     }
 }

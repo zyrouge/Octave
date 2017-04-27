@@ -40,7 +40,7 @@ class JavascriptCommand : CommandExecutor() {
                 color = Color.RED
                 "The error `$e` occurred while executing the JavaScript statement."
             })
-        }.rest().queue()
+        }.action().queue()
 
 
     }

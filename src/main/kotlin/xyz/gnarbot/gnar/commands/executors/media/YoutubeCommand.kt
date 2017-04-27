@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.link
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.link
 import org.json.JSONException
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -53,7 +53,7 @@ class YoutubeCommand : CommandExecutor() {
                         }
                     }
                 }
-            }.rest().queue()
+            }.action().queue()
 
             context.send().text("**First Video:** $firstUrl").queue()
         } catch (e: JSONException) {

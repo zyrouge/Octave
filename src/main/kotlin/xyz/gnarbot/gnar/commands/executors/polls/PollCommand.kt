@@ -28,7 +28,7 @@ class PollCommand : CommandExecutor() {
                     }
                 }
             }
-        }.rest().queue {
+        }.action().queue {
             for (index in 0..options.size - 1) {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
@@ -68,7 +68,7 @@ class PollCommand : CommandExecutor() {
                     field("Winner") {
                         winners.joinToString(prefix = "**", postfix = "**") { options[it] }
                     }
-                }.rest().queue()
+                }.action().queue()
             }
         }
     }

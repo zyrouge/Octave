@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import net.dv8tion.jda.core.b
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -8,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.KEmbedBuilder
+import xyz.gnarbot.gnar.utils.b
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -61,7 +61,7 @@ class VoteSkipCommand : CommandExecutor() {
                     append("Whichever has the most votes in 30 seconds will win!")
                 }
             }
-        }.rest().queue {
+        }.action().queue {
             it.addReaction("👍").queue()
             it.addReaction("👎").queue()
 
@@ -97,7 +97,7 @@ class VoteSkipCommand : CommandExecutor() {
                     field("Results") {
                         "__$skip Skip Votes__ — __$stay Stay Votes__"
                     }
-                }.rest().queue()
+                }.action().queue()
                 manager.isVotingToSkip = false
             }
         }

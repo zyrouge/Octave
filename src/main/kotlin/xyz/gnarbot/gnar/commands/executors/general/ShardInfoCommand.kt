@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("shards", "shard", "shardinfo"),
@@ -33,15 +34,14 @@ class ShardInfoCommand : CommandExecutor() {
             shards.forEach {
                 field("Shard ${it.shardInfo.shardId}", true) {
                     buildString {
-                        append("Status: ").appendln(it.status)
-                        append("Guilds: ").appendln(it.guilds.size)
-                        append("Users: ").appendln(it.users.size)
-                        append("Requests: ").appendln(it.guildData.values.sumBy { it.commandHandler.requests })
+                        append("Status: ").append(it.status).ln()
+                        append("Guilds: ").append(it.guilds.size).ln()
+                        append("Users: ").append(it.users.size).ln()
                     }
                 }
             }
 
             footer = "Page [$page/${pages.size}]"
-        }.rest().queue()
+        }.action().queue()
     }
 }

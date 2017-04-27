@@ -57,6 +57,6 @@ public class WhoIsCommand extends CommandExecutor {
                     }
                     return sb.toString();
                 })
-                .rest().queue();
+                .action().queue();
     }
 }

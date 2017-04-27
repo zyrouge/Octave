@@ -44,7 +44,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                     .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
                     .field("Definition", true, word.optString("definition"))
                     .field("Example", true, word.optString("example"))
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error("Could not find that word, rip u").queue();

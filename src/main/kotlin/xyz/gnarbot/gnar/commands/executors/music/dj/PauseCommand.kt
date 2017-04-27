@@ -33,6 +33,6 @@ class PauseCommand : CommandExecutor() {
             } else {
                 "The player has resumed playing."
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

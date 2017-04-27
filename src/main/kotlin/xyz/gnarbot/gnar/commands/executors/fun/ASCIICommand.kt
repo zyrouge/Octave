@@ -37,7 +37,7 @@ class ASCIICommand : CommandExecutor() {
             context.send().embed("ASCII Text") {
                 color = BotConfiguration.ACCENT_COLOR
                 description = "```\n${getText(element)}```"
-            }.rest().queue()
+            }.action().queue()
 
         } catch (e: Exception) {
             context.send().error("Unable to generate ASCII art.").queue()

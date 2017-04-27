@@ -60,7 +60,7 @@ public class ExplosmCommand extends CommandExecutor {
                     .setDescription("No: **" + rand + "**\n")
                     .setThumbnail(logo)
                     .setImage(url)
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error("Unable to grab Cyanide and Happiness comic.").queue();

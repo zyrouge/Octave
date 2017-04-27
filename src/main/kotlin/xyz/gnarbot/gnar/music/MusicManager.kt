@@ -72,7 +72,7 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
                 context.send().embed("Music Queue") {
                     color = BotConfiguration.MUSIC_COLOR
                     description = "Added __**[${track.info.title}](${track.info.uri})**__ to queue."
-                }.rest().queue()
+                }.action().queue()
             }
 
             override fun playlistLoaded(playlist: AudioPlaylist) {
@@ -96,7 +96,7 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
                 context.send().embed("Music Queue") {
                     color = BotConfiguration.MUSIC_COLOR
                     description = "Added `$added` tracks to queue from playlist `${playlist.name}`."
-                }.rest().queue(null) {
+                }.action().queue(null) {
                     if (it is PermissionException) {
                         context.send().text("Added `$added` tracks to queue from playlist `${playlist.name}`.").queue()
                     }

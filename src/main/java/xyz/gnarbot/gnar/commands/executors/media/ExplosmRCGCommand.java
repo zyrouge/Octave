@@ -33,7 +33,7 @@ public class ExplosmRCGCommand extends CommandExecutor {
                     .setDescription("**Random Comic Generator**")
                     .setImage(url)
                     .setThumbnail(logo)
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error("Unable to grab random Cyanide and Happiness comic.").queue();

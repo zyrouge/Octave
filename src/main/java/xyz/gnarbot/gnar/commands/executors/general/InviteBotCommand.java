@@ -14,6 +14,6 @@ public class InviteBotCommand extends CommandExecutor {
         context.send().embed("Get Gnar on your server!")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription("__**[Click to invite Gnar to your server.](" + link + ")**__")
-                .rest().queue();
+                .action().queue();
     }
 }

@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.requests.RestAction
 import xyz.gnarbot.gnar.BotConfiguration
 import java.awt.Color
-import java.util.function.Consumer
 
 class ResponseBuilder(val channel: MessageChannel) {
     /**
@@ -30,7 +29,7 @@ class ResponseBuilder(val channel: MessageChannel) {
             title = "Info"
             description = msg
             color = BotConfiguration.ACCENT_COLOR
-        }.rest()
+        }.action()
     }
 
     /**
@@ -44,43 +43,50 @@ class ResponseBuilder(val channel: MessageChannel) {
             title = "Error"
             description = msg
             color = Color.RED
-        }.rest()
+        }.action()
+    }
+
+    /**
+     * Send a standard exception message.
+     *
+     * @param msg The text to send.
+     * @return The Message created by this function.
+     */
+    fun exception(exception: Exception): RestAction<Message> {
+        return embed {
+            title = "Exception"
+            description = exception.message
+            color = Color.RED
+        }.action()
     }
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.rest] to quickly send the built embed.
+     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
      *
      * @param title Title of the embed.
      */
     @JvmOverloads
-    fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder(channel).setTitle(title)
-
-    /**
-     * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.rest] to quickly send an embed message.
-     *
-     * @param title Title of the embed.
-     */
-    fun embed(title: String? = null, block: Consumer<ResponseEmbedBuilder>): ResponseEmbedBuilder {
-        return embed(title).apply { block.accept(this) }
+    fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder(channel).apply {
+        this.title = title
+        this.color = BotConfiguration.ACCENT_COLOR
     }
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.rest] to quickly send the built embed.
+     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
      *
      * @param title Title of the embed.
      */
     inline fun embed(title: String? = null, value: ResponseEmbedBuilder.() -> Unit): ResponseEmbedBuilder {
-        return embed(title).apply { value(this) }
+        return embed(title).apply(value)
     }
 
     /**
-     * A specialized [AbstractEmbedBuilder] that can use [rest] to quickly send an embed message.
+     * A specialized [AbstractEmbedBuilder] that can use [action] to quickly send an embed message.
      */
     class ResponseEmbedBuilder(val channel: MessageChannel) : AbstractEmbedBuilder<ResponseEmbedBuilder>() {
-        fun rest(): RestAction<Message> = channel.sendMessage(build())
+        fun action(): RestAction<Message> = channel.sendMessage(build())
     }
 }
 

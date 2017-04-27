@@ -2,13 +2,13 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.link
 
 @Command(
         aliases = arrayOf("help", "guide"),
@@ -44,7 +44,7 @@ class HelpCommand : CommandExecutor() {
 
                 field("Description", false, cmd.info.description)
 
-            }.rest().queue()
+            }.action().queue()
 
             return
         }
@@ -113,7 +113,7 @@ class HelpCommand : CommandExecutor() {
                         appendln(b("Patreon" link "https://www.patreon.com/gnarbot"))
                     }
                 }
-            }.rest().queue()
+            }.action().queue()
         }
 
         context.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()

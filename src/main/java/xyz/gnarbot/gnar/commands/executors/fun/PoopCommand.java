@@ -50,6 +50,6 @@ public class PoopCommand extends CommandExecutor {
         context.send().embed("Pooping Memes")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(joiner.toString())
-                .rest().queue();
+                .action().queue();
     }
 }

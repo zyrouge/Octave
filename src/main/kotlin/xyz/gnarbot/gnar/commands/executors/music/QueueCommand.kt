@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.entities.MessageEmbed
-import net.dv8tion.jda.core.u
+import xyz.gnarbot.gnar.utils.u
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -53,6 +53,6 @@ class QueueCommand : CommandExecutor() {
 
             field("Entries", true, trackCount)
             field("Queue Duration", true, Utils.getTimestamp(queueLength))
-        }.rest().queue()
+        }.action().queue()
     }
 }

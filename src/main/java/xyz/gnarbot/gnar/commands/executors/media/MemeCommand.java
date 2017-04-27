@@ -84,7 +84,7 @@ public class MemeCommand extends CommandExecutor {
                             return sb.toString();
                         })
                         .setFooter("Page [" + page + "/" + pages + "]")
-                        .rest().queue();
+                        .action().queue();
 
                 return;
             }
@@ -118,7 +118,7 @@ public class MemeCommand extends CommandExecutor {
             context.send().embed("Meme Generator")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setImage(response.optString("url"))
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error(

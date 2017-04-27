@@ -39,7 +39,7 @@ public class YodaTalkCommand extends CommandExecutor {
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription(result)
                     .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
-                    .rest().queue();
+                    .action().queue();
 
         } catch (UnirestException e) {
             e.printStackTrace();

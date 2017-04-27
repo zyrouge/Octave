@@ -1,11 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.OnlineStatus
-import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.link
+import xyz.gnarbot.gnar.utils.ln
 import java.lang.management.ManagementFactory
 
 @Command(
@@ -78,22 +79,22 @@ class BotInfoCommand : CommandExecutor() {
 
                 field("Users") {
                     buildString {
-                        append("Total: ").appendln(users)
-                        append("Online: ").appendln(online)
-                        append("Offline: ").appendln(offline)
-                        append("Inactive: ").appendln(inactive)
+                        append("Total: ").append(users).ln()
+                        append("Online: ").append(online).ln()
+                        append("Offline: ").append(offline).ln()
+                        append("Inactive: ").append(inactive).ln()
                     }
                 }
 
                 field("Others") {
                     buildString {
-                        appendln("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**")
-                        appendln("Contributor: **[Gatt](https://github.com/RealGatt)**")
-                        appendln("Commands: **$commandSize**")
-                        appendln("Library: Java **[JDA 3](https://github.com/DV8FromTheWorld/JDA)**")
+                        append("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**").ln()
+                        append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
+                        append("Commands: **$commandSize**").ln()
+                        append("Library: Java **[JDA 3](https://github.com/DV8FromTheWorld/JDA)**").ln()
                     }
                 }
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

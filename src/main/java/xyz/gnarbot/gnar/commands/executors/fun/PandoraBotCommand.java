@@ -35,7 +35,7 @@ public class PandoraBotCommand extends CommandExecutor {
             context.send().embed("PandoraBot")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription(output)
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();

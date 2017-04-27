@@ -38,6 +38,6 @@ public class LeetifyCommand extends CommandExecutor {
         context.send().embed("Leet it")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(s)
-                .rest().queue();
+                .action().queue();
     }
 }

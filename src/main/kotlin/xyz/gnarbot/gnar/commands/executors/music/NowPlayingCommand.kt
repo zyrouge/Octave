@@ -31,6 +31,6 @@ class NowPlayingCommand : CommandExecutor() {
             val duration = Utils.getTimestamp(track.duration)
 
             field("Time", true, "**[$position / $duration]**")
-        }.rest().queue()
+        }.action().queue()
     }
 }

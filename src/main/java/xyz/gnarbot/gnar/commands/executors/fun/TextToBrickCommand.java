@@ -35,6 +35,6 @@ public class TextToBrickCommand extends CommandExecutor {
                     }
                     return sb.toString();
                 })
-                .rest().queue();
+                .action().queue();
     }
 }

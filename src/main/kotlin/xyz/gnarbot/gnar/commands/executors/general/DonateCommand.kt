@@ -1,11 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.link
+import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("donate"),
@@ -17,11 +18,11 @@ class DonateCommand : CommandExecutor() {
             color = BotConfiguration.ACCENT_COLOR
             description {
                 buildString {
-                    appendln("Want to donate to support Gnar?")
-                    appendln(b("PayPal" link "https://gnarbot.xyz/donate"))
-                    appendln(b("Patreon" link "https://www.patreon.com/gnarbot"))
+                    append("Want to donate to support Gnar?").ln()
+                    append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
+                    append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
                 }
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

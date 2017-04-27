@@ -19,7 +19,7 @@ public class PingCommand extends CommandExecutor {
         context.send().embed("Ping")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription("Checking ping...")
-                .rest().queue(msg -> msg.editMessage(
+                .action().queue(msg -> msg.editMessage(
                         new KEmbedBuilder().setTitle("Ping")
                                 .setColor(BotConfiguration.ACCENT_COLOR)
                                 //.field("Receive Time", true, () -> receiveTime + " ms")

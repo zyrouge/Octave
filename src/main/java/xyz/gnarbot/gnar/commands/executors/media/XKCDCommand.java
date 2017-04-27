@@ -64,7 +64,7 @@ public class XKCDCommand extends CommandExecutor {
                             .setDescription("No: " + num)
                             .setThumbnail(logo)
                             .setImage(url)
-                            .rest().queue();
+                            .action().queue();
 
                     return;
                 }

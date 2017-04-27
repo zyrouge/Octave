@@ -50,7 +50,7 @@ public class CatsCommand extends CommandExecutor {
             context.send().embed("Random Cat Pictures")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setImage(url)
-                    .rest().queue();
+                    .action().queue();
 
         } catch (Exception e) {
             context.send().error("Unable to find cats to sooth the darkness of your soul.").queue();

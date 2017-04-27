@@ -28,13 +28,13 @@ class RemindMeCommand : CommandExecutor() {
                 context.send().embed("Reminder Scheduled") {
                     color = BotConfiguration.ACCENT_COLOR
                     description = "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__."
-                }.rest().queue()
+                }.action().queue()
 
                 context.message.author.openPrivateChannel().queue {
                     context.send(it).embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
                         color = BotConfiguration.ACCENT_COLOR
                         description = string
-                    }.rest().queueAfter(time.toLong(), timeUnit)
+                    }.action().queueAfter(time.toLong(), timeUnit)
                 }
             } else {
                 context.send().error("Number must be more than 0.").queue()

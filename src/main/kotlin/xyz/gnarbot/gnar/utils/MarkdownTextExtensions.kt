@@ -1,5 +1,5 @@
 @file:Suppress("NOTHING_TO_INLINE")
-package net.dv8tion.jda.core;
+package xyz.gnarbot.gnar.utils;
 
 /**
  * Bold strings.

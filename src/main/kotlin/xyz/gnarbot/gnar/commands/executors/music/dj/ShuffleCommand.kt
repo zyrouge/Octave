@@ -23,6 +23,6 @@ class ShuffleCommand : CommandExecutor() {
         context.send().embed("Shuffle Queue") {
             color = BotConfiguration.MUSIC_COLOR
             description = "Player has been shuffled"
-        }.rest().queue()
+        }.action().queue()
     }
 }

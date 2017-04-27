@@ -31,6 +31,6 @@ class DisableCommand : CommandExecutor() {
                     "You didn't enter any enabled commands or commands that could be disabled."
                 }
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

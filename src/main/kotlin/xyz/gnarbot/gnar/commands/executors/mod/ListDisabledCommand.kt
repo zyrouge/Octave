@@ -27,6 +27,6 @@ class ListDisabledCommand : CommandExecutor() {
                     }
                 }
             }
-        }.rest().queue()
+        }.action().queue()
     }
 }

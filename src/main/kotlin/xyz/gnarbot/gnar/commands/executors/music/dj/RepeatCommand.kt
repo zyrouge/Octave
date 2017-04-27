@@ -24,6 +24,6 @@ class RepeatCommand : CommandExecutor() {
         context.send().embed("Repeat Queue") {
             color = BotConfiguration.MUSIC_COLOR
             description = "Music player was set to __${if (manager.scheduler.isRepeating) "repeat" else "not repeat"}__."
-        }.rest().queue()
+        }.action().queue()
     }
 }

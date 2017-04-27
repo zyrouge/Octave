@@ -30,7 +30,7 @@ class RestartCommand : CommandExecutor() {
             context.send().embed("Restart Song") {
                 color = BotConfiguration.MUSIC_COLOR
                 description = "Restarting track: `${track.info.title}`."
-            }.rest().queue()
+            }.action().queue()
 
             manager.player.playTrack(track.makeClone())
         } else {

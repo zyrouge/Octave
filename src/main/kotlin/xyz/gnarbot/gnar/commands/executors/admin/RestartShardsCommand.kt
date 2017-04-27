@@ -17,7 +17,7 @@ class RestartShardsCommand : CommandExecutor() {
         context.send().embed("Restarting Shards") {
             color = BotConfiguration.ACCENT_COLOR
             description = "Bot is now restarting."
-        }.rest().queue()
+        }.action().queue()
 
         context.bot.restart()
     }

@@ -17,6 +17,6 @@ class UptimeCommand : CommandExecutor() {
         context.send().embed("Bot Uptime") {
             color = BotConfiguration.ACCENT_COLOR
             description = "$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds"
-        }.rest().queue()
+        }.action().queue()
     }
 }

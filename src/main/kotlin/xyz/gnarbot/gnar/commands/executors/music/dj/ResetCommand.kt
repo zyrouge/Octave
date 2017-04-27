@@ -22,6 +22,6 @@ class ResetCommand : CommandExecutor() {
         context.send().embed("Reset Music") {
             color = BotConfiguration.MUSIC_COLOR
             description = "The player was completely reset."
-        }.rest().queue()
+        }.action().queue()
     }
 }

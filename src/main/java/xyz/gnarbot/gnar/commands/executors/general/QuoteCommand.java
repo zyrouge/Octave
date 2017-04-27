@@ -33,7 +33,7 @@ public class QuoteCommand extends CommandExecutor {
                             .setColor(BotConfiguration.ACCENT_COLOR)
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
-                            .rest().queue());
+                            .action().queue());
 
                 } catch (Exception e) {
                     try {
