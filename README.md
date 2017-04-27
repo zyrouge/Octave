@@ -5,7 +5,7 @@ Gnar provides various features including musicManager playback, fun and moderati
 
 ## Main Contributors
 * Avarel
-* Maeyrl
+* Xevryll
 * Gatt
 
 ## Dependencies
