@@ -30,138 +30,132 @@ import java.util.Set;
  */
 public class CommandRegistry {
     /** The mapped registry of invoking key to the classes. */
-    private final Map<String, CommandEntry> commandEntryMap = new LinkedHashMap<>();
+    private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
 
     public CommandRegistry() {
-        register(HelpCommand.class);
-        register(InviteBotCommand.class);
-        register(PingCommand.class);
-        register(MathCommand.class);
-        register(RemindMeCommand.class);
-        register(GoogleCommand.class);
-        register(YoutubeCommand.class);
-        register(UrbanDictionaryCommand.class);
-        register(UptimeCommand.class);
-        register(WhoIsCommand.class);
-        register(BotInfoCommand.class);
-        register(DonateCommand.class);
+        register(new HelpCommand());
+        register(new InviteBotCommand());
+        register(new PingCommand());
+        register(new MathCommand());
+        register(new RemindMeCommand());
+        register(new GoogleCommand());
+        register(new YoutubeCommand());
+        register(new UrbanDictionaryCommand());
+        register(new UptimeCommand());
+        register(new WhoIsCommand());
+        register(new BotInfoCommand());
+        register(new DonateCommand());
         //End General Commands
 
         //Fun Commands
-        register(ASCIICommand.class);
-        register(CoinFlipCommand.class);
-        register(DialogCommand.class);
-        register(YodaTalkCommand.class);
-        register(RollCommand.class);
-        register(PoopCommand.class);
-        register(GoodShitCommand.class);
-        register(EightBallCommand.class);
-        register(LeetifyCommand.class);
-        //register(ProgressionCommand.class);
-        register(GoogleyEyesCommand.class);
-        //register(ServersSharedCommand.class);
-        register(TextToSpeechCommand.class);
-        register(ReactCommand.class);
-        register(ChampDataCommand.class);
-        register(TriviaAnswerCommand.class);
-        register(TriviaCommand.class);
-        //register(GraphCommand.class);
+        register(new ASCIICommand());
+        register(new CoinFlipCommand());
+        register(new DialogCommand());
+        register(new YodaTalkCommand());
+        register(new RollCommand());
+        register(new PoopCommand());
+        register(new GoodShitCommand());
+        register(new EightBallCommand());
+        register(new LeetifyCommand());
+        //register(new ProgressionCommand());
+        register(new GoogleyEyesCommand());
+        //register(new ServersSharedCommand());
+        register(new TextToSpeechCommand());
+        register(new ReactCommand());
+        register(new ChampDataCommand());
+        register(new TriviaAnswerCommand());
+        register(new TriviaCommand());
+        //register(new GraphCommand());
 
-        register(ChampQuoteCommand.class);
-        register(PandoraBotCommand.class);
-        register(MemeCommand.class);
+        register(new ChampQuoteCommand());
+        register(new PandoraBotCommand());
+        register(new MemeCommand());
         //End Fun Commands
 
         //Mod Commands
-        register(BanCommand.class);
-        register(KickCommand.class);
-        register(UnbanCommand.class);
-        register(PruneCommand.class);
-        register(DeleteMessageCommand.class);
+        register(new PruneCommand());
         //End Mod Commands
 
         //Testing Commands
-        register(TestCommand.class);
+        register(new TestCommand());
         //End Testing Commands
 
         //Game Commands
-        register(OverwatchLookupCommand.class);
-        register(LeagueLookupCommand.class);
-        register(GameLookupCommand.class);
+        register(new OverwatchLookupCommand());
+        register(new LeagueLookupCommand());
+        register(new GameLookupCommand());
         //End Game Commands
 
         //Poll Commands
-        register(PollCommand.class);
+        register(new PollCommand());
         //End Poll Commands
 
         //Media Commands
-        register(CatsCommand.class);
-        register(ExplosmCommand.class);
-        register(ExplosmRCGCommand.class);
-        //register(GarfieldCommand.class);
-        register(XKCDCommand.class);
+        register(new CatsCommand());
+        register(new ExplosmCommand());
+        register(new ExplosmRCGCommand());
+        //register(new GarfieldCommand());
+        register(new XKCDCommand());
         //End Media Commands
 
         // Administrator commands
-        register(GarbageCollectCommand.class);
-        register(RestartShardsCommand.class);
-        register(JavascriptCommand.class);
-        register(ShardInfoCommand.class);
-        register(ThrowError.class);
+        register(new GarbageCollectCommand());
+        register(new RestartShardsCommand());
+        register(new JavascriptCommand());
+        register(new ShardInfoCommand());
+        register(new ThrowError());
 
 
         // Test Commands
-        register(TestEmbedCommand.class);
-        register(QuoteCommand.class);
-        register(TextToBrickCommand.class);
+        register(new TestEmbedCommand());
+        register(new QuoteCommand());
+        register(new TextToBrickCommand());
 
         //MUSIC COMMAND
-        register(PlayCommand.class);
-        register(LeaveCommand.class);
-        register(PauseCommand.class);
-        register(StopCommand.class);
-        register(SkipCommand.class);
-        register(ShuffleCommand.class);
-        register(NowPlayingCommand.class);
-        register(QueueCommand.class);
-        register(RestartCommand.class);
-        register(RepeatCommand.class);
-        register(ResetCommand.class);
-        register(VoteSkipCommand.class);
+        register(new PlayCommand());
+        register(new LeaveCommand());
+        register(new PauseCommand());
+        register(new StopCommand());
+        register(new SkipCommand());
+        register(new ShuffleCommand());
+        register(new NowPlayingCommand());
+        register(new QueueCommand());
+        register(new RestartCommand());
+        register(new RepeatCommand());
+        register(new ResetCommand());
+        register(new VoteSkipCommand());
 
-        register(EnableCommand.class);
-        register(DisableCommand.class);
-        register(ListDisabledCommand.class);
-
-//        register(new JSCommandExecutor(new File("data/scripting/javascript/firstJSCommand.js")));
+        register(new EnableCommand());
+        register(new DisableCommand());
+        register(new ListDisabledCommand());
     }
 
-    public Map<String, CommandEntry> getCommandEntriesMap() {
+    public Map<String, CommandExecutor> getCommandMap() {
         return commandEntryMap;
     }
 
-    public void register(Class<? extends CommandExecutor> cls) {
+    public void register(CommandExecutor cmd) {
+        Class<? extends CommandExecutor> cls = cmd.getClass();
         if (!cls.isAnnotationPresent(Command.class)) {
             throw new IllegalStateException("@Command annotation not found for class: " + cls.getName());
         }
 
-        CommandEntry entry = new CommandEntry(cls);
-        for (String alias : entry.info.aliases()) {
-            registerCommand(alias, entry);
+        for (String alias : cmd.getInfo().aliases()) {
+            registerCommand(alias, cmd);
         }
     }
 
     /**
      * Register the CommandExecutor instance into the registry.
      * @param label Invoking key.
-     * @param entry CommandEntry.
+     * @param cmd Command entry.
      */
-    public void registerCommand(String label, CommandEntry entry) {
+    public void registerCommand(String label, CommandExecutor cmd) {
         label = label.toLowerCase();
         if (commandEntryMap.containsKey(label)) {
             throw new IllegalStateException("Command " + label + " is already registered.");
         }
-        commandEntryMap.put(label, entry);
+        commandEntryMap.put(label, cmd);
     }
 
     /**
@@ -178,27 +172,11 @@ public class CommandRegistry {
      *
      * @return The command registry.
      */
-    public Set<CommandEntry> getEntries() {
+    public Set<CommandExecutor> getEntries() {
         return new LinkedHashSet<>(commandEntryMap.values());
     }
 
-    /**
-     * Get the command based on the key.
-     *
-     * @param key Invoking key.
-     * @return CommandExecutor instance.
-     */
-    public CommandEntry getEntry(String key) {
-        return commandEntryMap.get(key);
-    }
-
-    public static class CommandEntry {
-        public final Class<? extends CommandExecutor> cls;
-        public final Command info;
-
-        CommandEntry(Class<? extends CommandExecutor> cls) {
-            this.cls = cls;
-            this.info = cls.getAnnotation(Command.class);
-        }
+    public CommandExecutor getCommand(String label) {
+        return commandEntryMap.get(label);
     }
 }

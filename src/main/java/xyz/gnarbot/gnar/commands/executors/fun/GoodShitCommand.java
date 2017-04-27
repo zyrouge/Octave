@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "goodshit",
@@ -11,8 +11,8 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
         category = Category.FUN)
 public class GoodShitCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
-        message.send().text("\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D" +
+    public void execute(Context context, String[] args) {
+        context.send().text("\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D\uDC40\uD83D\uDC4C\uD83D" +
                 "\uDC40\uD83D\uDC4C\uD83D\uDC40 good shit go౦ԁ sHit\uD83D\uDC4C thats ✔ some " +
                 "good\uD83D\uDC4C\uD83D\uDC4Cshit " +
                 "right\uD83D\uDC4C\uD83D\uDC4Cthere\uD83D\uDC4C\uD83D\uDC4C\uD83D\uDC4C right✔there ✔✔if i do ƽaү so " +

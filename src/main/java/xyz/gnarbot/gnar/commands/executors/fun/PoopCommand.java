@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.StringJoiner;
 
@@ -16,7 +16,7 @@ import java.util.StringJoiner;
         category = Category.FUN)
 public class PoopCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         String poop = StringUtils.join(args, " ");
 
         StringJoiner joiner = new StringJoiner("\n", "```\n", "```");
@@ -39,7 +39,7 @@ public class PoopCommand extends CommandExecutor {
             try {
                 poopArt.setCharAt(7 + i, poop.charAt(i));
             } catch (IndexOutOfBoundsException e) {
-                message.send().error("Poop is too big. Constipation occurred.").queue();
+                context.send().error("Poop is too big. Constipation occurred.").queue();
                 return;
             }
         }
@@ -47,7 +47,7 @@ public class PoopCommand extends CommandExecutor {
         joiner.add(poopArt);
         joiner.add("░░░░░░░░░░░░░░░░░░░░░░░");
 
-        message.send().embed("Pooping Memes")
+        context.send().embed("Pooping Memes")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(joiner.toString())
                 .rest().queue();

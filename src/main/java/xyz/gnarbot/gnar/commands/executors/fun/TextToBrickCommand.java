@@ -1,10 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "ttb",
@@ -13,13 +13,13 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 )
 public class TextToBrickCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Please provide a query.").queue();
+            context.send().error("Please provide a query.").queue();
             return;
         }
 
-        message.send().embed("Text to Brick")
+        context.send().embed("Text to Brick")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .description(() -> {
                     StringBuilder sb = new StringBuilder();

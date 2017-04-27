@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Message
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         aliases = arrayOf("enable"),
@@ -16,13 +16,13 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
         permissions = arrayOf(Permission.ADMINISTRATOR)
 )
 class EnableCommand : CommandExecutor() {
-    override fun execute(message: Message, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         val enabled = args
-                .map(guildData.commandHandler::enableCommand)
+                .map(context.guildData.commandHandler::enableCommand)
                 .filterNotNull()
                 .map { it.info.aliases[0] }
 
-        message.send().embed("Enabling Commands") {
+        context.send().embed("Enabling Commands") {
             color = BotConfiguration.ACCENT_COLOR
             description {
                 if (enabled.isNotEmpty()) {

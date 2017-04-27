@@ -1,10 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Random;
 
@@ -19,13 +19,13 @@ public class EightBallCommand extends CommandExecutor {
             "Outlook not so good", "Very doubtful"};
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Ask the 8-ball something.").queue();
+            context.send().error("Ask the 8-ball something.").queue();
             return;
         }
 
-        message.send().embed("8-Ball")
+        context.send().embed("8-Ball")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(responses[random.nextInt(responses.length)])
                 .rest().queue();

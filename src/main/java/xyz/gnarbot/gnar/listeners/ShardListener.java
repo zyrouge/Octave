@@ -18,6 +18,7 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.utils.Context;
 
 public class ShardListener extends ListenerAdapter {
     private final Shard shard;
@@ -32,8 +33,9 @@ public class ShardListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.isFromType(ChannelType.TEXT)) {
             if (event.getMessage().getContent().startsWith(BotConfiguration.PREFIX)) {
-                GuildData guild = shard.getGuildData(event.getGuild());
-                guild.handleMessage(event.getMessage());
+                GuildData gd = shard.getGuildData(event.getGuild());
+
+                gd.handleCommand(new Context(event.getMessage(), event.getGuild(), gd, shard, bot));
             }
         }
     }

@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,34 +17,34 @@ import java.util.List;
 )
 public class WhoIsCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("You did not mention a user.").queue();
+            context.send().error("You did not mention a user.").queue();
             return;
         }
 
         // SEARCH USERS
         final Member member;
 
-        List<User> mentioned = message.getMentionedUsers();
+        List<User> mentioned = context.getMessage().getMentionedUsers();
         if (mentioned.size() > 0) {
-            member = getGuild().getMember(mentioned.get(0));
+            member = context.getGuild().getMember(mentioned.get(0));
         } else {
-            member = getGuildData().getMemberByName(StringUtils.join(args, " "), true);
+            member = context.getGuildData().getMemberByName(StringUtils.join(args, " "), true);
         }
 
         if (member == null) {
-            message.send().error("You did not mention a valid user.").queue();
+            context.send().error("You did not mention a valid user.").queue();
             return;
         }
 
-        message.send().embed("Who is " + member.getName() + "?")
+        context.send().embed("Who is " + member.getUser().getName() + "?")
                 .setColor(member.getColor())
-                .setThumbnail(member.getAvatarUrl())
-                .field("Name", true, member.getName())
-                .field("Discriminator", true, member.getDiscriminator())
+                .setThumbnail(member.getUser().getAvatarUrl())
+                .field("Name", true, member.getUser().getName())
+                .field("Discriminator", true, member.getUser().getDiscriminator())
 
-                .field("ID", true, member.getId())
+                .field("ID", true, member.getUser().getId())
                 .field("Join Date", true, member.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
 
                 .field("Nickname", true, member.getNickname() != null ? member.getNickname() : "No nickname.")

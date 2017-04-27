@@ -1,28 +1,27 @@
 package xyz.gnarbot.gnar.commands;
 
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
+import xyz.gnarbot.gnar.utils.Context;
 
 public enum Scope {
     GUILD {
         @Override
-        public boolean checkPermission(Message message, Member target, Permission... permissions) {
-            return target.hasPermission(permissions);
+        public boolean checkPermission(Context context, Permission... permissions) {
+            return context.getMember().hasPermission(permissions);
         }
     },
     TEXT {
         @Override
-        public boolean checkPermission(Message message, Member target, Permission... permissions) {
-            return target.hasPermission(message.getTextChannel(), permissions);
+        public boolean checkPermission(Context context, Permission... permissions) {
+            return context.getMember().hasPermission(context.getMessage().getTextChannel(), permissions);
         }
     },
     VOICE {
         @Override
-        public boolean checkPermission(Message message, Member target, Permission... permissions) {
-            return target.hasPermission(target.getVoiceState().getChannel(), permissions);
+        public boolean checkPermission(Context context, Permission... permissions) {
+            return context.getMember().hasPermission(context.getMember().getVoiceState().getChannel(), permissions);
         }
     };
 
-    abstract public boolean checkPermission(Message message, Member target, Permission... permissions);
+    abstract public boolean checkPermission(Context context, Permission... permissions);
 }

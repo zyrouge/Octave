@@ -2,11 +2,11 @@ package xyz.gnarbot.gnar.commands.executors.mod;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Scope;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(aliases = "ban",
         category = Category.MODERATION,
@@ -14,26 +14,26 @@ import xyz.gnarbot.gnar.commands.Scope;
         permissions = Permission.BAN_MEMBERS)
 public class BanCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
-        Member author = message.getMember();
+    public void execute(Context context, String[] args) {
+        Member author = context.getMessage().getMember();
         Member target = null;
 
-        if (message.getMentionedChannels().size() >= 1) {
-            target = getGuild().getMember(message.getMentionedUsers().get(0));
+        if (context.getMessage().getMentionedChannels().size() >= 1) {
+            target = getGuild().getMember(context.getMessage().getMentionedUsers().get(0));
         } else if (args.length >= 1) {
             target = getGuildData().getMemberByName(args[0], false);
         }
 
         if (target == null) {
-            message.send().error("Could not find user.").queue();
+            context.send().error("Could not find user.").queue();
             return;
         }
         if (!author.canInteract(target)) {
-            message.send().error("Sorry, that user has an equal or higher role.").queue();
+            context.send().error("Sorry, that user has an equal or higher role.").queue();
             return;
         }
 
         getGuild().getController().ban(target, 2).queue();
-        message.send().info(target.getEffectiveName() + " has been banned.").queue();
+        context.send().info(target.getEffectiveName() + " has been banned.").queue();
     }
 }

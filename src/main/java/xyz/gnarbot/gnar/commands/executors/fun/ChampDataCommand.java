@@ -2,12 +2,12 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.io.File;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ChampDataCommand extends CommandExecutor {
     private static final Config information = ConfigFactory.parseFile(new File(BotConfiguration.DATA_FOLDER,"league/League.txt"));
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         int maybeDistance = 20;
         String maybe = "";
 
@@ -80,7 +80,7 @@ public class ChampDataCommand extends CommandExecutor {
             spellInfo.append("\n    **").append(fuckTits).append("**: ").append(j.getString("name"));
         }
 
-        message.send().text(spellInfo.toString()).queue();
+        context.send().text(spellInfo.toString()).queue();
     }
 
 }

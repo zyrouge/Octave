@@ -1,10 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.ResponseBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,22 +14,22 @@ import java.util.concurrent.TimeUnit;
         description = "Quote somebody else..")
 public class QuoteCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Provide a message id.").queue();
+            context.send().error("Provide a message id.").queue();
             return;
         }
 
-        TextChannel targetChannel = message.getTextChannel();
-        if (message.getMentionedChannels().size() > 0) {
-            targetChannel = message.getMentionedChannels().get(0);
+        TextChannel targetChannel = context.getMessage().getTextChannel();
+        if (context.getMessage().getMentionedChannels().size() > 0) {
+            targetChannel = context.getMessage().getMentionedChannels().get(0);
         }
 
         for (String id : args) {
             if (!id.contains("#")) {
                 try {
                     final TextChannel _targetChannel = targetChannel;
-                    message.getChannel().getMessageById(id).queue(msg -> _targetChannel.send().embed()
+                    context.getMessage().getChannel().getMessageById(id).queue(msg -> new ResponseBuilder(_targetChannel).embed()
                             .setColor(BotConfiguration.ACCENT_COLOR)
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
@@ -36,7 +37,7 @@ public class QuoteCommand extends CommandExecutor {
 
                 } catch (Exception e) {
                     try {
-                        message.send()
+                        context.send()
                                 .error("Could not find a message with the ID " + id + " within this channel.")
                                 .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
                     } catch (Exception ignore) {}
@@ -44,7 +45,7 @@ public class QuoteCommand extends CommandExecutor {
             }
         }
 
-        message.send().info("Sent quotes to the " + targetChannel.getName() + " channel!")
+        context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!")
                 .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
     }
 }

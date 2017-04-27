@@ -1,23 +1,23 @@
 package xyz.gnarbot.gnar.commands.executors.`fun`
 
-import net.dv8tion.jda.core.entities.Message
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 import java.util.*
 
 @Command(aliases = arrayOf("dialog"),
         usage = "(words...)",
         description = "Make some of that Windows ASCII art!")
 class DialogCommand : CommandExecutor() {
-    override fun execute(message: Message, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         val lines = WordUtils
                 .wrap(StringUtils.join(args, ' ').replace("```", ""), 25, null, true)
                 .split("\n")
 
-        message.send().embed {
+        context.send().embed {
             color = BotConfiguration.ACCENT_COLOR
             description = buildString {
                 appendln("```")

@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
 import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
 import org.json.JSONException
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.YouTube
 import java.awt.Color
 
@@ -15,9 +15,9 @@ import java.awt.Color
         description = "Search and get a YouTube video."
 )
 class YoutubeCommand : CommandExecutor() {
-    override fun execute(message: Message, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
-            message.send().error("Gotta put something to search YouTube.").queue()
+            context.send().error("Gotta put something to search YouTube.").queue()
             return
         }
 
@@ -27,12 +27,12 @@ class YoutubeCommand : CommandExecutor() {
             val results = YouTube.search(query, 3)
 
             if (results.isEmpty()) {
-                message.send().error("No search results for `$query`.").queue()
+                context.send().error("No search results for `$query`.").queue()
                 return
             }
             var firstUrl: String? = null
 
-            message.send().embed {
+            context.send().embed {
                 setAuthor("YouTube Results", "https://www.youtube.com", "https://s.ytimg.com/yts/img/favicon_144-vflWmzoXw.png")
                 thumbnail = "https://gnarbot.xyz/assets/img/youtube.png"
                 color = Color(141, 20, 0)
@@ -55,12 +55,12 @@ class YoutubeCommand : CommandExecutor() {
                 }
             }.rest().queue()
 
-            message.send().text("**First Video:** $firstUrl").queue()
+            context.send().text("**First Video:** $firstUrl").queue()
         } catch (e: JSONException) {
-            message.send().error("Unable to get YouTube results.").queue()
+            context.send().error("Unable to get YouTube results.").queue()
             e.printStackTrace()
         } catch (e: NullPointerException) {
-            message.send().error("Unable to get YouTube results.").queue()
+            context.send().error("Unable to get YouTube results.").queue()
             e.printStackTrace()
         }
     }

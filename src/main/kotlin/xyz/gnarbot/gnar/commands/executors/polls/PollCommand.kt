@@ -1,24 +1,25 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
-import net.dv8tion.jda.core.entities.Message
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.KEmbedBuilder
 import java.util.concurrent.TimeUnit
 
 @Command(aliases = arrayOf("poll"),
         usage = "(option 1);(option 2);...",
         description = "Create a poll.")
 class PollCommand : CommandExecutor() {
-    override fun execute(message: Message, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         val options = args.joinToString(" ").split(',').map(String::trim)
 
         if (options.size <= 1) {
-            message.send().error("Please offer more options for the poll.").queue()
+            context.send().error("Please offer more options for the poll.").queue()
             return
         }
         
-        message.send().embed("Poll") {
+        context.send().embed("Poll") {
             description = "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!"
             field("Options") {
                 buildString {
@@ -32,11 +33,11 @@ class PollCommand : CommandExecutor() {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
 
-            it.editMessage(it.embeds[0].edit().apply {
+            it.editMessage(KEmbedBuilder(it.embeds[0]).apply {
                 description = "Voting has ended! Check the results in the newer messages!"
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
-                it.send().embed("Poll Results") {
+                context.send().embed("Poll Results") {
                     color = BotConfiguration.ACCENT_COLOR
                     description = "Voting has ended! Here are the results!"
 

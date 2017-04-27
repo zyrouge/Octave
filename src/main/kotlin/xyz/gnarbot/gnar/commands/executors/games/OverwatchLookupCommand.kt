@@ -1,10 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.games
 
 import com.mashape.unirest.http.Unirest
-import net.dv8tion.jda.core.entities.Message
 import org.json.JSONObject
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 import java.awt.Color
 
 @Command(aliases = arrayOf("overwatch", "ow"),
@@ -13,14 +13,14 @@ import java.awt.Color
 class OverwatchLookupCommand : CommandExecutor() {
     private val regions = arrayOf("us", "eu", "kr")
 
-    public override fun execute(message: Message, args: Array<String>) {
+    public override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
-            message.send().error("Insufficient arguments. `${info.usage}`.").queue()
+            context.send().error("Insufficient arguments. `${info.usage}`.").queue()
             return
         }
 
         if (!args[0].matches("""[a-zA-Z1-9]+[#-]\d+""".toRegex())) {
-            message.send().error("You did not enter a valid BattleTag `[BattleTag#0000]`.").queue()
+            context.send().error("You did not enter a valid BattleTag `[BattleTag#0000]`.").queue()
             return
         }
 
@@ -35,7 +35,7 @@ class OverwatchLookupCommand : CommandExecutor() {
                 }
             }
             if (region == null) {
-                message.send().error("Invalid region provided. `[us, eu, kr]`").queue()
+                context.send().error("Invalid region provided. `[us, eu, kr]`").queue()
                 return
             }
         }
@@ -51,7 +51,7 @@ class OverwatchLookupCommand : CommandExecutor() {
         // Region arg provided.
         if (region != null) {
             if (!response.has(region)) {
-                message.send().error("Unable to find Overwatch player `" + tag + "` in region `" + region.toUpperCase() + "`.").queue()
+                context.send().error("Unable to find Overwatch player `" + tag + "` in region `" + region.toUpperCase() + "`.").queue()
                 return
             }
 
@@ -68,12 +68,12 @@ class OverwatchLookupCommand : CommandExecutor() {
             }
 
             if (jso == null || region == null) {
-                message.send().error("Unable to find Overwatch player `$tag`.").queue()
+                context.send().error("Unable to find Overwatch player `$tag`.").queue()
                 return
             }
         }// Region arg not provided. Search for first non-null region.
 
-        message.send().embed("Overwatch Stats: $tag") {
+        context.send().embed("Overwatch Stats: $tag") {
             description {
                 buildString {
                     appendln("Battle Tag: **__[$tag](https://playoverwatch.com/en-gb/career/pc/$region/$tag)__**")
@@ -84,7 +84,7 @@ class OverwatchLookupCommand : CommandExecutor() {
             val overall = jso?.optJSONObject("stats")
 
             if (overall == null) {
-                message.send().error("Unable to find statistics for Overwatch player`$tag`.").queue()
+                context.send().error("Unable to find statistics for Overwatch player`$tag`.").queue()
                 return
             }
 

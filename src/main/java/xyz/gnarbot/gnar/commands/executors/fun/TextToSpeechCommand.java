@@ -2,12 +2,12 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Scope;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = {"tts"},
@@ -19,9 +19,9 @@ import xyz.gnarbot.gnar.commands.Scope;
 )
 public class TextToSpeechCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Please provide a query.").queue();
+            context.send().error("Please provide a query.").queue();
             return;
         }
 
@@ -29,6 +29,6 @@ public class TextToSpeechCommand extends CommandExecutor {
         builder.setTTS(true);
         builder.append(StringUtils.join(args, " "));
 
-        message.getChannel().sendMessage(builder.build()).queue();
+        context.getMessage().getChannel().sendMessage(builder.build()).queue();
     }
 }

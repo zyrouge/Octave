@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import com.mashape.unirest.http.Unirest;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +9,7 @@ import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = {"urbandict", "ub", "urbandictionary"},
@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 )
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             String query = StringUtils.join(args, "+");
 
@@ -32,13 +32,13 @@ public class UrbanDictionaryCommand extends CommandExecutor {
             JSONArray words = json.getJSONArray("list");
 
             if (words.length() < 1) {
-                message.send().error("Could not find that word, rip u").queue();
+                context.send().error("Could not find that word, rip u").queue();
                 return;
             }
 
             JSONObject word = words.getJSONObject(0);
 
-            message.send().embed("Urban Dictionary")
+            context.send().embed("Urban Dictionary")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
                     .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
@@ -47,7 +47,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error("Could not find that word, rip u").queue();
+            context.send().error("Could not find that word, rip u").queue();
         }
     }
 

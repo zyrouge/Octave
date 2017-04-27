@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.w3c.dom.Document;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,7 +18,7 @@ import java.net.URL;
 )
 public class CatsCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             String apiKey = "MTAyODkw";
 
@@ -36,7 +36,7 @@ public class CatsCommand extends CommandExecutor {
 
                         break;
                     default:
-                        message.send().error("Not a valid picture type. `[png, jpg, gif]`").queue();
+                        context.send().error("Not a valid picture type. `[png, jpg, gif]`").queue();
                         return;
                 }
             } else {
@@ -47,13 +47,13 @@ public class CatsCommand extends CommandExecutor {
 
             String url = doc.getElementsByTagName("url").item(0).getTextContent();
 
-            message.send().embed("Random Cat Pictures")
+            context.send().embed("Random Cat Pictures")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setImage(url)
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error("Unable to find cats to sooth the darkness of your soul.").queue();
+            context.send().error("Unable to find cats to sooth the darkness of your soul.").queue();
             e.printStackTrace();
         }
     }

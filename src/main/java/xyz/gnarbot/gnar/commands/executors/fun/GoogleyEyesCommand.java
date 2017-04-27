@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import net.dv8tion.jda.core.entities.Message;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.BotConfiguration;
@@ -11,6 +10,7 @@ import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -42,9 +42,9 @@ public class GoogleyEyesCommand extends CommandExecutor {
     }
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Please provide an image link.").queue();
+            context.send().error("Please provide an image link.").queue();
             return;
         }
 
@@ -77,7 +77,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
                 }
             } catch (Exception e) {
                 if (eyesJSON.isEmpty()) {
-                    message.send().error("The API did not detect any eyes/facial features.").queue();
+                    context.send().error("The API did not detect any eyes/facial features.").queue();
                     return;
                 }
             }
@@ -97,7 +97,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
             try {
                 if (ImageIO.write(targetImg, "jpg", outputFile)) {
                     //send if success
-                    message.getChannel().sendFile(outputFile, null).queue();
+                    context.getMessage().getChannel().sendFile(outputFile, null).queue();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,7 +108,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
 
             //event.getChannel().sendMessage(mb.build());
         } catch (Exception e) {
-            message.send().error("An unexpected error occurred, did you provide a proper link?").queue();
+            context.send().error("An unexpected error occurred, did you provide a proper link?").queue();
             e.printStackTrace();
         }
     }

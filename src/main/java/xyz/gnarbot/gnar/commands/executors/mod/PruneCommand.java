@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Scope;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,27 +25,27 @@ import java.util.concurrent.TimeUnit;
 public class PruneCommand extends CommandExecutor {
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("Insufficient amount of arguments.").queue();
+            context.send().error("Insufficient amount of arguments.").queue();
             return;
         }
         
-        message.delete().queue();
+        context.getMessage().delete().queue();
 
-        MessageHistory history = message.send().getChannel().getHistory();
+        MessageHistory history = context.send().getChannel().getHistory();
 
         int amount;
         try {
             amount = Integer.parseInt(args[0]);
             amount = Math.min(amount, 100);
         } catch (NumberFormatException e) {
-            message.send().error("Improper arguments supplies, must be a number.").queue();
+            context.send().error("Improper arguments supplies, must be a number.").queue();
             return;
         }
 
         if (amount < 2) {
-            message.send().error("You need to delete 2 or more messages to use this command.").queue();
+            context.send().error("You need to delete 2 or more messages to use this command.").queue();
             return;
         }
 
@@ -64,9 +65,9 @@ public class PruneCommand extends CommandExecutor {
                 msgs = _msgs;
             }
 
-            message.getTextChannel().deleteMessages(msgs).queue();
+            context.getMessage().getTextChannel().deleteMessages(msgs).queue();
 
-            message.send().info("Attempted to delete **[" + msgs.size() + "]()** messages.\nDeleting this message in **5** seconds.")
+            context.send().info("Attempted to delete **[" + msgs.size() + "]()** messages.\nDeleting this message in **5** seconds.")
                     .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
         });
     }

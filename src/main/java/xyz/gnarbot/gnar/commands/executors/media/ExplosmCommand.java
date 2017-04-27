@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Random;
 
@@ -18,7 +18,7 @@ import java.util.Random;
 )
 public class ExplosmCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             Document document;
 
@@ -33,7 +33,7 @@ public class ExplosmCommand extends CommandExecutor {
                     input = Integer.valueOf(args[0]);
 
                     if (input > max || input < 100) {
-                        message.send().error("Explosm does not have a comic for that number.").queue();
+                        context.send().error("Explosm does not have a comic for that number.").queue();
                     }
 
                     rand = String.valueOf(input);
@@ -41,7 +41,7 @@ public class ExplosmCommand extends CommandExecutor {
                     if (args[0].equalsIgnoreCase("latest")) {
                         rand = "latest";
                     } else {
-                        message.send().error("You didn't enter a proper ID number.").queue();
+                        context.send().error("You didn't enter a proper ID number.").queue();
                         return;
                     }
                 }
@@ -55,7 +55,7 @@ public class ExplosmCommand extends CommandExecutor {
 
             String logo = "http://explosm.net/img/logo.png";
 
-            message.send().embed("Cyanide and Happiness")
+            context.send().embed("Cyanide and Happiness")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription("No: **" + rand + "**\n")
                     .setThumbnail(logo)
@@ -63,7 +63,7 @@ public class ExplosmCommand extends CommandExecutor {
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error("Unable to grab Cyanide and Happiness comic.").queue();
+            context.send().error("Unable to grab Cyanide and Happiness comic.").queue();
             e.printStackTrace();
         }
     }

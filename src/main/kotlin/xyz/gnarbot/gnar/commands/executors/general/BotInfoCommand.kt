@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.OnlineStatus
-import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 import java.lang.management.ManagementFactory
 
 @Command(
@@ -13,8 +13,8 @@ import java.lang.management.ManagementFactory
         description = "Show information about the bot."
 )
 class BotInfoCommand : CommandExecutor() {
-    override fun execute(message: Message, args: Array<String>) {
-        val registry = bot.commandRegistry
+    override fun execute(context: Context, args: Array<String>) {
+        val registry = context.bot.commandRegistry
 
         // Uptime
         val s = ManagementFactory.getRuntimeMXBean().uptime / 1000
@@ -34,7 +34,7 @@ class BotInfoCommand : CommandExecutor() {
         var online = 0
         var inactive = 0
 
-        for (shard in bot.shards) {
+        for (shard in context.bot.shards) {
             guilds += shard.guilds.size
 
             for (guild in shard.guilds) {
@@ -60,16 +60,12 @@ class BotInfoCommand : CommandExecutor() {
 
         val commandSize = registry.entries.count { it.info.category.show }
 
-        val requests = bot.shards
-                .flatMap { it.guildData.values }
-                .sumBy { it.commandHandler.requests }
-
-        message.send().embed("Bot Information") {
+        context.send().embed("Bot Information") {
             color = BotConfiguration.ACCENT_COLOR
 
             inline {
-                field("Requests", requests)
-                field("Requests Per Hour", requests / if (h == 0L) 1 else h)
+                field("Requests", context.bot.requests)
+                field("Requests Per Hour", context.bot.requests / if (h == 0L) 1 else h)
                 field("Website", "gnarbot.xyz" link "https://gnarbot.xyz")
 
                 field("Text Channels", textChannels)

@@ -9,8 +9,9 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
+import net.dv8tion.jda.core.AccountType
+import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.jda
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.gnarbot.gnar.api.data.BotInfo
@@ -43,6 +44,12 @@ class Bot(val token: String, val numShards: Int) {
     /** @return Sharded JDA instances of the bot.*/
     val shards = mutableListOf<Shard>()
 
+    private val guildCountListener = GuildCountListener(this)
+    private val userListener = UserListener()
+
+    /** @return the amount of successful requests on this command handler. */
+    var requests = 0
+
     /** Start the bot. */
     fun start() {
         check(!token.isNullOrEmpty()) { "Bot token can not be null." }
@@ -54,11 +61,8 @@ class Bot(val token: String, val numShards: Int) {
         log.info("Prefix:\t${BotConfiguration.PREFIX}")
         log.info("Admins:\t${BotConfiguration.ADMINISTRATORS.size}")
 
-        val guildCountListener = GuildCountListener(this)
-        val userListener = UserListener()
-
         for (id in 0 until numShards) {
-            val jda = jda(token, id, numShards) {
+            val jda = with (JDABuilder(AccountType.BOT)) {
                 setToken(token)
                 setAutoReconnect(true)
                 addEventListener(guildCountListener)
@@ -66,7 +70,7 @@ class Bot(val token: String, val numShards: Int) {
                 setAudioSendFactory(NativeAudioSendFactory())
                 setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
                 setAudioEnabled(true)
-            }
+            }.buildBlocking()
 
             log.info("JDA $id is ready.")
 
@@ -83,12 +87,15 @@ class Bot(val token: String, val numShards: Int) {
 
         shards[id].shutdown()
 
-        val jda = jda(token, id, numShards) {
+        val jda = with (JDABuilder(AccountType.BOT)) {
             setToken(token)
             setAutoReconnect(true)
-            setGame(Game.of("$id | _help"))
+            addEventListener(guildCountListener)
+            addEventListener(userListener)
+            setAudioSendFactory(NativeAudioSendFactory())
+            setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
             setAudioEnabled(true)
-        }
+        }.buildBlocking()
 
         log.info("JDA $id has restarted.")
 

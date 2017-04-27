@@ -1,16 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.games;
 
-import net.dv8tion.jda.core.entities.Message;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(aliases = {"league", "lol"},
         usage = "(LOL Username)",
         description = "Look up Leauge of Legends statistics " + "of a player.")
 public class LeagueLookupCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
-        message.send().error("This command is borked. Blame Rito for their crap API.").queue();
+    public void execute(Context context, String[] args) {
+        context.send().error("This command is borked. Blame Rito for their crap API.").queue();
 
         /*
         StringJoiner joiner = new StringJoiner("");

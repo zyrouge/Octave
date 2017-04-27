@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.media;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +11,7 @@ import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
 import java.util.Map;
@@ -45,7 +45,7 @@ public class MemeCommand extends CommandExecutor {
     }
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             if (args[0].equalsIgnoreCase("list")) {
                 int page = 1;
@@ -71,7 +71,7 @@ public class MemeCommand extends CommandExecutor {
                 if (page > pages) page = pages;
 
                 int _page = page;
-                message.send().embed("Meme List")
+                context.send().embed("Meme List")
                         .description(() -> {
                             StringBuilder sb = new StringBuilder();
                             int i = 0;
@@ -115,13 +115,13 @@ public class MemeCommand extends CommandExecutor {
                     .getObject()
                     .getJSONObject("data");
 
-            message.send().embed("Meme Generator")
+            context.send().embed("Meme Generator")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setImage(response.optString("url"))
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error(
+            context.send().error(
                     "**Please supply more arguments. Example Usage:**\n\n" +
                     "[_meme Spongegar | Top Text | Bottom Text]()\n\n" +
                     "**For a list of memes, type:**\n\n" +

@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,14 +28,14 @@ public class LeetifyCommand extends CommandExecutor {
     }};
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         String s = StringUtils.join(args, " ");
 
         for (Map.Entry<String, String> entry : substitutions.entrySet()) {
             s = s.replaceAll(entry.getKey(), entry.getValue());
         }
 
-        message.send().embed("Leet it")
+        context.send().embed("Leet it")
                 .setColor(BotConfiguration.ACCENT_COLOR)
                 .setDescription(s)
                 .rest().queue();

@@ -3,12 +3,12 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = {"yodatalk"},
@@ -18,9 +18,9 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 )
 public class YodaTalkCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            message.send().error("At least put something. `:[`").queue();
+            context.send().error("At least put something. `:[`").queue();
             return;
         }
 
@@ -35,7 +35,7 @@ public class YodaTalkCommand extends CommandExecutor {
 
             String result = response.getBody();
 
-            message.send().embed("Yoda-Speak")
+            context.send().embed("Yoda-Speak")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription(result)
                     .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")

@@ -4,12 +4,12 @@ import com.google.code.chatterbotapi.ChatterBot;
 import com.google.code.chatterbotapi.ChatterBotFactory;
 import com.google.code.chatterbotapi.ChatterBotSession;
 import com.google.code.chatterbotapi.ChatterBotType;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "pbot",
@@ -21,24 +21,24 @@ public class PandoraBotCommand extends CommandExecutor {
     private ChatterBotSession session = null;
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             if (bot == null) {
                 bot = factory.create(ChatterBotType.PANDORABOTS, "b0dafd24ee35a477");
                 session = bot.createSession();
-                message.send().info("Pandora-Bot session created for the server.").queue();
+                context.send().info("Pandora-Bot session created for the server.").queue();
             }
 
             String input = StringUtils.join(args, " ");
 
             String output = session.think(input);
-            message.send().embed("PandoraBot")
+            context.send().embed("PandoraBot")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription(output)
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();
+            context.send().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();
             bot = null;
         }
     }

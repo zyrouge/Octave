@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,7 +33,7 @@ public class ChampQuoteCommand extends CommandExecutor {
             "Zed", "Ziggs", "Zilean", "Zyra"};
 
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             //Makes the first character uppercase
             String champ = StringUtils.join(args, " ");
@@ -49,7 +49,7 @@ public class ChampQuoteCommand extends CommandExecutor {
                 for (String s : names) {
                     championsList.append(", ").append(s);
                 }
-                message.send().text(championsList.toString().replaceFirst(", ", "")).queue();
+                context.send().text(championsList.toString().replaceFirst(", ", "")).queue();
                 return;
             }
 
@@ -77,7 +77,7 @@ public class ChampQuoteCommand extends CommandExecutor {
 
                 br = new BufferedReader(new FileReader(new File(BotConfiguration.DATA_FOLDER, "quotes/" + maybe + ".txt")));
 
-                message.send().info("I think you meant **" + maybe + "**? Here's a quote from them!").queue();
+                context.send().info("I think you meant **" + maybe + "**? Here's a quote from them!").queue();
                 champ = maybe;
             }
 
@@ -88,10 +88,10 @@ public class ChampQuoteCommand extends CommandExecutor {
             }
 
             //Pull a random quote and send
-            message.send().text("`" + quotes.get(new Random().nextInt(quotes.size())) + "` - **" + champ + "**").queue();
+            context.send().text("`" + quotes.get(new Random().nextInt(quotes.size())) + "` - **" + champ + "**").queue();
 
         } catch (Exception e) {
-            message.send().text("Odd, you should have never got here. For getting here and some how butchering that " +
+            context.send().text("Odd, you should have never got here. For getting here and some how butchering that " +
                     "champions name so bad, here's a cookie :cookie:").queue();
             e.printStackTrace();
         }

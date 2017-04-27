@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import net.dv8tion.jda.core.entities.Message;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,6 +7,7 @@ import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "rcg",
@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 )
 public class ExplosmRCGCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             Document document;
 
@@ -28,7 +28,7 @@ public class ExplosmRCGCommand extends CommandExecutor {
 
             String logo = "http://explosm.net/img/logo.png";
 
-            message.send().embed("Cyanide and Happiness")
+            context.send().embed("Cyanide and Happiness")
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setDescription("**Random Comic Generator**")
                     .setImage(url)
@@ -36,7 +36,7 @@ public class ExplosmRCGCommand extends CommandExecutor {
                     .rest().queue();
 
         } catch (Exception e) {
-            message.send().error("Unable to grab random Cyanide and Happiness comic.").queue();
+            context.send().error("Unable to grab random Cyanide and Happiness comic.").queue();
             e.printStackTrace();
         }
     }

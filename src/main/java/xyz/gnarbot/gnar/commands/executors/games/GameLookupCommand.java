@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.games;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import net.dv8tion.jda.core.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,13 +10,14 @@ import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 @Command(aliases = {"game", "gamelookup"},
         usage = "(Game name)",
         description = "Look up information about a game.")
 public class GameLookupCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             String query = StringUtils.join(args, "+");
 
@@ -32,7 +32,7 @@ public class GameLookupCommand extends CommandExecutor {
             JSONArray jsa = response.getBody().getArray();
 
             if (jsa.length() == 0) {
-                message.send().error("No game found with that title.").queue();
+                context.send().error("No game found with that title.").queue();
                 return;
             }
 
@@ -44,7 +44,7 @@ public class GameLookupCommand extends CommandExecutor {
             String desc = jso.optString("summary");
             String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
-            message.send().embed(title)
+            context.send().embed(title)
                     .setColor(BotConfiguration.ACCENT_COLOR)
                     .setThumbnail(thumb)
                     //.field("Publisher", true, publisher)

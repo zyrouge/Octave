@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.awt.*;
 import java.util.Random;
@@ -18,12 +19,12 @@ import java.util.Random;
         administrator = true)
 public class TestEmbedCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         EmbedBuilder eb = new EmbedBuilder();
         String s = StringUtils.join(args, " ");
         Random r = new Random();
         String[] parts = s.split(":newsection:");
-        eb.setTitle("Message from " + message.getAuthor().getName(), null);
+        eb.setTitle("Message from " + context.getMessage().getAuthor().getName(), null);
         eb.setDescription(parts[0]);
         parts[0] = "";
         if (parts.length > 1) {
@@ -31,16 +32,16 @@ public class TestEmbedCommand extends CommandExecutor {
             for (String p : parts) {
                 if (p.equals("")) {
                     id++;
-                    eb.field("Section " + id, false, p);
+                    eb.addField("Section " + id, p, false);
                 }
             }
         }
-        eb.setThumbnail(message.getAuthor().getAvatarUrl())
+        eb.setThumbnail(context.getMessage().getAuthor().getAvatarUrl())
                 .setColor(new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
         MessageEmbed embed = eb.build();
         MessageBuilder mb = new MessageBuilder();
         mb.setEmbed(embed);
         Message m = mb.build();
-        message.getChannel().sendMessage(m).queue();
+        context.getMessage().getChannel().sendMessage(m).queue();
     }
 }

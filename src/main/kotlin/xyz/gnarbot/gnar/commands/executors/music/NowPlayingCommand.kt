@@ -1,10 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import net.dv8tion.jda.core.entities.Message
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
@@ -14,15 +14,15 @@ import xyz.gnarbot.gnar.utils.Utils
 )
 class NowPlayingCommand : CommandExecutor() {
 
-    override fun execute(message: Message, args: Array<String>) {
-        val track = guildData.musicManager.player.playingTrack
+    override fun execute(context: Context, args: Array<String>) {
+        val track = context.guildData.musicManager.player.playingTrack
 
         if (track == null) {
-            message.send().error("The player is not currently playing anything.").queue()
+            context.send().error("The player is not currently playing anything.").queue()
             return
         }
 
-        message.send().embed("Now Playing") {
+        context.send().embed("Now Playing") {
             color = BotConfiguration.MUSIC_COLOR
 
             field("Now Playing", false, "__[${track.info.title}](${track.info.uri})__")

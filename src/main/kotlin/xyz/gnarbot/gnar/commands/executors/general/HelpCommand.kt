@@ -3,12 +3,12 @@ package xyz.gnarbot.gnar.commands.executors.general
 import com.google.common.collect.Lists
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.b
-import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.link
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         aliases = arrayOf("help", "guide"),
@@ -17,33 +17,32 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
         disableable = false
 )
 class HelpCommand : CommandExecutor() {
-
-    override fun execute(message: Message, args: Array<String>) {
-        val registry = bot.commandRegistry
+    override fun execute(context: Context, args: Array<String>) {
+        val registry = context.bot.commandRegistry
 
         if (args.isNotEmpty()) {
             val target = if (args[0].startsWith('_')) args[0].substring(1) else args[0]
 
-            val entry = registry.getEntry(target)
+            val cmd = registry.getCommand(target)
 
-            if (entry == null) {
-                message.send().error("There is no command named `$target`. :cry:").queue()
+            if (cmd == null) {
+                context.send().error("There is no command named `$target`. :cry:").queue()
                 return
             }
 
-            message.send().embed("Command Information") {
+            context.send().embed("Command Information") {
                 color = BotConfiguration.ACCENT_COLOR
 
-                field("Aliases", true, entry.info.aliases.joinToString(separator = ", ${BotConfiguration.PREFIX}", prefix = BotConfiguration.PREFIX))
-                field("Usage", true, "${BotConfiguration.PREFIX}${entry.info.aliases[0].toLowerCase()} ${entry.info.usage}")
+                field("Aliases", true, cmd.info.aliases.joinToString(separator = ", ${BotConfiguration.PREFIX}", prefix = BotConfiguration.PREFIX))
+                field("Usage", true, "${BotConfiguration.PREFIX}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}")
                 field(true)
 
-                if (entry.info.permissions.isNotEmpty())
-                    field("Guild Permission", true, "${entry.info.scope} ${entry.info.permissions.map(Permission::getName)}")
+                if (cmd.info.permissions.isNotEmpty())
+                    field("Guild Permission", true, "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}")
 
 
 
-                field("Description", false, entry.info.description)
+                field("Description", false, cmd.info.description)
 
             }.rest().queue()
 
@@ -52,8 +51,8 @@ class HelpCommand : CommandExecutor() {
 
         val cmds = registry.entries
 
-        message.author.openPrivateChannel().queue {
-            it.send().embed("Documentation") {
+        context.message.author.openPrivateChannel().queue {
+            context.send(it).embed("Documentation") {
                 color = BotConfiguration.ACCENT_COLOR
                 description = "This is all of Gnar's currently registered commands."
 
@@ -117,6 +116,6 @@ class HelpCommand : CommandExecutor() {
             }.rest().queue()
         }
 
-        message.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
+        context.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
     }
 }

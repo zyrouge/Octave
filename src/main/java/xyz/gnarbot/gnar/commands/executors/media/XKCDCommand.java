@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
 import com.mashape.unirest.http.Unirest;
-import net.dv8tion.jda.core.entities.Message;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Random;
 
@@ -17,7 +17,7 @@ import java.util.Random;
 )
 public class XKCDCommand extends CommandExecutor {
     @Override
-    public void execute(Message message, String[] args) {
+    public void execute(Context context, String[] args) {
         try {
             JSONObject latestJso = Unirest.get("http://xkcd.com/info.0.json").asJson().getBody().getObject();
 
@@ -32,7 +32,7 @@ public class XKCDCommand extends CommandExecutor {
                         input = Integer.valueOf(args[0]);
 
                         if (input > max || input < 1) {
-                            message.send().error("xkcd does not have a comic for that number.").queue();
+                            context.send().error("xkcd does not have a comic for that number.").queue();
                         }
 
                         rand = input;
@@ -40,7 +40,7 @@ public class XKCDCommand extends CommandExecutor {
                         if (args[0].equalsIgnoreCase("latest")) {
                             rand = max;
                         } else {
-                            message.send().error("You didn't enter a proper number.").queue();
+                            context.send().error("You didn't enter a proper number.").queue();
                             return;
                         }
                     }
@@ -59,7 +59,7 @@ public class XKCDCommand extends CommandExecutor {
 
                     String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
 
-                    message.send().embed(title)
+                    context.send().embed(title)
                             .setColor(BotConfiguration.ACCENT_COLOR)
                             .setDescription("No: " + num)
                             .setThumbnail(logo)
@@ -70,7 +70,7 @@ public class XKCDCommand extends CommandExecutor {
                 }
             }
 
-            message.send().error("Unable to grab xkcd comic.").queue();
+            context.send().error("Unable to grab xkcd comic.").queue();
         } catch (Exception e) {
             e.printStackTrace();
         }
