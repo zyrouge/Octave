@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
 class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
     val guild : Guild get() = shard.getGuildById(id)
 
-    val commandHandler = CommandDispatcher(this, bot)
+    val commandHandler = CommandDispatcher(bot)
 
     private var musicManager_delegate: MusicManager? = null
         get() {

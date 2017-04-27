@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.Shard
 
 @Suppress("unused")
 class ShardInfo(shard: Shard) {
-    val requests: Int = shard.guildData.values.map { it.commandHandler.requests }.sum()
+    val requests: Int = shard.bot.requests
     val id: Int = shard.id
     val status: JDA.Status = shard.status
     val guilds: Int = shard.guilds.size

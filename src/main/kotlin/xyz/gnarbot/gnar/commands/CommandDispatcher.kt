@@ -33,7 +33,7 @@ class CommandDispatcher(private val bot: Bot) {
         
         val cmd = bot.commandRegistry.getCommand(label) ?: return false
 
-        if (disabled.contains(cmd)) {
+        if (cmd in disabled) {
             context.send().error("This command is disabled by the server owner.").queue()
             return false
         }
@@ -42,7 +42,7 @@ class CommandDispatcher(private val bot: Bot) {
         val member = message.member
 
         if (cmd.info.administrator) {
-            if (!BotConfiguration.ADMINISTRATORS.contains(member.user.idLong)) {
+            if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
                 context.send().error("This command is for bot administrators only.").queue()
                 return false
             }
@@ -90,7 +90,7 @@ class CommandDispatcher(private val bot: Bot) {
      * @param cmd Command entry.
      */
     fun enableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (!disabled.contains(cmd)) return null
+        if (cmd !in disabled) return null
         disabled -= cmd
         return cmd
     }
@@ -110,7 +110,7 @@ class CommandDispatcher(private val bot: Bot) {
      * @param cmd Command entry.
      */
     fun disableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (disabled.contains(cmd)) return null
+        if (cmd in disabled) return null
         if (!cmd.info.disableable) return null
         disabled += cmd
         return cmd
