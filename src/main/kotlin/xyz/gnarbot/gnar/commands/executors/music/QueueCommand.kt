@@ -15,7 +15,6 @@ import xyz.gnarbot.gnar.utils.u
         category = Category.MUSIC
 )
 class QueueCommand : CommandExecutor() {
-
     override fun execute(context: Context, args: Array<String>) {
         val queue = context.guildData.musicManager.scheduler.queue
 

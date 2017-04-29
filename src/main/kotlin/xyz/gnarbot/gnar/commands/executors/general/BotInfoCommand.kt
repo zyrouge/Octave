@@ -25,6 +25,7 @@ class BotInfoCommand : CommandExecutor() {
 
         var voiceConnections = 0
 
+        var requests = 0
         var textChannels = 0
         var voiceChannels = 0
         var guildData = 0 // wrapper
@@ -37,6 +38,7 @@ class BotInfoCommand : CommandExecutor() {
 
         for (shard in context.bot.shards) {
             guilds += shard.guilds.size
+            requests += shard.requests
 
             for (guild in shard.guilds) {
                 for (member in guild.members) {
@@ -47,8 +49,8 @@ class BotInfoCommand : CommandExecutor() {
                         else -> {}
                     }
                 }
-
-                if (guild.selfMember.voiceState.channel != null) {
+                
+                guild?.selfMember?.voiceState?.channel?.let {
                     voiceConnections++
                 }
             }
@@ -65,8 +67,8 @@ class BotInfoCommand : CommandExecutor() {
             color = BotConfiguration.ACCENT_COLOR
 
             inline {
-                field("Requests", context.bot.requests)
-                field("Requests Per Hour", context.bot.requests / if (h == 0L) 1 else h)
+                field("Requests", requests)
+                field("Requests Per Hour", requests / Math.max(1, h))
                 field("Website", "gnarbot.xyz" link "https://gnarbot.xyz")
 
                 field("Text Channels", textChannels)

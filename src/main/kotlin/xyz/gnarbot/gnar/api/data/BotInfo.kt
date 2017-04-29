@@ -6,7 +6,7 @@ import java.util.*
 
 @Suppress("unused")
 class BotInfo(bot: Bot) {
-    val requests = bot.requests
+    val requests = bot.shards.sumBy(Shard::requests)
     val totalShards = bot.shards.size
     val guilds = bot.shards.sumBy { it.guilds.size }
     val users = bot.shards.sumBy { it.users.size }

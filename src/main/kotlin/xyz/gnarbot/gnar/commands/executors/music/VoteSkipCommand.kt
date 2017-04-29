@@ -43,8 +43,8 @@ class VoteSkipCommand : CommandExecutor() {
             context.send().error("You must wait ${BotConfiguration.VOTE_SKIP_COOLDOWN_TEXT} before starting a new vote.").queue()
             return
         }
-        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= 30) {
-            context.send().error("By the time the vote finishes, the song will be over.").queue()
+        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= BotConfiguration.VOTE_SKIP_DURATION.toMillis()) {
+            context.send().error("By the time the vote finishes in ${BotConfiguration.VOTE_SKIP_DURATION_TEXT}, the song will be over.").queue()
             return
         }
 
@@ -58,7 +58,7 @@ class VoteSkipCommand : CommandExecutor() {
                     append(b(context.message.author.name))
                     append(" has voted to **skip** the current track!")
                     appendln(" React with :thumbsup: or :thumbsdown:")
-                    append("Whichever has the most votes in 30 seconds will win!")
+                    append("Whichever has the most votes in ${BotConfiguration.VOTE_SKIP_DURATION_TEXT} will win!")
                 }
             }
         }.action().queue {
@@ -68,7 +68,7 @@ class VoteSkipCommand : CommandExecutor() {
             it.editMessage(KEmbedBuilder(it.embeds[0]).apply {
                 description = "Voting has ended! Check the newer messages for results."
                 clearFields()
-            }.build()).queueAfter(30, TimeUnit.SECONDS) {
+            }.build()).queueAfter(BotConfiguration.VOTE_SKIP_DURATION.seconds, TimeUnit.SECONDS) {
 
                 var skip = 0
                 var stay = 0

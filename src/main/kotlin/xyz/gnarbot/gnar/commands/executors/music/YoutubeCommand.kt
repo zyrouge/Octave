@@ -1,18 +1,19 @@
-package xyz.gnarbot.gnar.commands.executors.media
+package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.link
 import org.json.JSONException
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.YouTube
+import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.utils.*
 import java.awt.Color
 
 @Command(
-        aliases = arrayOf("youtube"),
-        usage = "-query...",
-        description = "Search and get a YouTube video."
+        aliases = arrayOf("youtube", "yt"),
+        usage = "(query...)",
+        description = "Search and get a YouTube video.",
+        scope = Scope.VOICE,
+        category = Category.MUSIC
 )
 class YoutubeCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -49,13 +50,15 @@ class YoutubeCommand : CommandExecutor() {
                                 firstUrl = url
                             }
 
-                            appendln(b(title link url)).appendln(desc)
+                            append(b(title link url)).ln().append(desc).ln()
                         }
                     }
                 }
             }.action().queue()
 
             context.send().text("**First Video:** $firstUrl").queue()
+
+            context.guildData.musicManager.youtubeResultsMap[context.member] = results to System.currentTimeMillis()
         } catch (e: JSONException) {
             context.send().error("Unable to get YouTube results.").queue()
             e.printStackTrace()

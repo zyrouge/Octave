@@ -2,3 +2,5 @@
 
 data/*.json
 data/*.conf
+
+!data/bot.conf

@@ -110,8 +110,7 @@ class CommandDispatcher(private val bot: Bot) {
      * @param cmd Command entry.
      */
     fun disableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (cmd in disabled) return null
-        if (!cmd.info.disableable) return null
+        if (cmd in disabled || !cmd.info.disableable) return null
         disabled += cmd
         return cmd
     }

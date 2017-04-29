@@ -17,7 +17,7 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
     private var musicManager_delegate: MusicManager? = null
         get() {
             if (field == null) {
-                field = MusicManager(this, bot.playerManager)
+                field = MusicManager(this)
                 field!!.player.volume = 35
             }
             return field
@@ -62,7 +62,7 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
 
     override fun handleCommand(context: Context) {
         if(commandHandler.callCommand(context)) {
-            bot.requests++
+            shard.requests++
         }
     }
 }

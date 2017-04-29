@@ -6,12 +6,11 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.awt.Color
-import javax.script.ScriptEngineManager
-import javax.script.ScriptException
+import javax.script.*
 
 @Command(
-        aliases = arrayOf("js", "runjs"),
-        description = "Run JavaScript commands.",
+        aliases = arrayOf("js"),
+        description = "Run JS scripts.",
         administrator = true,
         category = Category.NONE
 )
@@ -19,11 +18,20 @@ class JavascriptCommand : CommandExecutor() {
     val blocked = arrayListOf("leave", "delete", "Guilds", "Token", "Channels", "voice",
             "remove", "ByName", "ById", "Controller", "Manager", "Permissions")
 
-    override fun execute(context: Context, args: Array<String>) {
-        val engine = ScriptEngineManager().getEngineByName("javascript")
+    companion object {
+        val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("javascript")
+    }
 
-        engine.put("context", context)
+    override fun execute(context: Context, args: Array<String>) {
         val script = args.joinToString(" ")
+        if (script.isNullOrEmpty()) {
+            context.send().error("Script can not be empty.").queue()
+            return
+        }
+
+        val scope = SimpleScriptContext()
+
+        scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
 
         if (blocked.any { script.contains(it, true) }) {
             context.send().error("JavaScript eval Expression may be malicious, canceling.").queue()
@@ -35,13 +43,12 @@ class JavascriptCommand : CommandExecutor() {
 
             field("Running", false, script)
             field("Result", false, try {
-                engine.eval(script)
+                scriptEngine.eval(script, scope)
             } catch (e: ScriptException) {
                 color = Color.RED
                 "The error `$e` occurred while executing the JavaScript statement."
             })
         }.action().queue()
-
-
     }
+
 }

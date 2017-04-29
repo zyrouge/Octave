@@ -37,6 +37,7 @@ class ShardInfoCommand : CommandExecutor() {
                         append("Status: ").append(it.status).ln()
                         append("Guilds: ").append(it.guilds.size).ln()
                         append("Users: ").append(it.users.size).ln()
+                        append("Requests: ").append(it.requests).ln()
                     }
                 }
             }

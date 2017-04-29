@@ -8,7 +8,6 @@ import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
         aliases = arrayOf("ascii"),
@@ -59,7 +58,7 @@ class ASCIICommand : CommandExecutor() {
             text = cell.text()
         }
 
-        text = text?.let { Utils.stringSplit(it, '\n') }?.let {
+        text = text?.split('\n')?.let {
             buildString {
                 it.filterNot(String::isNullOrBlank)
                         .forEach { appendln(it) }

@@ -21,7 +21,7 @@ class PlayCommand : CommandExecutor() {
         val userChannel = context.guild.getMember(context.message.author).voiceState.channel
 
         if (botChannel != null && botChannel != userChannel) {
-            context.send().error("The getBot is already playing music in another channel.").queue()
+            context.send().error("The bot is already playing music in another channel.").queue()
             return
         }
 

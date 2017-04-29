@@ -1,15 +1,8 @@
 package xyz.gnarbot.gnar
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import net.dv8tion.jda.core.AccountType
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import org.slf4j.Logger
@@ -26,7 +19,7 @@ import kotlin.jvm.JvmStatic as static
  * @param token Discord token.
  * @param numShards Number of shards to request.
  */
-class Bot(val token: String, numShards: Int) {
+class Bot(val token: String, val numShards: Int) {
 
     private val guildCountListener = GuildCountListener(this)
     private val userListener = UserListener()
@@ -37,41 +30,10 @@ class Bot(val token: String, numShards: Int) {
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
 
-    val commandRegistry = CommandRegistry()
-
-    val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
-        registerSourceManager(YoutubeAudioSourceManager())
-        registerSourceManager(SoundCloudAudioSourceManager())
-        registerSourceManager(VimeoAudioSourceManager())
-        registerSourceManager(BandcampAudioSourceManager())
-        registerSourceManager(TwitchStreamAudioSourceManager())
-        registerSourceManager(BeamAudioSourceManager())
-    }
-
-    /** @return the amount of successful requests on this command handler. */
-    var requests = 0
+    val commandRegistry = CommandRegistry(this)
 
     init {
         check(!token.isNullOrEmpty()) { "Bot token can not be null." }
-
-        shards = Array(numShards) { id ->
-            val jda = with (JDABuilder(AccountType.BOT)) {
-                setToken(token)
-                if (numShards > 1) useSharding(id, numShards)
-                setAutoReconnect(true)
-                addEventListener(guildCountListener)
-                addEventListener(userListener)
-                setAudioSendFactory(NativeAudioSendFactory())
-                setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
-                setAudioEnabled(true)
-            }.buildBlocking()
-
-            log.info("JDA $id is ready.")
-
-            jda.selfUser.manager.setName(BotConfiguration.BOT_NAME).queue()
-
-            Shard(id, jda, this)
-        }
 
         log.info("Initializing the Discord bot.")
 
@@ -79,6 +41,16 @@ class Bot(val token: String, numShards: Int) {
         log.info("Shards:\t$numShards")
         log.info("Prefix:\t${BotConfiguration.PREFIX}")
         log.info("Admins:\t${BotConfiguration.ADMINISTRATORS.size}")
+
+        shards = Array(numShards) { id ->
+            val jda = createJDA(id)
+
+            log.info("JDA $id is ready.")
+
+            jda.selfUser.manager.setName(BotConfiguration.BOT_NAME).queue()
+
+            Shard(id, jda, this)
+        }
 
         log.info("The bot is now fully connected to Discord.")
     }
@@ -88,15 +60,7 @@ class Bot(val token: String, numShards: Int) {
 
         shards[id].shutdown()
 
-        val jda = with (JDABuilder(AccountType.BOT)) {
-            setToken(token)
-            setAutoReconnect(true)
-            addEventListener(guildCountListener)
-            addEventListener(userListener)
-            setAudioSendFactory(NativeAudioSendFactory())
-            setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
-            setAudioEnabled(true)
-        }.buildBlocking()
+        val jda = createJDA(id)
 
         log.info("JDA $id has restarted.")
 
@@ -111,6 +75,19 @@ class Bot(val token: String, numShards: Int) {
         shards.map(Shard::id).forEach(this::restart)
 
         log.info("Discord bot shards have now restarted.")
+    }
+
+    private fun createJDA(id: Int) : JDA {
+        return with (JDABuilder(AccountType.BOT)) {
+            setToken(token)
+            if (numShards > 1) useSharding(id, numShards)
+            setAutoReconnect(true)
+            addEventListener(guildCountListener)
+            addEventListener(userListener)
+            setAudioSendFactory(NativeAudioSendFactory())
+            setGame(Game.of(BotConfiguration.BOT_GAME.format(id)))
+            setAudioEnabled(true)
+        }.buildBlocking()
     }
 
     /**

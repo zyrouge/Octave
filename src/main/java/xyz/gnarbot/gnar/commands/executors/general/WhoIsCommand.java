@@ -11,26 +11,24 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Command(aliases = {"whois", "infoof", "infoon", "user"},
+@Command(aliases = {"whois", "infoof", "infoon", "user", "who"},
         usage = "-@user",
         description = "Get information on a user."
 )
 public class WhoIsCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (args.length == 0) {
-            context.send().error("You did not mention a user.").queue();
-            return;
-        }
-
-        // SEARCH USERS
         final Member member;
 
-        List<User> mentioned = context.getMessage().getMentionedUsers();
-        if (mentioned.size() > 0) {
-            member = context.getGuild().getMember(mentioned.get(0));
+        if (args.length == 0) {
+            member = context.getMember();
         } else {
-            member = context.getGuildData().getMemberByName(StringUtils.join(args, " "), true);
+            List<User> mentioned = context.getMessage().getMentionedUsers();
+            if (!mentioned.isEmpty()) {
+                member = context.getGuild().getMember(mentioned.get(0));
+            } else {
+                member = context.getGuildData().getMemberByName(StringUtils.join(args, " "), true);
+            }
         }
 
         if (member == null) {

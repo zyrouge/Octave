@@ -1,5 +1,7 @@
 package xyz.gnarbot.gnar.commands;
 
+import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.executors.admin.GarbageCollectCommand;
 import xyz.gnarbot.gnar.commands.executors.admin.JavascriptCommand;
 import xyz.gnarbot.gnar.commands.executors.admin.RestartShardsCommand;
@@ -10,11 +12,10 @@ import xyz.gnarbot.gnar.commands.executors.games.LeagueLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
-import xyz.gnarbot.gnar.commands.executors.mod.*;
-import xyz.gnarbot.gnar.commands.executors.music.NowPlayingCommand;
-import xyz.gnarbot.gnar.commands.executors.music.PlayCommand;
-import xyz.gnarbot.gnar.commands.executors.music.QueueCommand;
-import xyz.gnarbot.gnar.commands.executors.music.VoteSkipCommand;
+import xyz.gnarbot.gnar.commands.executors.mod.DisableCommand;
+import xyz.gnarbot.gnar.commands.executors.mod.EnableCommand;
+import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
+import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.*;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
@@ -29,10 +30,14 @@ import java.util.Set;
  * A registry storing CommandExecutor entries for the bot.
  */
 public class CommandRegistry {
+    private final Bot bot;
+
     /** The mapped registry of invoking key to the classes. */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
 
-    public CommandRegistry() {
+    public CommandRegistry(Bot bot) {
+        this.bot = bot;
+
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
@@ -94,7 +99,6 @@ public class CommandRegistry {
         register(new CatsCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
-        //register(new GarfieldCommand());
         register(new XKCDCommand());
         //End Media Commands
 
@@ -112,22 +116,25 @@ public class CommandRegistry {
         register(new TextToBrickCommand());
 
         //MUSIC COMMAND
-        register(new PlayCommand());
-        register(new LeaveCommand());
-        register(new PauseCommand());
-        register(new StopCommand());
-        register(new SkipCommand());
-        register(new ShuffleCommand());
-        register(new NowPlayingCommand());
-        register(new QueueCommand());
-        register(new RestartCommand());
-        register(new RepeatCommand());
-        register(new ResetCommand());
-        register(new VoteSkipCommand());
+        if (BotConfiguration.MUSIC_ENABLED) {
+            register(new PlayCommand());
+            register(new LeaveCommand());
+            register(new PauseCommand());
+            register(new StopCommand());
+            register(new SkipCommand());
+            register(new ShuffleCommand());
+            register(new NowPlayingCommand());
+            register(new QueueCommand());
+            register(new RestartCommand());
+            register(new RepeatCommand());
+            register(new ResetCommand());
+            register(new VoteSkipCommand());
+            register(new ChooseCommand());
+        }
 
         register(new EnableCommand());
         register(new DisableCommand());
-        register(new ListDisabledCommand());
+        //register(new ListDisabledCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {

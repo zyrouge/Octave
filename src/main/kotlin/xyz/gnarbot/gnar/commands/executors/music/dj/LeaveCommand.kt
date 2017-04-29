@@ -16,7 +16,6 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class LeaveCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        context.guild.audioManager.sendingHandler = null
-        context.guild.audioManager.closeAudioConnection()
+        context.guildData.resetMusicManager()
     }
 }

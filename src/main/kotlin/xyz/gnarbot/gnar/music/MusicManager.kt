@@ -3,22 +3,41 @@ package xyz.gnarbot.gnar.music
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioTrack
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.YouTube
 
-class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) {
+class MusicManager(guildData: GuildData) {
+    companion object {
+        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
+            registerSourceManager(YoutubeAudioSourceManager())
+            registerSourceManager(SoundCloudAudioSourceManager())
+            registerSourceManager(VimeoAudioSourceManager())
+            registerSourceManager(BandcampAudioSourceManager())
+            registerSourceManager(TwitchStreamAudioSourceManager())
+            registerSourceManager(BeamAudioSourceManager())
+        }
+    }
 
     /**
      * @return Audio player for the guild.
      */
-    val player: AudioPlayer = playerManager.createPlayer()
+    var player: AudioPlayer = playerManager.createPlayer()
 
     /**
      * @return Track scheduler for the player.
@@ -39,6 +58,8 @@ class MusicManager(guildData: GuildData, val playerManager: AudioPlayerManager) 
      * @return Whether there is a vote to skip the song or not.
      */
     var isVotingToSkip = false
+
+    var youtubeResultsMap = mutableMapOf<Member, Pair<List<YouTube.Result>, Long>>()
 
     init {
         player.addListener(scheduler)
