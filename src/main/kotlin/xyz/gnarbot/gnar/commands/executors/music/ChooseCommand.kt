@@ -76,13 +76,7 @@ class ChooseCommand : CommandExecutor() {
         }
 
         if (botChannel == null) {
-            context.guild.audioManager.sendingHandler = manager.sendHandler
-            context.guild.audioManager.openAudioConnection(userChannel)
-
-            context.send().embed("Music Playback") {
-                color = BotConfiguration.MUSIC_COLOR
-                description = "Joined channel `${userChannel.name}`."
-            }.action().queue()
+            context.guildData.musicManager.openAudioConnection(userChannel, context)
         }
 
         manager.loadAndPlay(context, results[option - 1].url)

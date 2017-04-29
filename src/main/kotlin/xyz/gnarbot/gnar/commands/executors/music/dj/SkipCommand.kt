@@ -20,7 +20,7 @@ class SkipCommand : CommandExecutor() {
         val manager = context.guildData.musicManager
 
         if (manager.scheduler.queue.isEmpty()) {
-            context.guildData.resetMusicManager()
+            context.guildData.musicManager.reset()
         } else {
             manager.scheduler.nextTrack()
         }

@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class ResetCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        context.guildData.resetMusicManager()
+        context.guildData.musicManager.reset()
 
         context.send().embed("Reset Music") {
             color = BotConfiguration.MUSIC_COLOR

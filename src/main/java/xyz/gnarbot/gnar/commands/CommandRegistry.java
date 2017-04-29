@@ -118,7 +118,7 @@ public class CommandRegistry {
         //MUSIC COMMAND
         if (BotConfiguration.MUSIC_ENABLED) {
             register(new PlayCommand());
-            register(new LeaveCommand());
+            //register(new LeaveCommand()); // Useless
             register(new PauseCommand());
             register(new StopCommand());
             register(new SkipCommand());

@@ -85,7 +85,7 @@ class VoteSkipCommand : CommandExecutor() {
                             if (skip > stay) {
                                 appendln("The vote has passed! The song has been skipped.")
                                 if (manager.scheduler.queue.isEmpty()) {
-                                    context.guildData.resetMusicManager()
+                                    context.guildData.musicManager.reset()
                                 } else {
                                     manager.scheduler.nextTrack()
                                 }

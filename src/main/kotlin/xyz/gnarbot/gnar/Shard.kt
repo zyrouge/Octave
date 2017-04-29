@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.listeners.ShardListener
  */
 class Shard(val id: Int, private val jda: JDA, val bot: Bot) : JDA by jda {
     /** @return the amount of successful requests on this command handler. */
-    var requests = 0
+    @JvmField var requests = 0
 
     val guildData = mutableMapOf<Long, GuildData>()
 

@@ -16,6 +16,6 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class LeaveCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        context.guildData.resetMusicManager()
+        context.guildData.musicManager.reset()
     }
 }

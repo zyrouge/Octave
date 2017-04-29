@@ -21,6 +21,7 @@ task wrapper(type: Wrapper) {
 
 repositories {
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -30,8 +31,8 @@ dependencies {
     testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.1.2'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.0.0_187'
-    compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.4'
+    compile 'com.github.Almighty-Alpaca:JDA:2695d5c'
+    compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.36'
 
     // Configurations

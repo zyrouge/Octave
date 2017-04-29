@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.events.ExceptionEvent;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.ResumedEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.update.GuildUpdateRegionEvent;
 import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
@@ -68,7 +69,7 @@ public class ShardListener extends ListenerAdapter {
 
             if (botChannel.getMembers().size() == 1) {
                 GuildData data = shard.getGuildData(event.getGuild());
-                data.resetMusicManager();
+                data.getMusicManager().reset();
             }
         }
     }
@@ -91,6 +92,13 @@ public class ShardListener extends ListenerAdapter {
 //            }
 //        });
 //    }
+
+
+    @Override
+    public void onGuildUpdateRegion(GuildUpdateRegionEvent event) {
+        super.onGuildUpdateRegion(event);
+    }
+
 
     @Override
     public void onResume(ResumedEvent event) {

@@ -66,7 +66,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 player.startTrack(lastTrack.makeClone(), false);
             } else {
                 if (queue.isEmpty()) {
-                    guildData.resetMusicManager();
+                    guildData.getMusicManager().reset();
                     return;
                 }
                 nextTrack();

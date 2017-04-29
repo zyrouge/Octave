@@ -11,7 +11,6 @@ import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.Shard;
 
 public class GuildCountListener extends ListenerAdapter {
-
     private final Bot bot;
 
     private int changes = 0;

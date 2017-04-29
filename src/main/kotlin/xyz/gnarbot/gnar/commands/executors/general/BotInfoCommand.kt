@@ -49,7 +49,7 @@ class BotInfoCommand : CommandExecutor() {
                         else -> {}
                     }
                 }
-                
+
                 guild?.selfMember?.voiceState?.channel?.let {
                     voiceConnections++
                 }

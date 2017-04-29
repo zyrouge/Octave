@@ -14,28 +14,10 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
 
     val commandHandler = CommandDispatcher(bot)
 
-    private var musicManager_delegate: MusicManager? = null
+    val musicManager: MusicManager = MusicManager(this)
         get() {
-            if (field == null) {
-                field = MusicManager(this)
-                field!!.player.volume = 35
-            }
-            return field
+            return field.also { if (!field.isSetup) field.setup() }
         }
-
-    var musicManager: MusicManager
-        get() = musicManager_delegate!!
-        set(value) {
-            musicManager_delegate = value
-        }
-
-    fun resetMusicManager() {
-        musicManager.scheduler.queue.clear()
-        musicManager.player.destroy()
-        guild.audioManager.closeAudioConnection()
-        guild.audioManager.sendingHandler = null
-        musicManager_delegate = null
-    }
 
     fun getMemberByName(name: String, searchNickname: Boolean = false): Member? {
         for (member in guild.getMembersByName(name, true)) {
@@ -50,13 +32,10 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
     }
 
     fun reset(interrupt: Boolean) : Boolean {
-        musicManager_delegate?.let {
-            if (!interrupt && it.player.playingTrack != null) {
-                return false
-            }
+        if (!interrupt && musicManager.player.playingTrack != null) {
+            return false
         }
-
-        resetMusicManager()
+        musicManager.reset()
         return true
     }
 
