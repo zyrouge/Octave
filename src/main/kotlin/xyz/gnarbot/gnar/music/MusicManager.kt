@@ -15,16 +15,15 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import net.dv8tion.jda.core.Region
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.guilds.GuildData
-import xyz.gnarbot.gnar.listeners.AudioConnectionListener
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.YouTube
 
-class MusicManager(private val guildData: GuildData) {
+open class MusicManager(private val guildData: GuildData) {
     companion object {
         private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
             registerSourceManager(YoutubeAudioSourceManager())
@@ -33,6 +32,15 @@ class MusicManager(private val guildData: GuildData) {
             registerSourceManager(BandcampAudioSourceManager())
             registerSourceManager(TwitchStreamAudioSourceManager())
             registerSourceManager(BeamAudioSourceManager())
+        }
+
+        fun NoImpl(guildData: GuildData) : MusicManager {
+            return object : MusicManager(guildData) {
+                override fun setup() = TODO("Music is disabled.")
+                override fun reset() = TODO("Music is disabled.")
+                override fun openAudioConnection(channel: VoiceChannel, context: Context) = TODO("Music is disabled.")
+                override fun closeAudioConnection() = TODO("Music is disabled.")
+            }
         }
     }
 
@@ -59,50 +67,50 @@ class MusicManager(private val guildData: GuildData) {
 
     var youtubeResultsMap = mutableMapOf<Member, Pair<List<YouTube.Result>, Long>>()
 
-    fun setup() {
+    open fun setup() {
         player = playerManager.createPlayer()
         scheduler = TrackScheduler(guildData, player)
-        player.addListener(scheduler)
         sendHandler = AudioPlayerSendHandler(player)
+
+        player.addListener(scheduler)
         player.volume = 35
+
         isSetup = true
     }
 
-    fun reset() {
-        scheduler.queue.clear()
+    open fun reset() {
+        //scheduler.queue.clear()
         player.destroy()
         closeAudioConnection()
 
         isSetup = false
     }
 
-    fun openAudioConnection(voiceChannel: VoiceChannel, context: Context) : Boolean {
-        when (guildData.guild.region) {
-            Region.SINGAPORE, Region.UNKNOWN -> {
-                context.send().error("Singapore/Unknown server music playback is unavailable as of now.").queue()
+    open fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
+        when {
+            !guildData.guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
+                context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
                 return false
             }
             else -> {
                 guildData.guild.audioManager.sendingHandler = sendHandler
-                guildData.guild.audioManager.connectionListener = AudioConnectionListener(guildData)
-                guildData.guild.audioManager.openAudioConnection(voiceChannel)
+                guildData.guild.audioManager.openAudioConnection(channel)
 
                 context.send().embed("Music Playback") {
                     color = BotConfiguration.MUSIC_COLOR
-                    description = "Joining channel `${voiceChannel.name}`."
+                    description = "Joining channel `${channel.name}`."
                 }.action().queue()
                 return true
             }
         }
     }
 
-    fun closeAudioConnection() {
+    open fun closeAudioConnection() {
         guildData.guild.audioManager.closeAudioConnection()
-        guildData.guild.audioManager.connectionListener = null
         guildData.guild.audioManager.sendingHandler = null
     }
 
-    fun loadAndPlay(context: Context, trackUrl: String) {
+    open fun loadAndPlay(context: Context, trackUrl: String) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (scheduler.queue.size >= BotConfiguration.QUEUE_LIMIT) {

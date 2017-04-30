@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
+import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.OnlineStatus
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
@@ -93,7 +94,7 @@ class BotInfoCommand : CommandExecutor() {
                         append("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**").ln()
                         append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
                         append("Commands: **$commandSize**").ln()
-                        append("Library: Java **[JDA 3](https://github.com/DV8FromTheWorld/JDA)**").ln()
+                        append("Library: Java **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
                     }
                 }
             }

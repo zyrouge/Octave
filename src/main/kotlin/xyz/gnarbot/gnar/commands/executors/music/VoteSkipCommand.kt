@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.KEmbedBuilder
+import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
 import java.util.concurrent.TimeUnit
 
@@ -28,15 +29,11 @@ class VoteSkipCommand : CommandExecutor() {
         }
 
         if (member.voiceState.isDeafened) {
-            context.send().error("You actually have to be listening to the song to start a vote... Tsk tsk...").queue {
-                it.delete().queueAfter(5, TimeUnit.SECONDS)
-            }
+            context.send().error("You actually have to be listening to the song to start a vote.").queue()
             return
         }
         if (manager.isVotingToSkip) {
-            context.send().error("There is already a vote going on!").queue { msg ->
-                msg.delete().queueAfter(5, TimeUnit.SECONDS)
-            }
+            context.send().error("There is already a vote going on!").queue()
             return
         }
         if (System.currentTimeMillis() - manager.lastVoteTime < BotConfiguration.VOTE_SKIP_COOLDOWN.toMillis()) {
@@ -69,7 +66,6 @@ class VoteSkipCommand : CommandExecutor() {
                 description = "Voting has ended! Check the newer messages for results."
                 clearFields()
             }.build()).queueAfter(BotConfiguration.VOTE_SKIP_DURATION.seconds, TimeUnit.SECONDS) {
-
                 var skip = 0
                 var stay = 0
 
@@ -97,7 +93,7 @@ class VoteSkipCommand : CommandExecutor() {
                     field("Results") {
                         "__$skip Skip Votes__ — __$stay Stay Votes__"
                     }
-                }.action().queue()
+                }.action().queue(Utils.deleteMessage(30))
                 manager.isVotingToSkip = false
             }
         }

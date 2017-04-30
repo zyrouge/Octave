@@ -6,8 +6,7 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.ResponseBuilder;
-
-import java.util.concurrent.TimeUnit;
+import xyz.gnarbot.gnar.utils.Utils;
 
 @Command(aliases = {"quote", "quotemsg"},
         usage = "(message id) [#channel]",
@@ -39,14 +38,14 @@ public class QuoteCommand extends CommandExecutor {
                     try {
                         context.send()
                                 .error("Could not find a message with the ID " + id + " within this channel.")
-                                .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
+                                .queue(Utils.deleteMessage(5));
                     } catch (Exception ignore) {}
                 }
             }
         }
 
         context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!")
-                .queue(msg -> msg.delete().queueAfter(5, TimeUnit.SECONDS));
+                .queue(Utils.deleteMessage(5));
     }
 }
 

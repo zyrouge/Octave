@@ -12,9 +12,9 @@ public class Credentials {
     public final static String PRODUCTION = CONFIG.getString("token.production");
     public final static String BETA = CONFIG.getString("token.beta");
 
-    public final static String ABAL_URL = CONFIG.getString("abal.url");
-    public final static String ABAL_TOKEN = CONFIG.getString("abal.token");
-    public final static String CARBONITEX = CONFIG.getString("carbonitex");
+    public final static String ABAL = CONFIG.getString("server counts.abal");
+    public final static String CARBONITEX = CONFIG.getString("server counts.carbonitex");
+    public final static String DISCORDBOTS = CONFIG.getString("server counts.discordbots");
 
     public final static String IMGFLIP = CONFIG.getString("imgflip");
     public final static String MASHAPE = CONFIG.getString("mashape");

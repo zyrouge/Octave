@@ -1,9 +1,17 @@
 package xyz.gnarbot.gnar.utils;
 
+import net.dv8tion.jda.core.entities.Message;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class Utils {
+    public static Consumer<Message> deleteMessage(final int seconds) {
+        return msg -> msg.delete().queueAfter(seconds, TimeUnit.SECONDS);
+    }
+
     public static String[] stringSplit(String s, final char delimiter) {
         List<String> f = new ArrayList<>();
 

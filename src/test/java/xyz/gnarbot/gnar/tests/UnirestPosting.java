@@ -8,9 +8,9 @@ import xyz.gnarbot.gnar.Credentials;
 public class UnirestPosting {
     @Test
     public void unirestUpdate() throws Exception {
-        int i = 7000;
+        int i = 25000;
 
-        String auth = Credentials.ABAL_TOKEN;
+        String auth = Credentials.ABAL;
         String key = Credentials.CARBONITEX;
 
         JSONObject json = new JSONObject()
@@ -29,15 +29,35 @@ public class UnirestPosting {
     }
 
     @Test
-    public void unirestUpdate2() throws Exception {
-        int i = 7000;
+    public void updateDiscordBotsCount() throws Exception {
+        int i = 25000;
 
-        String auth = Credentials.ABAL_TOKEN;
+        String auth = Credentials.DISCORDBOTS;
+
+        JSONObject json = new JSONObject().put("server_count", i);
+
+        String response = Unirest.post("https://discordbots.org/api/bots/201503408652419073/stats")
+                .header("User-Agent", "Gnar Bot")
+                .header("Authorization", auth)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .body(json)
+                .asString()
+                .getStatusText();
+
+        System.out.println(response);
+    }
+
+    @Test
+    public void unirestUpdate2() throws Exception {
+        int i = 25000;
+
+        String auth = Credentials.ABAL;
 
         JSONObject json = new JSONObject()
                 .put("server_count", i);
 
-        String response = Unirest.post(Credentials.ABAL_URL)
+        String response = Unirest.post("https://bots.discord.pw/api/bots/201503408652419073/stats")
                 .header("User-Agent", "Gnar Bot")
                 .header("Authorization", auth)
                 .header("Content-Type", "application/json")

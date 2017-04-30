@@ -48,21 +48,18 @@ public class GuildCountListener extends ListenerAdapter {
             count += shard.getGuilds().size();
         }
 
-        updateServerCount(count);
-    }
-
-    private void updateServerCount(int i) {
-        updateAbalCount(i);
-        updateCarbonitexCount(i);
+        updateAbalCount(count);
+        updateCarbonitexCount(count);
+        updateDiscordBotsCount(count);
     }
 
     private void updateAbalCount(int i) {
         try {
-            String auth = Credentials.ABAL_TOKEN;
+            String auth = Credentials.ABAL;
 
             JSONObject json = new JSONObject().put("server_count", i);
 
-            String response = Unirest.post(Credentials.ABAL_URL)
+            String response = Unirest.post("https://bots.discord.pw/api/bots/201503408652419073/stats")
                     .header("User-Agent", "Gnar Bot")
                     .header("Authorization", auth)
                     .header("Content-Type", "application/json")
@@ -79,9 +76,32 @@ public class GuildCountListener extends ListenerAdapter {
         }
     }
 
+    private void updateDiscordBotsCount(int i) {
+        try {
+            String auth = Credentials.DISCORDBOTS;
+
+            JSONObject json = new JSONObject().put("server_count", i);
+
+            String response = Unirest.post("https://discordbots.org/api/bots/201503408652419073/stats")
+                    .header("User-Agent", "Gnar Bot")
+                    .header("Authorization", auth)
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .body(json)
+                    .asString()
+                    .getStatusText();
+
+            bot.getLog().info("Successfully updated DiscordBots server count to " + i + ".");
+            bot.getLog().info("Response code: " + response);
+        } catch (UnirestException e) {
+            bot.getLog().warn("Failed updating DiscordBots server count to " + i + ".");
+            e.printStackTrace();
+        }
+    }
+
     private void updateCarbonitexCount(int i) {
         try {
-            String auth = Credentials.ABAL_TOKEN;
+            String auth = Credentials.ABAL;
             String key = Credentials.CARBONITEX;
 
             JSONObject json = new JSONObject().put("key", key).put("servercount", i);

@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
@@ -11,6 +12,7 @@ import xyz.gnarbot.gnar.utils.u
 
 @Command(
         aliases = arrayOf("queue", "list"),
+        usage = "[clear]",
         description = "Shows the music that's currently queued.",
         category = Category.MUSIC
 )
@@ -21,6 +23,21 @@ class QueueCommand : CommandExecutor() {
         var trackCount = 0
         var queueLength = 0L
 
+        if (args.isNotEmpty()) {
+            if (args[0] == "clear") {
+                if (!context.member.hasPermission(context.guild.selfMember.voiceState.channel, Permission.MANAGE_CHANNEL)) {
+                    context.send().error("You lack the following permissions: `Manage Channels` in the the voice channel `${context.guild.selfMember.voiceState.channel.name}`.").queue()
+                    return
+                }
+                queue.clear()
+                context.send().embed("Music Queue") {
+                    color = BotConfiguration.MUSIC_COLOR
+                    description = "Cleared the music queue."
+                }.action().queue()
+                return
+            }
+        }
+
         context.send().embed("Music Queue") {
             color = BotConfiguration.MUSIC_COLOR
 
@@ -28,7 +45,6 @@ class QueueCommand : CommandExecutor() {
                 field("Now Playing", false) {
                     "__[${it.info.title}](${it.info.uri})__"
                 }
-
             }
 
             field("Queue", false) {
