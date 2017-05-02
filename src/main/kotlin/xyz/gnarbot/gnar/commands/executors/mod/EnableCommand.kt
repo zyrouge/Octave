@@ -59,7 +59,8 @@ class EnableCommand : CommandExecutor() {
             if (fails.isNotEmpty()) {
                 field("Failure") {
                     buildString {
-                        append("Unable to enable ${fails.joinToString(prefix = "`_", separator = "`, `_", postfix = "`")}.")
+                        append("Unable to enable ${fails.joinToString(prefix = "`_", separator = "`, `_", postfix = "`")}.").ln()
+                        append("Either that they are not commands or could not be enabled.")
                     }
                 }
             }

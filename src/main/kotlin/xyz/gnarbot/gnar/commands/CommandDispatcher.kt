@@ -8,9 +8,6 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
 class CommandDispatcher(private val bot: Bot) {
-    /** @returns Enabled command entries. */
-    val enabled: List<CommandExecutor> get() = bot.commandRegistry.entries.apply { removeAll(disabled) }.toList()
-
     /** @returns Disabled command entries. */
     val disabled: MutableList<CommandExecutor> = mutableListOf()
 
