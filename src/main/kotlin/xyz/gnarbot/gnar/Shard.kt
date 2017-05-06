@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar
 
+import gnu.trove.map.hash.TLongObjectHashMap
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Guild
 import xyz.gnarbot.gnar.api.data.ShardInfo
@@ -13,14 +14,21 @@ class Shard(val id: Int, val jda: JDA, val bot: Bot) : JDA by jda {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
 
-    val guildData = mutableMapOf<Long, GuildData>()
+    val guildData = TLongObjectHashMap<GuildData>()
 
     init {
         jda.addEventListener(ShardListener(this, bot))
     }
 
     fun getGuildData(id: Long) : GuildData {
-        return guildData.getOrPut(id) { GuildData(id, this, bot) }
+        val value = guildData[id]
+        return if (value == null) {
+            val answer = GuildData(id, this, bot)
+            guildData.put(id, answer)
+            answer
+        } else {
+            value
+        }
     }
 
     /**
@@ -55,8 +63,8 @@ class Shard(val id: Int, val jda: JDA, val bot: Bot) : JDA by jda {
     fun clearData(interrupt: Boolean) {
         val iterator = guildData.iterator()
         while (iterator.hasNext()) {
-            val it = iterator.next()
-            if(it.value.reset(interrupt)) {
+            iterator.advance()
+            if(iterator.value().reset(interrupt)) {
                 iterator.remove()
             }
         }

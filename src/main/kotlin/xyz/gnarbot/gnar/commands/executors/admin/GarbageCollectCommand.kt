@@ -21,7 +21,7 @@ class GarbageCollectCommand : CommandExecutor() {
             context.bot.shards.forEach { it.clearData(interrupt) }
             field("Wrappers", false, "Removed settings instances.")
 
-            field("Guild Data Remaining", true, context.bot.shards.sumBy { it.guildData.size })
+            field("Guild Data Remaining", true, context.bot.shards.sumBy { it.guildData.size() })
 
             System.gc()
             field("GC Request", false, "Garbage collection request sent to JVM.")
