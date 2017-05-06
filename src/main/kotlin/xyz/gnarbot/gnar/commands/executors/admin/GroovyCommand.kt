@@ -9,14 +9,14 @@ import java.awt.Color
 import javax.script.*
 
 @Command(
-        aliases = arrayOf("js"),
-        description = "Run JS scripts.",
+        aliases = arrayOf("gv"),
+        description = "Run Groovy scripts.",
         administrator = true,
         category = Category.NONE
 )
-class JavascriptCommand : CommandExecutor() {
+class GroovyCommand : CommandExecutor() {
     companion object {
-        val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("javascript")
+        val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("groovy")
     }
 
     override fun execute(context: Context, args: Array<String>) {
@@ -30,7 +30,7 @@ class JavascriptCommand : CommandExecutor() {
 
         scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
 
-        context.send().embed("JavaScript") {
+        context.send().embed("Groovy") {
             color = BotConfiguration.ACCENT_COLOR
 
             field("Running", false, script)
@@ -38,7 +38,7 @@ class JavascriptCommand : CommandExecutor() {
                 scriptEngine.eval(script, scope)
             } catch (e: ScriptException) {
                 color = Color.RED
-                "The error `$e` occurred while executing the JavaScript statement."
+                "The error `$e` occurred while executing the Groovy statement."
             })
         }.action().queue()
     }

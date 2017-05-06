@@ -38,34 +38,34 @@ class CommandDispatcher(private val bot: Bot) {
         val message = context.message
         val member = message.member
 
-        if (cmd.info.administrator) {
-            if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
+        if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
+            if (cmd.info.administrator) {
                 context.send().error("This command is for bot administrators only.").queue()
-                return false
             }
-        }
-        if (cmd.info.guildOwner) {
-            if (context.guild.owner != member) {
-                context.send().error("This command is for server owners only.").queue()
-                return false
-            }
-        }
 
-        if (cmd.info.permissions.isNotEmpty()) {
-            if (cmd.info.scope == Scope.VOICE) {
-                if (member.voiceState.channel == null) {
-                    context.send().error("This command requires you to be in a voice channel.").queue()
+            if (cmd.info.guildOwner) {
+                if (context.guild.owner != member) {
+                    context.send().error("This command is for server owners only.").queue()
                     return false
                 }
             }
-            if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
-                val requirements = cmd.info.permissions.map(Permission::getName)
-                context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
-                    Scope.GUILD -> "the guild `${message.guild.name}`."
-                    Scope.TEXT -> "the text channel `${message.textChannel.name}`."
-                    Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
-                }).queue()
-                return false
+
+            if (cmd.info.permissions.isNotEmpty()) {
+                if (cmd.info.scope == Scope.VOICE) {
+                    if (member.voiceState.channel == null) {
+                        context.send().error("This command requires you to be in a voice channel.").queue()
+                        return false
+                    }
+                }
+                if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+                    val requirements = cmd.info.permissions.map(Permission::getName)
+                    context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
+                        Scope.GUILD -> "the guild `${message.guild.name}`."
+                        Scope.TEXT -> "the text channel `${message.textChannel.name}`."
+                        Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
+                    }).queue()
+                    return false
+                }
             }
         }
 

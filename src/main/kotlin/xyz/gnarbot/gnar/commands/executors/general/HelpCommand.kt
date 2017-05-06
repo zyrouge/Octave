@@ -75,7 +75,7 @@ class HelpCommand : CommandExecutor() {
                         field("", true) {
                             buildString {
                                 page.forEach {
-                                    append("**[").append(BotConfiguration.PREFIX).append(it.info.aliases[0]).append("]()**").ln()
+                                    append('`').append(BotConfiguration.PREFIX).append(it.info.aliases[0]).append('`').ln()
                                 }
                             }
                         }

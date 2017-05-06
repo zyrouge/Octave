@@ -1,14 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import org.apache.commons.lang3.StringUtils
+import org.mariuszgromada.math.mxparser.Expression
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
-import xyz.hexav.aje.AJEException
-import xyz.hexav.aje.ExpressionBuilder
 import java.awt.Color
 
 @Command(aliases = arrayOf("math"), usage = "(expression)", description = "Calculate fancy math expressions.")
@@ -22,23 +20,26 @@ class MathCommand : CommandExecutor() {
         context.send().embed("Math") {
             color = BotConfiguration.ACCENT_COLOR
 
-            val exp = ExpressionBuilder()
-            val lines = Utils.stringSplit(StringUtils.join(args, ' '), ';')
-            lines.forEach { exp.addLine(it) }
+            val script = StringUtils.join(args, ' ')
 
-            field("Expressions", true) {
-                b(lines.map(String::trim).joinToString("\n"))
+            field("Expressions") {
+                script
             }
 
-            try {
-                val results = exp.build().evalList()
+            val exp = Expression(script)
+
+            if (exp.checkSyntax()) {
+                val result = exp.calculate()
 
                 field("Result", true) {
-                    b(results.contentToString())
+                    b(result)
                 }
-            } catch (e: AJEException) {
-                field("Error", true) {
-                    e.message
+                field("Computing Time", true) {
+                    "${exp.computingTime} seconds"
+                }
+            } else {
+                field("Error") {
+                    exp.errorMessage
                 }
                 color = Color.RED
             }

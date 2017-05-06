@@ -2,10 +2,7 @@ package xyz.gnarbot.gnar.commands;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotConfiguration;
-import xyz.gnarbot.gnar.commands.executors.admin.GarbageCollectCommand;
-import xyz.gnarbot.gnar.commands.executors.admin.JavascriptCommand;
-import xyz.gnarbot.gnar.commands.executors.admin.RestartShardsCommand;
-import xyz.gnarbot.gnar.commands.executors.admin.ThrowError;
+import xyz.gnarbot.gnar.commands.executors.admin.*;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.LeagueLookupCommand;
@@ -106,6 +103,7 @@ public class CommandRegistry {
         register(new GarbageCollectCommand());
         register(new RestartShardsCommand());
         register(new JavascriptCommand());
+        register(new GroovyCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
 
