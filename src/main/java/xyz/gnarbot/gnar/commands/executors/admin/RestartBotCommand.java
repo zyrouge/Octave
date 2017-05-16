@@ -7,9 +7,9 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
-        aliases = "restart",
+        aliases = "restartbot",
         administrator = true)
-public class RestartCommand extends CommandExecutor {
+public class RestartBotCommand extends CommandExecutor {
 
     @Override
     public void execute(Context context, String[] args) {

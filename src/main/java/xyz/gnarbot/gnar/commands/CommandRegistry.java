@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
-import xyz.gnarbot.gnar.commands.executors.admin.RestartCommand;
+import xyz.gnarbot.gnar.commands.executors.admin.RestartBotCommand;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.LeagueLookupCommand;
@@ -108,7 +108,7 @@ public class CommandRegistry {
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new UpdateCommand());
-        register(new RestartCommand());
+        register(new RestartBotCommand());
 
 
         // Test Commands
