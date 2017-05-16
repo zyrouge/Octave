@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
+
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;

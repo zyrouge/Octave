@@ -72,7 +72,7 @@ class Bot(val token: String, val numShards: Int) {
     fun restart() {
         log.info("Restarting the Discord bot shards.")
 
-        shards.map(Shard::id).forEach(this::restart)
+        //shards.map(Shard::id).forEach(this::restart)
 
         log.info("Discord bot shards have now restarted.")
     }
