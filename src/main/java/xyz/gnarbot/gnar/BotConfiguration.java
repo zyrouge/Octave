@@ -9,6 +9,8 @@ import java.time.Duration;
 import java.util.List;
 
 public class BotConfiguration {
+    // TODO use Configurate instead of typesafe/config
+
     public final static File DATA_FOLDER = new File("data");
     public final static Config CONFIG = ConfigFactory.parseFile(new File(DATA_FOLDER, "bot.conf"))
             .withFallback(ConfigFactory.load("bot.conf"));

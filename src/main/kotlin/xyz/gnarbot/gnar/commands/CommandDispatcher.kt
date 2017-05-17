@@ -41,6 +41,7 @@ class CommandDispatcher(private val bot: Bot) {
         if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
             if (cmd.info.administrator) {
                 context.send().error("This command is for bot administrators only.").queue()
+                return false;
             }
 
             if (cmd.info.guildOwner) {
