@@ -12,7 +12,6 @@ import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.Utils;
 
 import java.util.Map;
 import java.util.Set;
@@ -88,9 +87,8 @@ public class MemeCommand extends CommandExecutor {
 
                 return;
             }
-
             String request = StringUtils.join(args, " ");
-            String[] arguments = Utils.stringSplit(request, '|');
+            String[] arguments = request.split("\\|");
 
             int ld = 999;
             String id = null;

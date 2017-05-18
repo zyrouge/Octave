@@ -12,19 +12,34 @@ public class Utils {
         return msg -> msg.delete().queueAfter(seconds, TimeUnit.SECONDS);
     }
 
-    public static String[] stringSplit(String s, final char delimiter) {
+    public static String[] stringSplit(String s) {
         List<String> f = new ArrayList<>();
 
         int p = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == delimiter) {
+            if (s.charAt(i) == ' ') {
                 f.add(s.substring(p, i));
                 p = i + 1;
-
-                while (i < s.length() - 1 && s.charAt(i + 1) == delimiter) {
+                while (i < s.length() - 1 && s.charAt(i + 1) == ' ') {
                     i++;
                     p++;
                 }
+            } else if (s.charAt(i) == '`') {
+                if (s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
+                    int start = i + 3;
+                    i += 3;
+                    while (i < s.length() - 3 && !s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
+                        i++;
+                    }
+                    int end = i;
+                    f.add(s.substring(start, end));
+                    i += 3;
+                    p = i;
+                }
+            } else if (s.charAt(i) == '\n'
+                    || s.charAt(i) == '\r' && s.charAt(i + 1) == '\n') {
+                f.add(s.substring(p, i + 1));
+                p = i + 1;
             }
         }
         f.add(s.substring(p));

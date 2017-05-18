@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import org.apache.commons.lang3.StringUtils
 import org.mariuszgromada.math.mxparser.Expression
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
 
 @Command(aliases = arrayOf("math"), usage = "(expression)", description = "Calculate fancy math expressions.")
@@ -20,10 +20,16 @@ class MathCommand : CommandExecutor() {
         context.send().embed("Math") {
             color = BotConfiguration.ACCENT_COLOR
 
-            val script = StringUtils.join(args, ' ')
+            val script = if (args.size == 1) {
+                args[0]
+            } else {
+                args.joinToString(" ")
+            }
 
             field("Expressions") {
-                script
+                code {
+                    script
+                }
             }
 
             val exp = Expression(script)

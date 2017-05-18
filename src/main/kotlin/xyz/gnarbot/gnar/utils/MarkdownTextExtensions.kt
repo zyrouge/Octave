@@ -25,6 +25,6 @@ inline infix fun String.link(url: String) = "[$this]${if (true) "($url)" else "(
 /** Link strings to a URL. */
 inline infix fun Any?.link(url: String) = toString() link url
 
-inline fun code(language: String, code: () -> String) = "```$language\n${code()}```";
+inline fun code(language: String = "", code: () -> String) = "```$language\n${code()}```";
 
 inline fun inline(code: () -> String) = "`${code()}`"

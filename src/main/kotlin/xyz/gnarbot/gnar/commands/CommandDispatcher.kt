@@ -21,13 +21,13 @@ class CommandDispatcher(private val bot: Bot) {
         val content = context.message.content
         if (!content.startsWith(BotConfiguration.PREFIX)) return false
 
-        // Tokenize the message.
-        val tokens = Utils.stringSplit(content, ' ')
+        // Split the message.
+        val tokens = Utils.stringSplit(content)
 
-        val label = tokens[0].substring(BotConfiguration.PREFIX.length).toLowerCase()
+        val label = tokens[0].substring(BotConfiguration.PREFIX.length).toLowerCase().trim()
 
         val args = tokens.copyOfRange(1, tokens.size)
-        
+
         val cmd = bot.commandRegistry.getCommand(label) ?: return false
 
         if (cmd in disabled) {
@@ -41,7 +41,7 @@ class CommandDispatcher(private val bot: Bot) {
         if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
             if (cmd.info.administrator) {
                 context.send().error("This command is for bot administrators only.").queue()
-                return false;
+                return false
             }
 
             if (cmd.info.guildOwner) {

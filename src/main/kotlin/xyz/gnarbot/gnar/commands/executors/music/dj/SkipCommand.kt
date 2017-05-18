@@ -12,19 +12,24 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("skip"),
         description = "Skip the current music track.",
         category = Category.MUSIC,
-        scope = Scope.VOICE,
-        permissions = arrayOf(Permission.MANAGE_CHANNEL)
+        scope = Scope.VOICE
 )
 class SkipCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
 
-        if (manager.scheduler.queue.isEmpty()) {
-            context.guildData.musicManager.reset()
-        } else {
-            manager.scheduler.nextTrack()
-        }
+        if (manager.player.playingTrack.userData == context.member
+                || context.member.hasPermission(Permission.MANAGE_CHANNEL)) {
 
+            if (manager.scheduler.queue.isEmpty()) {
+                context.guildData.musicManager.reset()
+            } else {
+                manager.scheduler.nextTrack()
+            }
+        } else {
+            context.send().error("You did not request this track.").queue()
+            return
+        }
         context.send().embed("Skip Current Track") {
             color = BotConfiguration.MUSIC_COLOR
             description = "The track was skipped."

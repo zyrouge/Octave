@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.Shard
 import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandHandler
@@ -18,8 +17,7 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
 
     val commandHandler = CommandDispatcher(bot)
 
-    val musicManager: MusicManager = if (BotConfiguration.MUSIC_ENABLED) MusicManager(this)
-    else MusicManager.NoImpl(this)
+    val musicManager: MusicManager = MusicManager(this)
         get() {
             return field.also { if (!field.isSetup) field.setup() }
         }

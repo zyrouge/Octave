@@ -23,7 +23,7 @@ import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.YouTube
 
-open class MusicManager(private val guildData: GuildData) {
+class MusicManager(private val guildData: GuildData) {
     companion object {
         private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
             registerSourceManager(YoutubeAudioSourceManager())
@@ -32,15 +32,6 @@ open class MusicManager(private val guildData: GuildData) {
             registerSourceManager(BandcampAudioSourceManager())
             registerSourceManager(TwitchStreamAudioSourceManager())
             registerSourceManager(BeamAudioSourceManager())
-        }
-
-        fun NoImpl(guildData: GuildData) : MusicManager {
-            return object : MusicManager(guildData) {
-                override fun setup() = TODO("Music is disabled.")
-                override fun reset() = TODO("Music is disabled.")
-                override fun openAudioConnection(channel: VoiceChannel, context: Context) = TODO("Music is disabled.")
-                override fun closeAudioConnection() = TODO("Music is disabled.")
-            }
         }
     }
 
@@ -67,7 +58,7 @@ open class MusicManager(private val guildData: GuildData) {
 
     var youtubeResultsMap = mutableMapOf<Member, Pair<List<YouTube.Result>, Long>>()
 
-    open fun setup() {
+    fun setup() {
         player = playerManager.createPlayer()
         scheduler = TrackScheduler(guildData, player)
         sendHandler = AudioPlayerSendHandler(player)
@@ -78,7 +69,7 @@ open class MusicManager(private val guildData: GuildData) {
         isSetup = true
     }
 
-    open fun reset() {
+    fun reset() {
         //scheduler.queue.clear()
         player.destroy()
         closeAudioConnection()
@@ -86,8 +77,12 @@ open class MusicManager(private val guildData: GuildData) {
         isSetup = false
     }
 
-    open fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
+    fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
         when {
+            !BotConfiguration.MUSIC_ENABLED -> {
+                context.send().error("Music is disabled.").queue()
+                return false;
+            }
             !guildData.guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
                 context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
                 return false
@@ -105,12 +100,12 @@ open class MusicManager(private val guildData: GuildData) {
         }
     }
 
-    open fun closeAudioConnection() {
+    fun closeAudioConnection() {
         guildData.guild.audioManager.closeAudioConnection()
         guildData.guild.audioManager.sendingHandler = null
     }
 
-    open fun loadAndPlay(context: Context, trackUrl: String) {
+    fun loadAndPlay(context: Context, trackUrl: String) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (scheduler.queue.size >= BotConfiguration.QUEUE_LIMIT) {
@@ -124,6 +119,8 @@ open class MusicManager(private val guildData: GuildData) {
                         return
                     }
                 }
+
+                track.userData = context.member
 
                 scheduler.queue(track)
 
@@ -143,6 +140,8 @@ open class MusicManager(private val guildData: GuildData) {
                         break
                     }
 
+                    track.userData = context.member
+
                     scheduler.queue(track)
                     added++
                 }
@@ -158,7 +157,7 @@ open class MusicManager(private val guildData: GuildData) {
             }
 
             override fun loadFailed(e: FriendlyException) {
-                context.send().error("**Exception**: `${e.message}`").queue()
+                context.send().exception(e).queue()
             }
         })
     }

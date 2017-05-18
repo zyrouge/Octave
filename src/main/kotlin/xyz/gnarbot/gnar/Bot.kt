@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -41,6 +42,7 @@ class Bot(val token: String, val numShards: Int) {
         log.info("Shards:\t$numShards")
         log.info("Prefix:\t${BotConfiguration.PREFIX}")
         log.info("Admins:\t${BotConfiguration.ADMINISTRATORS.size}")
+        log.info("JDA:\t${JDAInfo.VERSION}")
 
         shards = Array(numShards) { id ->
             val jda = createJDA(id)
