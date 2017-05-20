@@ -1,15 +1,21 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import com.mashape.unirest.http.Unirest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
+import xyz.gnarbot.gnar.Requester;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+
+import java.io.IOException;
 
 @Command(
         aliases = {"urbandict", "ub", "urbandictionary"},
@@ -18,37 +24,41 @@ import xyz.gnarbot.gnar.utils.Context;
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        try {
-            String query = StringUtils.join(args, "+");
+        String query = StringUtils.join(args, "+");
 
-            JSONObject json = Unirest.get("https://mashape-community-urban-dictionary.p.mashape.com/define")
-                    .queryString("term", query)
-                    .header("X-Mashape-Key", Credentials.MASHAPE)
-                    .header("Accept", "text/plain")
-                    .asJson()
-                    .getBody()
-                    .getObject();
+        Request request = new Request.Builder()
+                .url("https://mashape-community-urban-dictionary.p.mashape.com/define?term=" + query)
+                .header("X-Mashape-Key", Credentials.MASHAPE)
+                .header("Accept", "text/plain")
+                .get()
+                .build();
 
-            JSONArray words = json.getJSONArray("list");
-
-            if (words.length() < 1) {
-                context.send().error("Could not find that word, rip u").queue();
-                return;
+        Requester.CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                context.send().error("Failed to find that word.").queue();
             }
 
-            JSONObject word = words.getJSONObject(0);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONArray words = new JSONObject(response.body().string()).getJSONArray("list");
 
-            context.send().embed("Urban Dictionary")
-                    .setColor(BotConfiguration.ACCENT_COLOR)
-                    .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
-                    .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
-                    .field("Definition", true, word.optString("definition"))
-                    .field("Example", true, word.optString("example"))
-                    .action().queue();
+                if (words.length() < 1) {
+                    context.send().error("Could not find that word.").queue();
+                    return;
+                }
 
-        } catch (Exception e) {
-            context.send().error("Could not find that word, rip u").queue();
-        }
+                JSONObject word = words.getJSONObject(0);
+
+                context.send().embed("Urban Dictionary")
+                        .setColor(BotConfiguration.ACCENT_COLOR)
+                        .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
+                        .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
+                        .field("Definition", true, word.optString("definition"))
+                        .field("Example", true, word.optString("example"))
+                        .action().queue();
+            }
+        });
     }
 
 }

@@ -17,6 +17,7 @@ public class BotConfiguration {
 
     public static final String BOT_NAME = CONFIG.getString("bot.name");
     public static final String BOT_GAME = CONFIG.getString("bot.game");
+    public static final int SHARDS = CONFIG.getInt("bot.shards");
 
     public static final String PREFIX = CONFIG.getString("commands.prefix");
     public static final List<Long> ADMINISTRATORS = CONFIG.getLongList("commands.administrators");

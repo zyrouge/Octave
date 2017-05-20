@@ -26,6 +26,6 @@ public class MainBot {
             }
         };
 
-        new Bot(Credentials.PRODUCTION, 36);
+        new Bot(Credentials.PRODUCTION, BotConfiguration.SHARDS);
     }
 }
