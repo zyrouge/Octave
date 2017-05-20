@@ -97,7 +97,7 @@ abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
      */
     val isEmpty: Boolean
         get() = title == null
-                //&& descriptionBuilder == null
+                && descriptionBuilder.isEmpty()
                 && timestamp == null
                 && color == null
                 && thumbnail == null
