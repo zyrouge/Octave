@@ -7,7 +7,7 @@ import okhttp3.*;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Credentials;
-import xyz.gnarbot.gnar.Requester;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 import xyz.gnarbot.gnar.Shard;
 
 import java.io.IOException;
@@ -64,10 +64,10 @@ public class GuildCountListener extends ListenerAdapter {
                 .header("Authorization", Credentials.ABAL)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .post(RequestBody.create(Requester.JSON, json.toString()))
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build();
 
-        Requester.CLIENT.newCall(request).enqueue(new Callback() {
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("Abal failed.", e);
@@ -88,10 +88,10 @@ public class GuildCountListener extends ListenerAdapter {
                 .header("Authorization", Credentials.DISCORDBOTS)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .post(RequestBody.create(Requester.JSON, json.toString()))
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build();
 
-        Requester.CLIENT.newCall(request).enqueue(new Callback() {
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("DiscordBots failed.", e);
@@ -112,10 +112,10 @@ public class GuildCountListener extends ListenerAdapter {
                 .header("Authorization", Credentials.ABAL)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .post(RequestBody.create(Requester.JSON, json.toString()))
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build();
 
-        Requester.CLIENT.newCall(request).enqueue(new Callback() {
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("Carbonitex failed.", e);

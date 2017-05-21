@@ -42,7 +42,7 @@ class Bot(val token: String, val numShards: Int) {
         log.info("Shards:\t$numShards")
         log.info("Prefix:\t${BotConfiguration.PREFIX}")
         log.info("Admins:\t${BotConfiguration.ADMINISTRATORS.size}")
-        log.info("JDA:\t${JDAInfo.VERSION}")
+        log.info("JDA:\t\t${JDAInfo.VERSION}")
 
         shards = Array(numShards) { id ->
             val jda = createJDA(id)

@@ -38,13 +38,13 @@ dependencies {
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.39'
 
     // Configurations
-    compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.1'
+    compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
     compile group: 'com.typesafe', name: 'config', version: '1.3.1'
     compile group: 'io.github.config4k', name: 'config4k', version: '0.3.0'
     compile group: 'org.json', name: 'json', version: '20160810'
 
     // Other dependencies
-    compile group: 'org.mariuszgromada.math', name: 'MathParser.org-mXparser', version: '4.0.0'
+    compile group: 'xyz.avarel', name: 'AJE', version: '3.0.2'
     compile group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'

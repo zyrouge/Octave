@@ -9,7 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Credentials;
-import xyz.gnarbot.gnar.Requester;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -33,7 +33,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                 .get()
                 .build();
 
-        Requester.CLIENT.newCall(request).enqueue(new Callback() {
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 context.send().error("Failed to find that word.").queue();

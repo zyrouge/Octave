@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import org.mariuszgromada.math.mxparser.Expression
+import xyz.avarel.aje.AJEException
+import xyz.avarel.aje.Expression
 import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
 
@@ -26,26 +26,33 @@ class MathCommand : CommandExecutor() {
                 args.joinToString(" ")
             }
 
-            field("Expressions") {
-                code {
-                    script
-                }
-            }
-
             val exp = Expression(script)
 
-            if (exp.checkSyntax()) {
-                val result = exp.calculate()
+            try {
+                field("Expressions") {
+                    code {
+                        script
+                    }
+                }
 
-                field("Result", true) {
-                    b(result)
+                val expr = exp.compile()
+
+                field("AST") {
+                    code {
+                        buildString {
+                            expr.ast(this, "", true)
+                        }
+                    }
                 }
-                field("Computing Time", true) {
-                    "${exp.computingTime} seconds"
+
+                field("Result") {
+                    code {
+                        expr.compute().toString()
+                    }
                 }
-            } else {
+            } catch (e : AJEException) {
                 field("Error") {
-                    exp.errorMessage
+                    e.message
                 }
                 color = Color.RED
             }

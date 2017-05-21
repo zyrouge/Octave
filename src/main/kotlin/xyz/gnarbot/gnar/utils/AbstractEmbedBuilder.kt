@@ -1,5 +1,7 @@
 package xyz.gnarbot.gnar.utils
 
+import net.dv8tion.jda.core.EmbedBuilder.URL_PATTERN
+import net.dv8tion.jda.core.EmbedBuilder.ZERO_WIDTH_SPACE
 import net.dv8tion.jda.core.entities.MessageEmbed
 import net.dv8tion.jda.core.entities.MessageEmbed.*
 import net.dv8tion.jda.core.entities.User
@@ -539,11 +541,8 @@ abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
         @JvmStatic fun urlCheck(url: String?) {
             if (url == null) return
             require(url.length <= URL_MAX_LENGTH) { "URL cannot be longer than $URL_MAX_LENGTH characters." }
-            require(URL_PATTERN matches url) { "URL must be a valid http or https url." }
+            require(URL_PATTERN.matcher(url).matches()) { "URL must be a valid http or https url." }
         }
-
-        @JvmField val ZERO_WIDTH_SPACE = "\u200E"
-        @JvmField val URL_PATTERN = Regex("""\s*(https?|attachment)://.+\..{2,}\s*""", RegexOption.IGNORE_CASE)
     }
     
     inline var AbstractEmbedBuilder<*>.title : String?
