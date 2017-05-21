@@ -18,7 +18,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.VoiceChannel
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.YouTube
@@ -79,7 +78,7 @@ class MusicManager(private val guildData: GuildData) {
 
     fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
         when {
-            !BotConfiguration.MUSIC_ENABLED -> {
+            !context.bot.config.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
                 return false;
             }
@@ -92,7 +91,7 @@ class MusicManager(private val guildData: GuildData) {
                 guildData.guild.audioManager.openAudioConnection(channel)
 
                 context.send().embed("Music Playback") {
-                    color = BotConfiguration.MUSIC_COLOR
+                    color = context.bot.config.musicColor
                     description = "Joining channel `${channel.name}`."
                 }.action().queue()
                 return true
@@ -108,14 +107,14 @@ class MusicManager(private val guildData: GuildData) {
     fun loadAndPlay(context: Context, trackUrl: String) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
-                if (scheduler.queue.size >= BotConfiguration.QUEUE_LIMIT) {
-                    context.send().error("The queue can not exceed ${BotConfiguration.QUEUE_LIMIT} songs.").queue()
+                if (scheduler.queue.size >= context.bot.config.queueLimit) {
+                    context.send().error("The queue can not exceed ${context.bot.config.queueLimit} songs.").queue()
                     return
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    if (track.duration > BotConfiguration.DURATION_LIMIT.toMillis()) {
-                        context.send().error("The track can not exceed ${BotConfiguration.DURATION_LIMIT_TEXT}.").queue()
+                    if (track.duration > context.bot.config.durationLimit.toMillis()) {
+                        context.send().error("The track can not exceed ${context.bot.config.durationLimitText}.").queue()
                         return
                     }
                 }
@@ -125,7 +124,7 @@ class MusicManager(private val guildData: GuildData) {
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    color = BotConfiguration.MUSIC_COLOR
+                    color = context.bot.config.musicColor
                     description = "Added __**[${track.info.title}](${track.info.uri})**__ to queue."
                 }.action().queue()
             }
@@ -135,8 +134,8 @@ class MusicManager(private val guildData: GuildData) {
 
                 var added = 0
                 for (track in tracks) {
-                    if (scheduler.queue.size >= BotConfiguration.QUEUE_LIMIT) {
-                        context.send().info("Ignored ${tracks.size - added} songs as the queue can not exceed ${BotConfiguration.QUEUE_LIMIT} songs.").queue()
+                    if (scheduler.queue.size >= context.bot.config.queueLimit) {
+                        context.send().info("Ignored ${tracks.size - added} songs as the queue can not exceed ${context.bot.config.queueLimit} songs.").queue()
                         break
                     }
 
@@ -147,7 +146,7 @@ class MusicManager(private val guildData: GuildData) {
                 }
 
                 context.send().embed("Music Queue") {
-                    color = BotConfiguration.MUSIC_COLOR
+                    color = context.bot.config.musicColor
                     description = "Added `$added` tracks to queue from playlist `${playlist.name}`."
                 }.action().queue()
             }

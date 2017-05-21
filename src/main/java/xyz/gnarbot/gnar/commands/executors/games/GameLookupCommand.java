@@ -25,7 +25,7 @@ public class GameLookupCommand extends CommandExecutor {
                     .queryString("fields", "name,summary,rating,cover.url")
                     .queryString("limit", 1)
                     .queryString("search", query)
-                    .header("X-Mashape-Key", Credentials.MASHAPE)
+                    .header("X-Mashape-Key", context.getBot().getCredentials().getMashape())
                     .header("Accept", "application/json")
                     .asJson();
 
@@ -45,7 +45,7 @@ public class GameLookupCommand extends CommandExecutor {
             String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
             context.send().embed(title)
-                    .setColor(BotConfiguration.ACCENT_COLOR)
+                    .setColor(context.getBot().getConfig().getAccentColor())
                     .setThumbnail(thumb)
                     //.field("Publisher", true, publisher)
                     .field("Score", true, score)

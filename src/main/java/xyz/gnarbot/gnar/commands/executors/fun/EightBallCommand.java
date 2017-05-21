@@ -26,7 +26,7 @@ public class EightBallCommand extends CommandExecutor {
         }
 
         context.send().embed("8-Ball")
-                .setColor(BotConfiguration.ACCENT_COLOR)
+                .setColor(context.getBot().getConfig().getAccentColor())
                 .setDescription(responses[random.nextInt(responses.length)])
                 .action().queue();
     }

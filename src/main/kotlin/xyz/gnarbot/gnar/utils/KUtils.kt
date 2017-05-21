@@ -1,6 +1,71 @@
 @file:Suppress("NOTHING_TO_INLINE")
 package xyz.gnarbot.gnar.utils
 
+import ninja.leaping.configurate.ConfigurationNode
+import java.time.Duration
+import java.util.concurrent.TimeUnit
+
 inline fun StringBuilder.ln(): StringBuilder = appendln()
 
 inline fun Int.conformToRange(min: Int, max: Int) = Math.min(Math.max(min, this), max)
+
+
+@Suppress("NOTHING_TO_INLINE")
+inline operator fun ConfigurationNode.get(vararg objs : Any) : ConfigurationNode {
+    return this.getNode(*objs)
+}
+
+fun String.toDuration() : Duration {
+    return Duration.ofNanos(parseDuration(this))
+}
+
+fun parseDuration(input: String): Long {
+    val s = input.trim()
+    val originalUnitString = getUnits(s)
+    var unitString = originalUnitString
+    val numberString = s.substring(0, s.length - unitString.length).trim()
+
+    // this would be caught later anyway, but the error message
+    // is more helpful if we check it here.
+    if (numberString.isEmpty()) {
+        throw RuntimeException("No number in duration value '$input'")
+    }
+
+    if (unitString.length > 2 && !unitString.endsWith("s"))
+        unitString += "s"
+
+    // note that this is deliberately case-sensitive
+    val units: TimeUnit = when (unitString) {
+        "", "ms", "millis", "milliseconds" -> TimeUnit.MILLISECONDS
+        "us", "micros", "microseconds" -> TimeUnit.MICROSECONDS
+        "ns", "nanos", "nanoseconds" -> TimeUnit.NANOSECONDS
+        "d", "days" -> TimeUnit.DAYS
+        "h", "hours" -> TimeUnit.HOURS
+        "s", "seconds" -> TimeUnit.SECONDS
+        "m", "minutes" -> TimeUnit.MINUTES
+        else -> throw RuntimeException("Could not parse time unit '$originalUnitString' (try ns, us, ms, s, m, h, d)")
+    }
+
+    try {
+        if (numberString.matches("[+-]?[0-9]+".toRegex())) {
+            return units.toNanos(numberString.toLong())
+        } else {
+            val nanosInUnit = units.toNanos(1)
+            return (numberString.toDouble() * nanosInUnit).toLong()
+        }
+    } catch (e: NumberFormatException) {
+        throw RuntimeException("Could not parse duration number '$numberString'")
+    }
+
+}
+
+private fun getUnits(s: String): String {
+    var i = s.length - 1
+    while (i >= 0) {
+        val c = s[i]
+        if (!Character.isLetter(c))
+            break
+        i -= 1
+    }
+    return s.substring(i + 1)
+}

@@ -2,12 +2,15 @@ package xyz.gnarbot.gnar.utils;
 
 import net.dv8tion.jda.core.entities.Message;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class Utils {
+    public static final File DATA_FOLDER = new File("data");
+
     public static Consumer<Message> deleteMessage(final int seconds) {
         return msg -> msg.delete().queueAfter(seconds, TimeUnit.SECONDS);
     }

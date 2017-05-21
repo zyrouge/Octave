@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -27,7 +26,7 @@ class PauseCommand : CommandExecutor() {
         manager.player.isPaused = !manager.player.isPaused
 
         context.send().embed("Playback Control") {
-            color = BotConfiguration.MUSIC_COLOR
+            color = context.bot.config.musicColor
             description = if (manager.player.isPaused) {
                 "The player has been paused."
             } else {

@@ -1,24 +1,31 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfiguration;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.Utils;
 
 import java.io.File;
-import java.util.List;
+import java.io.FileReader;
 
 @Command(
         aliases = "champdata",
         category = Category.FUN)
 public class ChampDataCommand extends CommandExecutor {
     private static final String[] names = ChampQuoteCommand.names;
-    private static final Config information = ConfigFactory.parseFile(new File(BotConfiguration.DATA_FOLDER,"league/League.txt"));
+    private static JSONObject information;
+
+    static {
+        try {
+            File file = new File(Utils.DATA_FOLDER, "league/League.txt");
+            information = new JSONObject(new JSONTokener(new FileReader(file)));
+        } catch (Exception ignore) { }
+    }
 
     @Override
     public void execute(Context context, String[] args) {
@@ -33,17 +40,17 @@ public class ChampDataCommand extends CommandExecutor {
             }
         }
 
-        Config jso = information.getConfig(maybe);
+        JSONObject jso = information.getJSONObject(maybe);
 
-        List<? extends Config> spells = jso.getConfigList("spells");
+        JSONArray spells = jso.getJSONArray("spells");
 
 
-        StringBuilder spellInfo = new StringBuilder("**" + maybe + "**: " + jso.getString("title") + "\n");
+        StringBuilder spellInfo = new StringBuilder("**" + maybe + "**: " + jso.get("title") + "\n");
         String key = "";
 
 
-        for (int i = 0; i < spells.size(); i++) {
-            Config spellOne = spells.get(i);
+        for (int i = 0; i < spells.length(); i++) {
+            JSONObject spellOne = spells.getJSONObject(i);
 
             switch (i) {
                 case 0:
@@ -60,25 +67,20 @@ public class ChampDataCommand extends CommandExecutor {
                     break;
             }
 
-            spellInfo.append("    **")
-                    .append(key)
-                    .append("** - ")
-                    .append(spellOne.getString("name"))
-                    .append(": \n         ")
-                    .append(spellOne.getString("description"))
-                    .append("\n");
+            spellInfo.append("    **").append(key).append("** - ").append(spellOne.get("name")).append(": \n         ").append(spellOne.get
+                    ("description")).append("\n");
         }
 
         spellInfo.append("\n**Skins:**");
 
 
-        List<? extends Config> skins = jso.getConfigList("skins");
-        for (int i = 0; i < skins.size(); i++) {
-            Config j = skins.get(i);
+        JSONArray skins = jso.getJSONArray("skins");
+        for (int i = 0; i < skins.length(); i++) {
+            JSONObject j = skins.getJSONObject(i);
 
             int fuckTits = i + 1;
 
-            spellInfo.append("\n    **").append(fuckTits).append("**: ").append(j.getString("name"));
+            spellInfo.append("\n    **").append(fuckTits).append("**: ").append(j.get("name"));
         }
 
         context.send().text(spellInfo.toString()).queue();

@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
@@ -19,12 +18,12 @@ class CommandDispatcher(private val bot: Bot) {
      */
     fun callCommand(context: Context) : Boolean {
         val content = context.message.content
-        if (!content.startsWith(BotConfiguration.PREFIX)) return false
+        if (!content.startsWith(bot.config.prefix)) return false
 
         // Split the message.
         val tokens = Utils.stringSplit(content)
 
-        val label = tokens[0].substring(BotConfiguration.PREFIX.length).toLowerCase().trim()
+        val label = tokens[0].substring(bot.config.prefix.length).toLowerCase().trim()
 
         val args = tokens.copyOfRange(1, tokens.size)
 
@@ -38,7 +37,7 @@ class CommandDispatcher(private val bot: Bot) {
         val message = context.message
         val member = message.member
 
-        if (member.user.idLong !in BotConfiguration.ADMINISTRATORS) {
+        if (member.user.idLong !in bot.config.administrators) {
             if (cmd.info.administrator) {
                 context.send().error("This command is for bot administrators only.").queue()
                 return false

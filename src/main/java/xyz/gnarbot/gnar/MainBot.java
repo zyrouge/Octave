@@ -3,6 +3,9 @@ package xyz.gnarbot.gnar;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RestAction;
 import net.dv8tion.jda.core.utils.SimpleLog;
+import xyz.gnarbot.gnar.utils.Utils;
+
+import java.io.File;
 
 /**
  * Main bot instantiation class.
@@ -26,6 +29,9 @@ public class MainBot {
             }
         };
 
-        new Bot(Credentials.PRODUCTION, BotConfiguration.SHARDS);
+        Credentials credentials = new Credentials(new File(Utils.DATA_FOLDER, "credentials.conf"));
+        BotConfiguration config = new BotConfiguration(new File(Utils.DATA_FOLDER, "bot.conf"));
+
+        new Bot(config, credentials, true);
     }
 }

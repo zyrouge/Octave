@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -60,7 +60,7 @@ public class ChampQuoteCommand extends CommandExecutor {
             ArrayList<String> quotes = new ArrayList<>();
             try {
                 //They typed the name correctly
-                br = new BufferedReader(new FileReader(new File(BotConfiguration.DATA_FOLDER, "quotes/" + champ + ".txt")));
+                br = new BufferedReader(new FileReader(new File(Utils.DATA_FOLDER, "quotes/" + champ + ".txt")));
 
             } catch (Exception e) {
                 //They made a typo
@@ -75,7 +75,7 @@ public class ChampQuoteCommand extends CommandExecutor {
                     }
                 }
 
-                br = new BufferedReader(new FileReader(new File(BotConfiguration.DATA_FOLDER, "quotes/" + maybe + ".txt")));
+                br = new BufferedReader(new FileReader(new File(Utils.DATA_FOLDER, "quotes/" + maybe + ".txt")));
 
                 context.send().info("I think you meant **" + maybe + "**? Here's a quote from them!").queue();
                 champ = maybe;

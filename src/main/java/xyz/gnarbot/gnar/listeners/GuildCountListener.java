@@ -6,9 +6,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import okhttp3.*;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.Credentials;
-import xyz.gnarbot.gnar.utils.HttpUtils;
 import xyz.gnarbot.gnar.Shard;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 
@@ -61,7 +60,7 @@ public class GuildCountListener extends ListenerAdapter {
         Request request = new Request.Builder()
                 .url("https://bots.discord.pw/api/bots/201503408652419073/stats")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", Credentials.ABAL)
+                .header("Authorization", bot.getCredentials().getAbal())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
@@ -85,7 +84,7 @@ public class GuildCountListener extends ListenerAdapter {
         Request request = new Request.Builder()
                 .url("https://discordbots.org/api/bots/201503408652419073/stats")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", Credentials.DISCORDBOTS)
+                .header("Authorization", bot.getCredentials().getDiscordBots())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
@@ -104,12 +103,12 @@ public class GuildCountListener extends ListenerAdapter {
     }
 
     private void updateCarbonitexCount(int i) {
-        JSONObject json = new JSONObject().put("key", Credentials.CARBONITEX).put("servercount", i);
+        JSONObject json = new JSONObject().put("key", bot.getCredentials().getCarbonitex()).put("servercount", i);
 
         Request request = new Request.Builder()
                 .url("https://www.carbonitex.net/discord/data/botdata.php")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", Credentials.ABAL)
+                .header("Authorization", bot.getCredentials().getAbal())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))

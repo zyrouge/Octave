@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -34,14 +33,14 @@ class PlayCommand : CommandExecutor() {
             if (manager.player.isPaused) {
                 manager.player.isPaused = false
                 context.send().embed("Play Music") {
-                    color = BotConfiguration.MUSIC_COLOR
+                    color = context.bot.config.musicColor
                     description = "Music is now playing."
                 }.action().queue()
             } else if (manager.player.playingTrack != null) {
                 context.send().error("Music is already playing.").queue()
             } else if (manager.scheduler.queue.isEmpty()) {
                 context.send().embed("Empty Queue") {
-                    color = BotConfiguration.MUSIC_COLOR
+                    color = context.bot.config.musicColor
                     description = "There is no music queued right now. Add some songs with `play -song|url`."
                 }.action().queue()
             }

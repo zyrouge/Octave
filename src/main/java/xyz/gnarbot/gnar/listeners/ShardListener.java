@@ -16,7 +16,6 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.Context;
@@ -33,7 +32,7 @@ public class ShardListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
         if (event.isFromType(ChannelType.TEXT)) {
-            if (event.getMessage().getContent().startsWith(BotConfiguration.PREFIX)) {
+            if (event.getMessage().getContent().startsWith(bot.getConfig().getPrefix())) {
                 GuildData gd = shard.getGuildData(event.getGuild());
 
                 gd.handleCommand(new Context(event.getMessage(), event.getGuild(), gd, shard, bot));

@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -31,7 +30,7 @@ class SkipCommand : CommandExecutor() {
             return
         }
         context.send().embed("Skip Current Track") {
-            color = BotConfiguration.MUSIC_COLOR
+            color = context.bot.config.musicColor
             description = "The track was skipped."
         }.action().queue()
     }

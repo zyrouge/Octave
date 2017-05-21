@@ -20,7 +20,7 @@ public class TextToBrickCommand extends CommandExecutor {
         }
 
         context.send().embed("Text to Brick")
-                .setColor(BotConfiguration.ACCENT_COLOR)
+                .setColor(context.getBot().getConfig().getAccentColor())
                 .description(() -> {
                     StringBuilder sb = new StringBuilder();
                     for (String a : StringUtils.join(args, " ").split("")) {

@@ -19,5 +19,5 @@ data class Context(val message: Message, val guild : Guild, val guildData: Guild
      * @return Response builder.
      */
     @JvmOverloads
-    fun send(channel: MessageChannel = message.channel) = ResponseBuilder(channel)
+    fun send(channel: MessageChannel = message.channel) = ResponseBuilder(channel, bot)
 }

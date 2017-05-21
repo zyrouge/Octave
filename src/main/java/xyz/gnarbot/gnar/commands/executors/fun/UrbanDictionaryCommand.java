@@ -28,7 +28,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
         Request request = new Request.Builder()
                 .url("https://mashape-community-urban-dictionary.p.mashape.com/define?term=" + query)
-                .header("X-Mashape-Key", Credentials.MASHAPE)
+                .header("X-Mashape-Key", context.getBot().getCredentials().getMashape())
                 .header("Accept", "text/plain")
                 .get()
                 .build();
@@ -51,7 +51,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                 JSONObject word = words.getJSONObject(0);
 
                 context.send().embed("Urban Dictionary")
-                        .setColor(BotConfiguration.ACCENT_COLOR)
+                        .setColor(context.getBot().getConfig().getAccentColor())
                         .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
                         .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
                         .field("Definition", true, word.optString("definition"))

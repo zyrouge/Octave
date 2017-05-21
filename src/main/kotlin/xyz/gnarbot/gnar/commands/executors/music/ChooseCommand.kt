@@ -46,8 +46,8 @@ class ChooseCommand : CommandExecutor() {
             context.send().error("Your previous searches yielded no results.").queue()
         }
 
-        if (System.currentTimeMillis() - time > BotConfiguration.SEARCH_DURATION.toMillis()) {
-            context.send().error("You haven't searched anything in the last ${BotConfiguration.SEARCH_DURATION_TEXT}.").queue()
+        if (System.currentTimeMillis() - time > context.bot.config.searchDuration.toMillis()) {
+            context.send().error("You haven't searched anything in the last ${context.bot.config.searchDurationText}.").queue()
             return
         }
 

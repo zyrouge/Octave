@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -15,7 +14,7 @@ import xyz.gnarbot.gnar.utils.Context
 class GarbageCollectCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Garbage Collection") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
             val interrupt = if (!args.isEmpty()) args[0].toBoolean() else false
 
             context.bot.shards.forEach { it.clearData(interrupt) }

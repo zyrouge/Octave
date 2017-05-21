@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -21,7 +20,7 @@ class ShuffleCommand : CommandExecutor() {
         context.guildData.musicManager.scheduler.shuffle()
 
         context.send().embed("Shuffle Queue") {
-            color = BotConfiguration.MUSIC_COLOR
+            color = context.bot.config.musicColor
             description = "Player has been shuffled"
         }.action().queue()
     }

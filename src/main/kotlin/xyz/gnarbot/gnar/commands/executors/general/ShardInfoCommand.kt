@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -22,7 +21,7 @@ class ShardInfoCommand : CommandExecutor() {
         }
 
         context.send().embed("Shard Information") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
 
             val pages = Lists.partition(context.bot.shards.toList(), 12)
 

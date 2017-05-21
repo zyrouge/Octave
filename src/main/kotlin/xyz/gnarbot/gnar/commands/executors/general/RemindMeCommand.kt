@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -26,13 +25,13 @@ class RemindMeCommand : CommandExecutor() {
 
             if (time > 0) {
                 context.send().embed("Reminder Scheduled") {
-                    color = BotConfiguration.ACCENT_COLOR
+                    color = context.bot.config.accentColor
                     description = "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__."
                 }.action().queue()
 
                 context.message.author.openPrivateChannel().queue {
                     context.send(it).embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
-                        color = BotConfiguration.ACCENT_COLOR
+                        color = context.bot.config.accentColor
                         description = string
                     }.action().queueAfter(time.toLong(), timeUnit)
                 }

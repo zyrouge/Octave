@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -15,7 +14,7 @@ import xyz.gnarbot.gnar.utils.ln
 class DonateCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Donations") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
             description {
                 buildString {
                     append("Want to donate to support Gnar?").ln()

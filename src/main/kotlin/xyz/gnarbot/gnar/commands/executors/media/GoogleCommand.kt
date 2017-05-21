@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
 import org.jsoup.Jsoup
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -38,7 +37,7 @@ class GoogleCommand : CommandExecutor() {
             }
 
             context.send().embed {
-                color = BotConfiguration.ACCENT_COLOR
+                color = context.bot.config.accentColor
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
                 thumbnail = "https://gnarbot.xyz/assets/img/google.png"
 

@@ -33,7 +33,7 @@ public class PandoraBotCommand extends CommandExecutor {
 
             String output = session.think(input);
             context.send().embed("PandoraBot")
-                    .setColor(BotConfiguration.ACCENT_COLOR)
+                    .setColor(context.getBot().getConfig().getAccentColor())
                     .setDescription(output)
                     .action().queue();
 

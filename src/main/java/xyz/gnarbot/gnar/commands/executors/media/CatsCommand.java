@@ -48,7 +48,7 @@ public class CatsCommand extends CommandExecutor {
             String url = doc.getElementsByTagName("url").item(0).getTextContent();
 
             context.send().embed("Random Cat Pictures")
-                    .setColor(BotConfiguration.ACCENT_COLOR)
+                    .setColor(context.getBot().getConfig().getAccentColor())
                     .setImage(url)
                     .action().queue();
 

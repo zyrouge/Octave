@@ -4,10 +4,10 @@ import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.requests.RestAction
-import xyz.gnarbot.gnar.BotConfiguration
+import xyz.gnarbot.gnar.Bot
 import java.awt.Color
 
-class ResponseBuilder(val channel: MessageChannel) {
+class ResponseBuilder(val channel: MessageChannel, val bot: Bot) {
     /**
      * Quick-reply to a message.
      *
@@ -28,7 +28,7 @@ class ResponseBuilder(val channel: MessageChannel) {
         return embed {
             title = "Info"
             description = msg
-            color = BotConfiguration.ACCENT_COLOR
+            color = bot.config.accentColor
         }.action()
     }
 
@@ -69,7 +69,7 @@ class ResponseBuilder(val channel: MessageChannel) {
     @JvmOverloads
     fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder(channel).apply {
         this.title = title
-        this.color = BotConfiguration.ACCENT_COLOR
+        this.color = bot.config.accentColor
     }
 
     /**

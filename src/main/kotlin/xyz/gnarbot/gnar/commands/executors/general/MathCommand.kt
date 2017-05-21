@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import xyz.avarel.aje.AJEException
 import xyz.avarel.aje.Expression
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -18,7 +17,7 @@ class MathCommand : CommandExecutor() {
         }
 
         context.send().embed("Math") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
 
             val script = if (args.size == 1) {
                 args[0]

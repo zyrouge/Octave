@@ -36,7 +36,7 @@ public class YodaTalkCommand extends CommandExecutor {
             String result = response.getBody();
 
             context.send().embed("Yoda-Speak")
-                    .setColor(BotConfiguration.ACCENT_COLOR)
+                    .setColor(context.getBot().getConfig().getAccentColor())
                     .setDescription(result)
                     .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
                     .action().queue();

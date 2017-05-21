@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -20,7 +19,7 @@ class DisableCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Disabled Commands") {
-                color = BotConfiguration.ACCENT_COLOR
+                color = context.bot.config.accentColor
                 description {
                     if (context.guildData.commandHandler.disabled.isEmpty()) {
                         "There isn't any command disabled on this server."
@@ -48,7 +47,7 @@ class DisableCommand : CommandExecutor() {
                 .map { it.info.aliases[0] }
 
         context.send().embed("Disabling Commands") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
             if (disabled.isNotEmpty()) {
                 field("Success") {
                     buildString {

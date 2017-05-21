@@ -1,11 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.TextChannel;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.ResponseBuilder;
 import xyz.gnarbot.gnar.utils.Utils;
 
 @Command(aliases = {"quote", "quotemsg"},
@@ -28,8 +26,8 @@ public class QuoteCommand extends CommandExecutor {
             if (!id.contains("#")) {
                 try {
                     final TextChannel _targetChannel = targetChannel;
-                    context.getMessage().getChannel().getMessageById(id).queue(msg -> new ResponseBuilder(_targetChannel).embed()
-                            .setColor(BotConfiguration.ACCENT_COLOR)
+                    context.getMessage().getChannel().getMessageById(id).queue(msg -> context.send(_targetChannel).embed()
+                            .setColor(context.getBot().getConfig().getAccentColor())
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
                             .action().queue());

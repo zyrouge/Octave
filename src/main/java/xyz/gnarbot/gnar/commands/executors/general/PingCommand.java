@@ -17,11 +17,11 @@ public class PingCommand extends CommandExecutor {
         OffsetDateTime sentTime = context.getMessage().getCreationTime();
 
         context.send().embed("Ping")
-                .setColor(BotConfiguration.ACCENT_COLOR)
+                .setColor(context.getBot().getConfig().getAccentColor())
                 .setDescription("Checking ping...")
                 .action().queue(msg -> msg.editMessage(
                         new KEmbedBuilder().setTitle("Ping")
-                                .setColor(BotConfiguration.ACCENT_COLOR)
+                                .setColor(context.getBot().getConfig().getAccentColor())
                                 //.field("Receive Time", true, () -> receiveTime + " ms")
                                 .field("Response Time", true, () -> {
                                     long ping = Math.abs(sentTime.until(msg.getCreationTime(), ChronoUnit.MILLIS));

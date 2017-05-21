@@ -105,7 +105,7 @@ public class MemeCommand extends CommandExecutor {
             JSONObject response = Unirest.get("https://api.imgflip.com/caption_image")
                     .queryString("template_id", id)
                     .queryString("username", "GNARBot")
-                    .queryString("password", Credentials.IMGFLIP)
+                    .queryString("password", context.getBot().getCredentials().getImgFlip())
                     .queryString("text0", arguments[1].trim())
                     .queryString("text1", arguments[2].trim())
                     .asJson()
@@ -114,7 +114,7 @@ public class MemeCommand extends CommandExecutor {
                     .getJSONObject("data");
 
             context.send().embed("Meme Generator")
-                    .setColor(BotConfiguration.ACCENT_COLOR)
+                    .setColor(context.getBot().getConfig().getAccentColor())
                     .setImage(response.optString("url"))
                     .action().queue();
 

@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.OnlineStatus
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -65,7 +64,7 @@ class BotInfoCommand : CommandExecutor() {
         val commandSize = registry.entries.count { it.info.category.show }
 
         context.send().embed("Bot Information") {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
 
             inline {
                 field("Requests", requests)

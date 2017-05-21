@@ -5,12 +5,11 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfiguration;
-import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.Utils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -55,7 +54,7 @@ public class GoogleyEyesCommand extends CommandExecutor {
             HttpResponse<JsonNode> response = Unirest.get("https://apicloud-facerect.p.mashape.com/process-url.json")
                     .queryString("features", true)
                     .queryString("url", encodedStr)
-                    .header("X-Mashape-Key", Credentials.MASHAPE)
+                    .header("X-Mashape-Key", context.getBot().getCredentials().getMashape())
                     .header("Accept", "application/json")
                     .asJson();
 
@@ -87,13 +86,13 @@ public class GoogleyEyesCommand extends CommandExecutor {
 
             Graphics graphics = targetImg.getGraphics();
             for (JSONObject json : eyesJSON) {
-                eye = ImageIO.read(new File(BotConfiguration.DATA_FOLDER, "resources/eye" + new Random().nextInt(2) + ".png"));
+                eye = ImageIO.read(new File(Utils.DATA_FOLDER, "resources/eye" + new Random().nextInt(2) + ".png"));
                 resizedEye = resize(eye, (int) json.get("width"), (int) json.get("height"));
                 graphics.drawImage(resizedEye, (int) json.get("x"), (int) json.get("y"), null);
             }
 
             //writing the file
-            File outputFile = new File(BotConfiguration.DATA_FOLDER, "output_image.png");
+            File outputFile = new File(Utils.DATA_FOLDER, "output_image.png");
             try {
                 if (ImageIO.write(targetImg, "jpg", outputFile)) {
                     //send if success

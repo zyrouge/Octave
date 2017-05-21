@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.`fun`
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -18,7 +17,7 @@ class DialogCommand : CommandExecutor() {
                 .split("\n")
 
         context.send().embed {
-            color = BotConfiguration.ACCENT_COLOR
+            color = context.bot.config.accentColor
             description = buildString {
                 appendln("```")
                 appendln("﻿ ___________________________ ")

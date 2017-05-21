@@ -34,7 +34,7 @@ class ASCIICommand : CommandExecutor() {
             val element = document.getElementsByTag("body")[0]
 
             context.send().embed("ASCII Text") {
-                color = BotConfiguration.ACCENT_COLOR
+                color = context.bot.config.accentColor
                 description = "```\n${getText(element)}```"
             }.action().queue()
 

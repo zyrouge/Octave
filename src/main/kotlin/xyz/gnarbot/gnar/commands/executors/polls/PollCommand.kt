@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -38,7 +37,7 @@ class PollCommand : CommandExecutor() {
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 context.send().embed("Poll Results") {
-                    color = BotConfiguration.ACCENT_COLOR
+                    color = context.bot.config.accentColor
                     description = "Voting has ended! Here are the results!"
 
                     var topVotes = 0

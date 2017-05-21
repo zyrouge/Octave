@@ -13,7 +13,7 @@ public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         context.send().embed("Coin Flip")
-                .setColor(BotConfiguration.ACCENT_COLOR)
+                .setColor(context.getBot().getConfig().getAccentColor())
                 .setDescription(new Random().nextInt(2) == 0 ? "Heads" : "Tails!")
                 .action().queue();
     }
