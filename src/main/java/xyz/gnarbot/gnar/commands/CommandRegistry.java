@@ -107,6 +107,7 @@ public class CommandRegistry {
         register(new ThrowError());
         register(new UpdateCommand());
         register(new RestartBotCommand());
+        register(new EmoteListCommand());
 
 
         // Test Commands

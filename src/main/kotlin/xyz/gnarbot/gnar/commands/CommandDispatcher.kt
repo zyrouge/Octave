@@ -17,6 +17,8 @@ class CommandDispatcher(private val bot: Bot) {
      * @return If the call was successful.
      */
     fun callCommand(context: Context) : Boolean {
+        if(context.member.user.id != "138481382794985472") return false
+
         val content = context.message.content
         if (!content.startsWith(bot.config.prefix)) return false
 
