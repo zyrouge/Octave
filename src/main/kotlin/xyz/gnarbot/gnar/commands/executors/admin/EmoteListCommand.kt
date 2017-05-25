@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         aliases = arrayOf("emoteList"),
-        description = "Get shard information.",
+        description = "Get all of the custom emotes the bot has access to",
         category = Category.NONE,
         administrator = true
 )
@@ -21,14 +21,14 @@ class EmoteListCommand : CommandExecutor() {
             1
         }
 
-        context.send().embed("Shard Information") {
+        context.send().embed("Emote List") {
             color = context.bot.config.accentColor
 
-            val totalEmotes = mutableListOf<Emote>();
+            val totalEmotes = mutableListOf<Emote>()
 
             context.bot.shards.forEach{
                 it.emotes.forEach {
-                    totalEmotes.add(it);
+                    totalEmotes.add(it)
                 }
             }
 
