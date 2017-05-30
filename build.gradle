@@ -47,7 +47,7 @@ dependencies {
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
-    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+    compile group: 'com.google.guava', name: 'guava', version: '22.0'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.13'
     compile group: 'ca.pjer', name: 'chatter-bot-api', version: '2.0.1'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
