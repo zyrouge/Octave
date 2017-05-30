@@ -1,14 +1,13 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
-import net.dv8tion.jda.core.entities.Emote
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        aliases = arrayOf("emoteList"),
+        aliases = arrayOf("emotes", "emotesList"),
         description = "Get all of the custom emotes the bot has access to",
         category = Category.NONE,
         administrator = true
@@ -22,15 +21,7 @@ class EmoteListCommand : CommandExecutor() {
         }
 
         context.send().embed("Emote List") {
-            color = context.bot.config.accentColor
-
-            val totalEmotes = mutableListOf<Emote>()
-
-            context.bot.shards.forEach{
-                it.emotes.forEach {
-                    totalEmotes.add(it)
-                }
-            }
+            val totalEmotes = context.bot.shards.flatMap { it.emotes }
 
             val pages = Lists.partition(totalEmotes, 30)
 
@@ -39,10 +30,10 @@ class EmoteListCommand : CommandExecutor() {
 
             val emotePage = pages[page - 1]
 
-            emotePage.forEach {
-                field("Emotes", true) {
-                    buildString {
-                        append("${it.name}: ${it.asMention}")
+            description {
+                buildString {
+                    emotePage.forEach {
+                        append("${it.asMention} `:${it.name}:`")
                     }
                 }
             }

@@ -37,7 +37,7 @@ class GoogleCommand : CommandExecutor() {
             }
 
             context.send().embed {
-                color = context.bot.config.accentColor
+
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
                 thumbnail = "https://gnarbot.xyz/assets/img/google.png"
 

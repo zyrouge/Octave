@@ -1,14 +1,19 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfiguration;
+import org.apache.http.client.utils.URIBuilder;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.HttpUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 @Command(
         aliases = {"yodatalk"},
@@ -25,24 +30,38 @@ public class YodaTalkCommand extends CommandExecutor {
         }
 
         try {
-            String query = StringUtils.join(args, "+");
+            String query = StringUtils.join(args, " ");
 
-            HttpResponse<String> response = Unirest.get("https://yoda.p.mashape.com/yoda?sentence=" + query)
-                    //.queryString("sentence", query)
-                    .header("X-Mashape-Key", "dw1mYrC2ssmsh2WkFGHaherCtl48p1wtuHWjsnYbP3Y7q8y6M5")
-                    .header("Accept", "text/plain")
-                    .asString();
+            String url = new URIBuilder("https://yoda.p.mashape.com/yoda")
+                    .addParameter("sentence", query)
+                    .toString();
 
-            String result = response.getBody();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                    .header("Accept", "application/json")
+                    .build();
 
-            context.send().embed("Yoda-Speak")
-                    .setColor(context.getBot().getConfig().getAccentColor())
-                    .setDescription(result)
-                    .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
-                    .action().queue();
+            HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    call.cancel();
+                    context.send().error("Failure to query API.");
+                }
 
-        } catch (UnirestException e) {
-            e.printStackTrace();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    context.send().embed("Yoda-Speak")
+                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setDescription(response.body().string())
+                            .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
+                            .action().queue();
+
+                    response.close();
+                }
+            });
+        } catch (URISyntaxException e) {
+            context.send().error("Failure to query API.");
         }
     }
 }

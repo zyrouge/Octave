@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
+import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.avarel.aje.AJEException
 import xyz.avarel.aje.Expression
 import xyz.gnarbot.gnar.commands.Command
@@ -7,6 +8,9 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 @Command(aliases = arrayOf("math"), usage = "(expression)", description = "Calculate fancy math expressions.")
 class MathCommand : CommandExecutor() {
@@ -17,7 +21,7 @@ class MathCommand : CommandExecutor() {
         }
 
         context.send().embed("Math") {
-            color = context.bot.config.accentColor
+
 
             val script = if (args.size == 1) {
                 args[0]
@@ -38,20 +42,33 @@ class MathCommand : CommandExecutor() {
 
                 field("AST") {
                     code {
-                        buildString {
+                        val ast = buildString {
                             expr.ast(this, "", true)
+                        }
+                        if (ast.length > MessageEmbed.VALUE_MAX_LENGTH / 2) {
+                            "AST can not be displayed."
+                        } else {
+                            ast
                         }
                     }
                 }
 
+
+
                 field("Result") {
                     code {
-                        expr.compute().toString()
+                        CompletableFuture.supplyAsync(expr::compute)
+                                .get(500, TimeUnit.MILLISECONDS).toString()
                     }
                 }
             } catch (e : AJEException) {
                 field("Error") {
                     e.message
+                }
+                color = Color.RED
+            } catch (e : TimeoutException) {
+                field("Error") {
+                    "Script took too long to execute."
                 }
                 color = Color.RED
             }

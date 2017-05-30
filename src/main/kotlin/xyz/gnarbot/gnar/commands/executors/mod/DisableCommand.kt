@@ -19,7 +19,6 @@ class DisableCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Disabled Commands") {
-                color = context.bot.config.accentColor
                 description {
                     if (context.guildData.commandHandler.disabled.isEmpty()) {
                         "There isn't any command disabled on this server."
@@ -47,7 +46,7 @@ class DisableCommand : CommandExecutor() {
                 .map { it.info.aliases[0] }
 
         context.send().embed("Disabling Commands") {
-            color = context.bot.config.accentColor
+
             if (disabled.isNotEmpty()) {
                 field("Success") {
                     buildString {

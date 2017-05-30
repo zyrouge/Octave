@@ -1,13 +1,18 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import com.mashape.unirest.http.Unirest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfiguration;
+import org.json.JSONTokener;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 
+import java.io.IOException;
 import java.util.Random;
 
 @Command(
@@ -18,10 +23,22 @@ import java.util.Random;
 public class XKCDCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        try {
-            JSONObject latestJso = Unirest.get("http://xkcd.com/info.0.json").asJson().getBody().getObject();
 
-            if (latestJso != null) {
+        Request request = new Request.Builder()
+                .url("http://xkcd.com/info.0.json")
+                .build();
+
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
+                context.send().error("Unable to grab xkcd comic.").queue();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONObject latestJso = new JSONObject(new JSONTokener(response.body().byteStream()));
+
                 int min = 500;
                 int max = latestJso.getInt("num");
 
@@ -33,6 +50,7 @@ public class XKCDCommand extends CommandExecutor {
 
                         if (input > max || input < 1) {
                             context.send().error("xkcd does not have a comic for that number.").queue();
+                            return;
                         }
 
                         rand = input;
@@ -48,31 +66,38 @@ public class XKCDCommand extends CommandExecutor {
                     rand = min + new Random().nextInt(max - min);
                 }
 
-                JSONObject jso = Unirest.get("http://xkcd.com/" + rand + "/info.0.json").asJson().getBody().getObject();
+                Request request = new Request.Builder()
+                        .url("http://xkcd.com/" + rand + "/info.0.json")
+                        .build();
 
-                if (jso != null) {
-                    String title = jso.getString("title");
+                HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        call.cancel();
+                        context.send().error("Unable to grab xkcd comic.").queue();
+                    }
 
-                    int num = jso.getInt("num");
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
 
-                    String url = jso.getString("img").replaceAll("\\\\/", "/");
+                        String title = jso.getString("title");
 
-                    String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
+                        int num = jso.getInt("num");
 
-                    context.send().embed(title)
-                            .setColor(context.getBot().getConfig().getAccentColor())
-                            .setDescription("No: " + num)
-                            .setThumbnail(logo)
-                            .setImage(url)
-                            .action().queue();
+                        String url = jso.getString("img").replaceAll("\\\\/", "/");
 
-                    return;
-                }
+                        String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
+
+                        context.send().embed(title)
+                                .setColor(context.getBot().getConfig().getAccentColor())
+                                .setDescription("No: " + num)
+                                .setThumbnail(logo)
+                                .setImage(url)
+                                .action().queue();
+                    }
+                });
             }
-
-            context.send().error("Unable to grab xkcd comic.").queue();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

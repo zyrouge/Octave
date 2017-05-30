@@ -20,6 +20,7 @@ class BotConfiguration(file: File) {
 
     val name: String = this.config["bot", "name"].getString("Gnar")
     val game: String = this.config["bot", "game"].getString("%d | _help")
+    val avatar: String? = this.config["bot", "avatar"].string
     val shards: Int = this.config["bot", "shards"].int
 
     val prefix: String = this.config["commands", "prefix"].getString("_")

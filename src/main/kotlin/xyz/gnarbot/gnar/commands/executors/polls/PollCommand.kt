@@ -37,7 +37,7 @@ class PollCommand : CommandExecutor() {
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 context.send().embed("Poll Results") {
-                    color = context.bot.config.accentColor
+
                     description = "Voting has ended! Here are the results!"
 
                     var topVotes = 0

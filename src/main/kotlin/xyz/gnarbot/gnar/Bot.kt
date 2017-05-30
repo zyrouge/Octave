@@ -5,12 +5,14 @@ import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
+import net.dv8tion.jda.core.utils.SimpleLog
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
 import xyz.gnarbot.gnar.listeners.UserListener
+import java.io.File
 import kotlin.jvm.JvmStatic as static
 
 /**
@@ -19,14 +21,7 @@ import kotlin.jvm.JvmStatic as static
  * @param token Discord token.
  * @param numShards Number of shards to request.
  */
-class Bot(val config: BotConfiguration, val credentials: Credentials, val production: Boolean) {
-
-    private val token = if (production) {
-        credentials.production
-    } else {
-        credentials.beta
-    }
-
+class Bot(val config: BotConfiguration, val keys: Credentials) {
     private val guildCountListener = GuildCountListener(this)
     private val userListener = UserListener()
 
@@ -39,8 +34,9 @@ class Bot(val config: BotConfiguration, val credentials: Credentials, val produc
     val commandRegistry = CommandRegistry(this)
 
     init {
+        SimpleLog.addFileLogs(File("bot.stdout.log"), File("bot.err.log"))
 
-        check(!token.isNullOrEmpty()) { "Bot token can not be null." }
+        check(!keys.token.isNullOrEmpty()) { "Bot token can not be null." }
 
         log.info("Initializing the Discord bot.")
 
@@ -57,7 +53,7 @@ class Bot(val config: BotConfiguration, val credentials: Credentials, val produc
 
     private fun createShard(id: Int) : Shard {
         val jda = with (JDABuilder(AccountType.BOT)) {
-            setToken(token)
+            setToken(keys.token)
             if (config.shards > 1) useSharding(id, config.shards)
             setAutoReconnect(true)
             addEventListener(guildCountListener)
@@ -67,9 +63,9 @@ class Bot(val config: BotConfiguration, val credentials: Credentials, val produc
             setAudioEnabled(true)
         }.buildBlocking()
 
-        log.info("JDA $id is ready.")
-
         jda.selfUser.manager.setName(config.name).queue()
+
+        log.info("JDA $id is ready.")
 
         return Shard(id, jda, this)
     }

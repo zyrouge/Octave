@@ -25,13 +25,12 @@ class RemindMeCommand : CommandExecutor() {
 
             if (time > 0) {
                 context.send().embed("Reminder Scheduled") {
-                    color = context.bot.config.accentColor
+
                     description = "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__."
                 }.action().queue()
 
                 context.message.author.openPrivateChannel().queue {
                     context.send(it).embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
-                        color = context.bot.config.accentColor
                         description = string
                     }.action().queueAfter(time.toLong(), timeUnit)
                 }

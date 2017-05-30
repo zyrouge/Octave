@@ -64,8 +64,6 @@ class BotInfoCommand : CommandExecutor() {
         val commandSize = registry.entries.count { it.info.category.show }
 
         context.send().embed("Bot Information") {
-            color = context.bot.config.accentColor
-
             inline {
                 field("Requests", requests)
                 field("Requests Per Hour", requests / Math.max(1, h))

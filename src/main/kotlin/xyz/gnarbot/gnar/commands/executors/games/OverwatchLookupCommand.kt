@@ -1,11 +1,17 @@
 package xyz.gnarbot.gnar.commands.executors.games
 
-import com.mashape.unirest.http.Unirest
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
 import org.json.JSONObject
+import org.json.JSONTokener
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.HttpUtils
 import java.awt.Color
+import java.io.IOException
 
 @Command(aliases = arrayOf("overwatch", "ow"),
         usage = "(BattleTag#0000) [region]",
@@ -40,166 +46,177 @@ class OverwatchLookupCommand : CommandExecutor() {
             }
         }
 
-        val response = Unirest.get("https://owapi.net/api/v3/u/{tag}/stats")
-                .routeParam("tag", tag)
-                .asJson()
-                .body
-                .`object`
+        val request = Request.Builder()
+                .url("https://owapi.net/api/v3/u/$tag/stats")
+                .build()
 
-        var jso: JSONObject? = null
-
-        // Region arg provided.
-        if (region != null) {
-            if (!response.has(region)) {
-                context.send().error("Unable to find Overwatch player `" + tag + "` in region `" + region.toUpperCase() + "`.").queue()
-                return
+        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                call.cancel()
+                context.send().error("Failure to query API.")
             }
 
-            jso = response.optJSONObject(region)
-        } else {
-            for (r in regions) {
-                if (!response.has(r)) {
-                    continue
-                }
+            override fun onResponse(call: Call, response: Response) {
+                val rjso = JSONObject(JSONTokener(response.body()!!.byteStream()))
 
-                jso = response.optJSONObject(r)
-                region = r
-                break
-            }
+                response.close()
 
-            if (jso == null || region == null) {
-                context.send().error("Unable to find Overwatch player `$tag`.").queue()
-                return
-            }
-        }// Region arg not provided. Search for first non-null region.
+                var jso: JSONObject? = null
 
-        context.send().embed("Overwatch Stats: $tag") {
-            description {
-                buildString {
-                    appendln("Battle Tag: **__[$tag](https://playoverwatch.com/en-gb/career/pc/$region/$tag)__**")
-                    appendln("Region: **__[${region!!.toUpperCase()}](http://masteroverwatch.com/leaderboards/pc/$region/mode/ranked/category/skillrating)__**")
-                }
-            }
-
-            val overall = jso?.optJSONObject("stats")
-
-            if (overall == null) {
-                context.send().error("Unable to find statistics for Overwatch player`$tag`.").queue()
-                return
-            }
-
-            var avatar: String? = null
-            var eliminations = 0
-            var medals = 0
-            var dmg_done = 0
-            var cards = 0
-
-            overall.optJSONObject("quickplay")?.let {
-                it.optJSONObject("overall_stats")?.let {
-                    field("General") {
-                        buildString {
-                            append("Level: **[${it.optInt("prestige") * 100 + it.optInt("level")}]()**")
-                            avatar = it.optString("avatar")
-                        }
+                // Region arg provided.
+                if (region != null) {
+                    if (!rjso.has(region)) {
+                        context.send().error("Unable to find Overwatch player `" + tag + "` in region `" + region!!.toUpperCase() + "`.").queue()
+                        return
                     }
-                }
-                field("Quick Play", true) {
-                    it.optJSONObject("average_stats")?.let {
+
+                    jso = rjso.optJSONObject(region)
+                } else {
+                    for (r in regions) {
+                        if (!rjso.has(r)) {
+                            continue
+                        }
+
+                        jso = rjso.optJSONObject(r)
+                        region = r
+                        break
+                    }
+
+                    if (jso == null || region == null) {
+                        context.send().error("Unable to find Overwatch player `$tag`.").queue()
+                        return
+                    }
+                }// Region arg not provided. Search for first non-null region.
+
+                context.send().embed("Overwatch Stats: $tag") {
+                    description {
                         buildString {
-                            appendln("Avg. Elims: **[${it.optDouble("eliminations_avg")}]()**")
-                            appendln("Avg. Deaths: **[${it.optDouble("deaths_avg")}]()**")
+                            appendln("Battle Tag: **__[$tag](https://playoverwatch.com/en-gb/career/pc/$region/$tag)__**")
+                            appendln("Region: **__[${region!!.toUpperCase()}](http://masteroverwatch.com/leaderboards/pc/$region/mode/ranked/category/skillrating)__**")
                         }
                     }
 
-                    it.optJSONObject("overall_stats")?.let {
-                        buildString {
-                            appendln("Wins: **[${it.optInt("wins")}]()**")
-                        }
+                    val overall = jso?.optJSONObject("stats")
+
+                    if (overall == null) {
+                        context.send().error("Unable to find statistics for Overwatch player`$tag`.").queue()
+                        return
                     }
 
-                    it.optJSONObject("game_stats")?.let {
-                        eliminations += it.optDouble("eliminations").toInt()
-                        medals += it.optDouble("medals").toInt()
-                        dmg_done += it.optDouble("damage_done").toInt()
-                        cards += it.optDouble("cards").toInt()
+                    var avatar: String? = null
+                    var eliminations = 0
+                    var medals = 0
+                    var dmg_done = 0
+                    var cards = 0
 
-                        buildString {
-                            appendln("K/D Ratio: **[${it.optDouble("kpd")}]()**")
-                            appendln("Played for: **[${it.optInt("time_played")} hours]()**")
-                        }
-                    }
-                }
-            }
-
-            var sideColor: Color? = null
-            var rankName: String? = null
-
-            overall.optJSONObject("competitive")?.let {
-                field("Competitive", true) {
-
-                    buildString {
-                        it.optJSONObject("average_stats")?.let {
-                            appendln("Avg. Elims: **[" + it.optDouble("eliminations_avg") + "]()**")
-                            appendln("Avg. Deaths: **[" + it.optDouble("deaths_avg") + "]()**")
-                        }
-
-                        it.optJSONObject("game_stats").let {
-                            appendln("Wins/Draws/Loses: **["
-                                    + it.optInt("games_won") + "]()** | **["
-                                    + it.optInt("games_tied") + "]()** | **["
-                                    + it.optInt("games_lost") + "]()**")
-                            appendln("K/D Ratio: **[" + it.optDouble("kpd") + "]()**")
-                            appendln("Played for: **[" + it.optInt("time_played") + " hours]()**")
-
-                            eliminations += it.optDouble("eliminations").toInt()
-                            medals += it.optDouble("medals").toInt()
-                            dmg_done += it.optDouble("damage_done").toInt()
-                            cards += it.optDouble("cards").toInt()
-                        }
-
+                    overall.optJSONObject("quickplay")?.let {
                         it.optJSONObject("overall_stats")?.let {
-                            val rank = it.optInt("comprank")
-
-                            if (rank < 1500) {
-                                sideColor = Color(150, 90, 56)
-                                rankName = "Bronze"
-                            } else if (rank in 1500..1999) {
-                                sideColor = Color(168, 168, 168)
-                                rankName = "Silver"
-                            } else if (rank in 2000..2499) {
-                                sideColor = Color(201, 137, 16)
-                                rankName = "Gold"
-                            } else if (rank in 2500..2999) {
-                                sideColor = Color(229, 228, 226)
-                                rankName = "Platinum"
-                            } else if (rank in 3000..3499) {
-                                sideColor = Color(63, 125, 255)
-                                rankName = "Diamond"
-                            } else if (rank in 3500..3999) {
-                                sideColor = Color(255, 184, 12)
-                                rankName = "Master"
-                            } else if (rank >= 4000) {
-                                sideColor = Color(238, 180, 255)
-                                rankName = "Grand Master"
+                            field("General") {
+                                buildString {
+                                    append("Level: **[${it.optInt("prestige") * 100 + it.optInt("level")}]()**")
+                                    avatar = it.optString("avatar")
+                                }
+                            }
+                        }
+                        field("Quick Play", true) {
+                            it.optJSONObject("average_stats")?.let {
+                                buildString {
+                                    appendln("Avg. Elims: **[${it.optDouble("eliminations_avg")}]()**")
+                                    appendln("Avg. Deaths: **[${it.optDouble("deaths_avg")}]()**")
+                                }
                             }
 
-                            appendln("Comp. Rank: **[:beginner: $rank]() ($rankName)**")
+                            it.optJSONObject("overall_stats")?.let {
+                                buildString {
+                                    appendln("Wins: **[${it.optInt("wins")}]()**")
+                                }
+                            }
+
+                            it.optJSONObject("game_stats")?.let {
+                                eliminations += it.optDouble("eliminations").toInt()
+                                medals += it.optDouble("medals").toInt()
+                                dmg_done += it.optDouble("damage_done").toInt()
+                                cards += it.optDouble("cards").toInt()
+
+                                buildString {
+                                    appendln("K/D Ratio: **[${it.optDouble("kpd")}]()**")
+                                    appendln("Played for: **[${it.optInt("time_played")} hours]()**")
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            field("Overall", false) {
-                buildString {
-                    appendln("Eliminations: **[$eliminations]()**")
-                    appendln("Medals: **[$medals]()**")
-                    appendln("Total Damage: **[$dmg_done]()**")
-                    appendln("Cards: **[$cards]()**")
-                }
-            }
+                    var sideColor: Color? = null
+                    var rankName: String? = null
 
-            color = sideColor
-            thumbnail = avatar
-        }.action().queue()
+                    overall.optJSONObject("competitive")?.let {
+                        field("Competitive", true) {
+
+                            buildString {
+                                it.optJSONObject("average_stats")?.let {
+                                    appendln("Avg. Elims: **[" + it.optDouble("eliminations_avg") + "]()**")
+                                    appendln("Avg. Deaths: **[" + it.optDouble("deaths_avg") + "]()**")
+                                }
+
+                                it.optJSONObject("game_stats").let {
+                                    appendln("Wins/Draws/Loses: **["
+                                            + it.optInt("games_won") + "]()** | **["
+                                            + it.optInt("games_tied") + "]()** | **["
+                                            + it.optInt("games_lost") + "]()**")
+                                    appendln("K/D Ratio: **[" + it.optDouble("kpd") + "]()**")
+                                    appendln("Played for: **[" + it.optInt("time_played") + " hours]()**")
+
+                                    eliminations += it.optDouble("eliminations").toInt()
+                                    medals += it.optDouble("medals").toInt()
+                                    dmg_done += it.optDouble("damage_done").toInt()
+                                    cards += it.optDouble("cards").toInt()
+                                }
+
+                                it.optJSONObject("overall_stats")?.let {
+                                    val rank = it.optInt("comprank")
+
+                                    if (rank < 1500) {
+                                        sideColor = Color(150, 90, 56)
+                                        rankName = "Bronze"
+                                    } else if (rank in 1500..1999) {
+                                        sideColor = Color(168, 168, 168)
+                                        rankName = "Silver"
+                                    } else if (rank in 2000..2499) {
+                                        sideColor = Color(201, 137, 16)
+                                        rankName = "Gold"
+                                    } else if (rank in 2500..2999) {
+                                        sideColor = Color(229, 228, 226)
+                                        rankName = "Platinum"
+                                    } else if (rank in 3000..3499) {
+                                        sideColor = Color(63, 125, 255)
+                                        rankName = "Diamond"
+                                    } else if (rank in 3500..3999) {
+                                        sideColor = Color(255, 184, 12)
+                                        rankName = "Master"
+                                    } else if (rank >= 4000) {
+                                        sideColor = Color(238, 180, 255)
+                                        rankName = "Grand Master"
+                                    }
+
+                                    appendln("Comp. Rank: **[:beginner: $rank]() ($rankName)**")
+                                }
+                            }
+                        }
+                    }
+
+                    field("Overall", false) {
+                        buildString {
+                            appendln("Eliminations: **[$eliminations]()**")
+                            appendln("Medals: **[$medals]()**")
+                            appendln("Total Damage: **[$dmg_done]()**")
+                            appendln("Cards: **[$cards]()**")
+                        }
+                    }
+
+                    color = sideColor
+                    thumbnail = avatar
+                }.action().queue()
+            }
+        })
     }
 }

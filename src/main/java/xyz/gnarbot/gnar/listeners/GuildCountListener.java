@@ -60,7 +60,7 @@ public class GuildCountListener extends ListenerAdapter {
         Request request = new Request.Builder()
                 .url("https://bots.discord.pw/api/bots/201503408652419073/stats")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", bot.getCredentials().getAbal())
+                .header("Authorization", bot.getKeys().getAbal())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
@@ -70,10 +70,12 @@ public class GuildCountListener extends ListenerAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("Abal failed.", e);
+                call.cancel();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 bot.getLog().info("Abal | " + response.code());
+                response.close();
             }
         });
     }
@@ -84,7 +86,7 @@ public class GuildCountListener extends ListenerAdapter {
         Request request = new Request.Builder()
                 .url("https://discordbots.org/api/bots/201503408652419073/stats")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", bot.getCredentials().getDiscordBots())
+                .header("Authorization", bot.getKeys().getDiscordBots())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
@@ -94,21 +96,23 @@ public class GuildCountListener extends ListenerAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("DiscordBots failed.", e);
+                call.cancel();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 bot.getLog().info("DiscordBots | " + response.code());
+                response.close();
             }
         });
     }
 
     private void updateCarbonitexCount(int i) {
-        JSONObject json = new JSONObject().put("key", bot.getCredentials().getCarbonitex()).put("servercount", i);
+        JSONObject json = new JSONObject().put("key", bot.getKeys().getCarbonitex()).put("servercount", i);
 
         Request request = new Request.Builder()
                 .url("https://www.carbonitex.net/discord/data/botdata.php")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", bot.getCredentials().getAbal())
+                .header("Authorization", bot.getKeys().getAbal())
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
@@ -118,10 +122,12 @@ public class GuildCountListener extends ListenerAdapter {
             @Override
             public void onFailure(Call call, IOException e) {
                 bot.getLog().error("Carbonitex failed.", e);
+                call.cancel();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 bot.getLog().info("Carbonitex | " + response.code());
+                response.close();
             }
         });
     }

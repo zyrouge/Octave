@@ -12,8 +12,7 @@ class Credentials(file: File) {
 
     val config: CommentedConfigurationNode = loader.load()
 
-    val production: String = config["token", "production"].string
-    val beta: String = config["token", "beta"].string
+    val token: String = config["token"].string
 
     val abal: String = config["server counts", "abal"].string
     val carbonitex: String = config["server counts", "carbonitex"].string

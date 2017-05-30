@@ -14,7 +14,6 @@ import xyz.gnarbot.gnar.utils.Context
 class GarbageCollectCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Garbage Collection") {
-            color = context.bot.config.accentColor
             val interrupt = if (!args.isEmpty()) args[0].toBoolean() else false
 
             context.bot.shards.forEach { it.clearData(interrupt) }

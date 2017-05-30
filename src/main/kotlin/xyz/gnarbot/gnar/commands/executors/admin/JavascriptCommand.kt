@@ -30,8 +30,6 @@ class JavascriptCommand : CommandExecutor() {
         scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
 
         context.send().embed("JavaScript") {
-            color = context.bot.config.accentColor
-
             field("Running", false, script)
             field("Result", false, try {
                 scriptEngine.eval(script, scope)

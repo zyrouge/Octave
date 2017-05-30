@@ -15,6 +15,6 @@ public class TestBot {
         Credentials credentials = new Credentials(new File(Utils.DATA_FOLDER, "credentials.conf"));
         BotConfiguration config = new BotConfiguration(new File(Utils.DATA_FOLDER, "bot.conf"));
 
-        new Bot(config, credentials, false);
+        new Bot(config, credentials);
     }
 }

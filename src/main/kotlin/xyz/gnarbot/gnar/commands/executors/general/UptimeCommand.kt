@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import xyz.gnarbot.gnar.BotConfiguration
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -15,7 +14,6 @@ class UptimeCommand : CommandExecutor() {
         val d = h / 24
 
         context.send().embed("Bot Uptime") {
-            color = context.bot.config.accentColor
             description = "$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds"
         }.action().queue()
     }

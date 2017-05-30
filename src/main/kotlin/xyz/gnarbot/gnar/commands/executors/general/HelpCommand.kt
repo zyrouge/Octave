@@ -31,19 +31,15 @@ class HelpCommand : CommandExecutor() {
             }
 
             context.send().embed("Command Information") {
-                color = context.bot.config.accentColor
-
                 field("Aliases", true, cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix))
                 field("Usage", true, "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}")
                 field(true)
 
-                if (cmd.info.permissions.isNotEmpty())
+                if (cmd.info.permissions.isNotEmpty()) {
                     field("Guild Permission", true, "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}")
-
-
+                }
 
                 field("Description", false, cmd.info.description)
-
             }.action().queue()
 
             return
@@ -53,7 +49,7 @@ class HelpCommand : CommandExecutor() {
 
         context.message.author.openPrivateChannel().queue {
             context.send(it).embed("Documentation") {
-                color = context.bot.config.accentColor
+
                 description = "This is all of Gnar's currently registered commands."
 
                 for (category in Category.values()) {

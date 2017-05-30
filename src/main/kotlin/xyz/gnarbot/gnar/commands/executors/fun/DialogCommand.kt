@@ -17,52 +17,53 @@ class DialogCommand : CommandExecutor() {
                 .split("\n")
 
         context.send().embed {
-            color = context.bot.config.accentColor
-            description = buildString {
-                appendln("```")
-                appendln("﻿ ___________________________ ")
-                appendln("| Window          [_][☐][✕]|")
-                appendln("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|")
+            description {
+                buildString {
+                    appendln("```")
+                    appendln("﻿ ___________________________ ")
+                    appendln("| Window          [_][☐][✕]|")
+                    appendln("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|")
 
-                lines.map(String::trim)
-                        .map {
-                            it + buildString {
-                                kotlin.repeat(25 - it.length) { append(' ') }
+                    lines.map(String::trim)
+                            .map {
+                                it + buildString {
+                                    kotlin.repeat(25 - it.length) { append(' ') }
+                                }
                             }
+                            .map { "| $it |" }
+                            .forEach { appendln(it) }
+
+                    when (Random().nextInt(5)) {
+                        0 -> {
+                            appendln("|   _________    ________   |")
+                            appendln("|  |   Yes   |  |   No   |  |")
+                            appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
                         }
-                        .map { "| $it |" }
-                        .forEach { appendln(it) }
+                        1 -> {
+                            appendln("|  _____    ______    ____  |")
+                            appendln("| | Yes |  | Help |  | No | |")
+                            appendln("|  ‾‾‾‾‾    ‾‾‾‾‾‾    ‾‾‾‾  |")
+                        }
+                        2 -> {
+                            appendln("|   _________    ________   |")
+                            appendln("|  |  Maybe  |  |( ͡° ͜ʖ ͡°)|  |")
+                            appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
+                        }
+                        3 -> {
+                            appendln("|   _____________________   |")
+                            appendln("|  |     Confirm     | X |  |")
+                            appendln("|   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   |")
+                        }
+                        4 -> {
+                            appendln("|   ___________   _______   |")
+                            appendln("|  | HELLA YES | | PUSSY |  |")
+                            appendln("|   ‾‾‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾   |")
+                        }
+                    }
 
-                when (Random().nextInt(5)) {
-                    0 -> {
-                        appendln("|   _________    ________   |")
-                        appendln("|  |   Yes   |  |   No   |  |")
-                        appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
-                    }
-                    1 -> {
-                        appendln("|  _____    ______    ____  |")
-                        appendln("| | Yes |  | Help |  | No | |")
-                        appendln("|  ‾‾‾‾‾    ‾‾‾‾‾‾    ‾‾‾‾  |")
-                    }
-                    2 -> {
-                        appendln("|   _________    ________   |")
-                        appendln("|  |  Maybe  |  |( ͡° ͜ʖ ͡°)|  |")
-                        appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
-                    }
-                    3 -> {
-                        appendln("|   _____________________   |")
-                        appendln("|  |     Confirm     | X |  |")
-                        appendln("|   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   |")
-                    }
-                    4 -> {
-                        appendln("|   ___________   _______   |")
-                        appendln("|  | HELLA YES | | PUSSY |  |")
-                        appendln("|   ‾‾‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾   |")
-                    }
+                    appendln(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
+                    appendln("```")
                 }
-
-                appendln(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
-                appendln("```")
             }
         }.action().queue()
     }

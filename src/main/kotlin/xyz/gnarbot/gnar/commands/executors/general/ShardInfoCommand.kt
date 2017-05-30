@@ -21,8 +21,6 @@ class ShardInfoCommand : CommandExecutor() {
         }
 
         context.send().embed("Shard Information") {
-            color = context.bot.config.accentColor
-
             val pages = Lists.partition(context.bot.shards.toList(), 12)
 
             if (page >= pages.size) page = pages.size

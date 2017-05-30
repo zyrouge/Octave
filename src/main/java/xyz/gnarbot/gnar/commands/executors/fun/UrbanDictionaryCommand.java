@@ -7,8 +7,6 @@ import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfiguration;
-import xyz.gnarbot.gnar.Credentials;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -28,7 +26,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
         Request request = new Request.Builder()
                 .url("https://mashape-community-urban-dictionary.p.mashape.com/define?term=" + query)
-                .header("X-Mashape-Key", context.getBot().getCredentials().getMashape())
+                .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
                 .header("Accept", "text/plain")
                 .get()
                 .build();

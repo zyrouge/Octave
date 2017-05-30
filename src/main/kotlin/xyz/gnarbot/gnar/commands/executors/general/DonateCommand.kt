@@ -14,7 +14,6 @@ import xyz.gnarbot.gnar.utils.ln
 class DonateCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Donations") {
-            color = context.bot.config.accentColor
             description {
                 buildString {
                     append("Want to donate to support Gnar?").ln()

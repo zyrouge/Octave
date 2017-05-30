@@ -14,7 +14,6 @@ import xyz.gnarbot.gnar.utils.Context
 class RestartShardsCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Restarting Shards") {
-            color = context.bot.config.accentColor
             description = "Bot is now restarting."
         }.action().queue()
 

@@ -1,10 +1,15 @@
 package xyz.gnarbot.gnar.commands.executors.test;
 
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Icon;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 @Command(
         aliases = "wow",
@@ -15,6 +20,12 @@ import xyz.gnarbot.gnar.utils.Context;
 public class TestCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        context.send().text("wow").queue();
+        if (context.getBot().getConfig().getAvatar() != null) {
+            try (InputStream is = new URL(context.getBot().getConfig().getAvatar()).openStream()) {
+                context.getShard().getSelfUser().getManager().setAvatar(Icon.from(is)).queue();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -1,18 +1,22 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
 
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.BotConfiguration;
-import xyz.gnarbot.gnar.Credentials;
+import org.json.JSONTokener;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -27,20 +31,30 @@ public class MemeCommand extends CommandExecutor {
     private static final Map<String, String> map = new TreeMap<>();
 
     static {
-        try {
-            JSONObject memes = Unirest.get("https://api.imgflip.com/get_memes").asJson().getBody().getObject();
+        Request request = new Request.Builder()
+                .url("https://api.imgflip.com/get_memes")
+                .build();
 
-            JSONArray memeList = memes
-                    .getJSONObject("data")
-                    .getJSONArray("memes");
-
-            for (int i = 0; i < memeList.length(); i++) {
-                JSONObject jso = memeList.optJSONObject(i);
-                map.put(jso.getString("name"), jso.getString("id"));
+        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                call.cancel();
             }
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONArray memeList = new JSONObject(new JSONTokener(response.body().byteStream()))
+                        .getJSONObject("data")
+                        .getJSONArray("memes");
+
+                response.close();
+
+                for (int i = 0; i < memeList.length(); i++) {
+                    JSONObject jso = memeList.optJSONObject(i);
+                    map.put(jso.getString("name"), jso.getString("id"));
+                }
+            }
+        });
     }
 
     @Override
@@ -57,7 +71,6 @@ public class MemeCommand extends CommandExecutor {
                 } catch (Exception ignore) {}
 
                 Set<String> names = map.keySet();
-
 
                 int pages;
 
@@ -84,11 +97,10 @@ public class MemeCommand extends CommandExecutor {
                         })
                         .setFooter("Page [" + page + "/" + pages + "]")
                         .action().queue();
-
                 return;
             }
-            String request = StringUtils.join(args, " ");
-            String[] arguments = request.split("\\|");
+            String query = StringUtils.join(args, " ");
+            String[] arguments = query.split("\\|");
 
             int ld = 999;
             String id = null;
@@ -102,25 +114,43 @@ public class MemeCommand extends CommandExecutor {
                 }
             }
 
-            JSONObject response = Unirest.get("https://api.imgflip.com/caption_image")
-                    .queryString("template_id", id)
-                    .queryString("username", "GNARBot")
-                    .queryString("password", context.getBot().getCredentials().getImgFlip())
-                    .queryString("text0", arguments[1].trim())
-                    .queryString("text1", arguments[2].trim())
-                    .asJson()
-                    .getBody()
-                    .getObject()
-                    .getJSONObject("data");
+            String url = new URIBuilder("https://api.imgflip.com/caption_image")
+                    .addParameter("template_id", id)
+                    .addParameter("username", "GNARBot")
+                    .addParameter("password", context.getBot().getKeys().getImgFlip())
+                    .addParameter("text0", arguments[1].trim())
+                    .addParameter("text1", arguments[2].trim())
+                    .toString();
 
-            context.send().embed("Meme Generator")
-                    .setColor(context.getBot().getConfig().getAccentColor())
-                    .setImage(response.optString("url"))
-                    .action().queue();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                    .header("Accept", "application/json")
+                    .build();
 
+            HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    call.cancel();
+                    context.send().error("Failure to query API.");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()))
+                            .getJSONObject("data");
+
+                    context.send().embed("Meme Generator")
+                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setImage(jso.optString("url"))
+                            .action().queue();
+
+                    response.close();
+                }
+            });
         } catch (Exception e) {
             context.send().error(
-                    "**Please supply more arguments. Example Usage:**\n\n" +
+                    "*Arguments invalid. Example Usage:**\n\n" +
                     "[_meme Spongegar | Top Text | Bottom Text]()\n\n" +
                     "**For a list of memes, type:**\n\n" +
                     "[_meme list (page #)]()").queue();
