@@ -132,7 +132,7 @@ public class MemeCommand extends CommandExecutor {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     call.cancel();
-                    context.send().error("Failure to query API.");
+                    context.send().error("Failure to query API.").queue();
                 }
 
                 @Override

@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.MessageEmbed
-import xyz.avarel.aje.AJEException
 import xyz.avarel.aje.Expression
+import xyz.avarel.aje.exceptions.AJEException
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -12,7 +12,11 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-@Command(aliases = arrayOf("math"), usage = "(expression)", description = "Calculate fancy math expressions.")
+@Command(
+        aliases = arrayOf("math"),
+        usage = "(expression)",
+        description = "Calculate fancy math expressions."
+)
 class MathCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {

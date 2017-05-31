@@ -53,7 +53,7 @@ class OverwatchLookupCommand : CommandExecutor() {
         HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 call.cancel()
-                context.send().error("Failure to query API.")
+                context.send().error("Failure to query API.").queue()
             }
 
             override fun onResponse(call: Call, response: Response) {

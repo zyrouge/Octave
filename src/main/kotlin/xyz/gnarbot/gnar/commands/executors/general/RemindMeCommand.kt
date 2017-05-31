@@ -5,7 +5,10 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.util.concurrent.TimeUnit
 
-@Command(aliases = arrayOf("remindme", "remind"), usage = "(duration) (time unit) (msg)")
+@Command(
+        aliases = arrayOf("remindme", "remind"),
+        usage = "(duration) (time unit) (msg)"
+)
 class RemindMeCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.size >= 3) {

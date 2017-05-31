@@ -15,7 +15,8 @@ import java.io.FileReader;
 
 @Command(
         aliases = "champdata",
-        category = Category.FUN)
+        category = Category.FUN
+)
 public class ChampDataCommand extends CommandExecutor {
     private static final String[] names = ChampQuoteCommand.names;
     private static JSONObject information;

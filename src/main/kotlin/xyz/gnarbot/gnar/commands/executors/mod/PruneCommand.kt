@@ -7,7 +7,6 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.conformToRange
 import java.time.OffsetDateTime
 
 @Command(
@@ -31,7 +30,7 @@ class PruneCommand : CommandExecutor() {
         val amount: Int = (args[0].toIntOrNull() ?: run {
             context.send().error("Improper arguments supplies, must be a number.").queue()
             return
-        }).conformToRange(0, 100)
+        }).coerceIn(0, 100)
 
         if (amount < 2) {
             context.send().error("You need to delete 2 or more messages to use this command.").queue()
