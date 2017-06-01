@@ -5,6 +5,8 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.inlineCode
+import xyz.gnarbot.gnar.utils.link
 
 @Command(
         aliases = arrayOf("nowplaying", "np"),
@@ -12,7 +14,6 @@ import xyz.gnarbot.gnar.utils.Utils
         category = Category.MUSIC
 )
 class NowPlayingCommand : CommandExecutor() {
-
     override fun execute(context: Context, args: Array<String>) {
         val track = context.guildData.musicManager.player.playingTrack
 
@@ -24,12 +25,29 @@ class NowPlayingCommand : CommandExecutor() {
         context.send().embed("Now Playing") {
             color = context.bot.config.musicColor
 
-            field("Now Playing", false, "__[${track.info.title}](${track.info.uri})__")
+            field("Track", false) {
+                "**[${track.info.title}](${track.info.uri})**"
+            }
 
             val position = Utils.getTimestamp(track.position)
             val duration = Utils.getTimestamp(track.duration)
 
-            field("Time", true, "**[$position / $duration]**")
+            field("Progress", true) {
+                val percent = track.position.toDouble() / track.duration
+                buildString {
+                    for (i in 0 until 10) {
+                        if (i / 10.toDouble() > percent) {
+                            append("\u25AC")
+                        } else {
+                            append("\u25AC" link "")
+                        }
+                    }
+                    append(" **%.1f**%%".format(percent * 100))
+                }
+            }
+            field("Time", true) {
+                inlineCode { "[$position / $duration]" }
+            }
         }.action().queue()
     }
 }

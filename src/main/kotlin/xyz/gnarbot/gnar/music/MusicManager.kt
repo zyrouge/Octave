@@ -63,7 +63,6 @@ class MusicManager(private val guildData: GuildData) {
         sendHandler = AudioPlayerSendHandler(player)
 
         player.addListener(scheduler)
-        player.volume = 35
 
         isSetup = true
     }
@@ -80,7 +79,7 @@ class MusicManager(private val guildData: GuildData) {
         when {
             !context.bot.config.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
-                return false;
+                return false
             }
             !guildData.guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
                 context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
@@ -130,6 +129,11 @@ class MusicManager(private val guildData: GuildData) {
             }
 
             override fun playlistLoaded(playlist: AudioPlaylist) {
+                if (playlist.isSearchResult) {
+                    trackLoaded(playlist.tracks.first())
+                    return
+                }
+
                 val tracks = playlist.tracks
 
                 var added = 0

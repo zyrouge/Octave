@@ -27,4 +27,4 @@ inline infix fun Any?.link(url: String) = toString() link url
 
 inline fun code(language: String = "", code: () -> String) = "```$language\n${code()}```";
 
-inline fun inline(code: () -> String) = "`${code()}`"
+inline fun inlineCode(code: () -> String) = "`${code()}`"

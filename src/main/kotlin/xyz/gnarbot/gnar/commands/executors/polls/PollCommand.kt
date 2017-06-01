@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
         description = "Create a poll.")
 class PollCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        val options = args.joinToString(" ").split(',').map(String::trim)
+        val options = args.joinToString(" ").split(';').map(String::trim)
 
         if (options.size <= 1) {
             context.send().error("Please offer more options for the poll.").queue()

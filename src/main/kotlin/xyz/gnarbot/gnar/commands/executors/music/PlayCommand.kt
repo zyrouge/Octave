@@ -50,7 +50,31 @@ class PlayCommand : CommandExecutor() {
         val url = if ("https://" in args[0] || "http://" in args[0]) {
             args[0]
         } else {
-            val query = args.joinToString("+")
+            val query = args.joinToString(" ").trim()
+
+            if (query.startsWith("scsearch:", ignoreCase = true)
+                    || query.startsWith("ytsearch:", ignoreCase = true)) {
+                if (botChannel == null) {
+                    context.guildData.musicManager.openAudioConnection(userChannel, context)
+                }
+
+                manager.loadAndPlay(context, query)
+                return
+            } else if (query.startsWith("youtube ", ignoreCase = true)) {
+                if (botChannel == null) {
+                    context.guildData.musicManager.openAudioConnection(userChannel, context)
+                }
+
+                manager.loadAndPlay(context, query.replaceFirst("youtube ", "ytsearch:", ignoreCase = true))
+                return
+            } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
+                if (botChannel == null) {
+                    context.guildData.musicManager.openAudioConnection(userChannel, context)
+                }
+
+                manager.loadAndPlay(context, query.replaceFirst("soundcloud ", "scsearch:", ignoreCase = true))
+                return
+            }
 
             val results = YouTube.search(query, 1)
 
@@ -66,7 +90,6 @@ class PlayCommand : CommandExecutor() {
         if (botChannel == null) {
             context.guildData.musicManager.openAudioConnection(userChannel, context)
         }
-
 
         manager.loadAndPlay(context, url)
     }
