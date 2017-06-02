@@ -12,12 +12,13 @@ class Credentials(file: File) {
 
     val config: CommentedConfigurationNode = loader.load()
 
-    val token: String = config["token"].string
+    val token: String = config["token"].string.takeIf { !it.isNullOrBlank() } ?: error("Bot token can't be null or blank.")
 
-    val abal: String = config["server counts", "abal"].string
-    val carbonitex: String = config["server counts", "carbonitex"].string
-    val discordBots: String = config["server counts", "discordbots"].string
+    val abal: String? = config["server counts", "abal"].string
+    val carbonitex: String? = config["server counts", "carbonitex"].string
+    val discordBots: String? = config["server counts", "discordbots"].string
 
-    val imgFlip: String = config["imgflip"].string
-    val mashape: String = config["mashape"].string
+    val cat: String? = config["cat"].string
+    val imgFlip: String? = config["imgflip"].string
+    val mashape: String? = config["mashape"].string
 }

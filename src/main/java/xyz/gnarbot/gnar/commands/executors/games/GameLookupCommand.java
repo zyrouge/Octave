@@ -22,6 +22,11 @@ import java.io.IOException;
 public class GameLookupCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
+        if (context.getKeys().getMashape() == null) {
+            context.send().error("Mashape key is null").queue();
+            return;
+        }
+
         try {
             String query = StringUtils.join(args, " ");
 
@@ -33,7 +38,7 @@ public class GameLookupCommand extends CommandExecutor {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                    .header("X-Mashape-Key", context.getKeys().getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -56,13 +61,12 @@ public class GameLookupCommand extends CommandExecutor {
                     JSONObject jso = jsa.getJSONObject(0);
 
                     String title = jso.optString("name");
-                    //String publisher = jso.optString("publisher");
                     String score = jso.optString("rating");
                     String desc = jso.optString("summary");
                     String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
                     context.send().embed(title)
-                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setColor(context.getConfig().getAccentColor())
                             .setThumbnail(thumb)
                             //.field("Publisher", true, publisher)
                             .field("Score", true, score)

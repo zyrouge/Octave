@@ -7,9 +7,6 @@ import java.util.concurrent.TimeUnit
 
 inline fun StringBuilder.ln(): StringBuilder = appendln()
 
-inline fun Int.conformToRange(min: Int, max: Int) = Math.min(Math.max(min, this), max)
-
-
 @Suppress("NOTHING_TO_INLINE")
 inline operator fun ConfigurationNode.get(vararg objs : Any) : ConfigurationNode {
     return this.getNode(*objs)

@@ -54,7 +54,7 @@
 //            HttpResponse<JsonNode> response = Unirest.get("https://apicloud-facerect.p.mashape.com/process-url.json")
 //                    .queryString("features", true)
 //                    .queryString("url", encodedStr)
-//                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+//                    .header("X-Mashape-Key", context.getKeys().getMashape())
 //                    .header("Accept", "application/json")
 //                    .asJson();
 //

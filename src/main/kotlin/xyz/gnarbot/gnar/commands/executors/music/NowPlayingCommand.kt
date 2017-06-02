@@ -14,6 +14,9 @@ import xyz.gnarbot.gnar.utils.link
         category = Category.MUSIC
 )
 class NowPlayingCommand : CommandExecutor() {
+
+    private val totalBlocks = 15;
+
     override fun execute(context: Context, args: Array<String>) {
         val track = context.guildData.musicManager.player.playingTrack
 
@@ -35,8 +38,8 @@ class NowPlayingCommand : CommandExecutor() {
             field("Progress", true) {
                 val percent = track.position.toDouble() / track.duration
                 buildString {
-                    for (i in 0 until 10) {
-                        if (i / 10.toDouble() > percent) {
+                    for (i in 0 until totalBlocks) {
+                        if (i / totalBlocks.toDouble() > percent) {
                             append("\u25AC")
                         } else {
                             append("\u25AC" link "")

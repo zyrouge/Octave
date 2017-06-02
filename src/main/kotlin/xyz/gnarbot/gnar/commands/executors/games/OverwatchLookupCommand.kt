@@ -25,7 +25,7 @@ class OverwatchLookupCommand : CommandExecutor() {
             return
         }
 
-        if (!args[0].matches("""[a-zA-Z1-9]+[#-]\d+""".toRegex())) {
+        if (!args[0].matches(Regex("""[a-zA-Z1-9]+[#-]\d+"""))) {
             context.send().error("You did not enter a valid BattleTag `[BattleTag#0000]`.").queue()
             return
         }

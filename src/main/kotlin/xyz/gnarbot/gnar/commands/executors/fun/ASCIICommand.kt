@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.`fun`
 
 import org.apache.commons.lang3.StringUtils
+import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
@@ -21,14 +22,15 @@ class ASCIICommand : CommandExecutor() {
         }
 
         try {
-            val query = StringUtils.join(args, "+")
+            val query = StringUtils.join(args, " ")
 
             if (query.length > 15) {
                 context.send().error("The query has too many characters. 15 at most.").queue()
                 return
             }
 
-            val document = Jsoup.connect("http://artii.herokuapp.com/make?text=$query").get()
+            val document = Jsoup.connect(
+                    URIBuilder("http://artii.herokuapp.com/make").addParameter("text", query).toString()).get()
 
             val element = document.getElementsByTag("body")[0]
 

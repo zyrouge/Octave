@@ -37,7 +37,6 @@ class PollCommand : CommandExecutor() {
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 context.send().embed("Poll Results") {
-
                     description = "Voting has ended! Here are the results!"
 
                     var topVotes = 0
@@ -63,6 +62,8 @@ class PollCommand : CommandExecutor() {
                             }
                         }
                     }
+
+                    it.clearReactions().reason("Poll ended.").queue()
 
                     field("Winner") {
                         winners.joinToString(prefix = "**", postfix = "**") { options[it] }

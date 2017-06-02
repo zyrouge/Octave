@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
-import xyz.gnarbot.gnar.BotConfiguration;
+import net.dv8tion.jda.core.Permission;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -9,10 +9,10 @@ import xyz.gnarbot.gnar.utils.Context;
 public class InviteBotCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        String link = "https://discordapp.com/oauth2/authorize?client_id=201492375653056512&scope=bot&permissions=8";
+        String link = context.getShard().asBot().getInviteUrl(Permission.ADMINISTRATOR);
 
         context.send().embed("Get Gnar on your server!")
-                .setColor(context.getBot().getConfig().getAccentColor())
+                .setColor(context.getConfig().getAccentColor())
                 .setDescription("__**[Click to invite Gnar to your server.](" + link + ")**__")
                 .action().queue();
     }

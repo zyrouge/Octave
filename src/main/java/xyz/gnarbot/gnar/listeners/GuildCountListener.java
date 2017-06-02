@@ -55,6 +55,8 @@ public class GuildCountListener extends ListenerAdapter {
     }
 
     private void updateAbalCount(int i) {
+        if (bot.getKeys().getAbal() == null) return;
+
         JSONObject json = new JSONObject().put("server_count", i);
 
         Request request = new Request.Builder()
@@ -81,6 +83,8 @@ public class GuildCountListener extends ListenerAdapter {
     }
 
     private void updateDiscordBotsCount(int i) {
+        if (bot.getKeys().getDiscordBots() == null) return;
+
         JSONObject json = new JSONObject().put("server_count", i);
 
         Request request = new Request.Builder()
@@ -107,6 +111,9 @@ public class GuildCountListener extends ListenerAdapter {
     }
 
     private void updateCarbonitexCount(int i) {
+        if (bot.getKeys().getAbal() == null) return;
+        if (bot.getKeys().getCarbonitex() == null) return;
+
         JSONObject json = new JSONObject().put("key", bot.getKeys().getCarbonitex()).put("servercount", i);
 
         Request request = new Request.Builder()

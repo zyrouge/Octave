@@ -24,6 +24,11 @@ import java.net.URISyntaxException;
 public class YodaTalkCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
+        if (context.getKeys().getMashape() == null) {
+            context.send().error("Mashape key is null").queue();
+            return;
+        }
+
         if (args.length == 0) {
             context.send().error("At least put something. `:[`").queue();
             return;
@@ -38,7 +43,7 @@ public class YodaTalkCommand extends CommandExecutor {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                    .header("X-Mashape-Key", context.getKeys().getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -52,7 +57,7 @@ public class YodaTalkCommand extends CommandExecutor {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     context.send().embed("Yoda-Speak")
-                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setColor(context.getConfig().getAccentColor())
                             .setDescription(response.body().string())
                             .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
                             .action().queue();

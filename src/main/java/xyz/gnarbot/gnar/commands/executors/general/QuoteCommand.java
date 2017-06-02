@@ -27,7 +27,7 @@ public class QuoteCommand extends CommandExecutor {
                 try {
                     final TextChannel _targetChannel = targetChannel;
                     context.getMessage().getChannel().getMessageById(id).queue(msg -> context.send(_targetChannel).embed()
-                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setColor(context.getConfig().getAccentColor())
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
                             .action().queue());

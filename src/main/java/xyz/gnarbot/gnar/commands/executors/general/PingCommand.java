@@ -13,11 +13,11 @@ public class PingCommand extends CommandExecutor {
         long time = System.currentTimeMillis();
 
         context.send().embed("Ping")
-                .setColor(context.getBot().getConfig().getAccentColor())
+                .setColor(context.getConfig().getAccentColor())
                 .setDescription("Checking ping...")
                 .action().queue(msg -> msg.editMessage(
                         new KEmbedBuilder().setTitle("Ping")
-                                .setColor(context.getBot().getConfig().getAccentColor())
+                                .setColor(context.getConfig().getAccentColor())
                                 //.field("Receive Time", true, () -> receiveTime + " ms")
                                 .field("Response Time", true, () -> {
                                     long ping = System.currentTimeMillis() - time;

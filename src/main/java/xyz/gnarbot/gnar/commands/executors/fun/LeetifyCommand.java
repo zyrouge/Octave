@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -36,7 +35,7 @@ public class LeetifyCommand extends CommandExecutor {
         }
 
         context.send().embed("Leet it")
-                .setColor(context.getBot().getConfig().getAccentColor())
+                .setColor(context.getConfig().getAccentColor())
                 .setDescription(s)
                 .action().queue();
     }

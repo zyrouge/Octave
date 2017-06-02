@@ -20,8 +20,8 @@ import java.net.URL;
 public class TestCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (context.getBot().getConfig().getAvatar() != null) {
-            try (InputStream is = new URL(context.getBot().getConfig().getAvatar()).openStream()) {
+        if (context.getConfig().getAvatar() != null) {
+            try (InputStream is = new URL(context.getConfig().getAvatar()).openStream()) {
                 context.getShard().getSelfUser().getManager().setAvatar(Icon.from(is)).queue();
             } catch (IOException e) {
                 e.printStackTrace();

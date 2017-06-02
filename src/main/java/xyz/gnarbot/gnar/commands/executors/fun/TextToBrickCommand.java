@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -20,7 +19,7 @@ public class TextToBrickCommand extends CommandExecutor {
         }
 
         context.send().embed("Text to Brick")
-                .setColor(context.getBot().getConfig().getAccentColor())
+                .setColor(context.getConfig().getAccentColor())
                 .description(() -> {
                     StringBuilder sb = new StringBuilder();
                     for (String a : StringUtils.join(args, " ").split("")) {

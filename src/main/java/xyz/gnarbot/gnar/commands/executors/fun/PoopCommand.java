@@ -48,7 +48,7 @@ public class PoopCommand extends CommandExecutor {
         joiner.add("░░░░░░░░░░░░░░░░░░░░░░░");
 
         context.send().embed("Pooping Memes")
-                .setColor(context.getBot().getConfig().getAccentColor())
+                .setColor(context.getConfig().getAccentColor())
                 .setDescription(joiner.toString())
                 .action().queue();
     }

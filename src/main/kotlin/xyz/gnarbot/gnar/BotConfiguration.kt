@@ -18,12 +18,14 @@ class BotConfiguration(file: File) {
 
     var config: CommentedConfigurationNode = loader.load()
 
-    val name: String = this.config["bot", "name"].getString("Gnar")
-    val game: String = this.config["bot", "game"].getString("%d | _help")
-    val avatar: String? = this.config["bot", "avatar"].string
-    val shards: Int = this.config["bot", "shards"].int
+    val shards: Int = this.config["bot", "shards"].int.takeIf { it != 0 } ?: error("Shard number must be >= 1")
 
-    val prefix: String = this.config["commands", "prefix"].getString("_")
+    val name: String = this.config["bot", "name"].string ?: "Gnar"
+    val game: String = this.config["bot", "game"].string ?: "%d | _help"
+    val avatar: String? = this.config["bot", "avatar"].string
+    val consoleChannelID: Long = this.config["bot", "console channel id"].getLong(0)
+
+    val prefix: String = this.config["commands", "prefix"].string ?: "_"
 
     val administrators: List<Long> = this.config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
 
@@ -42,6 +44,6 @@ class BotConfiguration(file: File) {
     val searchDurationText: String = this.config["music", "search duration"].string
     val searchDuration: Duration = searchDurationText.toDuration()
 
-    val accentColor : Color = Color.decode(this.config["colors", "accent"].string)
-    val musicColor: Color = Color.decode(this.config["colors", "alternate"].string)
+    val accentColor : Color = (this.config["colors", "accent"].string ?: "0050af").let { Color.decode(it) }
+    val musicColor: Color = (this.config["colors", "music"].string ?: "00dd58").let { Color.decode(it) }
 }

@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -24,7 +23,7 @@ public class RollCommand extends CommandExecutor {
                 }
 
                 context.send().embed("Roll a Number")
-                        .setColor(context.getBot().getConfig().getAccentColor())
+                        .setColor(context.getConfig().getAccentColor())
                         .description(() -> "You rolled a **"
                                 + new Random().nextInt(Integer.valueOf(args[0]))
                                 + "** from range **[0 to " + args[0]+ "]**.")

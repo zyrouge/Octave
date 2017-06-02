@@ -5,14 +5,14 @@ import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.utils.SimpleLog
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
 import xyz.gnarbot.gnar.listeners.UserListener
-import java.io.File
+import xyz.gnarbot.gnar.utils.DiscordLogBack
+import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter
 import kotlin.jvm.JvmStatic as static
 
 /**
@@ -34,7 +34,9 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
     val commandRegistry = CommandRegistry(this)
 
     init {
-        SimpleLog.addFileLogs(File("bot.stdout.log"), File("bot.err.log"))
+        //SimpleLog.addFileLogs(File("bot.stdout.log"), File("bot.err.log"))
+        SimpleLogToSLF4JAdapter.install()
+        DiscordLogBack.enable(this)
 
         check(!keys.token.isNullOrEmpty()) { "Bot token can not be null." }
 

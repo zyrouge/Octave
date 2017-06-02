@@ -13,10 +13,19 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class RestartShardsCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        context.send().embed("Restarting Shards") {
-            description = "Bot is now restarting."
-        }.action().queue()
+        if (args.isEmpty()) {
+            context.send().embed("Restarting Shards") {
+                description = "Bot is now restarting."
+            }.action().queue()
 
-        context.bot.restart()
+            context.bot.restart()
+        } else {
+            val id = args[0].toIntOrNull()?.coerceIn(0, context.bot.shards.size) ?: kotlin.run {
+                context.send().error("You must enter a valid shard id.").queue()
+                return
+            }
+
+            context.bot.restart(id)
+        }
     }
 }

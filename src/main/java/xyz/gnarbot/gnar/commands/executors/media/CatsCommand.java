@@ -20,7 +20,7 @@ public class CatsCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         try {
-            String apiKey = "MTAyODkw";
+            String apiKey = context.getKeys().getCat();
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -48,7 +48,7 @@ public class CatsCommand extends CommandExecutor {
             String url = doc.getElementsByTagName("url").item(0).getTextContent();
 
             context.send().embed("Random Cat Pictures")
-                    .setColor(context.getBot().getConfig().getAccentColor())
+                    .setColor(context.getConfig().getAccentColor())
                     .setImage(url)
                     .action().queue();
 

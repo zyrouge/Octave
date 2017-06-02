@@ -12,6 +12,7 @@ import xyz.gnarbot.gnar.commands.executors.mod.DisableCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.EnableCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
+import xyz.gnarbot.gnar.commands.executors.music.dj.ShuffleCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.*;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;

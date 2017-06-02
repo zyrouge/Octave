@@ -15,7 +15,6 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_CHANNEL)
 )
 class ShuffleCommand : CommandExecutor() {
-
     override fun execute(context: Context, args: Array<String>) {
         context.guildData.musicManager.scheduler.shuffle()
 

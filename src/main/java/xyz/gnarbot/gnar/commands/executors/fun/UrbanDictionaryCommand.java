@@ -5,6 +5,7 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.utils.HttpUtils;
@@ -14,6 +15,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 @Command(
         aliases = {"urbandict", "ub", "urbandictionary"},
@@ -22,11 +24,26 @@ import java.io.IOException;
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        String query = StringUtils.join(args, "+");
+        if (context.getKeys().getMashape() == null) {
+            context.send().error("Mashape key is null").queue();
+            return;
+        }
+
+        String query = StringUtils.join(args, " ");
+
+        String url;
+        try {
+            url = new URIBuilder("https://mashape-community-urban-dictionary.p.mashape.com/define")
+                    .addParameter("term", query)
+                    .toString();
+        } catch (URISyntaxException e) {
+            context.getLog().error("Urban dictionary error", e);
+            return;
+        }
 
         Request request = new Request.Builder()
-                .url("https://mashape-community-urban-dictionary.p.mashape.com/define?term=" + query)
-                .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                .url(url)
+                .header("X-Mashape-Key", context.getKeys().getMashape())
                 .header("Accept", "text/plain")
                 .get()
                 .build();
@@ -49,7 +66,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                 JSONObject word = words.getJSONObject(0);
 
                 context.send().embed("Urban Dictionary")
-                        .setColor(context.getBot().getConfig().getAccentColor())
+                        .setColor(context.getConfig().getAccentColor())
                         .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
                         .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
                         .field("Definition", true, word.optString("definition"))

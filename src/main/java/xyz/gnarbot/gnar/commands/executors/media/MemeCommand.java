@@ -117,14 +117,14 @@ public class MemeCommand extends CommandExecutor {
             String url = new URIBuilder("https://api.imgflip.com/caption_image")
                     .addParameter("template_id", id)
                     .addParameter("username", "GNARBot")
-                    .addParameter("password", context.getBot().getKeys().getImgFlip())
+                    .addParameter("password", context.getKeys().getImgFlip())
                     .addParameter("text0", arguments[1].trim())
                     .addParameter("text1", arguments[2].trim())
                     .toString();
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getBot().getKeys().getMashape())
+                    .header("X-Mashape-Key", context.getKeys().getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -141,7 +141,7 @@ public class MemeCommand extends CommandExecutor {
                             .getJSONObject("data");
 
                     context.send().embed("Meme Generator")
-                            .setColor(context.getBot().getConfig().getAccentColor())
+                            .setColor(context.getConfig().getAccentColor())
                             .setImage(jso.optString("url"))
                             .action().queue();
 
