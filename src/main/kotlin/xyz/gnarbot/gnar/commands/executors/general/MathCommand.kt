@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
@@ -68,6 +69,11 @@ class MathCommand : CommandExecutor() {
             } catch (e : AJEException) {
                 field("Error") {
                     e.message
+                }
+                color = Color.RED
+            } catch (e : ExecutionException) {
+                field("Error") {
+                    e.cause?.message ?: e.message
                 }
                 color = Color.RED
             } catch (e : TimeoutException) {
