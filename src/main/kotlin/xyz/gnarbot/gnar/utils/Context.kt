@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.guilds.GuildData
 /**
  * Contains
  */
-data class Context(val message: Message, val guild : Guild, val guildData: GuildData, val shard: Shard, val bot: Bot) {
+data class Context(val message: Message, val channel: MessageChannel, val guild : Guild, val guildData: GuildData, val shard: Shard, val bot: Bot) {
     val keys = bot.keys
     val config = bot.config
     val log = bot.log

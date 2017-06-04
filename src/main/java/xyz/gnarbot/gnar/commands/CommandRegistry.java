@@ -62,7 +62,7 @@ public class CommandRegistry {
         //register(new ProgressionCommand());
         //register(new GoogleyEyesCommand());
         //register(new ServersSharedCommand());
-        //register(new TextToSpeechCommand());
+        register(new TextToSpeechCommand());
         register(new ReactCommand());
         register(new ChampDataCommand());
         register(new TriviaAnswerCommand());

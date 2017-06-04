@@ -11,7 +11,7 @@ import java.time.OffsetDateTime
 
 @Command(
         aliases = arrayOf("prune", "delmessages", "delmsgs"),
-        usage = "-amount -words...", description = "Delete up to 100 messages.",
+        usage = "(amount)", description = "Delete up to 100 messages.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.MESSAGE_MANAGE)
@@ -25,41 +25,48 @@ class PruneCommand : CommandExecutor() {
 
         context.message.delete().queue()
 
-        val history = context.send().channel.history
+        val history = context.channel.history
 
-        val amount: Int = (args[0].toIntOrNull() ?: run {
+        val amount = args[0].toIntOrNull()?.coerceIn(0, 100) ?: kotlin.run {
             context.send().error("Improper arguments supplies, must be a number.").queue()
             return
-        }).coerceIn(0, 100)
+        }
 
         if (amount < 2) {
             context.send().error("You need to delete 2 or more messages to use this command.").queue()
             return
         }
 
+        val time = OffsetDateTime.now().minusWeeks(2)
+
+//        val messages = context.channel.iterableHistory.stream().filter { msg ->
+//            msg.creationTime.isAfter(time)
+//        }.limit(amount).toList()
+//
+//        when {
+//            messages.isNotEmpty() -> {
+//                Lists.partition(messages, 100).forEach {
+//                    context.message.textChannel.deleteMessages(it).queue()
+//                }
+//
+//                context.send().info("Attempted to delete **[${messages.size}]()** messages.\nDeleting this message in **5** seconds.")
+//                        .queue(Utils.deleteMessage(5))
+//            }
+//            else -> {
+//                context.send().info("No messages were found (that are younger than 2 weeks).\nDeleting this message in **5** seconds.")
+//                        .queue(Utils.deleteMessage(5))
+//            }
+//        }
+
         history.retrievePast(amount).queue {
-            val filters = if (args.size >= 2) {
-                args.copyOfRange(1, args.size)
-            } else {
-                emptyArray()
+            val messages = it.filter { msg ->
+                msg.creationTime.isAfter(time)
             }
 
-            val msgList = it.map { msg ->
-                when {
-                    msg.creationTime.isBefore(OffsetDateTime.now().minusWeeks(2)) -> null
-                    filters.isNotEmpty() -> if (args.any { msg.content.contains(it) }) msg else null
-                    else -> msg
-                }
-            }.filterNotNull()
-
             when {
-                msgList.isNotEmpty() -> {
-                    context.message.textChannel.deleteMessages(msgList).queue()
-                    context.send().info("Attempted to delete **[${it.size}]()** messages.\nDeleting this message in **5** seconds.")
-                            .queue(Utils.deleteMessage(5))
-                }
-                filters.isNotEmpty() -> {
-                    context.send().info("No messages (that are younger than 2 weeks) were found with the filters.\nDeleting this message in **5** seconds.")
+                messages.isNotEmpty() -> {
+                    context.message.textChannel.deleteMessages(messages).queue()
+                    context.send().info("Attempted to delete **[${messages.size}]()** messages.\nDeleting this message in **5** seconds.")
                             .queue(Utils.deleteMessage(5))
                 }
                 else -> {

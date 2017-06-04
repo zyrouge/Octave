@@ -58,7 +58,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
 
         if (event.getMessage().length() > MessageEmbed.VALUE_MAX_LENGTH) {
             new ResponseBuilder(channel, bot).embed()
-                    .setTitle(event.getLevel() + " - " + event.getLoggerName() + " - " + event.getThreadName())
+                    .setTitle(event.getLevel() + " | " + event.getLoggerName() + " | " + event.getThreadName())
                     .setDescription("Too long..." + Utils.hasteBin(patternLayout.doLayout(event)))
                     .setFooter(format.format(new Date(event.getTimeStamp())))
                     .action().queue();

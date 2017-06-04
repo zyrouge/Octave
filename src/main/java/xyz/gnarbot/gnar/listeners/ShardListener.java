@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.listeners;
 
 
-import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.DisconnectEvent;
@@ -13,7 +12,7 @@ import net.dv8tion.jda.core.events.guild.update.GuildUpdateRegionEvent;
 import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
@@ -30,17 +29,15 @@ public class ShardListener extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.isFromType(ChannelType.TEXT)) {
-            if (event.getMessage().getContent().startsWith(bot.getConfig().getPrefix())) {
-                GuildData gd = shard.getGuildData(event.getGuild());
+    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        if (event.getMessage().getContent().startsWith(bot.getConfig().getPrefix())) {
+            GuildData gd = shard.getGuildData(event.getGuild());
 
-                if (event.getAuthor() == null || event.getMember() == null) {
-                    return;
-                }
-
-                gd.handleCommand(new Context(event.getMessage(), event.getGuild(), gd, shard, bot));
+            if (event.getAuthor() == null || event.getMember() == null) {
+                return;
             }
+
+            gd.handleCommand(new Context(event.getMessage(), event.getChannel(), event.getGuild(), gd, shard, bot));
         }
     }
 
