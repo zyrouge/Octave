@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory
 import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
-import xyz.gnarbot.gnar.listeners.UserListener
 import xyz.gnarbot.gnar.utils.DiscordLogBack
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter
 import kotlin.jvm.JvmStatic as static
@@ -23,7 +22,6 @@ import kotlin.jvm.JvmStatic as static
  */
 class Bot(val config: BotConfiguration, val keys: Credentials) {
     private val guildCountListener = GuildCountListener(this)
-    private val userListener = UserListener()
 
     /** @return Sharded JDA instances of the bot.*/
     val shards : Array<Shard>
@@ -59,7 +57,6 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
             if (config.shards > 1) useSharding(id, config.shards)
             setAutoReconnect(true)
             addEventListener(guildCountListener)
-            addEventListener(userListener)
             setAudioSendFactory(NativeAudioSendFactory())
             setGame(Game.of(config.game.format(id)))
             setAudioEnabled(true)

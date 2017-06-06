@@ -37,7 +37,7 @@ public class ShardListener extends ListenerAdapter {
                 return;
             }
 
-            gd.handleCommand(new Context(event.getMessage(), event.getChannel(), event.getGuild(), gd, shard, bot));
+            gd.handleCommand(new Context(event, gd, shard, bot));
         }
     }
 

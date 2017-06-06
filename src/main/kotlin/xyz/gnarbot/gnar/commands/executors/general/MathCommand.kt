@@ -63,7 +63,7 @@ class MathCommand : CommandExecutor() {
                 field("Result") {
                     code {
                         CompletableFuture.supplyAsync(expr::compute)
-                                .get(500, TimeUnit.MILLISECONDS).toString()
+                                .get(5000, TimeUnit.MILLISECONDS).toString()
                     }
                 }
             } catch (e : AJEException) {

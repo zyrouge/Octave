@@ -44,9 +44,11 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
 
     override fun handleCommand(context: Context) {
         try {
-            if (commandHandler.callCommand(context)) {
-                shard.requests++
-            }
+            Thread {
+                if (commandHandler.callCommand(context)) {
+                    shard.requests++
+                }
+            }.start()
         } catch (e: PermissionException) {
             if (e.permission == Permission.MESSAGE_EMBED_LINKS) {
                 context.send().text("Most of the bot's messages are sent as embeds.\nGrant the bot `Embed Links` permission to see messages.")
