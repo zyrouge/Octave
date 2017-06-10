@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit
 inline fun StringBuilder.ln(): StringBuilder = appendln()
 
 @Suppress("NOTHING_TO_INLINE")
-inline operator fun ConfigurationNode.get(vararg objs : Any) : ConfigurationNode {
-    return this.getNode(*objs)
+inline operator fun ConfigurationNode.get(vararg nodes: Any) : ConfigurationNode {
+    return this.getNode(*nodes)
 }
 
 fun String.toDuration() : Duration {

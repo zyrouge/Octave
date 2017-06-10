@@ -41,10 +41,10 @@ class BotConfiguration(file: File) {
     val voteSkipDurationText: String = config["music", "vote skip duration"].getString("20 seconds")
     val voteSkipDuration: Duration = voteSkipDurationText.toDuration()
 
-    val searchDurationText: String = config["music", "search duration"].string
+    val searchDurationText: String = config["music", "search duration"].getString("2 minutes")
     val searchDuration: Duration = searchDurationText.toDuration()
 
-    val accentColor : Color = config["colors", "accent"].getString("0050af").let { Color.decode(it) }
-    val musicColor: Color = config["colors", "music"].getString("00dd58").let { Color.decode(it) }
-    val errorColor: Color = config["colors", "error"].getString("FF0000").let { Color.decode(it) }
+    val accentColor : Color = config["colors", "accent"].getString("0x0050af").let { Color.decode(it) }
+    val musicColor: Color = config["colors", "music"].getString("0x00dd58").let { Color.decode(it) }
+    val errorColor: Color = config["colors", "error"].getString("0xFF0000").let { Color.decode(it) }
 }

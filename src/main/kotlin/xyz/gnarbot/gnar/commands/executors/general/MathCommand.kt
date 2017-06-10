@@ -1,5 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.experimental.withTimeout
 import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.avarel.aje.Expression
 import xyz.avarel.aje.exceptions.AJEException
@@ -8,10 +12,8 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
-import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 @Command(
         aliases = arrayOf("math"),
@@ -37,7 +39,7 @@ class MathCommand : CommandExecutor() {
             val exp = Expression(script)
 
             try {
-                field("Expressions") {
+                field("Script") {
                     code {
                         script
                     }
@@ -45,25 +47,33 @@ class MathCommand : CommandExecutor() {
 
                 val expr = exp.compile()
 
+                var ast: String? = null
+
+                val result = runBlocking {
+                    withTimeout(1000) {
+                        async(CommonPool) {
+                            ast = buildString {
+                                expr.ast(this, "", true)
+                            }
+
+                            expr.compute()
+                        }.await()
+                    }
+                }
+
                 field("AST") {
                     code {
-                        val ast = buildString {
-                            expr.ast(this, "", true)
-                        }
-                        if (ast.length > MessageEmbed.VALUE_MAX_LENGTH / 2) {
+                        if (ast == null || ast!!.length > MessageEmbed.VALUE_MAX_LENGTH / 2) {
                             "AST can not be displayed."
                         } else {
-                            ast
+                            ast!!
                         }
                     }
                 }
 
-
-
                 field("Result") {
                     code {
-                        CompletableFuture.supplyAsync(expr::compute)
-                                .get(5000, TimeUnit.MILLISECONDS).toString()
+                        result.toString()
                     }
                 }
             } catch (e : AJEException) {
@@ -76,7 +86,7 @@ class MathCommand : CommandExecutor() {
                     e.cause?.message ?: e.message
                 }
                 color = Color.RED
-            } catch (e : TimeoutException) {
+            } catch (e : CancellationException) {
                 field("Error") {
                     "Script took too long to execute."
                 }
