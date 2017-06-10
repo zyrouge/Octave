@@ -1,9 +1,10 @@
 package xyz.gnarbot.gnar.guilds
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
 import xyz.gnarbot.gnar.commands.CommandDispatcher
@@ -43,16 +44,15 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
     }
 
     override fun handleCommand(context: Context) {
-        try {
-            Thread {
-                if (commandHandler.callCommand(context)) {
-                    shard.requests++
-                }
-            }.start()
-        } catch (e: PermissionException) {
-            if (e.permission == Permission.MESSAGE_EMBED_LINKS) {
-                context.send().text("Most of the bot's messages are sent as embeds.\nGrant the bot `Embed Links` permission to see messages.")
-                        .queue(Utils.deleteMessage(15))
+        if (!guild.selfMember.hasPermission(Permission.MESSAGE_EMBED_LINKS)) {
+            context.send().text("Grant the bot `Embed Links` permission to see messages.")
+                    .queue(Utils.deleteMessage(15))
+            return
+        }
+
+        launch(CommonPool) {
+            if (commandHandler.callCommand(context)) {
+                shard.requests++
             }
         }
     }

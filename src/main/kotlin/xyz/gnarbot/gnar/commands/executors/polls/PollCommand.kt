@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.polls
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.KEmbedBuilder
+import xyz.gnarbot.gnar.utils.EmbedMaker
 import java.util.concurrent.TimeUnit
 
 @Command(aliases = arrayOf("poll"),
@@ -32,7 +32,7 @@ class PollCommand : CommandExecutor() {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
 
-            it.editMessage(KEmbedBuilder(it.embeds[0]).apply {
+            it.editMessage(EmbedMaker(it.embeds[0]).apply {
                 description = "Voting has ended! Check the results in the newer messages!"
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {

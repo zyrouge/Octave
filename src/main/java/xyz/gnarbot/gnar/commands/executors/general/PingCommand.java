@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.KEmbedBuilder;
+import xyz.gnarbot.gnar.utils.EmbedMaker;
 
 @Command(aliases = "ping",
         description = "Show the bot's current response time.")
@@ -16,7 +16,7 @@ public class PingCommand extends CommandExecutor {
                 .setColor(context.getConfig().getAccentColor())
                 .setDescription("Checking ping...")
                 .action().queue(msg -> msg.editMessage(
-                        new KEmbedBuilder().setTitle("Ping")
+                        new EmbedMaker().setTitle("Ping")
                                 .setColor(context.getConfig().getAccentColor())
                                 //.field("Receive Time", true, () -> receiveTime + " ms")
                                 .field("Response Time", true, () -> {

@@ -17,7 +17,7 @@ import java.util.*
  * [http://imgur.com/a/yOb5n](http://imgur.com/a/yOb5n).
  */
 @Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
+abstract class AbstractEmbedMaker<T : AbstractEmbedMaker<T>> {
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
      * <br>Every part of an embed can be removed or cleared by providing {@code null} to the setter method.
@@ -524,17 +524,17 @@ abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
         InlineHandler(this).block()
     }
 
-    class InlineHandler<T : AbstractEmbedBuilder<T>>(val embedBuilder: AbstractEmbedBuilder<T>) {
+    class InlineHandler<T : AbstractEmbedMaker<T>>(val embedMaker: AbstractEmbedMaker<T>) {
         inline fun field(name: String, value: String?): T
-                = embedBuilder.field(name, true, value)
+                = embedMaker.field(name, true, value)
 
         inline fun field(name: String, value: Any?): T
-                = embedBuilder.field(name, true, value.toString())
+                = embedMaker.field(name, true, value.toString())
 
         inline fun field(name: String = ZERO_WIDTH_SPACE, block: () -> String?): T
-                = embedBuilder.field(name, true, block())
+                = embedMaker.field(name, true, block())
 
-        inline fun field() = embedBuilder.field(true)
+        inline fun field() = embedMaker.field(true)
     }
 
     companion object {
@@ -545,50 +545,50 @@ abstract class AbstractEmbedBuilder<T : AbstractEmbedBuilder<T>> {
         }
     }
     
-    inline var AbstractEmbedBuilder<*>.title : String?
+    inline var AbstractEmbedMaker<*>.title : String?
         get() = this.getTitle()
         set(value) {
             this.setTitle(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.url : String?
+    inline var AbstractEmbedMaker<*>.url : String?
         get() = this.getUrl()
         set(value) {
             this.setTitle(getTitle(), value)
         }
 
-    inline var AbstractEmbedBuilder<*>.color : Color?
+    inline var AbstractEmbedMaker<*>.color : Color?
         get() = this.getColor()
         set(value) {
             this.setColor(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.description : String?
+    inline var AbstractEmbedMaker<*>.description : String?
         get() = this.getDescription()
         set(value) {
             this.setDescription(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.footer : String?
+    inline var AbstractEmbedMaker<*>.footer : String?
         get() = this.getFooter()?.text
         set(value) {
             this.setFooter(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.image : String?
+    inline var AbstractEmbedMaker<*>.image : String?
         get() = this.getImage()
         set(value) {
             this.setImage(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.thumbnail : String?
+    inline var AbstractEmbedMaker<*>.thumbnail : String?
         get() = this.getThumbnail()
         set(value) {
             this.setThumbnail(value)
         }
 
-    inline var AbstractEmbedBuilder<*>.timestamp : OffsetDateTime?
-        get() = this.getTimestamp()
+    inline var AbstractEmbedMaker<*>.timestamp : OffsetDateTime?
+        get() = getTimestamp()
         set(value) {
             this.setTimestamp(value)
         }

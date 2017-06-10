@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.KEmbedBuilder
+import xyz.gnarbot.gnar.utils.EmbedMaker
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
 import java.util.concurrent.TimeUnit
@@ -61,7 +61,7 @@ class VoteSkipCommand : CommandExecutor() {
             it.addReaction("👍").queue()
             it.addReaction("👎").queue()
 
-            it.editMessage(KEmbedBuilder(it.embeds[0]).apply {
+            it.editMessage(EmbedMaker(it.embeds[0]).apply {
                 description = "Voting has ended! Check the newer messages for results."
                 clearFields()
             }.build()).queueAfter(context.bot.config.voteSkipDuration.seconds, TimeUnit.SECONDS) {

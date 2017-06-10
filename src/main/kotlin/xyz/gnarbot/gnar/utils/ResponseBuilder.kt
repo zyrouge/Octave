@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.requests.RestAction
 import xyz.gnarbot.gnar.Bot
-import java.awt.Color
 
 class ResponseBuilder(val channel: MessageChannel, val bot: Bot) {
     /**
@@ -42,7 +41,7 @@ class ResponseBuilder(val channel: MessageChannel, val bot: Bot) {
         return embed {
             title = "Error"
             description = msg
-            color = Color.RED
+            color = bot.config.errorColor
         }.action()
     }
 
@@ -56,36 +55,36 @@ class ResponseBuilder(val channel: MessageChannel, val bot: Bot) {
         return embed {
             title = "Exception"
             description = exception.message
-            color = Color.RED
+            color = bot.config.errorColor
         }.action()
     }
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
+     * <br> This builder can use [ResponseEmbedMaker.action] to quickly send the built embed.
      *
      * @param title Title of the embed.
      */
     @JvmOverloads
-    fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder(channel).apply {
+    fun embed(title: String? = null): ResponseEmbedMaker = ResponseEmbedMaker(channel).apply {
         this.title = title
         this.color = bot.config.accentColor
     }
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
+     * <br> This builder can use [ResponseEmbedMaker.action] to quickly send the built embed.
      *
      * @param title Title of the embed.
      */
-    inline fun embed(title: String? = null, value: ResponseEmbedBuilder.() -> Unit): ResponseEmbedBuilder {
+    inline fun embed(title: String? = null, value: ResponseEmbedMaker.() -> Unit): ResponseEmbedMaker {
         return embed(title).apply(value)
     }
 
     /**
-     * A specialized [AbstractEmbedBuilder] that can use [action] to quickly send an embed message.
+     * A specialized [AbstractEmbedMaker] that can use [action] to quickly send an embed message.
      */
-    class ResponseEmbedBuilder(val channel: MessageChannel) : AbstractEmbedBuilder<ResponseEmbedBuilder>() {
+    class ResponseEmbedMaker(val channel: MessageChannel) : AbstractEmbedMaker<ResponseEmbedMaker>() {
         fun action(): RestAction<Message> = channel.sendMessage(build())
     }
 }

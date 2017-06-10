@@ -14,6 +14,8 @@ import xyz.gnarbot.gnar.utils.DiscordLogBack
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter
 import kotlin.jvm.JvmStatic as static
 
+
+
 /**
  * Main class of the bot. Implemented as a singleton.
  *

@@ -18,32 +18,33 @@ class BotConfiguration(file: File) {
 
     var config: CommentedConfigurationNode = loader.load()
 
-    val shards: Int = this.config["bot", "shards"].int.takeIf { it != 0 } ?: error("Shard number must be >= 1")
+    val shards: Int = config["bot", "shards"].int.takeIf { it != 0 } ?: error("Shard number must be >= 1")
 
-    val name: String = this.config["bot", "name"].string ?: "Gnar"
-    val game: String = this.config["bot", "game"].string ?: "%d | _help"
-    val avatar: String? = this.config["bot", "avatar"].string
-    val consoleChannelID: Long = this.config["bot", "console channel id"].getLong(0)
+    val name: String = config["bot", "name"].getString("Gnar")
+    val game: String = config["bot", "game"].getString("%d | _help")
+    val avatar: String? = config["bot", "avatar"].string
+    val consoleChannelID: Long = config["bot", "console channel id"].getLong(0)
 
-    val prefix: String = this.config["commands", "prefix"].string ?: "_"
+    val prefix: String = config["commands", "prefix"].getString("_")
 
-    val administrators: List<Long> = this.config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
+    val administrators: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
 
-    val musicEnabled: Boolean = this.config["music", "enabled"].getBoolean(true)
-    val queueLimit: Int = this.config["music", "queue limit"].getInt(20)
+    val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
+    val queueLimit: Int = config["music", "queue limit"].getInt(20)
 
-    val durationLimitText: String = this.config["music", "duration limit"].string
+    val durationLimitText: String = config["music", "duration limit"].getString("2 hours")
     val durationLimit: Duration = durationLimitText.toDuration()
 
-    val voteSkipCooldownText: String = this.config["music", "vote skip cooldown"].string
+    val voteSkipCooldownText: String = config["music", "vote skip cooldown"].getString("35 seconds")
     val voteSkipCooldown: Duration = voteSkipCooldownText.toDuration()
 
-    val voteSkipDurationText: String = this.config["music", "vote skip duration"].string
+    val voteSkipDurationText: String = config["music", "vote skip duration"].getString("20 seconds")
     val voteSkipDuration: Duration = voteSkipDurationText.toDuration()
 
-    val searchDurationText: String = this.config["music", "search duration"].string
+    val searchDurationText: String = config["music", "search duration"].string
     val searchDuration: Duration = searchDurationText.toDuration()
 
-    val accentColor : Color = (this.config["colors", "accent"].string ?: "0050af").let { Color.decode(it) }
-    val musicColor: Color = (this.config["colors", "music"].string ?: "00dd58").let { Color.decode(it) }
+    val accentColor : Color = config["colors", "accent"].getString("0050af").let { Color.decode(it) }
+    val musicColor: Color = config["colors", "music"].getString("00dd58").let { Color.decode(it) }
+    val errorColor: Color = config["colors", "error"].getString("FF0000").let { Color.decode(it) }
 }
