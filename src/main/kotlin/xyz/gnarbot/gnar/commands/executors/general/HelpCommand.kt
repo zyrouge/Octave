@@ -5,16 +5,13 @@ import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.link
-import xyz.gnarbot.gnar.utils.ln
+import xyz.gnarbot.gnar.utils.*
 
 @Command(
         aliases = arrayOf("help", "guide"),
         usage = "[command]",
         description = "Display GN4R's list of commands.",
-        disableable = false
+        toggleable = false
 )
 class HelpCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -48,7 +45,7 @@ class HelpCommand : CommandExecutor() {
         val cmds = registry.entries
 
         context.message.author.openPrivateChannel().queue {
-            context.send(it).embed("Documentation") {
+            it.sendMessage(embed("Documentation") {
                 setDescription("This is all of Gnar's currently registered commands.")
 
                 for (category in Category.values()) {
@@ -69,7 +66,13 @@ class HelpCommand : CommandExecutor() {
                         field("", true) {
                             buildString {
                                 page.forEach {
-                                    append('`').append(context.bot.config.prefix).append(it.info.aliases[0]).append('`').ln()
+                                    append("[").append(context.bot.config.prefix).append(it.info.aliases[0]).append("]()")
+
+                                    if (it.info.donor) {
+                                        append(" 🌟").ln()
+                                    } else {
+                                        ln()
+                                    }
                                 }
                             }
                         }
@@ -80,18 +83,13 @@ class HelpCommand : CommandExecutor() {
                 field("Additional Information") {
                     buildString {
                         append("To view a command's description, do `").append(context.bot.config.prefix).append("help [command]`.").ln()
-                        append("__The commands that requires a named role must be created by you and assigned to a member in your guild.__").ln()
+                        append("🌟 are donator commands.").ln()
                     }
                 }
 
                 field("News") {
                     buildString {
-                        append("• **Incomplete**: disable commands with `_enable | _disable | _listdisabled`.").ln()
-                        append("• No more role names! **Commands are now linked with Discord permissions.**").ln()
-                        append("  - DJ commands for instance, requires you to be in a voice channel and have the `Manage Channel` permission of the channel.").ln()
-                        append("  - Ban and kick commands requires the `Ban Member` and `Kick Member` permission respectively.").ln()
-                        append("• `_nowplaying` links to the original songs.").ln()
-                        append("• Optimizations, basically rewritten the bot's systems.").ln()
+                        append("First donator command?! `_volume`")
                     }
                 }
 
@@ -108,7 +106,7 @@ class HelpCommand : CommandExecutor() {
                         append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
                     }
                 }
-            }.action().queue()
+            }.build()).queue()
         }
 
         context.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()

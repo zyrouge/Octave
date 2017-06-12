@@ -10,7 +10,7 @@ import javax.script.*
 @Command(
         aliases = arrayOf("js"),
         description = "Run JS scripts.",
-        administrator = true,
+        admin = true,
         category = Category.NONE
 )
 class JavascriptCommand : CommandExecutor() {

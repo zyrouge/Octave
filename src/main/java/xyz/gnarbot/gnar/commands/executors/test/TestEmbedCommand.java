@@ -16,7 +16,7 @@ import java.util.Random;
 @Command(aliases = "embedthis",
         usage = "(argument)",
         category = Category.NONE,
-        administrator = true)
+        admin = true)
 public class TestEmbedCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

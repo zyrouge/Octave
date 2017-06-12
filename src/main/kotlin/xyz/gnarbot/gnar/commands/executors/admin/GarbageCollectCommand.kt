@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 @Command(
         aliases = arrayOf("gc"),
         description = "Request Java to garbage collect.",
-        administrator = true,
+        admin = true,
         category = Category.NONE
 )
 class GarbageCollectCommand : CommandExecutor() {

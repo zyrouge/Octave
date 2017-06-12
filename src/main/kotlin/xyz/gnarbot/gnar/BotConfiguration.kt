@@ -27,7 +27,8 @@ class BotConfiguration(file: File) {
 
     val prefix: String = config["commands", "prefix"].getString("_")
 
-    val administrators: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
+    val admins: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
+    val donors: List<Long> = config["commands", "donors"].getList(TypeToken.of(Long::class.javaObjectType))
 
     val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
     val queueLimit: Int = config["music", "queue limit"].getInt(20)

@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import xyz.gnarbot.gnar.Bot;
@@ -56,21 +57,22 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
 
         if (!event.getLevel().isGreaterOrEqual(Level.INFO)) return;
 
+        MessageEmbed embed;
         if (event.getMessage().length() > MessageEmbed.VALUE_MAX_LENGTH) {
-            new ResponseBuilder(channel, bot).embed()
+             embed = new EmbedBuilder()
                     .setTitle(event.getLevel() + " | " + event.getLoggerName() + " | " + event.getThreadName())
                     .setDescription("Too long..." + Utils.hasteBin(patternLayout.doLayout(event)))
                     .setFooter(format.format(new Date(event.getTimeStamp())), null)
-                    .action().queue();
-
-            return;
+                    .build();
+        } else {
+             embed = new EmbedBuilder()
+                    .setTitle(event.getLevel() + " - " + event.getLoggerName() + " - " + event.getThreadName())
+                    .setDescription(event.getMessage())
+                    .setFooter(format.format(new Date(event.getTimeStamp())), null)
+                    .build();
         }
 
-        new ResponseBuilder(channel, bot).embed()
-                .setTitle(event.getLevel() + " - " + event.getLoggerName() + " - " + event.getThreadName())
-                .setDescription(event.getMessage())
-                .setFooter(format.format(new Date(event.getTimeStamp())), null)
-                .action().queue();
+        channel.sendMessage(embed).queue();
     }
 
     @Override

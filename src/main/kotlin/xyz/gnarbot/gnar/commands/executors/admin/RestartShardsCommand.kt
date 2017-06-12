@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 @Command(
         aliases = arrayOf("restartShards"),
         description = "Restart all Shard instances.",
-        administrator = true,
+        admin = true,
         category = Category.NONE
 )
 class RestartShardsCommand : CommandExecutor() {

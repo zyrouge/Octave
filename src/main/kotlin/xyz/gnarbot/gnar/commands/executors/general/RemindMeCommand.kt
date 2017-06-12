@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.embed
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -32,9 +33,9 @@ class RemindMeCommand : CommandExecutor() {
                 }.action().queue()
 
                 context.message.author.openPrivateChannel().queue {
-                    context.send(it).embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
+                    it.sendMessage(embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
                         setDescription(string)
-                    }.action().queueAfter(time.toLong(), timeUnit)
+                    }.build()).queueAfter(time.toLong(), timeUnit)
                 }
             } else {
                 context.send().error("Number must be more than 0.").queue()

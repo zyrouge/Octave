@@ -44,7 +44,7 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
         log.info("Name:\t${config.name}")
         log.info("Shards:\t${config.shards}")
         log.info("Prefix:\t${config.prefix}")
-        log.info("Admins:\t${config.administrators.size}")
+        log.info("Admins:\t${config.admins.size}")
         log.info("JDA:\t\t${JDAInfo.VERSION}")
 
         shards = Array(config.shards, this::createShard)

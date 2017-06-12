@@ -37,9 +37,14 @@ class CommandDispatcher(private val bot: Bot) {
         val message = context.message
         val member = message.member
 
-        if (member.user.idLong !in bot.config.administrators) {
-            if (cmd.info.administrator) {
+        if (member.user.idLong !in bot.config.admins) {
+            if (cmd.info.admin) {
                 context.send().error("This command is for bot administrators only.").queue()
+                return false
+            }
+
+            if (cmd.info.donor && !bot.config.donors.contains(context.guild.idLong)) {
+                context.send().error("This command is for donor servers only.").queue()
                 return false
             }
 
@@ -107,7 +112,7 @@ class CommandDispatcher(private val bot: Bot) {
      * @param cmd Command entry.
      */
     fun disableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (cmd in disabled || !cmd.info.disableable) return null
+        if (cmd in disabled || !cmd.info.toggleable) return null
         disabled += cmd
         return cmd
     }

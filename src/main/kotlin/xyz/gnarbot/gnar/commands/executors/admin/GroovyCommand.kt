@@ -10,7 +10,7 @@ import javax.script.*
 @Command(
         aliases = arrayOf("gv"),
         description = "Run Groovy scripts.",
-        administrator = true,
+        admin = true,
         category = Category.NONE
 )
 class GroovyCommand : CommandExecutor() {

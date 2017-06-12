@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("emotes", "emotesList"),
         description = "Get all of the custom emotes the bot has access to",
         category = Category.NONE,
-        administrator = true
+        admin = true
 )
 class EmoteListCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

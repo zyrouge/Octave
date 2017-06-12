@@ -15,7 +15,7 @@ data class Context(val event: GuildMessageReceivedEvent, val guildData: GuildDat
     val log = bot.log
 
     val message: Message = event.message
-    val channel: MessageChannel = event.channel
+    val channel: TextChannel = event.channel
     val guild : Guild = event.guild
 
     val member: Member = message.member
@@ -27,6 +27,5 @@ data class Context(val event: GuildMessageReceivedEvent, val guildData: GuildDat
 
      * @return Response builder.
      */
-    @JvmOverloads
-    fun send(channel: MessageChannel = message.channel) = ResponseBuilder(channel, bot)
+    fun send() = ResponseBuilder(this)
 }

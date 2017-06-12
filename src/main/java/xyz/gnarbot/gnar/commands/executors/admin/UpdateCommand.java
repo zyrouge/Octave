@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 @Command(
         aliases = "update",
-        administrator = true)
+        admin = true)
 public class UpdateCommand extends CommandExecutor {
 
     @Override

@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "wow",
-        administrator = true,
+        admin = true,
         category = Category.NONE,
         permissions = Permission.ADMINISTRATOR
 )

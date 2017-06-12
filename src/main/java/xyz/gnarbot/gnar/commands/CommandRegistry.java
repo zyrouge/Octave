@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
+import xyz.gnarbot.gnar.commands.executors.donator.VolumeCommand;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.LeagueLookupCommand;
@@ -131,6 +132,7 @@ public class CommandRegistry {
             register(new RepeatCommand());
             register(new ResetCommand());
             register(new VoteSkipCommand());
+            register(new VolumeCommand());
         }
 
         register(new EnableCommand());

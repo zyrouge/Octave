@@ -24,14 +24,17 @@ public @interface Command {
     /** @return The usage of this command. */
     String usage() default "";
 
+    /** @return If the command requires the user to be the bot administrator */
+    boolean admin() default false;
+
+    /** @return If the command requires the user to be a donator. */
+    boolean donor() default false;
+
     /** @return If the command requires the member to be the guild's owner. */
     boolean guildOwner() default false;
 
-    /** @return If the command requires the user to be the bot. */
-    boolean administrator() default false;
-
     /** @return If the command can be disabled. */
-    boolean disableable() default true;
+    boolean toggleable() default true;
 
     /** @return The category of the command. */
     Category category() default Category.GENERAL;

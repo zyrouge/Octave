@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.ln
         aliases = arrayOf("disable"),
         usage = "[commands...]",
         description = "Disable commands.",
-        disableable = false,
+        toggleable = false,
         category = Category.MODERATION,
         permissions = arrayOf(Permission.ADMINISTRATOR)
 )
