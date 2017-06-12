@@ -4,7 +4,7 @@ It is my mouth into which all travels end.
 Let us peruse this establishment's fare.
 It is the heart from which the darkest water flows.
 This buffet exceeds repugnance!
-Does your establishment have</b> any tables?
+Does your establishment have any tables?
 How delectable.
 Another meal.
 Delicious.
@@ -117,5 +117,5 @@ I search for bargains wherever fools cross my domain.
 A true meal requires foresight to manifest.
 Regrettably, I must retire in order to find a digestive.
 I shall return to this establishment shortly.
-I presume you are the com.jagrosh.jdautilities.waiter at this establishment.
-Are you the com.jagrosh.jdautilities.waiter of this establishment?
+I presume you are the waiter at this establishment.
+Are you the waiter of this establishment?
