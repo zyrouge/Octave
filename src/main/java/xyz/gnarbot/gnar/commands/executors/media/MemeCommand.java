@@ -95,7 +95,7 @@ public class MemeCommand extends CommandExecutor {
                             }
                             return sb.toString();
                         })
-                        .setFooter("Page [" + page + "/" + pages + "]")
+                        .setFooter("Page [" + page + "/" + pages + "]", null)
                         .action().queue();
                 return;
             }

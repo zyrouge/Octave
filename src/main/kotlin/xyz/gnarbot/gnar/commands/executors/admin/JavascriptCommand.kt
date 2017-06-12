@@ -30,13 +30,15 @@ class JavascriptCommand : CommandExecutor() {
         scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
 
         context.send().embed("JavaScript") {
-            field("Running", false, script)
-            field("Result", false, try {
-                scriptEngine.eval(script, scope)
-            } catch (e: ScriptException) {
-                color = Color.RED
-                "The error `$e` occurred while executing the JavaScript statement."
-            })
+            field("Running", false) { script }
+            field("Result", false) {
+                try {
+                    scriptEngine.eval(script, scope)
+                } catch (e: ScriptException) {
+                    setColor(Color.RED)
+                    "The error `$e` occurred while executing the JavaScript statement."
+                }
+            }
         }.action().queue()
     }
 

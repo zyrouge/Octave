@@ -19,8 +19,8 @@ class ResetCommand : CommandExecutor() {
         context.guildData.musicManager.reset()
 
         context.send().embed("Reset Music") {
-            color = context.bot.config.musicColor
-            description = "The player was completely reset."
+            setColor(context.bot.config.musicColor)
+            description { "The player was completely reset." }
         }.action().queue()
     }
 }

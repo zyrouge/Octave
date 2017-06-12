@@ -19,8 +19,8 @@ class ShuffleCommand : CommandExecutor() {
         context.guildData.musicManager.scheduler.shuffle()
 
         context.send().embed("Shuffle Queue") {
-            color = context.bot.config.musicColor
-            description = "Player has been shuffled"
+            setColor(context.bot.config.musicColor)
+            description { "Player has been shuffled" }
         }.action().queue()
     }
 }

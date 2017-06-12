@@ -15,12 +15,6 @@ import xyz.gnarbot.gnar.utils.Context;
 public class TestCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("what");
 //        if (context.getConfig().getAvatar() != null) {
 //            try (InputStream is = new URL(context.getConfig().getAvatar()).openStream()) {
 //                context.getShard().getSelfUser().getManager().setAvatar(Icon.from(is)).queue();

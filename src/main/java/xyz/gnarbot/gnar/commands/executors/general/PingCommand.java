@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.EmbedMaker;
 
 @Command(aliases = "ping",
         description = "Show the bot's current response time.")
@@ -15,16 +15,13 @@ public class PingCommand extends CommandExecutor {
         context.send().embed("Ping")
                 .setColor(context.getConfig().getAccentColor())
                 .setDescription("Checking ping...")
-                .action().queue(msg -> msg.editMessage(
-                        new EmbedMaker().setTitle("Ping")
-                                .setColor(context.getConfig().getAccentColor())
-                                //.field("Receive Time", true, () -> receiveTime + " ms")
-                                .field("Response Time", true, () -> {
-                                    long ping = System.currentTimeMillis() - time;
-                                    return ping + " ms";
-                                })
-                                .field("Discord API", true, () -> context.getShard().getPing() + " ms")
-                                .build())
-                .queue());
+                .action().queue(msg -> {
+            long ping = System.currentTimeMillis() - time;
+            msg.editMessage(new EmbedBuilder().setTitle("Ping")
+                    .setColor(context.getConfig().getAccentColor())
+                    .addField("Response Time", ping + " ms", true)
+                    .addField("Discord API", context.getShard().getPing() + " ms", true)
+                    .build()).queue();
+        });
     }
 }

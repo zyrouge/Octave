@@ -37,9 +37,8 @@ class GoogleCommand : CommandExecutor() {
             }
 
             context.send().embed {
-
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
-                thumbnail = "https://gnarbot.xyz/assets/img/google.png"
+                setThumbnail("https://gnarbot.xyz/assets/img/google.png")
 
                 description {
                     var count = 0

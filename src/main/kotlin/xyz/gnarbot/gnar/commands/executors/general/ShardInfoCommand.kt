@@ -39,7 +39,7 @@ class ShardInfoCommand : CommandExecutor() {
                 }
             }
 
-            footer = "Page [$page/${pages.size}]"
+            setFooter("Page [$page/${pages.size}]", null)
         }.action().queue()
     }
 }

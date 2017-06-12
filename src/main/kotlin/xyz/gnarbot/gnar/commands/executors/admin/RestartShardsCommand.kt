@@ -15,7 +15,7 @@ class RestartShardsCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Restarting Shards") {
-                description = "Bot is now restarting."
+                description { "Bot is now restarting." }
             }.action().queue()
 
             context.bot.restart()

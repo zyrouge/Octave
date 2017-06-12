@@ -11,7 +11,7 @@ import java.awt.Color
 @Command(
         aliases = arrayOf("youtube", "yt"),
         usage = "(query...)",
-        description = "Search and get a YouTube video.",
+        description = "Search and see YouTube results.",
         scope = Scope.VOICE,
         category = Category.MUSIC
 )
@@ -23,7 +23,7 @@ class YoutubeCommand : CommandExecutor() {
         }
 
         try {
-            val query = args.joinToString("+")
+            val query = args.joinToString(" ")
 
             val results = YouTube.search(query, 3)
 
@@ -35,8 +35,8 @@ class YoutubeCommand : CommandExecutor() {
 
             context.send().embed {
                 setAuthor("YouTube Results", "https://www.youtube.com", "https://s.ytimg.com/yts/img/favicon_144-vflWmzoXw.png")
-                thumbnail = "https://gnarbot.xyz/assets/img/youtube.png"
-                color = Color(141, 20, 0)
+                setThumbnail("https://gnarbot.xyz/assets/img/youtube.png")
+                setColor(Color(141, 20, 0))
 
                 description {
                     buildString {
@@ -50,13 +50,12 @@ class YoutubeCommand : CommandExecutor() {
                                 firstUrl = url
                             }
 
-                            append(b(title link url)).ln().append(desc).ln()
+                            append(b(title link url)).ln()
+                            append(desc).ln()
                         }
                     }
                 }
             }.action().queue()
-
-            context.send().text("**First Video:** $firstUrl").queue()
 
             context.guildData.musicManager.youtubeResultsMap[context.member] = results to System.currentTimeMillis()
         } catch (e: JSONException) {

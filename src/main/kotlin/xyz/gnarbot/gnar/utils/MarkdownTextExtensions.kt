@@ -1,5 +1,5 @@
 @file:Suppress("NOTHING_TO_INLINE")
-package xyz.gnarbot.gnar.utils;
+package xyz.gnarbot.gnar.utils
 
 /** Bold strings.*/
 inline fun b(string: String) = "**$string**"
@@ -25,6 +25,6 @@ inline infix fun String.link(url: String) = "[$this]${if (true) "($url)" else "(
 /** Link strings to a URL. */
 inline infix fun Any?.link(url: String) = toString() link url
 
-inline fun code(language: String = "", code: () -> String) = "```$language\n${code()}```";
+inline fun code(language: String = "", code: () -> String) = "```$language\n${code()}```"
 
 inline fun inlineCode(code: () -> String) = "`${code()}`"

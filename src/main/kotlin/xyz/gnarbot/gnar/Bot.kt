@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar
 
+import com.jagrosh.jdautilities.waiter.EventWaiter
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
@@ -7,7 +8,6 @@ import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.entities.Game
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import xyz.gnarbot.gnar.api.data.BotInfo
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.listeners.GuildCountListener
 import xyz.gnarbot.gnar.utils.DiscordLogBack
@@ -18,12 +18,11 @@ import kotlin.jvm.JvmStatic as static
 
 /**
  * Main class of the bot. Implemented as a singleton.
- *
- * @param token Discord token.
- * @param numShards Number of shards to request.
  */
 class Bot(val config: BotConfiguration, val keys: Credentials) {
     private val guildCountListener = GuildCountListener(this)
+
+    val waiter = EventWaiter()
 
     /** @return Sharded JDA instances of the bot.*/
     val shards : Array<Shard>
@@ -59,6 +58,7 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
             if (config.shards > 1) useSharding(id, config.shards)
             setAutoReconnect(true)
             addEventListener(guildCountListener)
+            addEventListener(waiter)
             setAudioSendFactory(NativeAudioSendFactory())
             setGame(Game.of(config.game.format(id)))
             setAudioEnabled(true)
@@ -95,6 +95,4 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
 
         log.info("Bot is now disconnected from Discord.")
     }
-
-    val info: BotInfo get() = BotInfo(this)
 }

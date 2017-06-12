@@ -29,12 +29,12 @@ class RemindMeCommand : CommandExecutor() {
             if (time > 0) {
                 context.send().embed("Reminder Scheduled") {
 
-                    description = "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__."
+                    description { "I'll be reminding you in __$time ${timeUnit.toString().toLowerCase()}__." }
                 }.action().queue()
 
                 context.message.author.openPrivateChannel().queue {
                     context.send(it).embed("Reminder from $time ${timeUnit.toString().toLowerCase()} ago.") {
-                        description = string
+                        description { string }
                     }.action().queueAfter(time.toLong(), timeUnit)
                 }
             } else {

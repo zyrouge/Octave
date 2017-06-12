@@ -14,8 +14,7 @@ import xyz.gnarbot.gnar.utils.link
         category = Category.MUSIC
 )
 class NowPlayingCommand : CommandExecutor() {
-
-    private val totalBlocks = 15;
+    private val totalBlocks = 15
 
     override fun execute(context: Context, args: Array<String>) {
         val track = context.guildData.musicManager.player.playingTrack
@@ -26,7 +25,7 @@ class NowPlayingCommand : CommandExecutor() {
         }
 
         context.send().embed("Now Playing") {
-            color = context.bot.config.musicColor
+            setColor(context.bot.config.musicColor)
 
             field("Track", false) {
                 "**[${track.info.title}](${track.info.uri})**"

@@ -80,17 +80,17 @@ class MathCommand : CommandExecutor() {
                 field("Error") {
                     e.message
                 }
-                color = Color.RED
+                setColor(Color.RED)
             } catch (e : ExecutionException) {
                 field("Error") {
                     e.cause?.message ?: e.message
                 }
-                color = Color.RED
+                setColor(Color.RED)
             } catch (e : CancellationException) {
                 field("Error") {
                     "Script took too long to execute."
                 }
-                color = Color.RED
+                setColor(Color.RED)
             }
         }.action().queue()
     }

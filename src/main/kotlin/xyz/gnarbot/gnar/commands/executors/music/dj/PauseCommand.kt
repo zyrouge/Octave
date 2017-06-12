@@ -26,11 +26,13 @@ class PauseCommand : CommandExecutor() {
         manager.player.isPaused = !manager.player.isPaused
 
         context.send().embed("Playback Control") {
-            color = context.bot.config.musicColor
-            description = if (manager.player.isPaused) {
-                "The player has been paused."
-            } else {
-                "The player has resumed playing."
+            setColor(context.bot.config.musicColor)
+            description {
+                if (manager.player.isPaused) {
+                    "The player has been paused."
+                } else {
+                    "The player has resumed playing."
+                }
             }
         }.action().queue()
     }

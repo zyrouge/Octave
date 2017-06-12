@@ -41,7 +41,7 @@ public class CommandRegistry {
         register(new MathCommand());
         register(new RemindMeCommand());
         register(new GoogleCommand());
-        register(new YoutubeCommand());
+        register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
         register(new WhoIsCommand());
@@ -116,10 +116,11 @@ public class CommandRegistry {
         register(new QuoteCommand());
         register(new TextToBrickCommand());
 
+        register(new YoutubeCommand());
+
         //MUSIC COMMAND
         if (bot.getConfig().getMusicEnabled()) {
             register(new PlayCommand());
-            //register(new LeaveCommand()); // Useless
             register(new PauseCommand());
             register(new StopCommand());
             register(new SkipCommand());
@@ -142,7 +143,7 @@ public class CommandRegistry {
         return commandEntryMap;
     }
 
-    public void register(CommandExecutor cmd) {
+    private void register(CommandExecutor cmd) {
         Class<? extends CommandExecutor> cls = cmd.getClass();
         if (!cls.isAnnotationPresent(Command.class)) {
             throw new IllegalStateException("@Command annotation not found for class: " + cls.getName());
@@ -158,7 +159,7 @@ public class CommandRegistry {
      * @param label Invoking key.
      * @param cmd Command entry.
      */
-    public void registerCommand(String label, CommandExecutor cmd) {
+    private void registerCommand(String label, CommandExecutor cmd) {
         label = label.toLowerCase();
         if (commandEntryMap.containsKey(label)) {
             throw new IllegalStateException("Command " + label + " is already registered.");

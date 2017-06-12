@@ -30,15 +30,15 @@ class QueueCommand : CommandExecutor() {
                 }
                 queue.clear()
                 context.send().embed("Music Queue") {
-                    color = context.bot.config.musicColor
-                    description = "Cleared the music queue."
+                    setColor(context.bot.config.musicColor)
+                    description { "Cleared the music queue." }
                 }.action().queue()
                 return
             }
         }
 
         context.send().embed("Music Queue") {
-            color = context.bot.config.musicColor
+            setColor(context.bot.config.musicColor)
 
             context.guildData.musicManager.player.playingTrack?.let {
                 field("Now Playing", false) {
@@ -64,8 +64,8 @@ class QueueCommand : CommandExecutor() {
                 }
             }
 
-            field("Entries", true, trackCount)
-            field("Queue Duration", true, Utils.getTimestamp(queueLength))
+            field("Entries", true) { trackCount }
+            field("Queue Duration", true) { Utils.getTimestamp(queueLength) }
         }.action().queue()
     }
 }

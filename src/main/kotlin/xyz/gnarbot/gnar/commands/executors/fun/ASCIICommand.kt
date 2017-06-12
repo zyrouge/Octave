@@ -8,6 +8,7 @@ import org.jsoup.nodes.TextNode
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.code
 
 @Command(
         aliases = arrayOf("ascii"),
@@ -35,15 +36,13 @@ class ASCIICommand : CommandExecutor() {
             val element = document.getElementsByTag("body")[0]
 
             context.send().embed("ASCII Text") {
-
-                description = "```\n${getText(element)}```"
+                description { code { "\n${getText(element)}" } }
             }.action().queue()
 
         } catch (e: Exception) {
             context.send().error("Unable to generate ASCII art.").queue()
             e.printStackTrace()
         }
-
     }
 
     private fun getText(cell: Element): String? {

@@ -17,12 +17,12 @@ class GarbageCollectCommand : CommandExecutor() {
             val interrupt = if (!args.isEmpty()) args[0].toBoolean() else false
 
             context.bot.shards.forEach { it.clearData(interrupt) }
-            field("Wrappers", false, "Removed settings instances.")
+            field("Wrappers") { "Removed settings instances." }
 
-            field("Guild Data Remaining", true, context.bot.shards.sumBy { it.guildData.size() })
+            field("Guild Data Remaining", true) { context.bot.shards.sumBy { it.guildData.size() } }
 
             System.gc()
-            field("GC Request", false, "Garbage collection request sent to JVM.")
+            field("GC Request") { "Garbage collection request sent to JVM." }
             context.bot.log.info("Garbage collection request sent to JVM.")
         }.action().queue()
     }

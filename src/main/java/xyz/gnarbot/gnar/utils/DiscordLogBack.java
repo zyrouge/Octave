@@ -60,7 +60,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
             new ResponseBuilder(channel, bot).embed()
                     .setTitle(event.getLevel() + " | " + event.getLoggerName() + " | " + event.getThreadName())
                     .setDescription("Too long..." + Utils.hasteBin(patternLayout.doLayout(event)))
-                    .setFooter(format.format(new Date(event.getTimeStamp())))
+                    .setFooter(format.format(new Date(event.getTimeStamp())), null)
                     .action().queue();
 
             return;
@@ -69,7 +69,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
         new ResponseBuilder(channel, bot).embed()
                 .setTitle(event.getLevel() + " - " + event.getLoggerName() + " - " + event.getThreadName())
                 .setDescription(event.getMessage())
-                .setFooter(format.format(new Date(event.getTimeStamp())))
+                .setFooter(format.format(new Date(event.getTimeStamp())), null)
                 .action().queue();
     }
 

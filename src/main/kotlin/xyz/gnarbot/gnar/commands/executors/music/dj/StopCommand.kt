@@ -24,8 +24,8 @@ class StopCommand : CommandExecutor() {
         context.guild.audioManager.closeAudioConnection()
 
         context.send().embed("Stop Playback") {
-            color = context.bot.config.musicColor
-            description = "Playback has been completely stopped and the queue has been cleared."
+            setColor(context.bot.config.musicColor)
+            description { "Playback has been completely stopped and the queue has been cleared." }
         }.action().queue()
     }
 }

@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
+import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.EmbedMaker
 import java.util.concurrent.TimeUnit
 
 @Command(aliases = arrayOf("poll"),
@@ -19,7 +19,7 @@ class PollCommand : CommandExecutor() {
         }
         
         context.send().embed("Poll") {
-            description = "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!"
+            description { "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!" }
             field("Options") {
                 buildString {
                     options.forEachIndexed { index, option ->
@@ -32,12 +32,12 @@ class PollCommand : CommandExecutor() {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
 
-            it.editMessage(EmbedMaker(it.embeds[0]).apply {
-                description = "Voting has ended! Check the results in the newer messages!"
+            it.editMessage(EmbedBuilder(it.embeds[0]).apply {
+                setDescription("Voting has ended! Check the results in the newer messages!")
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 context.send().embed("Poll Results") {
-                    description = "Voting has ended! Here are the results!"
+                    description { "Voting has ended! Here are the results!" }
 
                     var topVotes = 0
                     val winners = mutableListOf<Int>()

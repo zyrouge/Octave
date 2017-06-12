@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
+import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.EmbedMaker
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
 import java.util.concurrent.TimeUnit
@@ -48,7 +48,7 @@ class VoteSkipCommand : CommandExecutor() {
         manager.isVotingToSkip = true
 
         context.send().embed("Vote Skip") {
-            color = context.bot.config.musicColor
+            setColor(context.bot.config.musicColor)
             description {
                 buildString {
                     append(b(context.message.author.name))
@@ -61,8 +61,8 @@ class VoteSkipCommand : CommandExecutor() {
             it.addReaction("👍").queue()
             it.addReaction("👎").queue()
 
-            it.editMessage(EmbedMaker(it.embeds[0]).apply {
-                description = "Voting has ended! Check the newer messages for results."
+            it.editMessage(EmbedBuilder(it.embeds[0]).apply {
+                setDescription("Voting has ended! Check the newer messages for results.")
                 clearFields()
             }.build()).queueAfter(context.bot.config.voteSkipDuration.seconds, TimeUnit.SECONDS) {
                 var skip = 0
@@ -74,7 +74,7 @@ class VoteSkipCommand : CommandExecutor() {
                 }
 
                 context.send().embed("Vote Skip") {
-                    color = context.bot.config.musicColor
+                    setColor(context.bot.config.musicColor)
                     description {
                         buildString {
                             if (skip > stay) {

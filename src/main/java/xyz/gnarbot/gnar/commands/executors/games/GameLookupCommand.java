@@ -68,7 +68,6 @@ public class GameLookupCommand extends CommandExecutor {
                     context.send().embed(title)
                             .setColor(context.getConfig().getAccentColor())
                             .setThumbnail(thumb)
-                            //.field("Publisher", true, publisher)
                             .field("Score", true, score)
                             .field("Description", false, desc)
                             .action().queue();

@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar
 import gnu.trove.map.hash.TLongObjectHashMap
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.Guild
-import xyz.gnarbot.gnar.api.data.ShardInfo
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.listeners.ShardListener
 
@@ -46,11 +45,6 @@ class Shard(val id: Int, val jda: JDA, val bot: Bot) : JDA by jda {
      * @return The string representation of the shard.
      */
     override fun toString() = "Shard(id=$id, guilds=${jda.guilds.size})"
-
-    /**
-     * @return JSON data on the shard.
-     */
-    val info: ShardInfo get() = ShardInfo(this)
 
     /**
      * Shuts down the shard.

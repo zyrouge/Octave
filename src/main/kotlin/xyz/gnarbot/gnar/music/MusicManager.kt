@@ -90,8 +90,8 @@ class MusicManager(private val guildData: GuildData) {
                 guildData.guild.audioManager.openAudioConnection(channel)
 
                 context.send().embed("Music Playback") {
-                    color = context.bot.config.musicColor
-                    description = "Joining channel `${channel.name}`."
+                    setColor(context.bot.config.musicColor)
+                    description { "Joining channel `${channel.name}`." }
                 }.action().queue()
                 return true
             }
@@ -123,8 +123,8 @@ class MusicManager(private val guildData: GuildData) {
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    color = context.bot.config.musicColor
-                    description = "Added __**[${track.info.title}](${track.info.uri})**__ to queue."
+                    setColor(context.bot.config.musicColor)
+                    description { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
                 }.action().queue()
             }
 
@@ -150,8 +150,8 @@ class MusicManager(private val guildData: GuildData) {
                 }
 
                 context.send().embed("Music Queue") {
-                    color = context.bot.config.musicColor
-                    description = "Added `$added` tracks to queue from playlist `${playlist.name}`."
+                    setColor(context.bot.config.musicColor)
+                    description { "Added `$added` tracks to queue from playlist `${playlist.name}`." }
                 }.action().queue()
             }
 

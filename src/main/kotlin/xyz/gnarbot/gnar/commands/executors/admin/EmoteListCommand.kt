@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.general
+package xyz.gnarbot.gnar.commands.executors.admin
 
 import com.google.common.collect.Lists
 import xyz.gnarbot.gnar.commands.Category
@@ -38,7 +38,7 @@ class EmoteListCommand : CommandExecutor() {
                 }
             }
 
-            footer = "Page [$page/${pages.size}]"
+            setFooter("Page [$page/${pages.size}]", null)
         }.action().queue()
     }
 }

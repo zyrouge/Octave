@@ -64,35 +64,33 @@ class BotInfoCommand : CommandExecutor() {
         val commandSize = registry.entries.count { it.info.category.show }
 
         context.send().embed("Bot Information") {
-            inline {
-                field("Requests", requests)
-                field("Requests Per Hour", requests / Math.max(1, h))
-                field("Website", "gnarbot.xyz" link "https://gnarbot.xyz")
+            field("Requests", true) { requests }
+            field("Requests Per Hour", true) { requests / Math.max(1, h) }
+            field("Website", true) { "gnarbot.xyz" link "https://gnarbot.xyz" }
 
-                field("Text Channels", textChannels)
-                field("Voice Channels", voiceChannels)
-                field("Voice Connections", voiceConnections)
+            field("Text Channels", true) { textChannels }
+            field("Voice Channels", true) { voiceChannels }
+            field("Voice Connections", true) { voiceConnections }
 
-                field("Guilds", guilds)
-                field("Guild Data", guildData)
-                field("Uptime", "${d}d ${h % 24}h ${m % 60}m ${s % 60}s")
+            field("Guilds", true) { guilds }
+            field("Guild Data", true) { guildData }
+            field("Uptime", true) { "${d}d ${h % 24}h ${m % 60}m ${s % 60}s" }
 
-                field("Users") {
-                    buildString {
-                        append("Total: ").append(users).ln()
-                        append("Online: ").append(online).ln()
-                        append("Offline: ").append(offline).ln()
-                        append("Inactive: ").append(inactive).ln()
-                    }
+            field("Users", true) {
+                buildString {
+                    append("Total: ").append(users).ln()
+                    append("Online: ").append(online).ln()
+                    append("Offline: ").append(offline).ln()
+                    append("Inactive: ").append(inactive).ln()
                 }
+            }
 
-                field("Others") {
-                    buildString {
-                        append("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**").ln()
-                        append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
-                        append("Commands: **$commandSize**").ln()
-                        append("Library: Java **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
-                    }
+            field("Others", true) {
+                buildString {
+                    append("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**").ln()
+                    append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
+                    append("Commands: **$commandSize**").ln()
+                    append("Library: Java **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
                 }
             }
         }.action().queue()

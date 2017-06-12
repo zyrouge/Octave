@@ -31,15 +31,15 @@ class HelpCommand : CommandExecutor() {
             }
 
             context.send().embed("Command Information") {
-                field("Aliases", true, cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix))
-                field("Usage", true, "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}")
+                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix) }
+                field("Usage", true) { "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                 field(true)
 
                 if (cmd.info.permissions.isNotEmpty()) {
-                    field("Guild Permission", true, "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}")
+                    field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
                 }
 
-                field("Description", false, cmd.info.description)
+                field("Description") { cmd.info.description }
             }.action().queue()
 
             return
@@ -50,7 +50,7 @@ class HelpCommand : CommandExecutor() {
         context.message.author.openPrivateChannel().queue {
             context.send(it).embed("Documentation") {
 
-                description = "This is all of Gnar's currently registered commands."
+                description { "This is all of Gnar's currently registered commands." }
 
                 for (category in Category.values()) {
                     if (!category.show) continue
@@ -64,7 +64,7 @@ class HelpCommand : CommandExecutor() {
                             filtered.size / 3 + (if (filtered.size % 3 == 0) 0 else 1))
 
                     field(true)
-                    field("${category.title} — ${filtered.size}\n", false, category.description)
+                    field("${category.title} — ${filtered.size}\n") { category.description }
 
                     for (page in pages) {
                         field("", true) {

@@ -146,7 +146,7 @@ class OverwatchLookupCommand : CommandExecutor() {
                         }
                     }
 
-                    var sideColor: Color? = null
+                    val sideColor: Color? = null
                     var rankName: String? = null
 
                     overall.optJSONObject("competitive")?.let {
@@ -175,27 +175,35 @@ class OverwatchLookupCommand : CommandExecutor() {
                                 it.optJSONObject("overall_stats")?.let {
                                     val rank = it.optInt("comprank")
 
-                                    if (rank < 1500) {
-                                        sideColor = Color(150, 90, 56)
-                                        rankName = "Bronze"
-                                    } else if (rank in 1500..1999) {
-                                        sideColor = Color(168, 168, 168)
-                                        rankName = "Silver"
-                                    } else if (rank in 2000..2499) {
-                                        sideColor = Color(201, 137, 16)
-                                        rankName = "Gold"
-                                    } else if (rank in 2500..2999) {
-                                        sideColor = Color(229, 228, 226)
-                                        rankName = "Platinum"
-                                    } else if (rank in 3000..3499) {
-                                        sideColor = Color(63, 125, 255)
-                                        rankName = "Diamond"
-                                    } else if (rank in 3500..3999) {
-                                        sideColor = Color(255, 184, 12)
-                                        rankName = "Master"
-                                    } else if (rank >= 4000) {
-                                        sideColor = Color(238, 180, 255)
-                                        rankName = "Grand Master"
+                                    when {
+                                        rank < 1500 -> {
+                                            setColor(Color(150, 90, 56))
+                                            rankName = "Bronze"
+                                        }
+                                        rank in 1500..1999 -> {
+                                            setColor(Color(168, 168, 168))
+                                            rankName = "Silver"
+                                        }
+                                        rank in 2000..2499 -> {
+                                            setColor(Color(201, 137, 16))
+                                            rankName = "Gold"
+                                        }
+                                        rank in 2500..2999 -> {
+                                            setColor(Color(229, 228, 226))
+                                            rankName = "Platinum"
+                                        }
+                                        rank in 3000..3499 -> {
+                                            setColor(Color(63, 125, 255))
+                                            rankName = "Diamond"
+                                        }
+                                        rank in 3500..3999 -> {
+                                            setColor(Color(255, 184, 12))
+                                            rankName = "Master"
+                                        }
+                                        rank >= 4000 -> {
+                                            setColor(Color(238, 180, 255))
+                                            rankName = "Grand Master"
+                                        }
                                     }
 
                                     appendln("Comp. Rank: **[:beginner: $rank]() ($rankName)**")
@@ -213,8 +221,8 @@ class OverwatchLookupCommand : CommandExecutor() {
                         }
                     }
 
-                    color = sideColor
-                    thumbnail = avatar
+                    setColor(sideColor)
+                    setThumbnail(avatar)
                 }.action().queue()
             }
         })
