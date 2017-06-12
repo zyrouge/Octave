@@ -82,7 +82,7 @@ class ResponseBuilder(val context: Context) {
     @Suppress("NOTHING_TO_INLINE")
     inner class ResponseEmbedBuilder : EmbedProxy<ResponseEmbedBuilder>() {
         fun action(): RestAction<Message> {
-            return if (context.guild.selfMember.hasPermission(context.channel, Permission.MESSAGE_EMBED_LINKS)) {
+            return if (context.guild.selfMember.hasPermission(context.channel, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS)) {
                 context.channel.sendMessage(build())
             } else {
                 context.user.openPrivateChannel().complete().sendMessage(build())

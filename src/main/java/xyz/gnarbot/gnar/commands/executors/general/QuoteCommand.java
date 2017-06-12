@@ -32,8 +32,7 @@ public class QuoteCommand extends CommandExecutor {
                             .setColor(context.getConfig().getAccentColor())
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
                             .setDescription(msg.getContent())
-                            .build()));
-
+                            .build()).queue());
                 } catch (Exception e) {
                     try {
                         context.send()

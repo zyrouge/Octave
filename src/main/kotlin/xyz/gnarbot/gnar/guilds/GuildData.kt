@@ -23,6 +23,8 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
             return field.also { if (!field.isSetup) field.setup() }
         }
 
+    fun isPremium(): Boolean = bot.config.donors.contains(id)
+
     fun getMemberByName(name: String, searchNickname: Boolean = false): Member? {
         for (member in guild.getMembersByName(name, true)) {
             return member

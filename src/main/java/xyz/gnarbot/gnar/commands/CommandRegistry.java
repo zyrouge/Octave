@@ -108,7 +108,8 @@ public class CommandRegistry {
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new UpdateCommand());
-        register(new RestartBotCommand());
+//        register(new RestartBotCommand());
+        register(new ReloadConfig());
         register(new EmoteListCommand());
 
 
