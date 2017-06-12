@@ -20,7 +20,7 @@ class ShuffleCommand : CommandExecutor() {
 
         context.send().embed("Shuffle Queue") {
             setColor(context.bot.config.musicColor)
-            description { "Player has been shuffled" }
+            setDescription("Player has been shuffled")
         }.action().queue()
     }
 }

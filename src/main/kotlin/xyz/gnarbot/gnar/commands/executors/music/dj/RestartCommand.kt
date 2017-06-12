@@ -28,7 +28,7 @@ class RestartCommand : CommandExecutor() {
 
             context.send().embed("Restart Song") {
                 setColor(context.bot.config.musicColor)
-                description { "Restarting track: `${track.info.title}`." }
+                setDescription("Restarting track: `${track.info.title}`.")
             }.action().queue()
 
             manager.player.playTrack(track.makeClone())

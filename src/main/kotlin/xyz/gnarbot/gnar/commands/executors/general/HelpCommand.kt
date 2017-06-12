@@ -49,8 +49,7 @@ class HelpCommand : CommandExecutor() {
 
         context.message.author.openPrivateChannel().queue {
             context.send(it).embed("Documentation") {
-
-                description { "This is all of Gnar's currently registered commands." }
+                setDescription("This is all of Gnar's currently registered commands.")
 
                 for (category in Category.values()) {
                     if (!category.show) continue

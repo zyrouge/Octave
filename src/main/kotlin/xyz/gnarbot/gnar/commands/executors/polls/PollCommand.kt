@@ -19,7 +19,7 @@ class PollCommand : CommandExecutor() {
         }
         
         context.send().embed("Poll") {
-            description { "Vote through clicking the reactions on the choices below! Results will be final in 1 minute!" }
+            setDescription("Vote through clicking the reactions on the choices below! Results will be final in 1 minute!")
             field("Options") {
                 buildString {
                     options.forEachIndexed { index, option ->
@@ -37,7 +37,7 @@ class PollCommand : CommandExecutor() {
                 clearFields()
             }.build()).queueAfter(10, TimeUnit.SECONDS) {
                 context.send().embed("Poll Results") {
-                    description { "Voting has ended! Here are the results!" }
+                    setDescription("Voting has ended! Here are the results!")
 
                     var topVotes = 0
                     val winners = mutableListOf<Int>()

@@ -32,7 +32,7 @@ class SkipCommand : CommandExecutor() {
 
         context.send().embed("Skip Current Track") {
             setColor(context.bot.config.musicColor)
-            description { "The track was skipped." }
+            setDescription("The track was skipped.")
         }.action().queue()
     }
 }

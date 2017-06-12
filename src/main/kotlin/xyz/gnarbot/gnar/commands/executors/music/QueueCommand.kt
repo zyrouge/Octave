@@ -31,7 +31,7 @@ class QueueCommand : CommandExecutor() {
                 queue.clear()
                 context.send().embed("Music Queue") {
                     setColor(context.bot.config.musicColor)
-                    description { "Cleared the music queue." }
+                    setDescription("Cleared the music queue.")
                 }.action().queue()
                 return
             }

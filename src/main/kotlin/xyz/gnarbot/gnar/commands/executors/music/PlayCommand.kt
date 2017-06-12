@@ -34,14 +34,14 @@ class PlayCommand : CommandExecutor() {
                 manager.player.isPaused = false
                 context.send().embed("Play Music") {
                     setColor(context.bot.config.musicColor)
-                    description { "Music is now playing." }
+                    setDescription("Music is now playing.")
                 }.action().queue()
             } else if (manager.player.playingTrack != null) {
                 context.send().error("Music is already playing.").queue()
             } else if (manager.scheduler.queue.isEmpty()) {
                 context.send().embed("Empty Queue") {
                     setColor(context.bot.config.musicColor)
-                    description { "There is no music queued right now. Add some songs with `play -song|url`." }
+                    setDescription("There is no music queued right now. Add some songs with `play -song|url`.")
                 }.action().queue()
             }
             return

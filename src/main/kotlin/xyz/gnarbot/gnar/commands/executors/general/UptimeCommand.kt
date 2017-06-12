@@ -14,7 +14,7 @@ class UptimeCommand : CommandExecutor() {
         val d = h / 24
 
         context.send().embed("Bot Uptime") {
-            description { "$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds" }
+            setDescription("$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds")
         }.action().queue()
     }
 }

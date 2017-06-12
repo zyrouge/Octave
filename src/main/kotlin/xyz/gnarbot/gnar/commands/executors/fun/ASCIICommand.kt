@@ -36,7 +36,11 @@ class ASCIICommand : CommandExecutor() {
             val element = document.getElementsByTag("body")[0]
 
             context.send().embed("ASCII Text") {
-                description { code { "\n${getText(element)}" } }
+                description {
+                    code {
+                        "\n${getText(element)}"
+                    }
+                }
             }.action().queue()
 
         } catch (e: Exception) {

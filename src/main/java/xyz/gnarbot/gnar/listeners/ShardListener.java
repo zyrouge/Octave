@@ -8,7 +8,6 @@ import net.dv8tion.jda.core.events.ExceptionEvent;
 import net.dv8tion.jda.core.events.ReconnectedEvent;
 import net.dv8tion.jda.core.events.ResumedEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
-import net.dv8tion.jda.core.events.guild.update.GuildUpdateRegionEvent;
 import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
@@ -74,32 +73,6 @@ public class ShardListener extends ListenerAdapter {
         }
     }
 
-//    @Override
-//    public void onMessageReactionAdd(MessageReactionAddEvent event) {
-//
-//        long msg_id = event.getMessageIdLong();
-//        if (event.getMember().equals(event.getGuild().getSelfMember())) return;
-//        event.getChannel().getMessageById(msg_id).queue((msg) -> {
-//            if (!msg.getAuthor().equals(shard.getSelfUser())) return;
-//            if (msg.getEmbeds().isEmpty()) return;
-//            MessageEmbed embed = msg.getEmbeds().get(0);
-//            if (!embed.getTitle().equals("Poll")) return;
-//
-//            User author = event.getMember();
-//            for (MessageReaction reaction : msg.getReactions()) {
-//                if (reaction.equals(event.getReaction())) continue;
-//                event.getReaction().removeReaction(author).queue();
-//            }
-//        });
-//    }
-
-
-    @Override
-    public void onGuildUpdateRegion(GuildUpdateRegionEvent event) {
-        super.onGuildUpdateRegion(event);
-    }
-
-
     @Override
     public void onResume(ResumedEvent event) {
         bot.getLog().info("JDA " + shard.getId() + " has resumed.");
@@ -113,11 +86,11 @@ public class ShardListener extends ListenerAdapter {
     @Override
     public void onDisconnect(DisconnectEvent event) {
         if (event.isClosedByServer()) {
-            bot.getLog().info("JDA " + shard.getId() + " has disconnected. Code: "
-                    + event.getServiceCloseFrame().getCloseCode() + event.getCloseCode());
+            bot.getLog().info("JDA " + shard.getId() + " has disconnected (closed by server). "
+                    + "Code: " + event.getServiceCloseFrame().getCloseCode() + " "  + event.getCloseCode());
         } else {
-            bot.getLog().info("JDA " + shard.getId() + " has disconnected. Code: "
-                    + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
+            bot.getLog().info("JDA " + shard.getId() + " has disconnected. "
+                    + "Code: " + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
         }
     }
 
