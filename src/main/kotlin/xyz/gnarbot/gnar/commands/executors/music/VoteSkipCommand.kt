@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -53,7 +54,7 @@ class VoteSkipCommand : CommandExecutor() {
                 buildString {
                     append(b(context.message.author.name))
                     append(" has voted to **skip** the current track!")
-                    appendln(" React with :thumbsup: or :thumbsdown:")
+                    append(" React with :thumbsup: or :thumbsdown:").ln()
                     append("Whichever has the most votes in ${context.bot.config.voteSkipDurationText} will win!")
                 }
             }

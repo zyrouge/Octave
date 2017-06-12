@@ -131,7 +131,6 @@ public class CommandRegistry {
             register(new RepeatCommand());
             register(new ResetCommand());
             register(new VoteSkipCommand());
-            register(new ChooseCommand());
         }
 
         register(new EnableCommand());

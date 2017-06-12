@@ -16,11 +16,9 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.YouTube
 
 class MusicManager(private val guildData: GuildData) {
     companion object {
@@ -54,8 +52,6 @@ class MusicManager(private val guildData: GuildData) {
      * @return Whether there is a vote to skip the song or not.
      */
     var isVotingToSkip = false
-
-    var youtubeResultsMap = mutableMapOf<Member, Pair<List<YouTube.Result>, Long>>()
 
     fun setup() {
         player = playerManager.createPlayer()

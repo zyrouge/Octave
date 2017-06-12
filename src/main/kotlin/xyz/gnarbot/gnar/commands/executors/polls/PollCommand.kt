@@ -19,7 +19,7 @@ class PollCommand : CommandExecutor() {
         }
         
         context.send().embed("Poll") {
-            setDescription("Vote through clicking the reactions on the choices below! Results will be final in 1 minute!")
+            setDescription("Vote through clicking the reactions on the choices below!")
             field("Options") {
                 buildString {
                     options.forEachIndexed { index, option ->
@@ -27,6 +27,7 @@ class PollCommand : CommandExecutor() {
                     }
                 }
             }
+            setFooter("Results will be final in 2 minutes.", null)
         }.action().queue {
             for (index in 0..options.size - 1) {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
@@ -35,7 +36,7 @@ class PollCommand : CommandExecutor() {
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
                 setDescription("Voting has ended! Check the results in the newer messages!")
                 clearFields()
-            }.build()).queueAfter(10, TimeUnit.SECONDS) {
+            }.build()).queueAfter(2, TimeUnit.MINUTES) {
                 context.send().embed("Poll Results") {
                     setDescription("Voting has ended! Here are the results!")
 
