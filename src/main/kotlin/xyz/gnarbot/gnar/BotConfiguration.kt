@@ -13,8 +13,8 @@ import kotlin.jvm.JvmField as Field
 
 
 class BotConfiguration(file: File) {
-    val loader: ConfigurationLoader<CommentedConfigurationNode> = HoconConfigurationLoader.builder()
-            .setPath(file.toPath()).build() //File(DATA_FOLDER, "bot.conf")
+    val loader: ConfigurationLoader<CommentedConfigurationNode> =
+            HoconConfigurationLoader.builder().setPath(file.toPath()).build()
 
     var config: CommentedConfigurationNode
 

@@ -14,5 +14,8 @@ public class ReloadConfig extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         context.getConfig().reload();
+        context.send().embed("Admin")
+                .setDescription("Reloaded configuration")
+                .action().queue();
     }
 }

@@ -35,7 +35,7 @@ dependencies {
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.11'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_210'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_212'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.39'
 
@@ -44,7 +44,7 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20160810'
 
     // Other dependencies
-    compile group: 'xyz.avarel', name: 'AJE', version: '3.2.0'
+    compile group: 'xyz.avarel', name: 'AJE', version: '3.3.0'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
