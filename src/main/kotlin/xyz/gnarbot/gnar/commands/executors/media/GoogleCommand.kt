@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
+import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -8,8 +9,6 @@ import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.link
 import xyz.gnarbot.gnar.utils.ln
 import java.io.IOException
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Command(
         aliases = arrayOf("google"),
@@ -26,7 +25,9 @@ class GoogleCommand : CommandExecutor() {
         try {
             val query = args.joinToString(" ")
 
-            val blocks = Jsoup.connect("http://www.google.com/search?q=${URLEncoder.encode(query, StandardCharsets.UTF_8.displayName())}")
+            val url = URIBuilder("http://www.google.com/search").addParameter("q", query).build().toString()
+
+            val blocks = Jsoup.connect(url)
                     .userAgent("Gnar")
                     .get()
                     .select(".g")
@@ -48,17 +49,19 @@ class GoogleCommand : CommandExecutor() {
                             if (count >= 3) break
 
                             val list = block.select(".r>a")
-                            if (list.isEmpty()) break
+
+                            if (list.isEmpty()) continue
 
                             val entry = list[0]
                             val title = entry.text()
-                            val url = entry.absUrl("href").replace(")", "\\)")
+                            val url1 = entry.absUrl("href").replace(")", "\\)")
                             var desc: String? = null
 
                             val st = block.select(".st")
                             if (!st.isEmpty()) desc = st[0].text()
 
-                            append(b(title link url)).ln().append(desc).ln()
+                            append(b(title link url1)).ln().append(desc).ln()
+
                             count++
                         }
                     }

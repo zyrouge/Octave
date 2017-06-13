@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -14,6 +15,8 @@ import xyz.gnarbot.gnar.utils.*
         toggleable = false
 )
 class HelpCommand : CommandExecutor() {
+    var lazyEmbed: MessageEmbed? = null
+
     override fun execute(context: Context, args: Array<String>) {
         val registry = context.bot.commandRegistry
 
@@ -30,7 +33,7 @@ class HelpCommand : CommandExecutor() {
             context.send().embed("Command Information") {
                 field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix) }
                 field("Usage", true) { "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
-                field(true)
+                field("Donator", true) { if (cmd.info.donor) "This command is exclusive to donators' guilds." else "This command is available to all users." }
 
                 if (cmd.info.permissions.isNotEmpty()) {
                     field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
@@ -45,68 +48,72 @@ class HelpCommand : CommandExecutor() {
         val cmds = registry.entries
 
         context.message.author.openPrivateChannel().queue {
-            it.sendMessage(embed("Documentation") {
-                setDescription("This is all of Gnar's currently registered commands.")
+            if (lazyEmbed == null) {
+                lazyEmbed = embed("Documentation") {
+                    setColor(context.bot.config.accentColor)
+                    setDescription("This is all of Gnar's currently registered commands.")
 
-                for (category in Category.values()) {
-                    if (!category.show) continue
+                    for (category in Category.values()) {
+                        if (!category.show) continue
 
-                    val filtered = cmds.filter {
-                        it.info.category == category
-                    }
-                    if (filtered.isEmpty()) continue
+                        val filtered = cmds.filter {
+                            it.info.category == category
+                        }
+                        if (filtered.isEmpty()) continue
 
-                    val pages = Lists.partition(filtered,
-                            filtered.size / 3 + (if (filtered.size % 3 == 0) 0 else 1))
+                        val pages = Lists.partition(filtered, filtered.size / 3 + (if (filtered.size % 3 == 0) 0 else 1))
 
-                    field(true)
-                    field("${category.title} — ${filtered.size}\n") { category.description }
+                        field(true)
+                        field("${category.title} — ${filtered.size}\n") { category.description }
 
-                    for (page in pages) {
-                        field("", true) {
-                            buildString {
-                                page.forEach {
-                                    append("[").append(context.bot.config.prefix).append(it.info.aliases[0]).append("]()")
+                        for (page in pages) {
+                            field("", true) {
+                                buildString {
+                                    page.forEach {
+                                        append("[").append(context.bot.config.prefix).append(it.info.aliases[0]).append("]()")
 
-                                    if (it.info.donor) {
-                                        append(" 🌟").ln()
-                                    } else {
-                                        ln()
+                                        if (it.info.donor) {
+                                            append(" 🌟").ln()
+                                        } else {
+                                            ln()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                field(true)
-                field("Additional Information") {
-                    buildString {
-                        append("To view a command's description, do `").append(context.bot.config.prefix).append("help [command]`.").ln()
-                        append("🌟 are donator commands.").ln()
+                    field(true)
+                    field("Additional Information") {
+                        buildString {
+                            append("To view a command's description, do `").append(context.bot.config.prefix).append("help [command]`.").ln()
+                            append("🌟 are donator commands.").ln()
+                        }
                     }
-                }
 
-                field("News") {
-                    buildString {
-                        append("First donator command?! `_volume`")
+                    field("News") {
+                        buildString {
+                            append("First donator command?! `_volume`")
+                        }
                     }
-                }
 
-                field("Contact", true) {
-                    buildString {
-                        append(b("Website" link "http://gnarbot.xyz")).ln()
-                        append(b("Discord Server" link "http://discord.gg/NQRpmr2")).ln()
+                    field("Contact", true) {
+                        buildString {
+                            append(b("Website" link "http://gnarbot.xyz")).ln()
+                            append(b("Discord Server" link "http://discord.gg/NQRpmr2")).ln()
+                        }
                     }
-                }
 
-                field("Donations", true) {
-                    buildString {
-                        append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
-                        append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
+                    field("Donations", true) {
+                        buildString {
+                            append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
+                            append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
+                        }
                     }
-                }
-            }.build()).queue()
+                }.build()
+            }
+
+            it.sendMessage(lazyEmbed).queue()
         }
 
         context.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()

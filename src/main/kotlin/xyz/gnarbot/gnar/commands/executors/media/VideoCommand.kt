@@ -4,8 +4,8 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.YouTube
 
 @Command(
         aliases = arrayOf("video", "vid"),
@@ -23,21 +23,16 @@ class VideoCommand : CommandExecutor() {
 
         val query = args.joinToString(" ")
 
-        val results = try {
-            YouTube.search(query, 1)
-        } catch (e: RuntimeException) {
-            context.send().error("Error while searching for `$query`.").queue()
-            return
+        MusicManager.search("ytsearch:$query", 1) { results ->
+            if (results.isEmpty()) {
+                context.send().error("No search results for `$query`.").queue()
+                return@search
+            }
+
+            val url: String = results[0].info.uri
+
+            context.send().text("**Video:** $url").queue()
         }
-
-        if (results.isEmpty()) {
-            context.send().error("No search results for `$query`.").queue()
-            return
-        }
-
-        val url: String = results[0].url
-
-        context.send().text("**Video:** $url").queue()
     }
 }
 

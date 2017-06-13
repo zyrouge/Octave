@@ -3,8 +3,8 @@ package xyz.gnarbot.gnar.commands.executors.music
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.YouTube
 
 @Command(
         aliases = arrayOf("play"),
@@ -47,8 +47,12 @@ class PlayCommand : CommandExecutor() {
             return
         }
 
-        val url = if ("https://" in args[0] || "http://" in args[0]) {
-            args[0]
+        if ("https://" in args[0] || "http://" in args[0]) {
+            if (botChannel == null) {
+                context.guildData.musicManager.openAudioConnection(userChannel, context)
+            }
+
+            manager.loadAndPlay(context, args[0])
         } else {
             val query = args.joinToString(" ").trim()
 
@@ -76,21 +80,20 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            val results = YouTube.search(query, 1)
+            MusicManager.search("ytsearch:$query", 1) { results ->
+                if (results.isEmpty()) {
+                    context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+                    return@search
+                }
 
-            if (results.isEmpty()) {
-                context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
-                return
+                val result = results[0]
+
+                if (botChannel == null) {
+                    context.guildData.musicManager.openAudioConnection(userChannel, context)
+                }
+
+                manager.loadAndPlay(context, result.info.uri)
             }
-
-            val result = results[0]
-            result.url
         }
-
-        if (botChannel == null) {
-            context.guildData.musicManager.openAudioConnection(userChannel, context)
-        }
-
-        manager.loadAndPlay(context, url)
     }
 }

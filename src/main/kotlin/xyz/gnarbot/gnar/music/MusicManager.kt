@@ -22,13 +22,37 @@ import xyz.gnarbot.gnar.utils.Context
 
 class MusicManager(private val guildData: GuildData) {
     companion object {
-        private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
+        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
             registerSourceManager(YoutubeAudioSourceManager())
             registerSourceManager(SoundCloudAudioSourceManager())
             registerSourceManager(VimeoAudioSourceManager())
             registerSourceManager(BandcampAudioSourceManager())
             registerSourceManager(TwitchStreamAudioSourceManager())
             registerSourceManager(BeamAudioSourceManager())
+        }
+
+        fun search(query: String, maxResults: Int, callback: (List<AudioTrack>) -> Unit) {
+            playerManager.loadItemOrdered(this, query, object : AudioLoadResultHandler {
+                override fun trackLoaded(track: AudioTrack) {
+                    callback(listOf(track))
+                }
+
+                override fun playlistLoaded(playlist: AudioPlaylist) {
+                    if (!playlist.isSearchResult) {
+                        return
+                    }
+
+                    callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
+                }
+
+                override fun noMatches() {
+                    callback(emptyList())
+                }
+
+                override fun loadFailed(e: FriendlyException) {
+                    callback(emptyList())
+                }
+            })
         }
     }
 
@@ -54,6 +78,10 @@ class MusicManager(private val guildData: GuildData) {
     var isVotingToSkip = false
 
     fun setup() {
+        if (isSetup) {
+            reset()
+        }
+
         player = playerManager.createPlayer()
         scheduler = TrackScheduler(guildData, player)
         sendHandler = AudioPlayerSendHandler(player)
@@ -120,7 +148,7 @@ class MusicManager(private val guildData: GuildData) {
 
                 context.send().embed("Music Queue") {
                     setColor(context.bot.config.musicColor)
-                    description { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
+                    setDescription("Added __**[${track.info.title}](${track.info.uri})**__ to queue.")
                 }.action().queue()
             }
 
@@ -147,7 +175,7 @@ class MusicManager(private val guildData: GuildData) {
 
                 context.send().embed("Music Queue") {
                     setColor(context.bot.config.musicColor)
-                    description { "Added `$added` tracks to queue from playlist `${playlist.name}`." }
+                    setDescription("Added `$added` tracks to queue from playlist `${playlist.name}`.")
                 }.action().queue()
             }
 

@@ -119,6 +119,7 @@ public class CommandRegistry {
         register(new TextToBrickCommand());
 
         register(new YoutubeCommand());
+        register(new SoundcloudCommand());
 
         //MUSIC COMMAND
         if (bot.getConfig().getMusicEnabled()) {

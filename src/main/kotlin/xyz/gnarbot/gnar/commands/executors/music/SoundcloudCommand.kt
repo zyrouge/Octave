@@ -10,22 +10,23 @@ import xyz.gnarbot.gnar.utils.*
 import java.awt.Color
 
 @Command(
-        aliases = arrayOf("youtube", "yt"),
+        aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
         description = "Search and see YouTube results.",
+        donor = true,
         scope = Scope.VOICE,
         category = Category.MUSIC
 )
-class YoutubeCommand : CommandExecutor() {
+class SoundcloudCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Input a query to search YouTube.").queue()
+            context.send().error("Input a query to search Soundcloud.").queue()
             return
         }
 
         val query = args.joinToString(" ")
 
-        MusicManager.search("ytsearch:$query", 5) { results ->
+        MusicManager.search("scsearch:$query", 5) { results ->
             if (results.isEmpty()) {
                 context.send().error("No search results for `$query`.").queue()
                 return@search
@@ -38,9 +39,9 @@ class YoutubeCommand : CommandExecutor() {
 
             if (!context.config.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
-                    setAuthor("YouTube Results", "https://www.youtube.com", "https://www.youtube.com/favicon.ico")
-                    setThumbnail("https://gnarbot.xyz/assets/img/youtube.png")
-                    setColor(Color(141, 20, 0))
+                    setAuthor("SoundCloud Results", "https://soundcloud.com", "https://soundcloud.com/favicon.ico")
+                    setThumbnail("https://gnarbot.xyz/assets/img/soundcloud.png")
+                    setColor(Color(255, 110, 0))
 
                     description {
                         buildString {
@@ -62,9 +63,9 @@ class YoutubeCommand : CommandExecutor() {
                 return@search
             } else {
                 SelectorBuilder(context.bot.waiter).apply {
-                    setTitle("YouTube Results")
+                    setTitle("SoundCloud Results")
                     setDescription("Select one of the following options to play them in your current music channel.")
-                    setColor(Color(141, 20, 0))
+                    setColor(Color(255, 110, 0))
 
                     setUser(context.user)
 

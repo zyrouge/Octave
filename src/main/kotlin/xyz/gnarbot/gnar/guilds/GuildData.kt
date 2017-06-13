@@ -20,7 +20,7 @@ class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
 
     val musicManager: MusicManager = MusicManager(this)
         get() {
-            return field.also { if (!field.isSetup) field.setup() }
+            return field.apply { if (!isSetup) setup() }
         }
 
     fun isPremium(): Boolean = bot.config.donors.contains(id)
