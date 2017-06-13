@@ -28,14 +28,11 @@ import java.util.Set;
  * A registry storing CommandExecutor entries for the bot.
  */
 public class CommandRegistry {
-    private final Bot bot;
 
     /** The mapped registry of invoking key to the classes. */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
 
     public CommandRegistry(Bot bot) {
-        this.bot = bot;
-
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());

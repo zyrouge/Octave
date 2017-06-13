@@ -22,15 +22,15 @@ import kotlin.jvm.JvmStatic as static
 class Bot(val config: BotConfiguration, val keys: Credentials) {
     private val guildCountListener = GuildCountListener(this)
 
+    val commandRegistry = CommandRegistry(this)
+
     val waiter = EventWaiter()
 
     /** @return Sharded JDA instances of the bot.*/
-    val shards : Array<Shard>
+    val shards : MutableList<Shard>
 
     /** @returns The logger instance of the bot. */
     val log: Logger = LoggerFactory.getLogger("Bot")
-
-    val commandRegistry = CommandRegistry(this)
 
     init {
         //SimpleLog.addFileLogs(File("bot.stdout.log"), File("bot.err.log"))
@@ -47,7 +47,7 @@ class Bot(val config: BotConfiguration, val keys: Credentials) {
         log.info("Admins:\t${config.admins.size}")
         log.info("JDA:\t\t${JDAInfo.VERSION}")
 
-        shards = Array(config.shards, this::createShard)
+        shards = MutableList(config.shards, this::createShard)
 
         log.info("The bot is now fully connected to Discord.")
     }

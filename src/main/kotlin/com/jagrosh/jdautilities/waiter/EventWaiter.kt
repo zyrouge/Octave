@@ -69,7 +69,7 @@ class EventWaiter : EventListener {
     inner class WaiterBuilder<T: Event>(private var cls: Class<T>, private var action: (T) -> Unit) {
         private var predicate: ((T) -> Boolean) = { true }
 
-        fun predicate(predicate: (T) -> Boolean): WaiterBuilder<T> {
+        fun predicate(predicate: (event: T) -> Boolean): WaiterBuilder<T> {
             this.predicate = predicate
             return this
         }

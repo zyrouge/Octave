@@ -33,7 +33,11 @@ class HelpCommand : CommandExecutor() {
             context.send().embed("Command Information") {
                 field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix) }
                 field("Usage", true) { "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
-                field("Donator", true) { if (cmd.info.donor) "This command is exclusive to donators' guilds." else "This command is available to all users." }
+                if (cmd.info.donor) {
+                    field("Donator", true) { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
+                } else {
+                    field(true)
+                }
 
                 if (cmd.info.permissions.isNotEmpty()) {
                     field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
@@ -87,7 +91,7 @@ class HelpCommand : CommandExecutor() {
                     field("Additional Information") {
                         buildString {
                             append("To view a command's description, do `").append(context.bot.config.prefix).append("help [command]`.").ln()
-                            append("🌟 are donator commands.").ln()
+                            append("🌟 are donator commands. Donate to our Patreon or PayPal to gain access to them.").ln()
                         }
                     }
 

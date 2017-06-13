@@ -69,16 +69,13 @@ public class Utils {
     }
 
     public static String hasteBin(String content) {
-        Request request = new Request.Builder()
-                .url("https://hastebin.com/documents")
+        Request request = new Request.Builder().url("https://hastebin.com/documents")
                 .header("User-Agent", "Gnar")
                 .header("Content-Type", "text/plain")
-                .post(RequestBody.create(HttpUtils.TEXT, content))
+                .post(RequestBody.create(null, content))
                 .build();
 
-        try {
-            Response response = HttpUtils.CLIENT.newCall(request).execute();
-
+        try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
             JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
 
             response.close();

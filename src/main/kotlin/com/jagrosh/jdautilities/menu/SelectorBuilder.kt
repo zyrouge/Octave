@@ -14,6 +14,7 @@ class SelectorBuilder(val waiter: EventWaiter) {
     private var color: Color? = null
 
     private val options: MutableList<Selector.Entry> = mutableListOf()
+    private var finally: (() -> Unit)? = null
 
     private var timeout: Long = 20
     private var unit: TimeUnit = TimeUnit.SECONDS
@@ -36,6 +37,10 @@ class SelectorBuilder(val waiter: EventWaiter) {
     fun setUser(user: User): SelectorBuilder {
         this.user = user
         return this
+    }
+
+    fun finally(action: () -> Unit) {
+        this.finally = action
     }
 
     fun addOption(option: String, action: (Message) -> Unit): SelectorBuilder {

@@ -6,12 +6,13 @@ import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent
 import xyz.gnarbot.gnar.utils.embed
-import xyz.gnarbot.gnar.utils.field
 import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
 class Selector(val waiter: EventWaiter, val user: User?, val title: String, val description: String, val color: Color?, val options: List<Entry>, val timeout: Long, val unit: TimeUnit) {
+    val cancel = "\u274C"
+
     var message: Message? = null
 
     fun display(channel: MessageChannel) {
@@ -31,9 +32,15 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
             options.forEachIndexed { index, _ ->
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
+            it.addReaction(cancel).queue()
         }
 
         waiter.waitFor(MessageReactionAddEvent::class.java) {
+            if (it.reaction.emote.name == cancel) {
+                message?.delete()?.queue()
+                return@waitFor
+            }
+
             val value = it.reaction.emote.name[0] - '\u0030'
             it.channel.getMessageById(it.messageIdLong).queue {
                 options[value].action(it)
@@ -47,12 +54,16 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
                     false
                 }
                 else -> {
-                    val value = it.reaction.emote.name[0] - '\u0030'
-                    if (value in 0..options.size - 1) {
+                    if (it.reaction.emote.name == cancel) {
                         true
                     } else {
-                        it.reaction.removeReaction(it.user).queue()
-                        false
+                        val value = it.reaction.emote.name[0] - '\u0030'
+                        if (value in 0..options.size - 1) {
+                            true
+                        } else {
+                            it.reaction.removeReaction(it.user).queue()
+                            false
+                        }
                     }
                 }
             }

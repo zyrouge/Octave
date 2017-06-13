@@ -71,10 +71,6 @@ class SoundcloudCommand : CommandExecutor() {
 
                     for (result in results) {
                         addOption("`${Utils.getTimestamp(result.info.length)}` ${b(result.info.title link result.info.uri)}") {
-                            if (botChannel == null) {
-                                context.guildData.musicManager.openAudioConnection(userChannel, context)
-                            }
-
                             manager.loadAndPlay(context, result.info.uri)
                         }
                     }

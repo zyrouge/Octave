@@ -44,7 +44,7 @@ class CommandDispatcher(private val bot: Bot) {
             }
 
             if (cmd.info.donor && !context.guildData.isPremium()) {
-                context.send().error("This command is for donor servers only.").queue()
+                context.send().error("🌟 This command is for donators' servers only.").queue()
                 return false
             }
 

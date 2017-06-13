@@ -128,6 +128,10 @@ class MusicManager(private val guildData: GuildData) {
     }
 
     fun loadAndPlay(context: Context, trackUrl: String) {
+        if (guildData.guild.selfMember.voiceState.channel == null) {
+            context.guildData.musicManager.openAudioConnection(context.member.voiceState.channel, context)
+        }
+
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (scheduler.queue.size >= context.bot.config.queueLimit) {

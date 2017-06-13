@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.utils
 
-import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.requests.RestAction
@@ -13,7 +12,11 @@ class ResponseBuilder(val context: Context) {
      * @return The Message created by this function.
      */
     fun text(text: String): RestAction<Message> {
-        return context.channel.sendMessage(MessageBuilder().append(text).build())
+        return if (context.channel.canTalk()) {
+            context.channel.sendMessage(text)
+        } else {
+            context.user.openPrivateChannel().complete().sendMessage(text)
+        }
     }
 
     /**
