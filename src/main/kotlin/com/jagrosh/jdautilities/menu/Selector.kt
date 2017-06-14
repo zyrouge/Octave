@@ -1,8 +1,9 @@
 package com.jagrosh.jdautilities.menu
 
 import com.jagrosh.jdautilities.waiter.EventWaiter
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.entities.MessageChannel
+import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent
 import xyz.gnarbot.gnar.utils.embed
@@ -15,7 +16,17 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
 
     var message: Message? = null
 
-    fun display(channel: MessageChannel) {
+    fun display(channel: TextChannel) {
+
+        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE)) {
+            channel.sendMessage(embed("Error") {
+                description {
+                    "The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.name}` and `${Permission.MESSAGE_MANAGE.name}` for selection menus."
+                }
+            }.build()).queue()
+            return
+        }
+
         channel.sendMessage(embed(title) {
             setDescription(description)
             setColor(color)

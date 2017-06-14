@@ -120,6 +120,8 @@ class HelpCommand : CommandExecutor() {
             it.sendMessage(lazyEmbed).queue()
         }
 
-        context.send().info("Gnar's guide has been directly messaged to you.\n\nNeed more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
+        context.send().info("Gnar's guide has been directly messaged to you.\n\n" +
+                "Gnar is getting a rename soon!? __**[Vote for your favorite!](http://www.strawpoll.me/13183146)**__\n\n" +
+                "Need more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
     }
 }
