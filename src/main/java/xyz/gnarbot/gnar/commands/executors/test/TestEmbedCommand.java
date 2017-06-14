@@ -30,7 +30,7 @@ public class TestEmbedCommand extends CommandExecutor {
         if (parts.length > 1) {
             int id = 0;
             for (String p : parts) {
-                if (p.equals("")) {
+                if ("".equals(p)) {
                     id++;
                     eb.addField("Section " + id, p, false);
                 }

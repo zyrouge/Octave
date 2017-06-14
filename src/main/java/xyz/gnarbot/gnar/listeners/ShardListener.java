@@ -64,7 +64,7 @@ public class ShardListener extends ListenerAdapter {
                 channelLeft = ((GuildVoiceMoveEvent) event).getChannelLeft();
             }
 
-            if (botChannel.equals(null) || !channelLeft.equals(botChannel)) return;
+            if (botChannel == null || !channelLeft.equals(botChannel)) return;
 
             if (botChannel.getMembers().size() == 1) {
                 GuildData data = shard.getGuildData(event.getGuild());

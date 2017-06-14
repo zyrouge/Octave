@@ -14,7 +14,7 @@ public class ExtractZipFile {
         unzip("target/Gnar.zip", "unzipped/");
     }
 
-    static void unzip(String location, String destination) {
+    private static void unzip(String location, String destination) {
         try {
             ZipFile zipFile = new ZipFile(location);
 
