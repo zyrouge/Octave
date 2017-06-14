@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;

@@ -58,7 +58,6 @@ public class UpdateCommand extends CommandExecutor {
             }
 
             msg = msg.editMessage(msg.getRawContent() + "👌🏽\n\nRunning `gradlew`... ").complete(true);
-            File updateDir = new File("Gnar-git/");
 
             Process mvnBuild = rt.exec("./Gnar-git/gradlew");
 
@@ -79,8 +78,6 @@ public class UpdateCommand extends CommandExecutor {
             for(Shard s : context.getBot().getShards()) {
                 s.getPresence().setGame(Game.of("Restarting bot..."));
             }
-
-            System.exit(20);
         } catch (InterruptedException | IOException | RateLimitedException ex) {
             throw new RuntimeException(ex);
         }

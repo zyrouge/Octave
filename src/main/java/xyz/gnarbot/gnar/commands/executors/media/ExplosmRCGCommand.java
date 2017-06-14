@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import xyz.gnarbot.gnar.BotConfiguration;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
