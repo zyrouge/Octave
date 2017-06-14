@@ -5,7 +5,6 @@ import xyz.gnarbot.gnar.commands.executors.admin.*;
 import xyz.gnarbot.gnar.commands.executors.donator.VolumeCommand;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
-import xyz.gnarbot.gnar.commands.executors.games.LeagueLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
@@ -13,7 +12,6 @@ import xyz.gnarbot.gnar.commands.executors.mod.DisableCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.EnableCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
-import xyz.gnarbot.gnar.commands.executors.music.dj.ShuffleCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.*;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
@@ -62,12 +60,10 @@ public class CommandRegistry {
         //register(new ServersSharedCommand());
         register(new TextToSpeechCommand());
         register(new ReactCommand());
-        register(new ChampDataCommand());
         register(new TriviaAnswerCommand());
         register(new TriviaCommand());
         //register(new GraphCommand());
 
-        register(new ChampQuoteCommand());
         register(new PandoraBotCommand());
         register(new MemeCommand());
         //End Fun Commands
@@ -82,7 +78,6 @@ public class CommandRegistry {
 
         //Game Commands
         register(new OverwatchLookupCommand());
-        register(new LeagueLookupCommand());
         register(new GameLookupCommand());
         //End Game Commands
 
@@ -104,7 +99,7 @@ public class CommandRegistry {
         register(new GroovyCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
-        register(new UpdateCommand());
+        //register(new UpdateCommand());
 //        register(new RestartBotCommand());
         register(new ReloadConfig());
         register(new EmoteListCommand());
@@ -160,11 +155,10 @@ public class CommandRegistry {
      * @param cmd Command entry.
      */
     private void registerCommand(String label, CommandExecutor cmd) {
-        label = label.toLowerCase();
-        if (commandEntryMap.containsKey(label)) {
-            throw new IllegalStateException("Command " + label + " is already registered.");
+        if (commandEntryMap.containsKey(label.toLowerCase())) {
+            throw new IllegalStateException("Command " + label.toLowerCase() + " is already registered.");
         }
-        commandEntryMap.put(label, cmd);
+        commandEntryMap.put(label.toLowerCase(), cmd);
     }
 
     /**

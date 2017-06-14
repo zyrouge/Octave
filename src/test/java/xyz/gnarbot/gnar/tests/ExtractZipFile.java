@@ -14,7 +14,6 @@ public class ExtractZipFile {
         unzip("target/Gnar.zip", "unzipped/");
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     static void unzip(String location, String destination) {
         try {
             ZipFile zipFile = new ZipFile(location);

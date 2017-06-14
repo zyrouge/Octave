@@ -42,6 +42,8 @@ public class SimpleLogToSLF4JAdapter implements SimpleLog.LogListener {
             case FATAL:
                 log.error(message.toString());
                 break;
+            default:
+                break;
         }
     }
 

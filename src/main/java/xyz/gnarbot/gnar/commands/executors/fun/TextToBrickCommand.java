@@ -26,7 +26,7 @@ public class TextToBrickCommand extends CommandExecutor {
                         if (Character.isLetter(a.toLowerCase().charAt(0))) {
                             sb.append(":regional_indicator_").append(a.toLowerCase()).append(":");
                         } else {
-                            if (a.equals(" ")) {
+                            if (" ".equals(a)) {
                                 sb.append(" ");
                             }
                             sb.append(a);

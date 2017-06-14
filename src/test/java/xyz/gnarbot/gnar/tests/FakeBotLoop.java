@@ -18,6 +18,8 @@ public class FakeBotLoop {
                 case "-stop":
                     running = false;
                     break;
+                default:
+                    break;
             }
 
             //FakeBot.INSTANCE.send(query);

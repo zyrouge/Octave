@@ -17,7 +17,7 @@ public class RollCommand extends CommandExecutor {
     public void execute(Context context, String[] args) {
         try {
             if (args.length >= 1) {
-                if (!(Integer.valueOf(args[0]) > 0)) {
+                if (Integer.valueOf(args[0]) <= 0) {
                     context.send().error("Number need to be > 0.").queue();
                     return;
                 }
