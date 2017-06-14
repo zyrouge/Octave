@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'xyz.gnarbot'
-version '1.0'
+version '3.0'
 
 mainClassName = 'xyz.gnarbot.gnar.MainBot'
 

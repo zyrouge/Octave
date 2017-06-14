@@ -156,7 +156,7 @@ public class CommandRegistry {
      */
     private void registerCommand(String label, CommandExecutor cmd) {
         if (commandEntryMap.containsKey(label.toLowerCase())) {
-            throw new IllegalStateException("Command " + label.toLowerCase() + " is already registered.");
+            throw new IllegalStateException("Command " + label + " is already registered.");
         }
         commandEntryMap.put(label.toLowerCase(), cmd);
     }
