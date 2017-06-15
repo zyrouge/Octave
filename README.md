@@ -12,10 +12,6 @@ Click the following [link](https://discordapp.com/oauth2/authorize?client_id=201
 - Though we do not disallow user-hosted versions of Gnar, we will not provide **any** support for it.
 - We are not responsible for anything that this project does to you or your server and can not be held liable 
     for anything pertaining to it. 
-- Gnar is a sharded bot and is made for thousands of servers, not just one. Within the `bot.conf` file 
-    located in the `data/` folder, there is a `shards` option. If you plan to only have the bot be on
-    less than 100 servers, setting it to 1 should be fine. If you are planning on more, then your shard 
-    count should go with how we do ours which is `guild count / 700`.
 
 #### Instructions
 Note that only experienced developers should use or modify the bot.

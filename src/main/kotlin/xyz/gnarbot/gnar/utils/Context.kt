@@ -13,8 +13,8 @@ data class Context(val event: GuildMessageReceivedEvent, val guildData: GuildDat
     val channel: TextChannel = event.channel
     val guild : Guild = event.guild
 
-    val member: Member = message.member
-    val user: User = message.author
+    val member: Member = event.member
+    val user: User = event.author
 
     /**
      * Return a class with utilities to help send a message to

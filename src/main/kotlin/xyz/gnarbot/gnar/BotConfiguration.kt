@@ -18,8 +18,6 @@ class BotConfiguration(file: File) {
 
     var config: CommentedConfigurationNode
 
-    val shards: Int
-
     var name: String
     var game: String
     var avatar: String
@@ -51,8 +49,6 @@ class BotConfiguration(file: File) {
 
     init {
         config = loader.load()
-
-        shards = config["bot", "shards"].int.takeIf { it != 0 } ?: error("Shard number must be >= 1")
 
         name = config["bot", "name"].getString("Gnar")
         game = config["bot", "game"].getString("%d | _help")

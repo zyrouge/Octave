@@ -18,8 +18,8 @@ class SkipCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
 
-        if (manager.player.playingTrack.userData == context.member
-                || context.member.hasPermission(Permission.MANAGE_CHANNEL)) {
+        if (context.member.hasPermission(Permission.MANAGE_CHANNEL)
+                || manager.player.playingTrack.userData == context.member) {
 
             if (manager.scheduler.queue.isEmpty()) {
                 context.guildData.musicManager.reset()

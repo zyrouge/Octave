@@ -10,7 +10,7 @@ plugins {
 group 'xyz.gnarbot'
 version '3.0'
 
-mainClassName = 'xyz.gnarbot.gnar.MainBot'
+mainClassName = 'xyz.gnarbot.gnar.Bot'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -37,7 +37,7 @@ dependencies {
     // JDA
     compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_212'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.39'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.41'
 
     // Configurations
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'

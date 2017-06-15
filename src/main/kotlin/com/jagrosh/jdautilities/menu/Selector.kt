@@ -17,7 +17,6 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
     var message: Message? = null
 
     fun display(channel: TextChannel) {
-
         if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE)) {
             channel.sendMessage(embed("Error") {
                 description {

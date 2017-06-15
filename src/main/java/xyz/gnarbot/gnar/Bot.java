@@ -44,12 +44,12 @@ public final class Bot {
         LOG.info("Initializing the Discord bot.");
 
         LOG.info("Name:\t" + CONFIG.getName());
-        LOG.info("Shards:\t" + CONFIG.getShards());
+        LOG.info("Shards:\t" + KEYS.getShards());
         LOG.info("Prefix:\t" + CONFIG.getPrefix());
         LOG.info("Admins:\t" + CONFIG.getAdmins().size());
         LOG.info("JDA:\t\t" + JDAInfo.VERSION);
 
-        for (int i = 0; i < CONFIG.getShards(); i++) {
+        for (int i = 0; i < KEYS.getShards(); i++) {
             shards.add(createShard(i));
         }
 
@@ -78,11 +78,10 @@ public final class Bot {
                 .setEnableShutdownHook(true)
                 .setGame(Game.of(String.format(CONFIG.getGame(), id)));
 
-        if (CONFIG.getShards() > 1) builder.useSharding(id, CONFIG.getShards());
+        if (KEYS.getShards() > 1) builder.useSharding(id, KEYS.getShards());
 
-        JDA jda = null;
         try {
-            jda = builder.buildBlocking();
+            JDA jda = builder.buildBlocking();
 
             jda.getSelfUser().getManager().setName(CONFIG.getName()).queue();
             LOG.info("JDA " + id + " is ready.");
