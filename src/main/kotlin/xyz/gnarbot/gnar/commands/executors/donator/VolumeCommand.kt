@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.donator
 
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -28,7 +29,7 @@ class VolumeCommand : CommandExecutor() {
 
         if (args.isEmpty()) {
             context.send().embed("Music Volume") {
-                setColor(context.config.musicColor)
+                setColor(Bot.CONFIG.musicColor)
 
                 field("", true) {
                     val percent = context.guildData.musicManager.player.volume.toDouble() / 100
@@ -60,7 +61,7 @@ class VolumeCommand : CommandExecutor() {
         context.guildData.musicManager.player.volume = amount
 
         context.send().embed("Music Volume") {
-            setColor(context.config.musicColor)
+            setColor(Bot.CONFIG.musicColor)
 
             description {
                 val percent = amount.toDouble() / 100

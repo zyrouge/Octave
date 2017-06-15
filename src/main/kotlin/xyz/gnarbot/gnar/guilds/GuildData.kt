@@ -13,17 +13,17 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
-class GuildData(val id: Long, val shard: Shard, val bot: Bot) : CommandHandler {
+class GuildData(val id: Long, val shard: Shard) : CommandHandler {
     val guild : Guild get() = shard.getGuildById(id)
 
-    val commandHandler = CommandDispatcher(bot)
+    val commandHandler = CommandDispatcher()
 
     val musicManager: MusicManager = MusicManager(this)
         get() {
             return field.apply { if (!isSetup) setup() }
         }
 
-    fun isPremium(): Boolean = bot.config.donors.contains(id)
+    fun isPremium(): Boolean = Bot.CONFIG.donors.contains(id)
 
     fun getMemberByName(name: String, searchNickname: Boolean = false): Member? {
         for (member in guild.getMembersByName(name, true)) {

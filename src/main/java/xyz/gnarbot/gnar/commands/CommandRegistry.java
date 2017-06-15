@@ -30,7 +30,7 @@ public class CommandRegistry {
     /** The mapped registry of invoking key to the classes. */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
 
-    public CommandRegistry(Bot bot) {
+    public CommandRegistry() {
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
@@ -114,7 +114,7 @@ public class CommandRegistry {
         register(new SoundcloudCommand());
 
         //MUSIC COMMAND
-        if (bot.getConfig().getMusicEnabled()) {
+        if (Bot.CONFIG.getMusicEnabled()) {
             register(new PlayCommand());
             register(new PauseCommand());
             register(new StopCommand());

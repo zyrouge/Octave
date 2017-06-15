@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -24,7 +25,7 @@ import java.net.URISyntaxException;
 public class YodaTalkCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (context.getKeys().getMashape() == null) {
+        if (Bot.KEYS.getMashape() == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
@@ -43,7 +44,7 @@ public class YodaTalkCommand extends CommandExecutor {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getKeys().getMashape())
+                    .header("X-Mashape-Key", Bot.KEYS.getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -57,7 +58,6 @@ public class YodaTalkCommand extends CommandExecutor {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     context.send().embed("Yoda-Speak")
-                            .setColor(context.getConfig().getAccentColor())
                             .setDescription(response.body().string())
                             .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
                             .action().queue();

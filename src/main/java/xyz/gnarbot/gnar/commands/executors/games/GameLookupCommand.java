@@ -9,6 +9,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -22,7 +23,7 @@ import java.io.IOException;
 public class GameLookupCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (context.getKeys().getMashape() == null) {
+        if (Bot.KEYS.getMashape() == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
@@ -38,7 +39,7 @@ public class GameLookupCommand extends CommandExecutor {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getKeys().getMashape())
+                    .header("X-Mashape-Key", Bot.KEYS.getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -66,7 +67,6 @@ public class GameLookupCommand extends CommandExecutor {
                     String thumb = "https:" + jso.optJSONObject("cover").optString("url");
 
                     context.send().embed(title)
-                            .setColor(context.getConfig().getAccentColor())
                             .setThumbnail(thumb)
                             .field("Score", true, score)
                             .field("Description", false, desc)

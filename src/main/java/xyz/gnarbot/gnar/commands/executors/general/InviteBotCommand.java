@@ -12,7 +12,6 @@ public class InviteBotCommand extends CommandExecutor {
         String link = context.getShard().asBot().getInviteUrl(Permission.ADMINISTRATOR);
 
         context.send().embed("Get Gnar on your server!")
-                .setColor(context.getConfig().getAccentColor())
                 .setDescription("__**[Click to invite Gnar to your server.](" + link + ")**__")
                 .action().queue();
     }

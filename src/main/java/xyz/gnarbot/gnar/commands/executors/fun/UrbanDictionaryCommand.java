@@ -8,11 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.utils.HttpUtils;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,7 +25,7 @@ import java.net.URISyntaxException;
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (context.getKeys().getMashape() == null) {
+        if (Bot.KEYS.getMashape() == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
@@ -37,13 +38,13 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                     .addParameter("term", query)
                     .toString();
         } catch (URISyntaxException e) {
-            context.getLog().error("Urban dictionary error", e);
+            Bot.LOG.error("Urban dictionary error", e);
             return;
         }
 
         Request request = new Request.Builder()
                 .url(url)
-                .header("X-Mashape-Key", context.getKeys().getMashape())
+                .header("X-Mashape-Key", Bot.KEYS.getMashape())
                 .header("Accept", "text/plain")
                 .get()
                 .build();
@@ -66,7 +67,6 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                 JSONObject word = words.getJSONObject(0);
 
                 context.send().embed("Urban Dictionary")
-                        .setColor(context.getConfig().getAccentColor())
                         .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
                         .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
                         .field("Definition", true, word.optString("definition"))

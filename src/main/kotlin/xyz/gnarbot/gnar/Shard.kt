@@ -9,20 +9,20 @@ import xyz.gnarbot.gnar.listeners.ShardListener
 /**
  * Individual shard instances of [JDA] of the bot that contains all the [GuildData] for each guild.
  */
-class Shard(val id: Int, val jda: JDA, val bot: Bot) : JDA by jda {
+class Shard(val id: Int, val jda: JDA) : JDA by jda {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
 
     val guildData = TLongObjectHashMap<GuildData>()
 
     init {
-        jda.addEventListener(ShardListener(this, bot))
+        jda.addEventListener(ShardListener(this))
     }
 
     fun getGuildData(id: Long) : GuildData {
         val value = guildData[id]
         return if (value == null) {
-            val answer = GuildData(id, this, bot)
+            val answer = GuildData(id, this)
             guildData.put(id, answer)
             answer
         } else {

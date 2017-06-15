@@ -10,6 +10,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -117,14 +118,14 @@ public class MemeCommand extends CommandExecutor {
             String url = new URIBuilder("https://api.imgflip.com/caption_image")
                     .addParameter("template_id", id)
                     .addParameter("username", "GNARBot")
-                    .addParameter("password", context.getKeys().getImgFlip())
+                    .addParameter("password", Bot.KEYS.getImgFlip())
                     .addParameter("text0", arguments[1].trim())
                     .addParameter("text1", arguments[2].trim())
                     .toString();
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", context.getKeys().getMashape())
+                    .header("X-Mashape-Key", Bot.KEYS.getMashape())
                     .header("Accept", "application/json")
                     .build();
 
@@ -141,7 +142,6 @@ public class MemeCommand extends CommandExecutor {
                             .getJSONObject("data");
 
                     context.send().embed("Meme Generator")
-                            .setColor(context.getConfig().getAccentColor())
                             .setImage(jso.optString("url"))
                             .action().queue();
 

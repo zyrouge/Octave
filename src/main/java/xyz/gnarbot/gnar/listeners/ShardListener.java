@@ -20,23 +20,21 @@ import xyz.gnarbot.gnar.utils.Context;
 
 public class ShardListener extends ListenerAdapter {
     private final Shard shard;
-    private final Bot bot;
 
-    public ShardListener(Shard shard, Bot bot) {
+    public ShardListener(Shard shard) {
         this.shard = shard;
-        this.bot = bot;
     }
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getMessage().getContent().startsWith(bot.getConfig().getPrefix())) {
+        if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
             GuildData gd = shard.getGuildData(event.getGuild());
 
             if (event.getAuthor() == null || event.getMember() == null) {
                 return;
             }
 
-            gd.handleCommand(new Context(event, gd, shard, bot));
+            gd.handleCommand(new Context(event, gd, shard));
         }
     }
 
@@ -75,27 +73,27 @@ public class ShardListener extends ListenerAdapter {
 
     @Override
     public void onResume(ResumedEvent event) {
-        bot.getLog().info("JDA " + shard.getId() + " has resumed.");
+        Bot.LOG.info("JDA " + shard.getId() + " has resumed.");
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        bot.getLog().info("JDA " + shard.getId() + " has reconnected.");
+        Bot.LOG.info("JDA " + shard.getId() + " has reconnected.");
     }
 
     @Override
     public void onDisconnect(DisconnectEvent event) {
         if (event.isClosedByServer()) {
-            bot.getLog().info("JDA " + shard.getId() + " has disconnected (closed by server). "
+            Bot.LOG.info("JDA " + shard.getId() + " has disconnected (closed by server). "
                     + "Code: " + event.getServiceCloseFrame().getCloseCode() + " "  + event.getCloseCode());
         } else {
-            bot.getLog().info("JDA " + shard.getId() + " has disconnected. "
+            Bot.LOG.info("JDA " + shard.getId() + " has disconnected. "
                     + "Code: " + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
         }
     }
 
     @Override
     public void onException(ExceptionEvent event) {
-        if (!event.isLogged()) bot.getLog().error("Error thrown by JDA.", event.getCause());
+        if (!event.isLogged()) Bot.LOG.error("Error thrown by JDA.", event.getCause());
     }
 }

@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import com.google.common.collect.Lists
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -21,7 +22,7 @@ class EmoteListCommand : CommandExecutor() {
         }
 
         context.send().embed("Emote List") {
-            val totalEmotes = context.bot.shards.flatMap { it.emotes }
+            val totalEmotes = Bot.getShards().flatMap { it.emotes }
 
             val pages = Lists.partition(totalEmotes, 30)
 

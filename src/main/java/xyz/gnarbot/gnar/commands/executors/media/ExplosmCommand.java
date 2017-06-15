@@ -55,7 +55,6 @@ public class ExplosmCommand extends CommandExecutor {
             String logo = "http://explosm.net/img/logo.png";
 
             context.send().embed("Cyanide and Happiness")
-                    .setColor(context.getConfig().getAccentColor())
                     .setDescription("No: **" + rand + "**\n")
                     .setThumbnail(logo)
                     .setImage(url)

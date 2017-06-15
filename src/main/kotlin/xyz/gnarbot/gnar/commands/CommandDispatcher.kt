@@ -5,8 +5,10 @@ import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.ln
+import java.awt.Color
 
-class CommandDispatcher(private val bot: Bot) {
+class CommandDispatcher {
     /** @returns Disabled command entries. */
     val disabled: MutableList<CommandExecutor> = mutableListOf()
 
@@ -18,16 +20,16 @@ class CommandDispatcher(private val bot: Bot) {
      */
     fun callCommand(context: Context) : Boolean {
         val content = context.message.content
-        if (!content.startsWith(bot.config.prefix)) return false
+        if (!content.startsWith(Bot.CONFIG.prefix)) return false
 
         // Split the message.
         val tokens = Utils.stringSplit(content)
 
-        val label = tokens[0].substring(bot.config.prefix.length).toLowerCase().trim()
+        val label = tokens[0].substring(Bot.CONFIG.prefix.length).toLowerCase().trim()
 
         val args = tokens.copyOfRange(1, tokens.size)
 
-        val cmd = bot.commandRegistry.getCommand(label) ?: return false
+        val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
 
         if (cmd in disabled) {
             context.send().error("This command is disabled by the server owner.").queue()
@@ -37,14 +39,23 @@ class CommandDispatcher(private val bot: Bot) {
         val message = context.message
         val member = message.member
 
-        if (member.user.idLong !in bot.config.admins) {
+        if (member.user.idLong !in Bot.CONFIG.admins) {
             if (cmd.info.admin) {
                 context.send().error("This command is for bot administrators only.").queue()
                 return false
             }
 
             if (cmd.info.donor && !context.guildData.isPremium()) {
-                context.send().error("🌟 This command is for donators' servers only.").queue()
+                context.send().embed("Donators Only") {
+                    setColor(Color.ORANGE)
+                    description {
+                        buildString {
+                            append("🌟 This command is for donators' servers only.").ln()
+                            append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
+                            append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
+                        }
+                    }
+                }.action().queue()
                 return false
             }
 
@@ -103,7 +114,7 @@ class CommandDispatcher(private val bot: Bot) {
      * @param label Command label.
      */
     fun enableCommand(label: String) : CommandExecutor? {
-        return bot.commandRegistry.getCommand(label)?.let(this::enableCommand)
+        return Bot.getCommandRegistry().getCommand(label)?.let(this::enableCommand)
     }
 
     /**
@@ -123,6 +134,6 @@ class CommandDispatcher(private val bot: Bot) {
      * @param label Command label.
      */
     fun disableCommand(label: String) : CommandExecutor? {
-        return bot.commandRegistry.getCommand(label)?.let(this::disableCommand)
+        return Bot.getCommandRegistry().getCommand(label)?.let(this::disableCommand)
     }
 }

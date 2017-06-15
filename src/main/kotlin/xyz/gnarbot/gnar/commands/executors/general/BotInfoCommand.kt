@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.JDAInfo
 import net.dv8tion.jda.core.OnlineStatus
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -15,7 +16,7 @@ import java.lang.management.ManagementFactory
 )
 class BotInfoCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        val registry = context.bot.commandRegistry
+        val registry = Bot.getCommandRegistry()
 
         // Uptime
         val s = ManagementFactory.getRuntimeMXBean().uptime / 1000
@@ -36,7 +37,7 @@ class BotInfoCommand : CommandExecutor() {
         var online = 0
         var inactive = 0
 
-        for (shard in context.bot.shards) {
+        for (shard in Bot.getShards()) {
             guilds += shard.guilds.size
             requests += shard.requests
 

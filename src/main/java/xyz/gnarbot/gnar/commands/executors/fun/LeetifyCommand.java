@@ -35,7 +35,6 @@ public class LeetifyCommand extends CommandExecutor {
         }
 
         context.send().embed("Leet it")
-                .setColor(context.getConfig().getAccentColor())
                 .setDescription(s)
                 .action().queue();
     }

@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
 import org.w3c.dom.Document;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -19,7 +20,7 @@ public class CatsCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         try {
-            String apiKey = context.getKeys().getCat();
+            String apiKey = Bot.KEYS.getCat();
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -47,7 +48,6 @@ public class CatsCommand extends CommandExecutor {
             String url = doc.getElementsByTagName("url").item(0).getTextContent();
 
             context.send().embed("Random Cat Pictures")
-                    .setColor(context.getConfig().getAccentColor())
                     .setImage(url)
                     .action().queue();
 

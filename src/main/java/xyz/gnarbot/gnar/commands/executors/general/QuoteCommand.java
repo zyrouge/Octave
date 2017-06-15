@@ -29,10 +29,11 @@ public class QuoteCommand extends CommandExecutor {
                     final TextChannel _targetChannel = targetChannel;
                     context.getMessage().getChannel().getMessageById(id).queue(msg -> _targetChannel.sendMessage(
                             new EmbedBuilder()
-                            .setColor(context.getConfig().getAccentColor())
-                            .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
-                            .setDescription(msg.getContent())
-                            .build()).queue());
+                                    .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
+                                    .setDescription(msg.getContent())
+                                    .build()
+                            ).queue()
+                    );
                 } catch (Exception e) {
                     try {
                         context.send()

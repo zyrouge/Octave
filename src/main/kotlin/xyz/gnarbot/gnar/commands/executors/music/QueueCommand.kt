@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.MessageEmbed
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -30,7 +31,7 @@ class QueueCommand : CommandExecutor() {
                 }
                 queue.clear()
                 context.send().embed("Music Queue") {
-                    setColor(context.bot.config.musicColor)
+                    setColor(Bot.CONFIG.musicColor)
                     setDescription("Cleared the music queue.")
                 }.action().queue()
                 return
@@ -38,7 +39,7 @@ class QueueCommand : CommandExecutor() {
         }
 
         context.send().embed("Music Queue") {
-            setColor(context.bot.config.musicColor)
+            setColor(Bot.CONFIG.musicColor)
 
             context.guildData.musicManager.player.playingTrack?.let {
                 field("Now Playing", false) {

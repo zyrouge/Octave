@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.utils
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.requests.RestAction
+import xyz.gnarbot.gnar.Bot
 
 class ResponseBuilder(val context: Context) {
     /**
@@ -29,7 +30,7 @@ class ResponseBuilder(val context: Context) {
         return embed {
             setTitle("Info")
             setDescription(msg)
-            setColor(context.bot.config.accentColor)
+            setColor(Bot.CONFIG.accentColor)
         }.action()
     }
 
@@ -43,7 +44,7 @@ class ResponseBuilder(val context: Context) {
         return embed {
             setTitle("Error")
             setDescription(msg)
-            setColor(context.bot.config.errorColor)
+            setColor(Bot.CONFIG.errorColor)
         }.action()
     }
 
@@ -56,7 +57,7 @@ class ResponseBuilder(val context: Context) {
         return embed {
             setTitle("Exception")
             setDescription(exception.message)
-            setColor(context.bot.config.errorColor)
+            setColor(Bot.CONFIG.errorColor)
         }.action()
     }
 
@@ -69,7 +70,7 @@ class ResponseBuilder(val context: Context) {
     @JvmOverloads
     fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
         setTitle(title)
-        setColor(context.bot.config.accentColor)
+        setColor(Bot.CONFIG.accentColor)
     }
 
     /**

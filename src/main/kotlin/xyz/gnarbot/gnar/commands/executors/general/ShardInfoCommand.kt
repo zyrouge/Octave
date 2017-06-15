@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import com.google.common.collect.Lists
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -21,7 +22,7 @@ class ShardInfoCommand : CommandExecutor() {
         }
 
         context.send().embed("Shard Information") {
-            val pages = Lists.partition(context.bot.shards.toList(), 12)
+            val pages = Lists.partition(Bot.getShards().toList(), 12)
 
             if (page >= pages.size) page = pages.size
             else if (page <= 0) page = 1

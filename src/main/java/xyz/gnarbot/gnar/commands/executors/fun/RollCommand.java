@@ -23,7 +23,6 @@ public class RollCommand extends CommandExecutor {
                 }
 
                 context.send().embed("Roll a Number")
-                        .setColor(context.getConfig().getAccentColor())
                         .description(() -> "You rolled a **"
                                 + new Random().nextInt(Integer.valueOf(args[0]))
                                 + "** from range **[0 to " + args[0]+ "]**.")

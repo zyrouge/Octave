@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import com.google.common.collect.Lists
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.MessageEmbed
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -18,7 +19,7 @@ class HelpCommand : CommandExecutor() {
     var lazyEmbed: MessageEmbed? = null
 
     override fun execute(context: Context, args: Array<String>) {
-        val registry = context.bot.commandRegistry
+        val registry = Bot.getCommandRegistry()
 
         if (args.isNotEmpty()) {
             val target = if (args[0].startsWith('_')) args[0].substring(1) else args[0]
@@ -31,8 +32,8 @@ class HelpCommand : CommandExecutor() {
             }
 
             context.send().embed("Command Information") {
-                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${context.bot.config.prefix}", prefix = context.bot.config.prefix) }
-                field("Usage", true) { "${context.bot.config.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                field("Usage", true) { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                 if (cmd.info.donor) {
                     field("Donator", true) { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
                 } else {
@@ -54,7 +55,7 @@ class HelpCommand : CommandExecutor() {
         context.message.author.openPrivateChannel().queue {
             if (lazyEmbed == null) {
                 lazyEmbed = embed("Documentation") {
-                    setColor(context.bot.config.accentColor)
+                    setColor(Bot.CONFIG.accentColor)
                     setDescription("This is all of Gnar's currently registered commands.")
 
                     for (category in Category.values()) {
@@ -74,7 +75,7 @@ class HelpCommand : CommandExecutor() {
                             field("", true) {
                                 buildString {
                                     page.forEach {
-                                        append("[").append(context.bot.config.prefix).append(it.info.aliases[0]).append("]()")
+                                        append("[").append(Bot.CONFIG.prefix).append(it.info.aliases[0]).append("]()")
 
                                         if (it.info.donor) {
                                             append(" 🌟").ln()
@@ -90,7 +91,7 @@ class HelpCommand : CommandExecutor() {
                     field(true)
                     field("Additional Information") {
                         buildString {
-                            append("To view a command's description, do `").append(context.bot.config.prefix).append("help [command]`.").ln()
+                            append("To view a command's description, do `").append(Bot.CONFIG.prefix).append("help [command]`.").ln()
                             append("🌟 are donator commands. Donate to our Patreon or PayPal to gain access to them.").ln()
                         }
                     }

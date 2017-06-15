@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class TriviaQuestions {
-
     private static final ArrayList<String> questions = new ArrayList<>();
 
     private static final ArrayList<String> answers = new ArrayList<>();
 
     public static void init() {
-        File f = new File(Utils.DATA_FOLDER, "trivia");
+        File f = new File("data/trivia");
         if (!f.exists()) {
             System.out.println("No trivia folder detected.");
         }

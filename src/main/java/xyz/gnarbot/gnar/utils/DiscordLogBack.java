@@ -9,29 +9,25 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
 
 public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
-    private static Bot bot;
-
     private static boolean enabled;
 
     private PatternLayout patternLayout;
 
     public static void disable() {
-        DiscordLogBack.bot = null;
         enabled = false;
     }
 
-    public static void enable(Bot bot) {
-        DiscordLogBack.bot = bot;
+    public static void enable() {
         enabled = true;
     }
 
     private TextChannel consoleChannel() {
         if (!enabled) return null;
-        if (bot.getConfig().getConsoleChannelID() == 0) return null;
+        if (Bot.CONFIG.getConsoleChannelID() == 0) return null;
 
-        long id = bot.getConfig().getConsoleChannelID();
+        long id = Bot.CONFIG.getConsoleChannelID();
 
-        for (Shard shard : bot.getShards()) {
+        for (Shard shard : Bot.getShards()) {
             TextChannel channel = shard.getTextChannelById(id);
             if (channel != null) {
                 return channel;

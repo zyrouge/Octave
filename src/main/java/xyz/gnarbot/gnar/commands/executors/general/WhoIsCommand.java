@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Command(aliases = {"whois", "infoof", "infoon", "user", "who"},
-        usage = "-@user",
+        usage = "[user]",
         description = "Get information on a user."
 )
 public class WhoIsCommand extends CommandExecutor {

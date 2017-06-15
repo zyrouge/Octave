@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -25,7 +26,7 @@ class NowPlayingCommand : CommandExecutor() {
         }
 
         context.send().embed("Now Playing") {
-            setColor(context.bot.config.musicColor)
+            setColor(Bot.CONFIG.musicColor)
 
             field("Track", false) {
                 "**[${track.info.title}](${track.info.uri})**"

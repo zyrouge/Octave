@@ -10,32 +10,46 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 @Command(
         aliases = "pbot",
         category = Category.FUN)
 public class PandoraBotCommand extends CommandExecutor {
     private static final ChatterBotFactory factory = new ChatterBotFactory();
-    private ChatterBot bot = null;
+    private static ChatterBot bot = null;
 
-    private ChatterBotSession session = null;
+    private static final Map<Long, ChatterBotSession> sessions = new WeakHashMap<>();
 
     @Override
     public void execute(Context context, String[] args) {
-        try {
-            if (bot == null) {
+        if (bot == null) {
+            try {
                 bot = factory.create(ChatterBotType.PANDORABOTS, "b0dafd24ee35a477");
-                session = bot.createSession();
-                context.send().info("Pandora-Bot session created for the server.").queue();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        }
+
+        if (args.length > 0) {
+            if ("reset".equals(args[1])) {
+                sessions.put(context.getGuild().getIdLong(), null);
+            }
+        }
+
+        try {
+            ChatterBotSession session = sessions.computeIfAbsent(context.getGuild().getIdLong(), k -> {
+                context.send().info("Pandora-Bot session created for the server.").queue();
+                return bot.createSession();
+            });
 
             String input = StringUtils.join(args, " ");
 
             String output = session.think(input);
             context.send().embed("PandoraBot")
-                    .setColor(context.getConfig().getAccentColor())
                     .setDescription(output)
                     .action().queue();
-
         } catch (Exception e) {
             context.send().error("PandoraBot has encountered an exception. Resetting PandoraBot.").queue();
             bot = null;

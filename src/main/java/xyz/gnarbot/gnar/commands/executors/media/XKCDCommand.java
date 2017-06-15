@@ -90,7 +90,6 @@ public class XKCDCommand extends CommandExecutor {
                         String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
 
                         context.send().embed(title)
-                                .setColor(context.getConfig().getAccentColor())
                                 .setDescription("No: " + num)
                                 .setThumbnail(logo)
                                 .setImage(url)

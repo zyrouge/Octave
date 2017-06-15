@@ -12,7 +12,6 @@ public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         context.send().embed("Coin Flip")
-                .setColor(context.getConfig().getAccentColor())
                 .setDescription(new Random().nextInt(2) == 0 ? "Heads" : "Tails!")
                 .action().queue();
     }

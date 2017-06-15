@@ -17,8 +17,8 @@ public class TestCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         System.out.println(Utils.hasteBin("what"));
-//        if (context.getConfig().getAvatar() != null) {
-//            try (InputStream is = new URL(context.getConfig().getAvatar()).openStream()) {
+//        if (Bot.getConfig().getAvatar() != null) {
+//            try (InputStream is = new URL(Bot.getConfig().getAvatar()).openStream()) {
 //                context.getShard().getSelfUser().getManager().setAvatar(Icon.from(is)).queue();
 //            } catch (IOException e) {
 //                e.printStackTrace();

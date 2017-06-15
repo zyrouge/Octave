@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import com.jagrosh.jdautilities.menu.SelectorBuilder
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -37,7 +38,7 @@ class SoundcloudCommand : CommandExecutor() {
             val botChannel = context.guild.selfMember.voiceState.channel
             val userChannel = context.guild.getMember(context.message.author).voiceState.channel
 
-            if (!context.config.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
+            if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("SoundCloud Results", "https://soundcloud.com", "https://soundcloud.com/favicon.ico")
                     setThumbnail("https://gnarbot.xyz/assets/img/soundcloud.png")
@@ -62,7 +63,7 @@ class SoundcloudCommand : CommandExecutor() {
                 }.action().queue()
                 return@search
             } else {
-                SelectorBuilder(context.bot.waiter).apply {
+                SelectorBuilder(Bot.getWaiter()).apply {
                     setTitle("SoundCloud Results")
                     setDescription("Select one of the following options to play them in your current music channel.")
                     setColor(Color(255, 110, 0))

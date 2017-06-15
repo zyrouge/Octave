@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -27,7 +28,7 @@ class RestartCommand : CommandExecutor() {
         if (track != null) {
 
             context.send().embed("Restart Song") {
-                setColor(context.bot.config.musicColor)
+                setColor(Bot.CONFIG.musicColor)
                 setDescription("Restarting track: `${track.info.title}`.")
             }.action().queue()
 

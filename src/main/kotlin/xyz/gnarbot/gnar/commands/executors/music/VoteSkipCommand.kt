@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.EmbedBuilder
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -36,12 +37,12 @@ class VoteSkipCommand : CommandExecutor() {
             context.send().error("There is already a vote going on!").queue()
             return
         }
-        if (System.currentTimeMillis() - manager.lastVoteTime < context.bot.config.voteSkipCooldown.toMillis()) {
-            context.send().error("You must wait ${context.bot.config.voteSkipCooldownText} before starting a new vote.").queue()
+        if (System.currentTimeMillis() - manager.lastVoteTime < Bot.CONFIG.voteSkipCooldown.toMillis()) {
+            context.send().error("You must wait ${Bot.CONFIG.voteSkipCooldownText} before starting a new vote.").queue()
             return
         }
-        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= context.bot.config.voteSkipDuration.toMillis()) {
-            context.send().error("By the time the vote finishes in ${context.bot.config.voteSkipDurationText}, the song will be over.").queue()
+        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= Bot.CONFIG.voteSkipDuration.toMillis()) {
+            context.send().error("By the time the vote finishes in ${Bot.CONFIG.voteSkipDurationText}, the song will be over.").queue()
             return
         }
 
@@ -49,13 +50,13 @@ class VoteSkipCommand : CommandExecutor() {
         manager.isVotingToSkip = true
 
         context.send().embed("Vote Skip") {
-            setColor(context.bot.config.musicColor)
+            setColor(Bot.CONFIG.musicColor)
             description {
                 buildString {
                     append(b(context.message.author.name))
                     append(" has voted to **skip** the current track!")
                     append(" React with :thumbsup: or :thumbsdown:").ln()
-                    append("Whichever has the most votes in ${context.bot.config.voteSkipDurationText} will win!")
+                    append("Whichever has the most votes in ${Bot.CONFIG.voteSkipDurationText} will win!")
                 }
             }
         }.action().queue {
@@ -65,7 +66,7 @@ class VoteSkipCommand : CommandExecutor() {
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
                 setDescription("Voting has ended! Check the newer messages for results.")
                 clearFields()
-            }.build()).queueAfter(context.bot.config.voteSkipDuration.seconds, TimeUnit.SECONDS) {
+            }.build()).queueAfter(Bot.CONFIG.voteSkipDuration.seconds, TimeUnit.SECONDS) {
                 var skip = 0
                 var stay = 0
 
@@ -75,7 +76,7 @@ class VoteSkipCommand : CommandExecutor() {
                 }
 
                 context.send().embed("Vote Skip") {
-                    setColor(context.bot.config.musicColor)
+                    setColor(Bot.CONFIG.musicColor)
                     description {
                         buildString {
                             if (skip > stay) {

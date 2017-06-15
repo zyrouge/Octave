@@ -1,6 +1,5 @@
 .idea/
 
-data/*.json
-data/*.conf
+*.conf
 
-!data/bot.conf
+!bot.conf

@@ -13,12 +13,10 @@ public class PingCommand extends CommandExecutor {
         long time = System.currentTimeMillis();
 
         context.send().embed("Ping")
-                .setColor(context.getConfig().getAccentColor())
                 .setDescription("Checking ping...")
                 .action().queue(msg -> {
             long ping = System.currentTimeMillis() - time;
             msg.editMessage(new EmbedBuilder().setTitle("Ping")
-                    .setColor(context.getConfig().getAccentColor())
                     .addField("Response Time", ping + " ms", true)
                     .addField("Discord API", context.getShard().getPing() + " ms", true)
                     .build()).queue();

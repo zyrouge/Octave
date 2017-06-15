@@ -41,7 +41,7 @@ dependencies {
 
     // Configurations
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
-    compile group: 'org.json', name: 'json', version: '20160810'
+    compile group: 'org.json', name: 'json', version: '20170516'
 
     // Other dependencies
     compile group: 'xyz.avarel', name: 'AJE', version: '3.3.0'
