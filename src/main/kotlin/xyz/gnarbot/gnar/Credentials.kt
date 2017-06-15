@@ -16,6 +16,9 @@ class Credentials(file: File) {
             .setPath(file.toPath()).build()
 
     val config: CommentedConfigurationNode = loader.load()
+
+    val token: String = config["token"].string.takeIf { !it.isNullOrBlank() } ?: error("Bot token can't be null or blank.")
+
     val shards = kotlin.run {
         val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
                 .header("Authorization", "Bot " + token)
@@ -33,8 +36,6 @@ class Credentials(file: File) {
             1
         }
     }
-
-    val token: String = config["token"].string.takeIf { !it.isNullOrBlank() } ?: error("Bot token can't be null or blank.")
 
     val abal: String? = config["server counts", "abal"].string
     val carbonitex: String? = config["server counts", "carbonitex"].string

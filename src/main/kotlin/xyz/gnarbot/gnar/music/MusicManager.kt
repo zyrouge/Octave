@@ -135,7 +135,7 @@ class MusicManager(private val guildData: GuildData) {
 
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
-                if (scheduler.queue.size >= Bot.CONFIG.queueLimit) {
+                if (scheduler.queue.size + 1 >= Bot.CONFIG.queueLimit) {
                     context.send().error("The queue can not exceed ${Bot.CONFIG.queueLimit} songs.").queue()
                     return
                 }

@@ -20,9 +20,9 @@ class DialogCommand : CommandExecutor() {
             description {
                 buildString {
                     appendln("```")
-                    appendln("﻿ ___________________________ ")
-                    appendln("| Window          [_][☐][✕]|")
-                    appendln("|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|")
+                    appendln("╔═══════════════════════════╗ ")
+                    appendln("║ Alert                     ║")
+                    appendln("╠═══════════════════════════╣")
 
                     lines.map(String::trim)
                             .map {
@@ -30,38 +30,33 @@ class DialogCommand : CommandExecutor() {
                                     kotlin.repeat(25 - it.length) { append(' ') }
                                 }
                             }
-                            .map { "| $it |" }
+                            .map { "║ $it ║" }
                             .forEach { appendln(it) }
 
-                    when (Random().nextInt(5)) {
+                    when (Random().nextInt(4)) {
                         0 -> {
-                            appendln("|   _________    ________   |")
-                            appendln("|  |   Yes   |  |   No   |  |")
-                            appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
+                            appendln("║  ┌─────────┐  ┌────────┐  ║")
+                            appendln("║  │   Yes   │  │   No   │  ║")
+                            appendln("║  └─────────┘  └────────┘  ║")
                         }
                         1 -> {
-                            appendln("|  _____    ______    ____  |")
-                            appendln("| | Yes |  | Help |  | No | |")
-                            appendln("|  ‾‾‾‾‾    ‾‾‾‾‾‾    ‾‾‾‾  |")
+                            appendln("║ ┌─────┐  ┌──────┐  ┌────┐ ║")
+                            appendln("║ │ Yes │  │ Help │  │ No │ ║")
+                            appendln("║ └─────┘  └──────┘  └────┘ ║")
                         }
                         2 -> {
-                            appendln("|   _________    ________   |")
-                            appendln("|  |  Maybe  |  |( ͡° ͜ʖ ͡°)|  |")
-                            appendln("|   ‾‾‾‾‾‾‾‾‾    ‾‾‾‾‾‾‾‾   |")
+                            appendln("║  ┌─────────────────┬───┐  ║")
+                            appendln("║  │     Confirm     │ X │  ║")
+                            appendln("║  └─────────────────┴───┘  ║")
                         }
                         3 -> {
-                            appendln("|   _____________________   |")
-                            appendln("|  |     Confirm     | X |  |")
-                            appendln("|   ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾   |")
-                        }
-                        4 -> {
-                            appendln("|   ___________   _______   |")
-                            appendln("|  | HELLA YES | | PUSSY |  |")
-                            appendln("|   ‾‾‾‾‾‾‾‾‾‾‾   ‾‾‾‾‾‾‾   |")
+                            appendln("║  ┌───────────┐ ┌───────┐  ║")
+                            appendln("║  │ HELLA YES │ │ PUSSY │  ║")
+                            appendln("║  └───────────┘ └───────┘  ║")
                         }
                     }
 
-                    appendln(" ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾ ")
+                    appendln("╚═══════════════════════════╝")
                     appendln("```")
                 }
             }

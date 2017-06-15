@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import xyz.gnarbot.gnar.commands.executors.music.RepeatOption;
 import xyz.gnarbot.gnar.guilds.GuildData;
 
 import java.util.Collections;
@@ -17,7 +18,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     private final Queue<AudioTrack> queue;
     private AudioTrack lastTrack;
-    private boolean repeating = false;
+    private RepeatOption repeatOption = RepeatOption.NONE;
 
     /**
      * @param player The audio player this scheduler uses
@@ -59,27 +60,35 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         this.lastTrack = track;
 
-        // Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
-
         if (endReason.mayStartNext) {
-            if (repeating) {
-                player.startTrack(lastTrack.makeClone(), false);
-            } else {
-                if (queue.isEmpty()) {
-                    guildData.getMusicManager().reset();
-                    return;
+            switch (repeatOption) {
+                case SONG: {
+                    AudioTrack newTrack = lastTrack.makeClone();
+                    newTrack.setUserData(lastTrack.getUserData());
+                    player.startTrack(newTrack, false);
+                    break;
                 }
-                nextTrack();
+                case QUEUE: {
+                    AudioTrack newTrack = lastTrack.makeClone();
+                    newTrack.setUserData(lastTrack.getUserData());
+                    queue.offer(newTrack);
+                }
+                case NONE:
+                    if (queue.isEmpty()) {
+                        guildData.getMusicManager().reset();
+                        return;
+                    }
+                    nextTrack();
             }
         }
     }
 
-    public boolean isRepeating() {
-        return repeating;
+    public RepeatOption getRepeatOption() {
+        return repeatOption;
     }
 
-    public void setRepeating(boolean repeating) {
-        this.repeating = repeating;
+    public void setRepeatOption(RepeatOption repeatOption) {
+        this.repeatOption = repeatOption;
     }
 
     public void shuffle() {

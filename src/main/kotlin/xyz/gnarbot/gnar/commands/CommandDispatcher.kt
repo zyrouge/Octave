@@ -37,53 +37,53 @@ class CommandDispatcher {
         }
 
         val message = context.message
-        val member = message.member
+        val member = context.member
 
-        if (member.user.idLong !in Bot.CONFIG.admins) {
-            if (cmd.info.admin) {
-                context.send().error("This command is for bot administrators only.").queue()
-                return false
-            }
+        if (member.user.idLong !in Bot.CONFIG.admins && cmd.info.admin) {
+            context.send().error("This command is for bot administrators only.").queue()
+            return false
+        }
 
-            if (cmd.info.donor && !context.guildData.isPremium()) {
-                context.send().embed("Donators Only") {
-                    setColor(Color.ORANGE)
-                    description {
-                        buildString {
-                            append("🌟 This command is for donators' servers only.").ln()
-                            append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
-                            append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
-                        }
-                    }
-                }.action().queue()
-                return false
-            }
-
-            if (cmd.info.guildOwner) {
-                if (context.guild.owner != member) {
-                    context.send().error("This command is for server owners only.").queue()
-                    return false
-                }
-            }
-
-            if (cmd.info.permissions.isNotEmpty()) {
-                if (cmd.info.scope == Scope.VOICE) {
-                    if (member.voiceState.channel == null) {
-                        context.send().error("This command requires you to be in a voice channel.").queue()
-                        return false
+        if (member.user.idLong !in Bot.CONFIG.admins && cmd.info.donor && !context.guildData.isPremium()) {
+            context.send().embed("Donators Only") {
+                setColor(Color.ORANGE)
+                description {
+                    buildString {
+                        append("🌟 This command is for donators' servers only.").ln()
+                        append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
+                        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
                     }
                 }
-                if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
-                    val requirements = cmd.info.permissions.map(Permission::getName)
-                    context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
-                        Scope.GUILD -> "the guild `${message.guild.name}`."
-                        Scope.TEXT -> "the text channel `${message.textChannel.name}`."
-                        Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
-                    }).queue()
-                    return false
-                }
+            }.action().queue()
+            return false
+        }
+
+        if (member.user.idLong !in Bot.CONFIG.admins && cmd.info.guildOwner) {
+            if (context.guild.owner != member) {
+                context.send().error("This command is for server owners only.").queue()
+                return false
             }
         }
+
+        if (cmd.info.scope == Scope.VOICE) {
+            if (member.voiceState.channel == null) {
+                context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
+                return false
+            }
+        }
+
+        if (member.user.idLong !in Bot.CONFIG.admins && cmd.info.permissions.isNotEmpty()) {
+            if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+                val requirements = cmd.info.permissions.map(Permission::getName)
+                context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
+                    Scope.GUILD -> "the guild `${message.guild.name}`."
+                    Scope.TEXT -> "the text channel `${message.textChannel.name}`."
+                    Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
+                }).queue()
+                return false
+            }
+        }
+
 
         try {
             cmd.execute(context, args)

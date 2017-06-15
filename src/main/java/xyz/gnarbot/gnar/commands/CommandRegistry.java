@@ -2,7 +2,7 @@ package xyz.gnarbot.gnar.commands;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
-import xyz.gnarbot.gnar.commands.executors.donator.VolumeCommand;
+import xyz.gnarbot.gnar.commands.executors.music.VolumeCommand;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
@@ -13,6 +13,9 @@ import xyz.gnarbot.gnar.commands.executors.mod.EnableCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.*;
+import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand;
+import xyz.gnarbot.gnar.commands.executors.music.search.SoundcloudCommand;
+import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestEmbedCommand;
@@ -115,6 +118,7 @@ public class CommandRegistry {
 
         //MUSIC COMMAND
         if (Bot.CONFIG.getMusicEnabled()) {
+            register(new MusicHelpCommand());
             register(new PlayCommand());
             register(new PauseCommand());
             register(new StopCommand());

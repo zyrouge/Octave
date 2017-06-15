@@ -82,7 +82,6 @@ public final class Bot {
 
         try {
             JDA jda = builder.buildBlocking();
-
             jda.getSelfUser().getManager().setName(CONFIG.getName()).queue();
             LOG.info("JDA " + id + " is ready.");
             return new Shard(id, jda);
@@ -108,9 +107,6 @@ public final class Bot {
         LOG.info("Discord bot shards have now restarted.");
     }
 
-    /**
-     * Stop the bot.
-     */
     public static void stop() {
         shards.forEach(Shard::shutdown);
 

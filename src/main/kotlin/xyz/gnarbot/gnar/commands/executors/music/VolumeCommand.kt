@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.donator
+package xyz.gnarbot.gnar.commands.executors.music
 
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
@@ -23,7 +23,8 @@ class VolumeCommand : CommandExecutor() {
         val botChannel = context.guild.selfMember.voiceState.channel
 
         if (botChannel == null) {
-            context.send().error("The bot is not currently playing anything.").queue()
+            context.send().error("The bot is not currently in a channel.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
             return
         }
 

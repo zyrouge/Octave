@@ -11,8 +11,8 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("video", "vid"),
         usage = "(query...)",
         description = "Search and get a YouTube video.",
-        scope = Scope.VOICE,
-        category = Category.MUSIC
+        scope = Scope.TEXT,
+        category = Category.GENERAL
 )
 class VideoCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

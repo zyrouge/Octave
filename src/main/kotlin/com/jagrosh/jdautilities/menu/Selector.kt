@@ -11,18 +11,31 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class Selector(val waiter: EventWaiter, val user: User?, val title: String, val description: String, val color: Color?, val options: List<Entry>, val timeout: Long, val unit: TimeUnit) {
+class Selector(val waiter: EventWaiter,
+               val user: User?,
+               val title: String,
+               val description: String?,
+               val color: Color?,
+               val options: List<Entry>,
+               val timeout: Long,
+               val unit: TimeUnit,
+               val finally: (Message?) -> Unit) {
     val cancel = "\u274C"
 
     var message: Message? = null
 
     fun display(channel: TextChannel) {
-        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE)) {
+        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
             channel.sendMessage(embed("Error") {
                 description {
-                    "The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.name}` and `${Permission.MESSAGE_MANAGE.name}` for selection menus."
+                    buildString {
+                        append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
+                        append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
+                        append("`${Permission.MESSAGE_EMBED_LINKS.getName()}` for selection menus.")
+                    }
                 }
             }.build()).queue()
+            finally(message)
             return
         }
 
@@ -47,7 +60,7 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
 
         waiter.waitFor(MessageReactionAddEvent::class.java) {
             if (it.reaction.emote.name == cancel) {
-                message?.delete()?.queue()
+                finally(message)
                 return@waitFor
             }
 
@@ -55,11 +68,12 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
             it.channel.getMessageById(it.messageIdLong).queue {
                 options[value].action(it)
             }
-            message?.delete()?.queue()
+            finally(message)
         }.predicate {
             when {
+                it.messageIdLong != message?.idLong -> false
                 it.user.isBot -> false
-                it.user != user -> {
+                user != null && it.user != user -> {
                     it.reaction.removeReaction(it.user).queue()
                     false
                 }
@@ -78,7 +92,7 @@ class Selector(val waiter: EventWaiter, val user: User?, val title: String, val 
                 }
             }
         }.timeout(timeout, unit) {
-            message?.delete()?.queue()
+            finally(message)
         }
     }
 

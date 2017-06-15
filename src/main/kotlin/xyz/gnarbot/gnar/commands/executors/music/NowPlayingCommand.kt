@@ -21,7 +21,8 @@ class NowPlayingCommand : CommandExecutor() {
         val track = context.guildData.musicManager.player.playingTrack
 
         if (track == null) {
-            context.send().error("The player is not currently playing anything.").queue()
+            context.send().error("The player is not currently playing anything.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
             return
         }
 
@@ -50,6 +51,10 @@ class NowPlayingCommand : CommandExecutor() {
             }
             field("Time", true) {
                 inlineCode { "[$position / $duration]" }
+            }
+
+            field("Repeating", true) {
+                context.guildData.musicManager.scheduler.repeatOption
             }
         }.action().queue()
     }

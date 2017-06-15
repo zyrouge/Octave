@@ -1,9 +1,10 @@
-package xyz.gnarbot.gnar.commands.executors.music
+package xyz.gnarbot.gnar.commands.executors.music.search
 
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
@@ -11,6 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("play"),
         usage = "-(url|YT search)",
         description = "Joins and play music in a channel.",
+        scope = Scope.VOICE,
         category = Category.MUSIC
 )
 class PlayCommand : CommandExecutor() {
@@ -18,15 +20,10 @@ class PlayCommand : CommandExecutor() {
         val manager = context.guildData.musicManager
         
         val botChannel = context.guild.selfMember.voiceState.channel
-        val userChannel = context.guild.getMember(context.message.author).voiceState.channel
+        val userChannel = context.member.voiceState.channel
 
         if (botChannel != null && botChannel != userChannel) {
             context.send().error("The bot is already playing music in another channel.").queue()
-            return
-        }
-
-        if (userChannel == null) {
-            context.send().error("You must be in a voice channel to play music.").queue()
             return
         }
 

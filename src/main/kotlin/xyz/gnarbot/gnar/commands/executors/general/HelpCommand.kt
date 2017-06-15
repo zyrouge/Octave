@@ -111,8 +111,8 @@ class HelpCommand : CommandExecutor() {
 
                     field("Donations", true) {
                         buildString {
-                            append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
                             append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
+                            append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
                         }
                     }
                 }.build()
@@ -122,7 +122,6 @@ class HelpCommand : CommandExecutor() {
         }
 
         context.send().info("Gnar's guide has been directly messaged to you.\n\n" +
-                "Gnar is getting a rename soon!? __**[Vote for your favorite!](http://www.strawpoll.me/13183146)**__\n\n" +
                 "Need more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.").queue()
     }
 }
