@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.guilds.GuildData
+import xyz.gnarbot.gnar.music.MusicManager.Companion.playerManager
 import xyz.gnarbot.gnar.utils.Context
 
 class MusicManager(private val guildData: GuildData) {
@@ -116,7 +117,7 @@ class MusicManager(private val guildData: GuildData) {
 
                 context.send().embed("Music Playback") {
                     setColor(Bot.CONFIG.musicColor)
-                    description { "Joining channel `${channel.name}`." }
+                    setDescription("Joining channel `${channel.name}`.")
                 }.action().queue()
                 return true
             }

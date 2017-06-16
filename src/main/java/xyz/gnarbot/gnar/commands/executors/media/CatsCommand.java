@@ -40,8 +40,7 @@ public class CatsCommand extends CommandExecutor {
                         return;
                 }
             } else {
-                doc = db.parse(new URL("http://thecatapi.com/api/images/get?format=xml&api_key=" + apiKey +
-                        "&results_per_page=1")
+                doc = db.parse(new URL("http://thecatapi.com/api/images/get?format=xml&api_key=" + apiKey + "&results_per_page=1")
                         .openStream());
             }
 

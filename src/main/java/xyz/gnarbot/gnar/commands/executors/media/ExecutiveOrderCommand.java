@@ -29,11 +29,9 @@ import java.util.Arrays;
 public class ExecutiveOrderCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg");
-
         long start = System.currentTimeMillis();
 
-        try {
+        try (InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg")) {
             BufferedImage image = ImageIO.read(is);
 
             Graphics2D g2 = image.createGraphics();

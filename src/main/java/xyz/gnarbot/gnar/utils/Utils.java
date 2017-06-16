@@ -84,8 +84,8 @@ public class Utils {
                         f.add(s.substring(start, end));
                         i += 3;
                         p = i;
-                    } else {
-                        throw new IllegalArgumentException("Unterminated raw argument");
+                    } else { // unterminated
+                        f.add(s.substring(start, i));
                     }
                 }
             } else if (s.charAt(i) == '\n'
