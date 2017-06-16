@@ -49,6 +49,7 @@ public class CommandRegistry {
         //End General Commands
 
         //Fun Commands
+        register(new ExecutiveOrderCommand());
         register(new ASCIICommand());
         register(new CoinFlipCommand());
         register(new DialogCommand());
@@ -131,6 +132,7 @@ public class CommandRegistry {
             register(new ResetCommand());
             register(new VoteSkipCommand());
             register(new VolumeCommand());
+            register(new SeekCommand());
         }
 
         register(new EnableCommand());

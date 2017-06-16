@@ -19,6 +19,13 @@ class StopCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
 
+        val botChannel = context.guild.selfMember.voiceState.channel
+        if (botChannel == null) {
+            context.send().error("The bot is not currently in a channel.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            return
+        }
+
         manager.scheduler.queue.clear()
         manager.player.stopTrack()
         manager.player.isPaused = false

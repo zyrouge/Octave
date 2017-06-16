@@ -19,6 +19,13 @@ class PauseCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
 
+        val botChannel = context.guild.selfMember.voiceState.channel
+        if (botChannel == null) {
+            context.send().error("The bot is not currently in a channel.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            return
+        }
+
         if (manager.player.playingTrack == null) {
             context.send().error("Can not pause or resume player because there is no track loaded for playing.").queue()
             return

@@ -7,15 +7,54 @@ import okhttp3.Response;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
-    public static final File DATA_FOLDER = new File("data");
+    public static final Pattern TIMESTAMP_PATTERN =
+            Pattern.compile("(-?\\d+)\\s*((?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))");
+
+    public static long parseTimestamp(String s) {
+        s = s.toLowerCase();
+        long ms = 0;
+
+        Matcher matcher = TIMESTAMP_PATTERN.matcher(s);
+
+        while (matcher.find()) {
+            String numStr = matcher.group(1);
+            String unitStr = matcher.group(2);
+
+            TimeUnit unit;
+            switch (unitStr) {
+                case "s":
+                case "sec":
+                case "second":
+                case "seconds":
+                    unit = TimeUnit.SECONDS;
+                    break;
+                case "m":
+                case "min":
+                case "minute":
+                case "minutes":
+                    unit = TimeUnit.MINUTES;
+                    break;
+                case "h":
+                case "hour":
+                case "hours":
+                    unit = TimeUnit.HOURS;
+                    break;
+                default:
+                    throw new RuntimeException("NANI!?");
+            }
+            ms += unit.toMillis(Long.parseLong(numStr));
+        }
+        return ms;
+    }
 
     public static Consumer<Message> deleteMessage(final int seconds) {
         return msg -> msg.delete().queueAfter(seconds, TimeUnit.SECONDS);
@@ -40,10 +79,14 @@ public class Utils {
                     while (i < s.length() - 3 && !s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
                         i++;
                     }
-                    int end = i;
-                    f.add(s.substring(start, end));
-                    i += 3;
-                    p = i;
+                    if (s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
+                        int end = i;
+                        f.add(s.substring(start, end));
+                        i += 3;
+                        p = i;
+                    } else {
+                        throw new IllegalArgumentException("Unterminated raw argument");
+                    }
                 }
             } else if (s.charAt(i) == '\n'
                     || s.charAt(i) == '\r' && s.charAt(i + 1) == '\n') {

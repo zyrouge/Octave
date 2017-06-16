@@ -13,8 +13,10 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
-class GuildData(val id: Long, val shard: Shard) : CommandHandler {
-    val guild : Guild get() = shard.getGuildById(id)
+class GuildData(val id: Long) : CommandHandler {
+    val shard: Shard = Bot.getShards()[((id shr 22) % Bot.KEYS.shards).toInt()]
+
+    val guild: Guild get() = shard.getGuildById(id)
 
     val commandHandler = CommandDispatcher()
 

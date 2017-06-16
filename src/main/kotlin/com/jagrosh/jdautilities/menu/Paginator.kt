@@ -2,6 +2,7 @@ package com.jagrosh.jdautilities.menu
 
 import com.jagrosh.jdautilities.waiter.EventWaiter
 import net.dv8tion.jda.core.MessageBuilder
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
@@ -26,10 +27,38 @@ class Paginator(val waiter: EventWaiter,
     val RIGHT = "\u25B6"
 
     fun display(channel: TextChannel) {
+        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
+            channel.sendMessage(embed("Error") {
+                description {
+                    buildString {
+                        append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
+                        append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
+                        append("`${Permission.MESSAGE_EMBED_LINKS.getName()}` for pagination menus.")
+                    }
+                }
+            }.build()).queue()
+            finally(null)
+            return
+        }
+
         paginate(channel, 1)
     }
 
-    fun edit(message: Message) {
+    fun display(message: Message) {
+        if (!message.textChannel.guild.selfMember.hasPermission(message.textChannel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
+            message.channel.sendMessage(embed("Error") {
+                description {
+                    buildString {
+                        append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
+                        append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
+                        append("`${Permission.MESSAGE_EMBED_LINKS.getName()}` for pagination menus.")
+                    }
+                }
+            }.build()).queue()
+            finally(null)
+            return
+        }
+
         paginate(message, 1)
     }
 

@@ -30,7 +30,7 @@ class ShardInfoCommand : CommandExecutor() {
             val shards = pages[page - 1]
 
             shards.forEach {
-                field("Shard ${it.shardInfo.shardId}", true) {
+                field("Shard ${it.id}", true) {
                     buildString {
                         append("Status: ").append(it.status).ln()
                         append("Guilds: ").append(it.guilds.size).ln()

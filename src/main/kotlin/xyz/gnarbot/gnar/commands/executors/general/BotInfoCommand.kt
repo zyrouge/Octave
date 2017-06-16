@@ -59,7 +59,7 @@ class BotInfoCommand : CommandExecutor() {
             users += shard.users.size
             textChannels += shard.textChannels.size
             voiceChannels += shard.voiceChannels.size
-            guildData += shard.guildData.size()
+            guildData += Bot.getGuildDataMap().size()
         }
 
         val commandSize = registry.entries.count { it.info.category.show }

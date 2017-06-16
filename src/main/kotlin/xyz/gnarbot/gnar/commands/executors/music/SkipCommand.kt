@@ -18,17 +18,16 @@ class SkipCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
 
-        if (context.member.hasPermission(Permission.MANAGE_CHANNEL)
-                || manager.player.playingTrack.userData == context.member) {
-
-            if (manager.scheduler.queue.isEmpty()) {
-                context.guildData.musicManager.reset()
-            } else {
-                manager.scheduler.nextTrack()
-            }
-        } else {
+        if (!(context.member.hasPermission(Permission.MANAGE_CHANNEL)
+                || manager.player.playingTrack.userData == context.member)) {
             context.send().error("You did not request this track.").queue()
             return
+        }
+
+        if (manager.scheduler.queue.isEmpty()) {
+            context.guildData.musicManager.reset()
+        } else {
+            manager.scheduler.nextTrack()
         }
 
         context.send().embed("Skip Current Track") {

@@ -3,10 +3,7 @@ package xyz.gnarbot.gnar.listeners;
 
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.DisconnectEvent;
-import net.dv8tion.jda.core.events.ExceptionEvent;
-import net.dv8tion.jda.core.events.ReconnectedEvent;
-import net.dv8tion.jda.core.events.ResumedEvent;
+import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
@@ -14,33 +11,26 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.Context;
 
-public class ShardListener extends ListenerAdapter {
-    private final Shard shard;
-
-    public ShardListener(Shard shard) {
-        this.shard = shard;
-    }
-
+public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
-            GuildData gd = shard.getGuildData(event.getGuild());
+            GuildData gd = Bot.getGuildData(event.getGuild());
 
             if (event.getAuthor() == null || event.getMember() == null) {
                 return;
             }
 
-            gd.handleCommand(new Context(event, gd, shard));
+            gd.handleCommand(new Context(event));
         }
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        shard.getGuildData().remove(event.getGuild().getIdLong());
+        Bot.getGuildDataMap().remove(event.getGuild().getIdLong());
     }
 
     @Override
@@ -65,29 +55,34 @@ public class ShardListener extends ListenerAdapter {
             if (botChannel == null || !channelLeft.equals(botChannel)) return;
 
             if (botChannel.getMembers().size() == 1) {
-                GuildData data = shard.getGuildData(event.getGuild());
+                GuildData data = Bot.getGuildData(event.getGuild());
                 data.getMusicManager().reset();
             }
         }
     }
 
     @Override
+    public void onReady(ReadyEvent event) {
+        Bot.LOG.info("JDA " + (event.getJDA().getShardInfo() != null ? Bot.getShard(event.getJDA()).getId() : "instance") + " is ready.");
+    }
+
+    @Override
     public void onResume(ResumedEvent event) {
-        Bot.LOG.info("JDA " + shard.getId() + " has resumed.");
+        Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has resumed.");
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        Bot.LOG.info("JDA " + shard.getId() + " has reconnected.");
+        Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has reconnected.");
     }
 
     @Override
     public void onDisconnect(DisconnectEvent event) {
         if (event.isClosedByServer()) {
-            Bot.LOG.info("JDA " + shard.getId() + " has disconnected (closed by server). "
+            Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has disconnected (closed by server). "
                     + "Code: " + event.getServiceCloseFrame().getCloseCode() + " "  + event.getCloseCode());
         } else {
-            Bot.LOG.info("JDA " + shard.getId() + " has disconnected. "
+            Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has disconnected. "
                     + "Code: " + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
         }
     }
