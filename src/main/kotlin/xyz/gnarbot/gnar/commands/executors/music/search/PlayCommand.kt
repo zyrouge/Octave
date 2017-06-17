@@ -16,6 +16,8 @@ import xyz.gnarbot.gnar.utils.Context
         category = Category.MUSIC
 )
 class PlayCommand : CommandExecutor() {
+    val footnote = "You can search and pick results using _youtube or _soundcloud while in a channel."
+
     override fun execute(context: Context, args: Array<String>) {
         val manager = context.guildData.musicManager
         
@@ -46,19 +48,19 @@ class PlayCommand : CommandExecutor() {
         }
 
         if ("https://" in args[0] || "http://" in args[0]) {
-            manager.loadAndPlay(context, args[0])
+            manager.loadAndPlay(context, args[0], footnote)
         } else {
             val query = args.joinToString(" ").trim()
 
             if (query.startsWith("scsearch:", ignoreCase = true)
                     || query.startsWith("ytsearch:", ignoreCase = true)) {
-                manager.loadAndPlay(context, query)
+                manager.loadAndPlay(context, query, footnote)
                 return
             } else if (query.startsWith("youtube ", ignoreCase = true)) {
-                manager.loadAndPlay(context, query.replaceFirst("youtube ", "ytsearch:", ignoreCase = true))
+                manager.loadAndPlay(context, query.replaceFirst("youtube ", "ytsearch:", ignoreCase = true), footnote)
                 return
             } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
-                manager.loadAndPlay(context, query.replaceFirst("soundcloud ", "scsearch:", ignoreCase = true))
+                manager.loadAndPlay(context, query.replaceFirst("soundcloud ", "scsearch:", ignoreCase = true), footnote)
                 return
             }
 
@@ -70,7 +72,7 @@ class PlayCommand : CommandExecutor() {
 
                 val result = results[0]
 
-                manager.loadAndPlay(context, result.info.uri)
+                manager.loadAndPlay(context, result.info.uri, footnote)
             }
         }
     }

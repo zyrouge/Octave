@@ -28,7 +28,7 @@ class MusicHelpCommand : CommandExecutor() {
                 description {
                     buildString {
                         append("Check out Gnar's music commands! 🌟 are donator commands, please consider ")
-                        append("donating to our [Patreon](https://www.patreon.com/gnarbot) to gain access to them.").ln()
+                        append("donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__ to gain access to them.").ln()
                     }
                 }
                 setColor(Bot.CONFIG.musicColor)

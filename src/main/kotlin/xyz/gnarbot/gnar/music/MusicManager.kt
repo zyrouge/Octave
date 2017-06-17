@@ -19,7 +19,6 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.guilds.GuildData
-import xyz.gnarbot.gnar.music.MusicManager.Companion.playerManager
 import xyz.gnarbot.gnar.utils.Context
 
 class MusicManager(private val guildData: GuildData) {
@@ -129,7 +128,7 @@ class MusicManager(private val guildData: GuildData) {
         guildData.guild.audioManager.sendingHandler = null
     }
 
-    fun loadAndPlay(context: Context, trackUrl: String) {
+    fun loadAndPlay(context: Context, trackUrl: String, footnote: String? = null) {
         if (guildData.guild.selfMember.voiceState.channel == null) {
             context.guildData.musicManager.openAudioConnection(context.member.voiceState.channel, context)
         }
@@ -153,8 +152,9 @@ class MusicManager(private val guildData: GuildData) {
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    setColor(Bot.CONFIG.musicColor)
-                    setDescription("Added __**[${track.info.title}](${track.info.uri})**__ to queue.")
+                    color { Bot.CONFIG.musicColor }
+                    description { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
+                    footer { footnote }
                 }.action().queue()
             }
 
@@ -182,6 +182,7 @@ class MusicManager(private val guildData: GuildData) {
                 context.send().embed("Music Queue") {
                     setColor(Bot.CONFIG.musicColor)
                     setDescription("Added `$added` tracks to queue from playlist `${playlist.name}`.")
+                    footer { footnote }
                 }.action().queue()
             }
 

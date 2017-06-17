@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.guilds.GuildOptions;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.GuildCountListener;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
@@ -106,7 +107,7 @@ public final class Bot {
     public static GuildData getGuildData(long id) {
         GuildData value = guildDataMap.get(id);
         if (value == null) {
-            value = new GuildData(id);
+            value = new GuildData(id, new GuildOptions());
             guildDataMap.put(id, value);
         }
         return value;

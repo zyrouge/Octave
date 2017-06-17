@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class Utils {
     public static final Pattern TIMESTAMP_PATTERN =
-            Pattern.compile("(-?\\d+)\\s*((?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))");
+            Pattern.compile("(-?\\d+)\\s*((?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))?");
 
     public static long parseTimestamp(String s) {
         s = s.toLowerCase();
@@ -30,12 +30,13 @@ public class Utils {
             String unitStr = matcher.group(2);
 
             TimeUnit unit;
-            switch (unitStr) {
-                case "s":
-                case "sec":
-                case "second":
-                case "seconds":
-                    unit = TimeUnit.SECONDS;
+            if (unitStr == null) {
+                unit = TimeUnit.SECONDS;
+            } else switch (unitStr) {
+                case "h":
+                case "hour":
+                case "hours":
+                    unit = TimeUnit.HOURS;
                     break;
                 case "m":
                 case "min":
@@ -43,13 +44,13 @@ public class Utils {
                 case "minutes":
                     unit = TimeUnit.MINUTES;
                     break;
-                case "h":
-                case "hour":
-                case "hours":
-                    unit = TimeUnit.HOURS;
-                    break;
+                case "s":
+                case "sec":
+                case "second":
+                case "seconds":
                 default:
-                    throw new RuntimeException("NANI!?");
+                    unit = TimeUnit.SECONDS;
+                    break;
             }
             ms += unit.toMillis(Long.parseLong(numStr));
         }

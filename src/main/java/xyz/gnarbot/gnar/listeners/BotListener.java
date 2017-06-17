@@ -63,7 +63,7 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        Bot.LOG.info("JDA " + (event.getJDA().getShardInfo() != null ? Bot.getShard(event.getJDA()).getId() : "instance") + " is ready.");
+        Bot.LOG.info("JDA " + (event.getJDA().getShardInfo() != null ? event.getJDA().getShardInfo().getShardId() : "instance") + " is ready.");
     }
 
     @Override

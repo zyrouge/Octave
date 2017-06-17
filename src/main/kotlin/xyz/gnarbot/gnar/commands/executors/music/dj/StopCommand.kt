@@ -17,8 +17,6 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class StopCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        val manager = context.guildData.musicManager
-
         val botChannel = context.guild.selfMember.voiceState.channel
         if (botChannel == null) {
             context.send().error("The bot is not currently in a channel.\n" +
@@ -26,10 +24,7 @@ class StopCommand : CommandExecutor() {
             return
         }
 
-        manager.scheduler.queue.clear()
-        manager.player.stopTrack()
-        manager.player.isPaused = false
-        context.guild.audioManager.closeAudioConnection()
+        context.guildData.musicManager.reset()
 
         context.send().embed("Stop Playback") {
             setColor(Bot.CONFIG.musicColor)

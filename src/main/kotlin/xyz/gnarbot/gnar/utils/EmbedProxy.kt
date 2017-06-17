@@ -7,15 +7,8 @@ import java.time.temporal.TemporalAccessor
 
 @Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
 open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
-    inline fun field(inline: Boolean = false) = addBlankField(inline)
-
-    inline fun field(name: String?, inline: Boolean = false, value: Any?): T {
-        super.addField(name, value.toString(), inline)
-        return this as T
-    }
-
-    inline fun field(name: String?, inline: Boolean = false, value: () -> Any?): T {
-        super.addField(name, value().toString(), inline)
+    override fun clearFields(): T {
+        super.clearFields()
         return this as T
     }
 
@@ -24,13 +17,8 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
-    override fun setImage(url: String?): T {
-        super.setImage(url)
-        return this as T
-    }
-
-    override fun clearFields(): T {
-        super.clearFields()
+    override fun setDescription(description: CharSequence?): T {
+        super.setDescription(description)
         return this as T
     }
 
@@ -44,14 +32,17 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
+    inline fun timestamp(lazy: () -> TemporalAccessor?) {
+        this.setTimestamp(lazy())
+    }
+
     override fun setTimestamp(temporal: TemporalAccessor?): T {
         super.setTimestamp(temporal)
         return this as T
     }
 
-    override fun setDescription(description: CharSequence?): T {
-        super.setDescription(description)
-        return this as T
+    inline fun color(lazy: () -> Color?) {
+        this.setColor(lazy())
     }
 
     override fun setColor(color: Color?): T {
@@ -59,9 +50,17 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
+    inline fun footer(lazy: () -> String?) {
+        this.setFooter(lazy(), null)
+    }
+
     override fun setFooter(text: String?, iconUrl: String?): T {
         super.setFooter(text, iconUrl)
         return this as T
+    }
+
+    inline fun title(lazy: () -> String?) {
+        this.setTitle(lazy())
     }
 
     override fun setTitle(title: String?): T {
@@ -74,8 +73,21 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
+    fun thumbnail(lazy: () -> String?) {
+        this.setThumbnail(lazy())
+    }
+
     override fun setThumbnail(url: String?): T {
         super.setThumbnail(url)
+        return this as T
+    }
+
+    inline fun image(lazy: () -> String?) {
+        this.setImage(lazy())
+    }
+
+    override fun setImage(url: String?): T {
+        super.setImage(url)
         return this as T
     }
 
@@ -91,6 +103,18 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
 
     override fun addBlankField(inline: Boolean): T {
         super.addBlankField(inline)
+        return this as T
+    }
+
+    inline fun field(inline: Boolean = false) = addBlankField(inline)
+
+    inline fun field(name: String?, inline: Boolean = false, value: Any?): T {
+        super.addField(name, value.toString(), inline)
+        return this as T
+    }
+
+    inline fun field(name: String?, inline: Boolean = false, value: () -> Any?): T {
+        super.addField(name, value().toString(), inline)
         return this as T
     }
 }

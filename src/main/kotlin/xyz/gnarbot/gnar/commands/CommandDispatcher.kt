@@ -3,15 +3,13 @@ package xyz.gnarbot.gnar.commands
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 
-class CommandDispatcher {
-    /** @returns Disabled command entries. */
-    val disabled: MutableList<CommandExecutor> = mutableListOf()
-
+class CommandDispatcher(val guildData: GuildData) {
     /**
      * Call the command based on the message content.
      *
@@ -27,13 +25,32 @@ class CommandDispatcher {
 
         val label = tokens[0].substring(Bot.CONFIG.prefix.length).toLowerCase().trim()
 
+        if (label in guildData.options.disabledCommands) {
+            context.send().error("This command is disabled by the server owner.").queue()
+            return false
+        }
+
         val args = tokens.copyOfRange(1, tokens.size)
 
         val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
 
-        if (cmd in disabled) {
-            context.send().error("This command is disabled by the server owner.").queue()
-            return false
+        if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
+            context.send().embed("Command Information") {
+                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                field("Usage", true) { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                if (cmd.info.donor) {
+                    field("🌟 Donator", true) { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
+                } else {
+                    field(true)
+                }
+
+                if (cmd.info.permissions.isNotEmpty()) {
+                    field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
+                }
+
+                field("Description") { cmd.info.description }
+            }.action().queue()
+            return true
         }
 
         val message = context.message
@@ -95,45 +112,5 @@ class CommandDispatcher {
             e.printStackTrace()
         }
         return false
-    }
-
-    /**
-     * Enable the command [cmd].
-     *
-     * @param cmd Command entry.
-     */
-    fun enableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (cmd !in disabled) return null
-        disabled -= cmd
-        return cmd
-    }
-
-    /**
-     * Enable the command named [label].
-     *
-     * @param label Command label.
-     */
-    fun enableCommand(label: String) : CommandExecutor? {
-        return Bot.getCommandRegistry().getCommand(label)?.let(this::enableCommand)
-    }
-
-    /**
-     * Disable the command [cmd].
-     *
-     * @param cmd Command entry.
-     */
-    fun disableCommand(cmd: CommandExecutor) : CommandExecutor? {
-        if (cmd in disabled || !cmd.info.toggleable) return null
-        disabled += cmd
-        return cmd
-    }
-
-    /**
-     * Enable the command named [label].
-     *
-     * @param label Command label.
-     */
-    fun disableCommand(label: String) : CommandExecutor? {
-        return Bot.getCommandRegistry().getCommand(label)?.let(this::disableCommand)
     }
 }

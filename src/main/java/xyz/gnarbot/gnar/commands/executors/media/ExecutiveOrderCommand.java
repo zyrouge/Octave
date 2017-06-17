@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -36,17 +36,19 @@ public class ExecutiveOrderCommand extends CommandExecutor {
 
             Graphics2D g2 = image.createGraphics();
 
+            g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
             String query = StringUtils.join(Arrays.asList(args), " ");
 
-            if (query.length() > 175) {
-                query = query.substring(0, 172) + "...";
+            if (query.length() > 153) {
+                query = query.substring(0, 150) + "...";
             }
 
             if (query.isEmpty()) {
                 query = "Try putting in some text into the arguments, ie. \"_trump Pepe\"";
             }
 
-            double fontSize = 60.0 / (0.1 * query.length() + 1.0) + 25;
+            double fontSize = 65.0 / (0.05 * query.length() + 1.0) + 20;
 
             Font font = new Font("Times New Roman", Font.PLAIN, (int) fontSize);
 
@@ -69,7 +71,7 @@ public class ExecutiveOrderCommand extends CommandExecutor {
             AttributedCharacterIterator paragraph = string.getIterator();
             int paragraphStart = paragraph.getBeginIndex();
             int paragraphEnd = paragraph.getEndIndex();
-            int breakWidth = 250;
+            int breakWidth = 230;
             LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, g2.getFontRenderContext());
             lineMeasurer.setPosition(paragraphStart);
 

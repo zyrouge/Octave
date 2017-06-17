@@ -8,8 +8,7 @@ import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
-import xyz.gnarbot.gnar.commands.executors.mod.DisableCommand;
-import xyz.gnarbot.gnar.commands.executors.mod.EnableCommand;
+import xyz.gnarbot.gnar.commands.executors.mod.ManageCommandsCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.*;
@@ -135,9 +134,7 @@ public class CommandRegistry {
             register(new SeekCommand());
         }
 
-        register(new EnableCommand());
-        register(new DisableCommand());
-        //register(new ListDisabledCommand());
+        register(new ManageCommandsCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {

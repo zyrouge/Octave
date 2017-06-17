@@ -12,13 +12,15 @@ import xyz.gnarbot.gnar.commands.CommandHandler
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import java.beans.ConstructorProperties
 
-class GuildData(val id: Long) : CommandHandler {
+class GuildData @ConstructorProperties("id", "options") constructor(val id: Long, val options: GuildOptions) : CommandHandler {
+
     val shard: Shard = Bot.getShards()[((id shr 22) % Bot.KEYS.shards).toInt()]
 
     val guild: Guild get() = shard.getGuildById(id)
 
-    val commandHandler = CommandDispatcher()
+    val commandHandler = CommandDispatcher(this)
 
     val musicManager: MusicManager = MusicManager(this)
         get() {
@@ -39,7 +41,7 @@ class GuildData(val id: Long) : CommandHandler {
         return null
     }
 
-    fun reset(interrupt: Boolean) : Boolean {
+    fun reset(interrupt: Boolean): Boolean {
         if (!interrupt && musicManager.player.playingTrack != null) {
             return false
         }
@@ -49,7 +51,7 @@ class GuildData(val id: Long) : CommandHandler {
 
     override fun handleCommand(context: Context) {
         if (!guild.selfMember.hasPermission(Permission.MESSAGE_EMBED_LINKS)) {
-            context.send().text("Grant the bot `Embed Links` permission to see messages.")
+            context.send().text("The bot needs the `Embed Links` permission to show messages.")
                     .queue(Utils.deleteMessage(15))
             return
         }
