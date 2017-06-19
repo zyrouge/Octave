@@ -22,7 +22,7 @@ class EmoteListCommand : CommandExecutor() {
         }
 
         context.send().embed("Emote List") {
-            val totalEmotes = Bot.getShards().flatMap { it.emotes }
+            val totalEmotes = Bot.getShards().flatMap { it.jda.emotes }
 
             val pages = Lists.partition(totalEmotes, 30)
 

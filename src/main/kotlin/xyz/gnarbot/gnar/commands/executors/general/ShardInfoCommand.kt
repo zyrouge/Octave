@@ -32,9 +32,9 @@ class ShardInfoCommand : CommandExecutor() {
             shards.forEach {
                 field("Shard ${it.id}", true) {
                     buildString {
-                        append("Status: ").append(it.status).ln()
-                        append("Guilds: ").append(it.guilds.size).ln()
-                        append("Users: ").append(it.users.size).ln()
+                        append("Status: ").append(it.jda.status).ln()
+                        append("Guilds: ").append(it.jda.guilds.size).ln()
+                        append("Users: ").append(it.jda.users.size).ln()
                         append("Requests: ").append(it.requests).ln()
                     }
                 }

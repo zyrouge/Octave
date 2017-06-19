@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin;
 
-import net.dv8tion.jda.core.entities.Game;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.commands.Category;
@@ -9,15 +8,17 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
-        aliases = "restartbot",
+        aliases = "shutdown",
         admin = true,
-        category = Category.NONE
+        category = Category.NONE,
+        ignorable = false
 )
-public class RestartBotCommand extends CommandExecutor {
+public class ShutdownCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        for(Shard s : Bot.getShards()) {
-            s.getPresence().setGame(Game.of("Restarting bot..."));
+        Bot.clearGuildData();
+        for (Shard s : Bot.getShards()) {
+            s.getJda().shutdown(true);
         }
         System.exit(21);
     }

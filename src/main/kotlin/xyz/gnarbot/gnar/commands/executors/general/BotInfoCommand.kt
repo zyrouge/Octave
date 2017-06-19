@@ -38,10 +38,10 @@ class BotInfoCommand : CommandExecutor() {
         var inactive = 0
 
         for (shard in Bot.getShards()) {
-            guilds += shard.guilds.size
+            guilds += shard.jda.guilds.size
             requests += shard.requests
 
-            for (guild in shard.guilds) {
+            for (guild in shard.jda.guilds) {
                 for (member in guild.members) {
                     when (member.onlineStatus) {
                         OnlineStatus.ONLINE -> online++
@@ -56,9 +56,9 @@ class BotInfoCommand : CommandExecutor() {
                 }
             }
 
-            users += shard.users.size
-            textChannels += shard.textChannels.size
-            voiceChannels += shard.voiceChannels.size
+            users += shard.jda.users.size
+            textChannels += shard.jda.textChannels.size
+            voiceChannels += shard.jda.voiceChannels.size
             guildData += Bot.getGuildDataMap().size()
         }
 

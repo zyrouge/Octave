@@ -26,7 +26,7 @@ class RestartShardsCommand : CommandExecutor() {
                 return
             }
 
-            Bot.restart(id)
+            Bot.getShard(id).revive()
         }
     }
 }

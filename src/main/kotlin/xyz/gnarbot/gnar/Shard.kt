@@ -1,24 +1,58 @@
 package xyz.gnarbot.gnar
 
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
+import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
-import xyz.gnarbot.gnar.guilds.GuildData
+import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.entities.Game
+import net.dv8tion.jda.core.exceptions.RateLimitedException
+import xyz.gnarbot.gnar.Bot.CONFIG
+import javax.security.auth.login.LoginException
 
-/**
- * Individual shard instances of [JDA] of the bot that contains all the [GuildData] for each guild.
- */
-class Shard(val id: Int, val jda: JDA) : JDA by jda {
+class Shard(val id: Int) {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
+
+    private val builder = JDABuilder(AccountType.BOT).apply {
+        setToken(Bot.KEYS.token)
+        if (Bot.KEYS.shards > 1) useSharding(id, Bot.KEYS.shards)
+        setAutoReconnect(true)
+        setAudioEnabled(true)
+        setAudioSendFactory(NativeAudioSendFactory())
+        addEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
+        setEnableShutdownHook(true)
+        setGame(Game.of(String.format(CONFIG.game, id)))
+    }
+
+    var jda: JDA = build()
+
+    fun build(): JDA {
+        try {
+            Bot.LOG.info("Building shard $id.")
+
+            val jda = builder.buildBlocking()
+            jda.selfUser.manager.setName(CONFIG.name).queue()
+            return jda
+        } catch (e: LoginException) {
+            throw e
+        } catch (e: InterruptedException) {
+            throw e
+        } catch (e: RateLimitedException) {
+            throw e
+        }
+    }
+
+    fun revive() {
+        Bot.LOG.info("Reviving shard $id.")
+
+        jda.removeEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
+        jda.shutdown(false)
+
+        jda = build()
+    }
 
     /**
      * @return The string representation of the shard.
      */
     override fun toString() = "Shard(id=$id, guilds=${jda.guilds.size})"
-
-    /**
-     * Shuts down the shard.
-     */
-    override fun shutdown() {
-        jda.shutdown(false)
-    }
 }

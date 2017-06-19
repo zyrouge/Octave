@@ -39,7 +39,7 @@ public class GuildCountListener extends ListenerAdapter {
         int count = 0;
 
         for (Shard shard : Bot.getShards()) {
-            count += shard.getGuilds().size();
+            count += shard.getJda().getGuilds().size();
         }
 
         updateAbalCount(count);

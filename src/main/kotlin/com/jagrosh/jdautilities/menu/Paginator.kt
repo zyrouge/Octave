@@ -76,45 +76,47 @@ class Paginator(val waiter: EventWaiter,
 
     private fun initialize(action: RestAction<Message>, page: Int) {
         action.queue { message ->
-            message.addReaction(LEFT).queue()
-            message.addReaction(STOP).queue()
-            message.addReaction(RIGHT).queue {
-                waiter.waitFor(MessageReactionAddEvent::class.java) {
-                    val pageNew = when (it.reactionEmote.name) {
-                        LEFT -> page - 1
-                        RIGHT -> page + 1
-                        STOP -> {
-                            finally(message)
-                            return@waitFor
+            if (list.size > 1) {
+                message.addReaction(LEFT).queue()
+                message.addReaction(STOP).queue()
+                message.addReaction(RIGHT).queue {
+                    waiter.waitFor(MessageReactionAddEvent::class.java) {
+                        val pageNew = when (it.reactionEmote.name) {
+                            LEFT -> page - 1
+                            RIGHT -> page + 1
+                            STOP -> {
+                                finally(message)
+                                return@waitFor
+                            }
+                            else -> {
+                                finally(message)
+                                error("Internal pagination error")
+                            }
                         }
-                        else -> {
-                            finally(message)
-                            error("Internal pagination error")
-                        }
-                    }
 
-                    it.reaction.removeReaction(it.user).queue()
+                        it.reaction.removeReaction(it.user).queue()
 
-                    if (pageNew != page) {
-                        message?.editMessage(renderPage(pageNew))?.queue {
-                            paginate(it, pageNew)
+                        if (pageNew != page) {
+                            message?.editMessage(renderPage(pageNew))?.queue {
+                                paginate(it, pageNew)
+                            }
                         }
+                    }.predicate {
+                        when {
+                            it.messageIdLong != message?.idLong -> false
+                            it.user.isBot -> false
+                            user != null && it.user != user -> {
+                                it.reaction.removeReaction(it.user).queue()
+                                false
+                            }
+                            else -> when (it.reactionEmote.name) {
+                                LEFT, STOP, RIGHT -> true
+                                else -> false
+                            }
+                        }
+                    }.timeout(timeout, unit) {
+                        finally(message)
                     }
-                }.predicate {
-                    when {
-                        it.messageIdLong != message?.idLong -> false
-                        it.user.isBot -> false
-                        user != null && it.user != user -> {
-                            it.reaction.removeReaction(it.user).queue()
-                            false
-                        }
-                        else -> when (it.reactionEmote.name) {
-                            LEFT, STOP, RIGHT -> true
-                            else -> false
-                        }
-                    }
-                }.timeout(timeout, unit) {
-                    finally(message)
                 }
             }
         }

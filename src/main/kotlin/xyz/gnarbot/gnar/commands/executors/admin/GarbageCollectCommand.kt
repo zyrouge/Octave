@@ -15,14 +15,11 @@ import xyz.gnarbot.gnar.utils.Context
 class GarbageCollectCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Garbage Collection") {
-            val interrupt = if (!args.isEmpty()) args[0].toBoolean() else false
-
-            Bot.clearGuildData(interrupt)
+            Bot.clearGuildData()
             field("Wrappers") { "Removed settings instances." }
 
             field("Guild Data Remaining", true) { Bot.getGuildDataMap().size() }
 
-            System.gc()
             field("GC Request") { "Garbage collection request sent to JVM." }
             Bot.LOG.info("Garbage collection request sent to JVM.")
         }.action().queue()

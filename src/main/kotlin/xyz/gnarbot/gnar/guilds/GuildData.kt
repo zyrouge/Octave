@@ -1,26 +1,22 @@
 package xyz.gnarbot.gnar.guilds
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
-import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.Member
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
-import xyz.gnarbot.gnar.commands.CommandDispatcher
-import xyz.gnarbot.gnar.commands.CommandHandler
+import xyz.gnarbot.gnar.db.Database
+import xyz.gnarbot.gnar.db.ManagedObject
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
-import java.beans.ConstructorProperties
 
-class GuildData @ConstructorProperties("id", "options") constructor(val id: Long, val options: GuildOptions) : CommandHandler {
-
+data class GuildData(val id: Long): ManagedObject {
     val shard: Shard = Bot.getShards()[((id shr 22) % Bot.KEYS.shards).toInt()]
 
-    val guild: Guild get() = shard.getGuildById(id)
+    val guild: Guild get() = shard.jda.getGuildById(id)
 
-    val commandHandler = CommandDispatcher(this)
+    val options: GuildOptions = Bot.DATABASE.getGuildOptions(id.toString())?.also {
+        Database.LOG.info("Loaded $it from database.")
+        it.disabledCommands.removeIf { !Bot.getCommandRegistry().commandMap.containsKey(it) }
+    } ?: GuildOptions(id.toString())
 
     val musicManager: MusicManager = MusicManager(this)
         get() {
@@ -34,32 +30,16 @@ class GuildData @ConstructorProperties("id", "options") constructor(val id: Long
             return member
         }
         if (searchNickname) {
-            for (member in guild.getMembersByNickname(name, true)) {
-                return member
-            }
+            guild.getMembersByNickname(name, true).firstOrNull()
         }
         return null
     }
 
-    fun reset(interrupt: Boolean): Boolean {
-        if (!interrupt && musicManager.player.playingTrack != null) {
-            return false
-        }
-        musicManager.reset()
-        return true
+    override fun save() {
+        options.save()
     }
 
-    override fun handleCommand(context: Context) {
-        if (!guild.selfMember.hasPermission(Permission.MESSAGE_EMBED_LINKS)) {
-            context.send().text("The bot needs the `Embed Links` permission to show messages.")
-                    .queue(Utils.deleteMessage(15))
-            return
-        }
-
-        launch(CommonPool) {
-            if (commandHandler.callCommand(context)) {
-                shard.requests++
-            }
-        }
+    override fun delete() {
+        options.delete()
     }
 }

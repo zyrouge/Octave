@@ -1,0 +1,91 @@
+package xyz.gnarbot.gnar.db;
+
+import com.rethinkdb.gen.exc.ReqlDriverError;
+import com.rethinkdb.net.Connection;
+import gnu.trove.iterator.TLongObjectIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.guilds.GuildOptions;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static com.rethinkdb.RethinkDB.r;
+
+public class Database {
+    public static final Logger LOG = LoggerFactory.getLogger("Database");
+    private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+    private final Connection conn;
+    private final String name;
+
+    public Database(String name) {
+        Connection conn = null;
+        try {
+            conn = r.connection().hostname("localhost").port(28015).connect();
+            if (r.dbList().<List<String>>run(conn).contains(name)) {
+                LOG.info("Connected to database.");
+            } else {
+                LOG.info("Database of " + name + " is not present. Closing connection.");
+                close();
+            }
+        } catch (ReqlDriverError e) {
+            LOG.error("Database connection failed.");
+        }
+        this.conn = conn;
+        this.name = name;
+    }
+
+    public boolean isOpen() {
+        return conn != null && conn.isOpen();
+    }
+
+    public void close() {
+        conn.close();
+    }
+
+    @Nullable
+    public GuildOptions getGuildOptions(String id) {
+        return isOpen() ? r.db(name).table("guilds").get(id).run(conn, GuildOptions.class) : null;
+    }
+
+    public void pushToDatabase(boolean force) {
+        TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
+        while (iter.hasNext()) {
+            iter.advance();
+            GuildData gd = iter.value();
+            if (force || gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
+                gd.save();
+                iter.remove();
+            }
+        }
+    }
+
+    public void saveGuildOptions(GuildOptions guildData) {
+        if (isOpen()) r.db(name).table("guilds").insert(guildData)
+                .optArg("conflict", "replace")
+                .runNoReply(conn);
+    }
+
+    public void deleteGuildOptions(String id) {
+        if (isOpen()) r.db(name).table("guilds").get(id)
+                .delete()
+                .runNoReply(conn);
+    }
+
+    public ScheduledExecutorService getExecutor() {
+        return exec;
+    }
+
+    public void queue(Callable<?> action) {
+        getExecutor().submit(action);
+    }
+
+    public void queue(Runnable runnable) {
+        getExecutor().submit(runnable);
+    }
+}

@@ -27,7 +27,7 @@ class EventWaiter : EventListener {
                                 predicate: (T) -> Boolean,
                                 action: (T) -> Unit,
                                 timeout: Long,
-                                unit: TimeUnit,
+                                unit: TimeUnit?,
                                 timeoutAction: (() -> Unit)?): Waiter<T> {
         val list = waiters.getOrPut(cls, ::mutableListOf)
 
@@ -38,7 +38,7 @@ class EventWaiter : EventListener {
             requireNotNull(unit)
 
             launch(CommonPool) {
-                delay(timeout, unit)
+                delay(timeout, unit!!)
                 if (list.remove(waiter)) {
                     timeoutAction?.invoke()
                 }
@@ -55,7 +55,7 @@ class EventWaiter : EventListener {
         while (cls.superclass != null) {
             if (cls in waiters) {
                 val list = waiters[cls] as? MutableList<Waiter<Event>>
-                list?.removeAll(list.filter { it.attempt(event) })
+                list?.removeIf { it.attempt(event) }
             }
 
             cls = cls.superclass
@@ -75,7 +75,7 @@ class EventWaiter : EventListener {
         }
 
         fun noTimeout(): Waiter<T> {
-            return waitForEvent(cls, predicate, action, 0, TimeUnit.MILLISECONDS, null)
+            return waitForEvent(cls, predicate, action, 0, null, null)
         }
 
         fun timeout(timeout: Long, unit: TimeUnit, timeoutAction: () -> Unit): Waiter<T> {

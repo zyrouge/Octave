@@ -11,20 +11,14 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.guilds.GuildData;
-import xyz.gnarbot.gnar.utils.Context;
 
 public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
-            GuildData gd = Bot.getGuildData(event.getGuild());
-
-            if (event.getAuthor() == null || event.getMember() == null) {
-                return;
-            }
-
-            gd.handleCommand(new Context(event));
+            CommandDispatcher.INSTANCE.handleEvent(event);
         }
     }
 

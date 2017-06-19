@@ -23,5 +23,5 @@ public abstract class CommandExecutor {
      * @param context Context argument.
      * @param args Arguments passed into the execution.
      */
-    protected abstract void execute(Context context, String[] args);
+    public abstract void execute(Context context, String[] args);
 }

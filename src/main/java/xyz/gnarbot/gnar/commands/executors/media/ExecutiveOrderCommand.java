@@ -29,8 +29,6 @@ import java.util.Arrays;
 public class ExecutiveOrderCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        long start = System.currentTimeMillis();
-
         try (InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg")) {
             BufferedImage image = ImageIO.read(is);
 
@@ -86,9 +84,6 @@ public class ExecutiveOrderCommand extends CommandExecutor {
                 drawPosX -= 1;
             }
 
-
-            //layout.draw(g2, 380, 290);
-
             File file = new File("saved.png");
 
             ImageIO.write(image, "jpg", file);
@@ -97,14 +92,9 @@ public class ExecutiveOrderCommand extends CommandExecutor {
 
             context.getChannel().sendFile(file, null).queue();
 
-            if (file.delete()) {
+            if (!file.delete()) {
                 file.deleteOnExit();
             }
-
-            long end = System.currentTimeMillis();
-
-            System.out.println(end - start + "ms");
-
         } catch (IOException e) {
             e.printStackTrace();
         }

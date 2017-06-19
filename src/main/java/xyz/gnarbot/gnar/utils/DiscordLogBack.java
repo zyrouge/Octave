@@ -28,7 +28,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
         long id = Bot.CONFIG.getConsoleChannelID();
 
         for (Shard shard : Bot.getShards()) {
-            TextChannel channel = shard.getTextChannelById(id);
+            TextChannel channel = shard.getJda().getTextChannelById(id);
             if (channel != null) {
                 return channel;
             }

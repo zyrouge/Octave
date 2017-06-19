@@ -5,7 +5,6 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
-import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -52,28 +51,21 @@ class PlayCommand : CommandExecutor() {
         } else {
             val query = args.joinToString(" ").trim()
 
-            if (query.startsWith("scsearch:", ignoreCase = true)
-                    || query.startsWith("ytsearch:", ignoreCase = true)) {
-                manager.loadAndPlay(context, query, footnote)
+            if (query.startsWith("ytsearch:", ignoreCase = true)) {
+                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("ytsearch:", "", true)))
+                return
+            } else if (query.startsWith("scsearch:", ignoreCase = true)) {
+                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("scsearch:", "", true)))
                 return
             } else if (query.startsWith("youtube ", ignoreCase = true)) {
-                manager.loadAndPlay(context, query.replaceFirst("youtube ", "ytsearch:", ignoreCase = true), footnote)
+                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("youtube ", "", true)))
                 return
             } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
-                manager.loadAndPlay(context, query.replaceFirst("soundcloud ", "scsearch:", ignoreCase = true), footnote)
+                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("soundcloud ", "", true)))
                 return
             }
 
-            MusicManager.search("ytsearch:$query", 1) { results ->
-                if (results.isEmpty()) {
-                    context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
-                    return@search
-                }
-
-                val result = results[0]
-
-                manager.loadAndPlay(context, result.info.uri, footnote)
-            }
+            Bot.getCommandRegistry().getCommand("youtube").execute(context, args)
         }
     }
 }

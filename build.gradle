@@ -37,13 +37,13 @@ dependencies {
     // JDA
     compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_212'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.41'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.42'
 
     // Configurations
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
     compile group: 'org.json', name: 'json', version: '20170516'
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0.pr1'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0.pr3'
 
     // Other dependencies
     compile group: 'xyz.avarel', name: 'AJE', version: '3.3.0'

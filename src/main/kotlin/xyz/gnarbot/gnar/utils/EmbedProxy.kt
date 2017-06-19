@@ -12,6 +12,10 @@ open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
+    inline fun desc(value: () -> Any?): T {
+        return description(value)
+    }
+
     inline fun description(value: () -> Any?): T {
         setDescription(value().toString())
         return this as T

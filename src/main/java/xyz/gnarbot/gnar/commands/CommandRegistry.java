@@ -2,16 +2,19 @@ package xyz.gnarbot.gnar.commands;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
-import xyz.gnarbot.gnar.commands.executors.music.VolumeCommand;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
 import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
+import xyz.gnarbot.gnar.commands.executors.mod.IgnoreCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.ManageCommandsCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
-import xyz.gnarbot.gnar.commands.executors.music.dj.*;
+import xyz.gnarbot.gnar.commands.executors.music.dj.PauseCommand;
+import xyz.gnarbot.gnar.commands.executors.music.dj.ResetCommand;
+import xyz.gnarbot.gnar.commands.executors.music.dj.RestartCommand;
+import xyz.gnarbot.gnar.commands.executors.music.dj.StopCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
@@ -72,6 +75,8 @@ public class CommandRegistry {
         //End Fun Commands
 
         //Mod Commands
+        register(new ManageCommandsCommand());
+        register(new IgnoreCommand());
         register(new PruneCommand());
         //End Mod Commands
 
@@ -96,7 +101,9 @@ public class CommandRegistry {
         //End Media Commands
 
         // Administrator commands
-        register(new GarbageCollectCommand());
+        //register(new GarbageCollectCommand());
+        register(new SaveCommand());
+        register(new ShutdownCommand());
         register(new RestartShardsCommand());
         register(new JavascriptCommand());
         register(new GroovyCommand());
@@ -134,7 +141,6 @@ public class CommandRegistry {
             register(new SeekCommand());
         }
 
-        register(new ManageCommandsCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {

@@ -28,8 +28,8 @@ class ResponseBuilder(val context: Context) {
      */
     fun info(msg: String): RestAction<Message> {
         return embed {
-            setTitle("Info")
-            setDescription(msg)
+            title { "Info" }
+            description { msg }
             setColor(Bot.CONFIG.accentColor)
         }.action()
     }

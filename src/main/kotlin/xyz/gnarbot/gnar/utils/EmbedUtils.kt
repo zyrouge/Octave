@@ -3,10 +3,12 @@
 package xyz.gnarbot.gnar.utils
 
 import net.dv8tion.jda.core.EmbedBuilder
+import xyz.gnarbot.gnar.Bot
 
 @JvmOverloads
 fun embed(title: String? = null): EmbedMaker = EmbedMaker().apply {
-    setTitle(title)
+    title { title }
+    color { Bot.CONFIG.accentColor }
 }
 
 inline fun embed(title: String? = null, value: EmbedMaker.() -> Unit): EmbedMaker {
