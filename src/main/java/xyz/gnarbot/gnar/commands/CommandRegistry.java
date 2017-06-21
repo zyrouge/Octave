@@ -7,12 +7,12 @@ import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
+import xyz.gnarbot.gnar.commands.executors.mod.AutoroleCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.IgnoreCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.ManageCommandsCommand;
 import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.PauseCommand;
-import xyz.gnarbot.gnar.commands.executors.music.dj.ResetCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.RestartCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.StopCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand;
@@ -46,8 +46,10 @@ public class CommandRegistry {
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
         register(new WhoIsCommand());
+        register(new GuildInfoCommand());
         register(new BotInfoCommand());
         register(new DonateCommand());
+        register(new RedeemCommand());
         //End General Commands
 
         //Fun Commands
@@ -78,6 +80,7 @@ public class CommandRegistry {
         register(new ManageCommandsCommand());
         register(new IgnoreCommand());
         register(new PruneCommand());
+        register(new AutoroleCommand());
         //End Mod Commands
 
         //Testing Commands
@@ -101,7 +104,6 @@ public class CommandRegistry {
         //End Media Commands
 
         // Administrator commands
-        //register(new GarbageCollectCommand());
         register(new SaveCommand());
         register(new ShutdownCommand());
         register(new RestartShardsCommand());
@@ -109,9 +111,8 @@ public class CommandRegistry {
         register(new GroovyCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
-        //register(new UpdateCommand());
-//        register(new RestartBotCommand());
-        register(new ReloadConfig());
+        register(new GenerateKeyCommand());
+        register(new ReloadConfigCommand());
         register(new EmoteListCommand());
 
 
@@ -135,7 +136,6 @@ public class CommandRegistry {
             register(new QueueCommand());
             register(new RestartCommand());
             register(new RepeatCommand());
-            register(new ResetCommand());
             register(new VoteSkipCommand());
             register(new VolumeCommand());
             register(new SeekCommand());
