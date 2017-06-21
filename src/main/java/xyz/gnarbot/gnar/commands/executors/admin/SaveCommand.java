@@ -15,17 +15,8 @@ import xyz.gnarbot.gnar.utils.Context;
 public class SaveCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        boolean force = false;
-        if (args.length > 0) {
-            force = Boolean.parseBoolean(args[0]);
-        }
+        Bot.DATABASE.save();
 
-        Bot.DATABASE.pushToDatabase(force);
-
-        if (Bot.getGuildDataMap().size() == 0) {
-            context.send().info("Saved and released objects from memory.").queue();
-        } else {
-            context.send().info("Unable to save and release " + Bot.getGuildDataMap().size() + " GD objects.").queue();
-        }
+        context.send().info("Saved objects but release " + Bot.getGuildDataMap().size() + " GD objects.").queue();
     }
 }

@@ -11,9 +11,9 @@ import xyz.gnarbot.gnar.guilds.GuildOptions;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static com.rethinkdb.RethinkDB.r;
 
@@ -38,6 +38,8 @@ public class Database {
         }
         this.conn = conn;
         this.name = name;
+
+        exec.scheduleAtFixedRate(this::save, 10, 30, TimeUnit.MINUTES);
     }
 
     public boolean isOpen() {
@@ -53,13 +55,13 @@ public class Database {
         return isOpen() ? r.db(name).table("guilds").get(id).run(conn, GuildOptions.class) : null;
     }
 
-    public void pushToDatabase(boolean force) {
+    public void save() {
         TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
         while (iter.hasNext()) {
             iter.advance();
             GuildData gd = iter.value();
-            if (force || gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
-                gd.save();
+            gd.save();
+            if (gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
                 iter.remove();
             }
         }
@@ -77,15 +79,23 @@ public class Database {
                 .runNoReply(conn);
     }
 
+
+    public Key getPremiumKey(String id) {
+        return isOpen() ? r.db(name).table("keys").get(id).run(conn, Key.class) : null;
+    }
+
+    public void savePremiumKey(Key key) {
+        if (isOpen()) r.db(name).table("keys").insert(key)
+                .runNoReply(conn);
+    }
+
+    public void deleteKey(String id) {
+        if (isOpen()) r.db(name).table("keys").get(id)
+                .delete()
+                .runNoReply(conn);
+    }
+
     public ScheduledExecutorService getExecutor() {
         return exec;
-    }
-
-    public void queue(Callable<?> action) {
-        getExecutor().submit(action);
-    }
-
-    public void queue(Runnable runnable) {
-        getExecutor().submit(runnable);
     }
 }

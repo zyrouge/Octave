@@ -2,55 +2,77 @@ package xyz.gnarbot.gnar.listeners;
 
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.guilds.GuildOptions;
 
 public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
-            CommandDispatcher.INSTANCE.handleEvent(event);
+        if (Bot.STATE == LoadState.COMPLETE) {
+            if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
+                CommandDispatcher.INSTANCE.handleEvent(event);
+            }
+        }
+    }
+
+    @Override
+    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+        if (Bot.STATE == LoadState.COMPLETE) {
+            GuildOptions options = Bot.getGuildData(event.getGuild()).getOptions();
+
+            if (options.getAutoRole() != null) {
+                Role role = event.getGuild().getRoleById(options.getAutoRole());
+                event.getGuild().getController().addRolesToMember(event.getMember(), role).queue();
+            }
         }
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        Bot.getGuildDataMap().remove(event.getGuild().getIdLong());
+        if (Bot.STATE == LoadState.COMPLETE) {
+            Bot.getGuildDataMap().remove(event.getGuild().getIdLong());
+        }
     }
 
     @Override
     public void onGenericGuildVoice(GenericGuildVoiceEvent event) {
-        if (event instanceof GuildVoiceLeaveEvent || event instanceof GuildVoiceMoveEvent) {
-            if (event.getMember().getUser() == event.getJDA().getSelfUser()) return;
+        if (Bot.STATE == LoadState.COMPLETE) {
+            if (event instanceof GuildVoiceLeaveEvent || event instanceof GuildVoiceMoveEvent) {
+                if (event.getMember().getUser() == event.getJDA().getSelfUser()) return;
 
-            Guild guild = event.getGuild();
+                Guild guild = event.getGuild();
 
-            if (guild == null) return;
+                if (guild == null) return;
 
-            VoiceChannel botChannel = guild.getSelfMember().getVoiceState().getChannel();
+                VoiceChannel botChannel = guild.getSelfMember().getVoiceState().getChannel();
 
-            VoiceChannel channelLeft;
+                VoiceChannel channelLeft;
 
-            if (event instanceof GuildVoiceLeaveEvent) {
-                channelLeft = ((GuildVoiceLeaveEvent) event).getChannelLeft();
-            } else {
-                channelLeft = ((GuildVoiceMoveEvent) event).getChannelLeft();
-            }
+                if (event instanceof GuildVoiceLeaveEvent) {
+                    channelLeft = ((GuildVoiceLeaveEvent) event).getChannelLeft();
+                } else {
+                    channelLeft = ((GuildVoiceMoveEvent) event).getChannelLeft();
+                }
 
-            if (botChannel == null || !channelLeft.equals(botChannel)) return;
+                if (botChannel == null || !channelLeft.equals(botChannel)) return;
 
-            if (botChannel.getMembers().size() == 1) {
-                GuildData data = Bot.getGuildData(event.getGuild());
-                data.getMusicManager().reset();
+                if (botChannel.getMembers().size() == 1) {
+                    GuildData data = Bot.getGuildData(event.getGuild());
+                    data.getMusicManager().reset();
+                }
             }
         }
     }

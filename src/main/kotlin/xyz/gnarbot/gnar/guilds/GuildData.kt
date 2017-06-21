@@ -23,7 +23,7 @@ data class GuildData(val id: Long): ManagedObject {
             return field.apply { if (!isSetup) setup() }
         }
 
-    fun isPremium(): Boolean = Bot.CONFIG.donors.contains(id)
+    fun isPremium(): Boolean = options.isPremium()
 
     fun getMemberByName(name: String, searchNickname: Boolean = false): Member? {
         for (member in guild.getMembersByName(name, true)) {

@@ -21,18 +21,18 @@ class Shard(val id: Int) {
         setAudioSendFactory(NativeAudioSendFactory())
         addEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
         setEnableShutdownHook(true)
-        setGame(Game.of(String.format(CONFIG.game, id)))
+        setGame(Game.of("LOADING..."))
     }
 
-    var jda: JDA = build()
+    lateinit var jda: JDA
 
-    fun build(): JDA {
+    fun build() {
         try {
             Bot.LOG.info("Building shard $id.")
 
             val jda = builder.buildBlocking()
             jda.selfUser.manager.setName(CONFIG.name).queue()
-            return jda
+            this.jda = jda
         } catch (e: LoginException) {
             throw e
         } catch (e: InterruptedException) {
@@ -48,7 +48,7 @@ class Shard(val id: Int) {
         jda.removeEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
         jda.shutdown(false)
 
-        jda = build()
+        build()
     }
 
     /**

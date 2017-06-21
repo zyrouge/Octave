@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'xyz.gnarbot'
-version '3.0'
+version '3.5'
 
 mainClassName = 'xyz.gnarbot.gnar.Bot'
 
@@ -26,16 +26,16 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.2-4'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.2-4'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.2-5'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.2-5'
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.16'
 
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.1.2-4'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.1.2-5'
 
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.11'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_212'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_215'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.42'
 
@@ -43,17 +43,17 @@ dependencies {
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
     compile group: 'org.json', name: 'json', version: '20170516'
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0.pr3'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0.pr4'
 
     // Other dependencies
     compile group: 'xyz.avarel', name: 'AJE', version: '3.3.0'
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.8.0'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile group: 'com.google.guava', name: 'guava', version: '22.0'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'ca.pjer', name: 'chatter-bot-api', version: '2.0.1'
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.2'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.10.3'
 
     // Test dependencies
     testCompile group: 'junit', name: 'junit', version: '4.12'

@@ -1,16 +1,11 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
-import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
-import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.JDAInfo;
-import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
@@ -21,7 +16,6 @@ import xyz.gnarbot.gnar.listeners.GuildCountListener;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 
-import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +41,8 @@ public final class Bot {
 
     private static final TLongObjectMap<GuildData> guildDataMap = new TLongObjectHashMap<>();
 
+    public static LoadState STATE = LoadState.LOADING;
+
     public static void main(String[] args) {
         SimpleLogToSLF4JAdapter.install();
         DiscordLogBack.enable();
@@ -60,8 +56,12 @@ public final class Bot {
         LOG.info("JDA:\t\t" + JDAInfo.VERSION);
 
         for (int i = 0; i < KEYS.getShards(); i++) {
-            shards.add(new Shard(i));
+            Shard shard = new Shard(i);
+            shards.add(shard);
+            shard.build();
         }
+
+        STATE = LoadState.COMPLETE;
 
         LOG.info("The bot is now fully connected to Discord.");
     }
@@ -76,28 +76,6 @@ public final class Bot {
 
     public static List<Shard> getShards() {
         return shards;
-    }
-
-    private static JDA createJDA(int id) {
-        JDABuilder builder = new JDABuilder(AccountType.BOT)
-                .setToken(KEYS.getToken())
-                .setAutoReconnect(true)
-                .setAudioEnabled(true)
-                .setAudioSendFactory(new NativeAudioSendFactory())
-                .addEventListener(guildCountListener, waiter, botListener)
-                .setEnableShutdownHook(true)
-                .setGame(Game.of(String.format(CONFIG.getGame(), id)));
-
-        if (KEYS.getShards() > 1) builder.useSharding(id, KEYS.getShards());
-
-        try {
-            JDA jda = builder.buildBlocking();
-            jda.getSelfUser().getManager().setName(CONFIG.getName()).queue();
-            return jda;
-        } catch (LoginException | InterruptedException | RateLimitedException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public static TLongObjectMap<GuildData> getGuildDataMap() {
