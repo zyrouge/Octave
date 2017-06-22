@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.ln
 import java.time.OffsetDateTime
 
 @Command(
@@ -17,9 +18,16 @@ import java.time.OffsetDateTime
         permissions = arrayOf(Permission.MESSAGE_MANAGE)
 )
 class PruneCommand : CommandExecutor() {
-    public override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Insufficient amount of arguments.").queue()
+            context.send().embed("Prune Messages") {
+                description { info.description }
+                field("Options") {
+                    buildString {
+                        append("`(amount)` • Delete that amount of messages (up to 100).").ln()
+                    }
+                }
+            }.action().queue()
             return
         }
 
@@ -39,34 +47,20 @@ class PruneCommand : CommandExecutor() {
 
         val time = OffsetDateTime.now().minusWeeks(2)
 
-//        val messages = context.channel.iterableHistory.stream().filter { msg ->
-//            msg.creationTime.isAfter(time)
-//        }.limit(amount).toList()
-//
-//        when {
-//            messages.isNotEmpty() -> {
-//                Lists.partition(messages, 100).forEach {
-//                    context.message.textChannel.deleteMessages(it).queue()
-//                }
-//
-//                context.send().info("Attempted to delete **[${messages.size}]()** messages.\nDeleting this message in **5** seconds.")
-//                        .queue(Utils.deleteMessage(5))
-//            }
-//            else -> {
-//                context.send().info("No messages were found (that are younger than 2 weeks).\nDeleting this message in **5** seconds.")
-//                        .queue(Utils.deleteMessage(5))
-//            }
-//        }
-
         history.retrievePast(amount).queue {
             val messages = it.filter { msg ->
                 msg.creationTime.isAfter(time)
             }
 
             when {
-                messages.isNotEmpty() -> {
+                messages.size >= 2 -> {
                     context.message.textChannel.deleteMessages(messages).queue()
-                    context.send().info("Attempted to delete **[${messages.size}]()** messages.\nDeleting this message in **5** seconds.")
+                    context.send().info("Attempted to delete **${messages.size}** messages.\nDeleting this message in **5** seconds.")
+                            .queue(Utils.deleteMessage(5))
+                }
+                messages.size == 1 -> {
+                    messages.first().delete().queue()
+                    context.send().info("Attempted to delete **1** messages.\nDeleting this message in **5** seconds.")
                             .queue(Utils.deleteMessage(5))
                 }
                 else -> {

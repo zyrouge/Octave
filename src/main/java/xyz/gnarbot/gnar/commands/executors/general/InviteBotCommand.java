@@ -5,7 +5,10 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
-@Command(aliases = {"invite", "invitebot"}, description = "Get a link to invite GN4R to your server.")
+@Command(
+        aliases = {"invite", "invitebot"},
+        description = "Get a link to invite Gnar_ to your server."
+)
 public class InviteBotCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

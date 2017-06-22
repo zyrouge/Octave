@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.ln
 @Command(
         aliases = arrayOf("autorole"),
         usage = "(set|unset)",
-        description = "Set auto-roles, roles that are assigned to users on joining.",
+        description = "Set auto-roles that are assigned to users on joining.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.ADMINISTRATOR)
@@ -24,9 +24,7 @@ class AutoroleCommand : CommandExecutor() {
             context.send().embed("Autoroles") {
                 description {
                     buildString {
-                        append("`set` • Set the autorole.").ln()
-                        append("`unset` • Unset the autorole.").ln()
-
+                        append(info.description).ln()
                         val role = context.guildData.options.autoRole
                         append("Current auto-role: ")
                         if (role == null) {
@@ -34,6 +32,12 @@ class AutoroleCommand : CommandExecutor() {
                         } else {
                             append(context.guild.getRoleById(role).asMention)
                         }
+                    }
+                }
+                field("Options") {
+                    buildString {
+                        append("`set (role)` • Set the autorole.").ln()
+                        append("`unset` • Unset the autorole.").ln()
                     }
                 }
             }.action().queue()

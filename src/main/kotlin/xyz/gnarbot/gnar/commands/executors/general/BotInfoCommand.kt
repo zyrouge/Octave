@@ -86,12 +86,14 @@ class BotInfoCommand : CommandExecutor() {
                 }
             }
 
+
             field("Others", true) {
                 buildString {
-                    append("Creators: **[Avarel](https://github.com/Avarel)** and **[Xevryll](https://github.com/xevryll)**").ln()
+                    append("The Serious: **[Avarel](https://github.com/Avarel)**").ln()
+                    append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**").ln()
                     append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
                     append("Commands: **$commandSize**").ln()
-                    append("Library: Java **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
+                    append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
                 }
             }
         }.action().queue()

@@ -50,11 +50,6 @@ public class Database {
         conn.close();
     }
 
-    @Nullable
-    public GuildOptions getGuildOptions(String id) {
-        return isOpen() ? r.db(name).table("guilds").get(id).run(conn, GuildOptions.class) : null;
-    }
-
     public void save() {
         TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
         while (iter.hasNext()) {
@@ -65,6 +60,11 @@ public class Database {
                 iter.remove();
             }
         }
+    }
+
+    @Nullable
+    public GuildOptions getGuildOptions(String id) {
+        return isOpen() ? r.db(name).table("guilds").get(id).run(conn, GuildOptions.class) : null;
     }
 
     public void saveGuildOptions(GuildOptions guildData) {
@@ -79,7 +79,7 @@ public class Database {
                 .runNoReply(conn);
     }
 
-
+    @Nullable
     public Key getPremiumKey(String id) {
         return isOpen() ? r.db(name).table("keys").get(id).run(conn, Key.class) : null;
     }

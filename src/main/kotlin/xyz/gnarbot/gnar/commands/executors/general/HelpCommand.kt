@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import com.google.common.collect.Lists
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.gnarbot.gnar.Bot
@@ -32,16 +31,14 @@ class HelpCommand : CommandExecutor() {
             }
 
             context.send().embed("Command Information") {
-                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
-                field("Usage", true) { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                field("Usage") { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                 if (cmd.info.donor) {
-                    field("Donator", true) { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
-                } else {
-                    field(true)
+                    field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
                 }
 
                 if (cmd.info.permissions.isNotEmpty()) {
-                    field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
+                    field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
                 }
 
                 field("Description") { cmd.info.description }
@@ -52,77 +49,37 @@ class HelpCommand : CommandExecutor() {
 
         val cmds = registry.entries
 
-        context.message.author.openPrivateChannel().queue {
-            if (lazyEmbed == null) {
-                lazyEmbed = embed("Documentation") {
-                    setColor(Bot.CONFIG.accentColor)
-                    setDescription("This is all of Gnar's currently registered commands.")
+        if (lazyEmbed == null) {
+            lazyEmbed = embed("Documentation") {
+                setColor(Bot.CONFIG.accentColor)
+                setDescription("The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`.")
 
-                    for (category in Category.values()) {
-                        if (!category.show) continue
+                for (category in Category.values()) {
+                    if (!category.show) continue
 
-                        val filtered = cmds.filter {
-                            it.info.category == category
-                        }
-                        if (filtered.isEmpty()) continue
-
-                        val pages = Lists.partition(filtered, filtered.size / 3 + (if (filtered.size % 3 == 0) 0 else 1))
-
-                        field(true)
-                        field("${category.title} — ${filtered.size}\n") { category.description }
-
-                        for (page in pages) {
-                            field("", true) {
-                                buildString {
-                                    page.forEach {
-                                        append("[").append(Bot.CONFIG.prefix).append(it.info.aliases[0]).append("]()")
-
-                                        if (it.info.donor) {
-                                            append(" 🌟").ln()
-                                        } else {
-                                            ln()
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    val filtered = cmds.filter {
+                        it.info.category == category
                     }
+                    if (filtered.isEmpty()) continue
 
-                    field(true)
-                    field("Additional Information") {
-                        buildString {
-                            append("To view a command's description, do `").append(Bot.CONFIG.prefix).append("help [command]`.").ln()
-                            append("🌟 are donator commands. Donate to our Patreon or PayPal to gain access to them.").ln()
-                        }
+                    field("${category.title} — ${filtered.size}\n") {
+                        filtered.joinToString("`   `", "`", "`") { it.info.aliases.first() }
                     }
+                }
 
-                    field("News") {
-                        buildString {
-                            append("First donator command?! `_volume`")
-                        }
+                field("Donations", true) {
+                    buildString {
+                        append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
+                        append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
                     }
-
-                    field("Contact", true) {
-                        buildString {
-                            append(b("Website" link "http://gnarbot.xyz")).ln()
-                            append(b("Discord Server" link "http://discord.gg/NQRpmr2")).ln()
-                        }
-                    }
-
-                    field("Donations", true) {
-                        buildString {
-                            append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
-                            append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
-                        }
-                    }
-                }.build()
-            }
-
-            it.sendMessage(lazyEmbed).queue()
+                }
+            }.build()
         }
 
-        context.send().info("Gnar's guide has been directly messaged to you.\n"
-                + "Need more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.\n"
-                + "Please consider donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__.").queue()
+        context.channel.sendMessage(lazyEmbed).queue()
+
+//        context.send().info("Gnar's guide has been directly messaged to you.\n"
+//                + "Need more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.\n"
+//                + "Please consider donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__.").queue()
     }
 }

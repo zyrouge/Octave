@@ -52,19 +52,19 @@ class PlayCommand : CommandExecutor() {
         } else {
             val query = args.joinToString(" ").trim()
 
-            if (query.startsWith("ytsearch:", ignoreCase = true)) {
-                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("ytsearch:", "", true)))
-                return
-            } else if (query.startsWith("scsearch:", ignoreCase = true)) {
-                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("scsearch:", "", true)))
-                return
-            } else if (query.startsWith("youtube ", ignoreCase = true)) {
-                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("youtube ", "", true)))
-                return
-            } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
-                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("soundcloud ", "", true)))
-                return
-            }
+//            if (query.startsWith("ytsearch:", ignoreCase = true)) {
+//                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("ytsearch:", "", true)))
+//                return
+//            } else if (query.startsWith("scsearch:", ignoreCase = true)) {
+//                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("scsearch:", "", true)))
+//                return
+//            } else if (query.startsWith("youtube ", ignoreCase = true)) {
+//                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("youtube ", "", true)))
+//                return
+//            } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
+//                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("soundcloud ", "", true)))
+//                return
+//            }
 
             MusicManager.search("ytsearch:$query", 1) { results ->
                 if (results.isEmpty()) {

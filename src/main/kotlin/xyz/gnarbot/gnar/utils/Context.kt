@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils
 
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.*
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import xyz.gnarbot.gnar.Bot
@@ -12,6 +13,7 @@ class Context(event: GuildMessageReceivedEvent) {
     val guild: Guild = event.guild
     val guildData: GuildData = Bot.getGuildData(guild)
     val shard: Shard = guildData.shard
+    val jda: JDA = event.jda
 
     val member: Member = event.member
     val user: User = event.author

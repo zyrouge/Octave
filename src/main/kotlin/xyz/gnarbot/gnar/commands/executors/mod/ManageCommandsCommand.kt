@@ -23,6 +23,9 @@ class ManageCommandsCommand : CommandExecutor() {
         if (args.isEmpty()) {
             context.send().embed("Command Management") {
                 description {
+                    "Enable or disable certain commands."
+                }
+                field("Options") {
                     buildString {
                         append("`enable` • Enable a command.").ln()
                         append("`disable` • Disable a command.").ln()

@@ -44,7 +44,7 @@ object CommandDispatcher {
             return false
         }
 
-        val content = context.message.content
+        val content = context.message.rawContent
         if (!content.startsWith(Bot.CONFIG.prefix)) return false
 
         // Split the message.
@@ -63,16 +63,14 @@ object CommandDispatcher {
 
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
             context.send().embed("Command Information") {
-                field("Aliases", true) { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
-                field("Usage", true) { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                field("Usage") { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                 if (cmd.info.donor) {
-                    field("🌟 Donator", true) { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
-                } else {
-                    field(true)
+                    field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
                 }
 
                 if (cmd.info.permissions.isNotEmpty()) {
-                    field("Guild Permission", true) { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
+                    field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
                 }
 
                 field("Description") { cmd.info.description }
@@ -150,7 +148,7 @@ object CommandDispatcher {
     private fun isIgnored(context: Context, member: Member): Boolean {
         return (context.guildData.options.ignoredUsers.contains(member.user.id)
                 || context.guildData.options.ignoredChannels.contains(context.channel.id)
-                || member.roles.any { context.guildData.options.ignoredRoles.contains(it.id) })
+                || context.guildData.options.ignoredRoles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins
     }

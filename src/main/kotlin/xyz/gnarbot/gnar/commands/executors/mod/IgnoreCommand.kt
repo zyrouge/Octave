@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
 @Command(
         aliases = arrayOf("ignore"),
         usage = "(user|channel|role|list)",
-        description = "Ignore users or channels.",
+        description = "Make the bot ignore certain users, channels or roles.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.ADMINISTRATOR)
@@ -24,11 +24,12 @@ class IgnoreCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Ignore Management") {
-                description {
+                description { info.description }
+                field("Options") {
                     buildString {
-                        append("`user` • Ignore/unignore a user.").ln()
-                        append("`channel` • Ignore/unignore a channel.").ln()
-                        append("`role` • Ignore/unignore users with a role.").ln()
+                        append("`user (user)` • Ignore/unignore a user.").ln()
+                        append("`channel (channel)` • Ignore/unignore a channel.").ln()
+                        append("`role (role)` • Ignore/unignore users with a role.").ln()
                         append("`list` • List ignored entities.")
                     }
                 }
