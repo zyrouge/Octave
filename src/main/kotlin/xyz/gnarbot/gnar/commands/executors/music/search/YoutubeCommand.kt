@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 
 import com.jagrosh.jdautilities.menu.SelectorBuilder
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.link
@@ -23,7 +24,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
 
         val query = args.joinToString(" ")
 
-        xyz.gnarbot.gnar.music.MusicManager.Companion.search("ytsearch:$query", 5) { results ->
+        MusicManager.search("ytsearch:$query", 5) { results ->
             if (results.isEmpty()) {
                 context.send().error("No search results for `$query`.").queue()
                 return@search

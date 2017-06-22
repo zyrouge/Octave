@@ -5,6 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -65,7 +66,16 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            Bot.getCommandRegistry().getCommand("youtube").execute(context, args)
+            MusicManager.search("ytsearch:$query", 1) { results ->
+                if (results.isEmpty()) {
+                    context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+                    return@search
+                }
+
+                val result = results[0]
+
+                manager.loadAndPlay(context, result.info.uri, footnote)
+            }
         }
     }
 }
