@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.Member
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
-import xyz.gnarbot.gnar.db.Database
 import xyz.gnarbot.gnar.db.ManagedObject
 import xyz.gnarbot.gnar.music.MusicManager
 
@@ -13,10 +12,7 @@ data class GuildData(val id: Long): ManagedObject {
 
     val guild: Guild get() = shard.jda.getGuildById(id)
 
-    val options: GuildOptions = Bot.DATABASE.getGuildOptions(id.toString())?.also {
-        Database.LOG.info("Loaded $it from database.")
-        it.disabledCommands.removeIf { !Bot.getCommandRegistry().commandMap.containsKey(it) }
-    } ?: GuildOptions(id.toString())
+    val options: GuildOptions = Bot.DATABASE.getGuildOptions(id.toString()) ?: GuildOptions(id.toString())
 
     val musicManager: MusicManager = MusicManager(this)
         get() {

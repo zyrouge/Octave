@@ -25,6 +25,11 @@ class AutoroleCommand : ManagedCommand() {
             return
         }
 
+        if (!context.guild.selfMember.canInteract(role)) {
+            context.send().error("That role is higher than my role! Fix by changing the role hierarchy.").queue()
+            return
+        }
+
         context.guildData.options.autoRole = role.id
 
         context.send().embed("Ignore") {

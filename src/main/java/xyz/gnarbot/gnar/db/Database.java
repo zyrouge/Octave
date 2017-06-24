@@ -51,6 +51,7 @@ public class Database {
     }
 
     public void save() {
+        LOG.info("Saving to database.");
         TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
         while (iter.hasNext()) {
             iter.advance();

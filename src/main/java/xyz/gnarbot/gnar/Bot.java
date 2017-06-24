@@ -103,7 +103,7 @@ public final class Bot {
     public static void clearGuildData() {
         for (GuildData gd : getGuildDataMap().valueCollection()) {
             gd.save();
-            gd.getMusicManager().reset();
+            //gd.getMusicManager().reset();
         }
         getGuildDataMap().clear();
     }

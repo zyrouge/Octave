@@ -35,6 +35,12 @@ public class BotListener extends ListenerAdapter {
 
             if (options.getAutoRole() != null) {
                 Role role = event.getGuild().getRoleById(options.getAutoRole());
+
+                if (!event.getGuild().getSelfMember().canInteract(role)) {
+                    options.setAutoRole(null);
+                    return;
+                }
+
                 event.getGuild().getController().addRolesToMember(event.getMember(), role).reason("Auto-role").queue();
             }
         }
