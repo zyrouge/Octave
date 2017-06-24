@@ -121,9 +121,6 @@ public class CommandRegistry {
         register(new QuoteCommand());
         register(new TextToBrickCommand());
 
-        register(new YoutubeCommand());
-        register(new SoundcloudCommand());
-
         //MUSIC COMMAND
         if (Bot.CONFIG.getMusicEnabled()) {
             register(new MusicHelpCommand());
@@ -141,6 +138,8 @@ public class CommandRegistry {
             register(new SeekCommand());
         }
 
+        register(new YoutubeCommand());
+        register(new SoundcloudCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {

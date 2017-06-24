@@ -2,13 +2,12 @@ package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
-import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.managed.ManagedCommand
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("autorole"),
@@ -18,83 +17,47 @@ import xyz.gnarbot.gnar.utils.ln
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.ADMINISTRATOR)
 )
-class AutoroleCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
-        if (args.isEmpty()) {
-            context.send().embed("Autoroles") {
-                description {
-                    buildString {
-                        append(info.description).ln()
-                        val role = context.guildData.options.autoRole
-                        append("Current auto-role: ")
-                        if (role == null) {
-                            append("__None__")
-                        } else {
-                            append(context.guild.getRoleById(role).asMention)
-                        }
-                    }
-                }
-                field("Options") {
-                    buildString {
-                        append("`set (role)` • Set the autorole.").ln()
-                        append("`unset` • Unset the autorole.").ln()
-                    }
-                }
-            }.action().queue()
+class AutoroleCommand : ManagedCommand() {
+    @Executor(position = 0, description = "Set the auto-role.")
+    fun set(context: Context, role: Role) {
+        if (role == context.guild.publicRole) {
+            context.send().error("You can't grant the public role!").queue()
             return
         }
 
-        when (args[0]) {
-            "set" -> {
-                val role: Role
+        context.guildData.options.autoRole = role.id
 
-                if (args.size < 2) {
-                    context.send().error("Please mention a role. ie: `_ignore role Mod`").queue()
-                    return
-                } else {
-                    val mentioned = context.message.mentionedRoles
-                    if (!mentioned.isEmpty()) {
-                        role = mentioned[0]
-                    } else {
-                        val name = StringUtils.join(args.copyOfRange(1, args.size), " ")
-                        val roles = context.guild.getRolesByName(name, true)
-                        if (roles.isEmpty()) {
-                            context.send().error("You did not mention a valid role.").queue()
-                            return
-                        }
-                        role = roles[0]
-                    }
-                }
-
-                if (role == context.guild.publicRole) {
-                    context.send().error("You can't grant the public role!").queue()
-                    return
-                }
-
-                context.guildData.options.autoRole = role.id
-
-                context.send().embed("Ignore") {
-                    description {
-                        "Users joining the channel will now be granted the role ${role.asMention}."
-                    }
-                }.action().queue()
-
-                context.guildData.options.save()
+        context.send().embed("Ignore") {
+            description {
+                "Users joining the channel will now be granted the role ${role.asMention}."
             }
-            "unset" -> {
-                context.guildData.options.autoRole = null
+        }.action().queue()
 
-                context.send().embed("Ignore") {
-                    description {
-                        "Unset autorole. Users joining the channel will not be granted any role."
-                    }
-                }.action().queue()
+        context.guildData.options.save()
+    }
 
-                context.guildData.options.save()
+    @Executor(position = 1, description = "Unset the auto-role.")
+    fun unset(context: Context) {
+        context.guildData.options.autoRole = null
+
+        context.send().embed("Ignore") {
+            description {
+                "Unset autorole. Users joining the channel will not be granted any role."
             }
-            else -> {
-                context.send().error("Invalid argument. Try `set` or `unset` instead.").queue()
+        }.action().queue()
+
+        context.guildData.options.save()
+    }
+
+    override fun noMatches(context: Context, args: Array<String>) {
+        noMatches(context, args, buildString {
+            val role = context.guildData.options.autoRole
+            append("Current auto-role: ")
+            if (role == null) {
+                append("__None__")
+            } else {
+                append(context.guild.getRoleById(role).asMention)
             }
-        }
+        })
     }
 }

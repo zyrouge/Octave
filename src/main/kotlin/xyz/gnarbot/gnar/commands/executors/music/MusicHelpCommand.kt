@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import com.google.common.collect.Lists
 import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
@@ -27,7 +26,7 @@ class MusicHelpCommand : CommandExecutor() {
             lazyEmbed = embed("Music Commands") {
                 description {
                     buildString {
-                        append("Check out Gnar's music commands! 🌟 are donator commands, please consider ")
+                        append("Check out Gnar's music commands! Certain commands are donator exclusive, please consider ")
                         append("donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__ to gain access to them.").ln()
                     }
                 }
@@ -39,20 +38,13 @@ class MusicHelpCommand : CommandExecutor() {
                     it.info.category == category
                 }
 
-                val pages = Lists.partition(filtered, filtered.size / 3 + (if (filtered.size % 3 == 0) 0 else 1))
-
-                for (page in pages) {
-                    field("", true) {
-                        buildString {
-                            page.forEach {
-                                append("[").append(Bot.CONFIG.prefix).append(it.info.aliases[0]).append("]()")
-
-                                if (it.info.donor) {
-                                    append(" 🌟").ln()
-                                } else {
-                                    ln()
-                                }
-                            }
+                field("Commands") {
+                    buildString {
+                        filtered.forEach {
+                            append('`')
+                            append(it.info.aliases.first())
+                            append("` • ")
+                            append(it.info.description).ln()
                         }
                     }
                 }

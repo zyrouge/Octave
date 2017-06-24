@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.exceptions.RateLimitedException
-import xyz.gnarbot.gnar.Bot.CONFIG
 import javax.security.auth.login.LoginException
 
 class Shard(val id: Int) {
@@ -26,20 +25,18 @@ class Shard(val id: Int) {
 
     lateinit var jda: JDA
 
-    fun build() {
-        try {
-            Bot.LOG.info("Building shard $id.")
+    fun build() = try {
+        Bot.LOG.info("Building shard $id.")
 
-            val jda = builder.buildBlocking()
-            jda.selfUser.manager.setName(CONFIG.name).queue()
-            this.jda = jda
-        } catch (e: LoginException) {
-            throw e
-        } catch (e: InterruptedException) {
-            throw e
-        } catch (e: RateLimitedException) {
-            throw e
+        this.jda = builder.buildBlocking().apply {
+            selfUser.manager.setName(Bot.CONFIG.name).queue()
         }
+    } catch (e: LoginException) {
+        throw e
+    } catch (e: InterruptedException) {
+        throw e
+    } catch (e: RateLimitedException) {
+        throw e
     }
 
     fun revive() {

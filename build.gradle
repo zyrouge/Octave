@@ -26,16 +26,16 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.2-5'
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.2-5'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.3'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.1.3'
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.16'
 
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.1.2-5'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.1.3'
 
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.11'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_215'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.1.1_217'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.42'
 
