@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
+import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.GuildCountListener;
@@ -38,6 +39,8 @@ public final class Bot {
     protected static final EventWaiter waiter = new EventWaiter();
 
     private static final CommandRegistry commandRegistry = new CommandRegistry();
+    private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
+
     private static final List<Shard> shards = new ArrayList<>();
 
     private static final TLongObjectMap<GuildData> guildDataMap = new TLongObjectHashMap<>();
@@ -102,10 +105,13 @@ public final class Bot {
 
     public static void clearGuildData() {
         for (GuildData gd : getGuildDataMap().valueCollection()) {
-            gd.save();
-            //gd.getMusicManager().reset();
+            gd.getMusicManager().reset();
         }
         getGuildDataMap().clear();
+    }
+
+    public static OptionsRegistry getOptions() {
+        return optionsRegistry;
     }
 
     public static Shard getShard(int id) {

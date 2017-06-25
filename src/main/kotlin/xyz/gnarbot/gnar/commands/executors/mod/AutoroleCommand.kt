@@ -30,7 +30,7 @@ class AutoroleCommand : ManagedCommand() {
             return
         }
 
-        context.guildData.options.autoRole = role.id
+        context.guildOptions.autoRole = role.id
 
         context.send().embed("Ignore") {
             description {
@@ -38,12 +38,12 @@ class AutoroleCommand : ManagedCommand() {
             }
         }.action().queue()
 
-        context.guildData.options.save()
+        context.guildOptions.save()
     }
 
     @Executor(position = 1, description = "Unset the auto-role.")
     fun unset(context: Context) {
-        context.guildData.options.autoRole = null
+        context.guildOptions.autoRole = null
 
         context.send().embed("Ignore") {
             description {
@@ -51,12 +51,12 @@ class AutoroleCommand : ManagedCommand() {
             }
         }.action().queue()
 
-        context.guildData.options.save()
+        context.guildOptions.save()
     }
 
     override fun noMatches(context: Context, args: Array<String>) {
         noMatches(context, args, buildString {
-            val role = context.guildData.options.autoRole
+            val role = context.guildOptions.autoRole
             append("Current auto-role: ")
             if (role == null) {
                 append("__None__")

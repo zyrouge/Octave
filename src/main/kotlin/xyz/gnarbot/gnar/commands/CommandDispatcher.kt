@@ -52,7 +52,7 @@ object CommandDispatcher {
 
         val label = tokens[0].substring(Bot.CONFIG.prefix.length).toLowerCase().trim()
 
-        if (label in context.guildData.options.disabledCommands) {
+        if (label in context.guildOptions.disabledCommands) {
             context.send().error("This command is disabled by the server owner.").queue()
             return false
         }
@@ -87,7 +87,7 @@ object CommandDispatcher {
                 return false
             }
 
-            if (cmd.info.donor && !context.guildData.isPremium()) {
+            if (cmd.info.donor && !context.guildOptions.isPremium()) {
                 context.send().embed("Donators Only") {
                     setColor(Color.ORANGE)
                     description {
@@ -146,9 +146,9 @@ object CommandDispatcher {
     }
 
     private fun isIgnored(context: Context, member: Member): Boolean {
-        return (context.guildData.options.ignoredUsers.contains(member.user.id)
-                || context.guildData.options.ignoredChannels.contains(context.channel.id)
-                || context.guildData.options.ignoredRoles.any { id -> member.roles.any { it.id == id } })
+        return (context.guildOptions.ignoredUsers.contains(member.user.id)
+                || context.guildOptions.ignoredChannels.contains(context.channel.id)
+                || context.guildOptions.ignoredRoles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins
     }

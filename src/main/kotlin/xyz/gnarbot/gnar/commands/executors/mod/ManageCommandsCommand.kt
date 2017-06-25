@@ -15,8 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         description = "Manage usage of commands.",
         toggleable = false,
         category = Category.MODERATION,
-        permissions = arrayOf(Permission.ADMINISTRATOR),
-        ignorable = false
+        permissions = arrayOf(Permission.ADMINISTRATOR)
 )
 class ManageCommandsCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -49,14 +48,14 @@ class ManageCommandsCommand : CommandExecutor() {
                     return
                 }
 
-                val list = aliases.filter(context.guildData.options.disabledCommands::contains)
+                val list = aliases.filter(context.guildOptions.disabledCommands::contains)
 
                 if (list.isEmpty()) {
                     context.send().error("`${args[1]}` is not disabled.").queue()
                     return
                 }
 
-                context.guildData.options.disabledCommands.removeAll(list)
+                context.guildOptions.disabledCommands.removeAll(list)
 
                 context.send().info("Enabling ${list.joinToString { "`$it`" }}.").queue()
             }
@@ -82,24 +81,24 @@ class ManageCommandsCommand : CommandExecutor() {
                     return
                 }
 
-                val list = aliases.filterNot(context.guildData.options.disabledCommands::contains)
+                val list = aliases.filterNot(context.guildOptions.disabledCommands::contains)
 
                 if (list.isEmpty()) {
                     context.send().error("`${args[1]}` is already disabled.").queue()
                     return
                 }
 
-                context.guildData.options.disabledCommands.addAll(list)
+                context.guildOptions.disabledCommands.addAll(list)
 
                 context.send().info("Disabling ${list.joinToString { "`$it`" }}.").queue()
             }
             "list" -> {
                 context.send().embed("Disabled Commands") {
                     description {
-                        if (context.guildData.options.disabledCommands.isEmpty()) {
+                        if (context.guildOptions.disabledCommands.isEmpty()) {
                             "No commands disabled!? Hooray!"
                         } else buildString {
-                            context.guildData.options.disabledCommands.forEach {
+                            context.guildOptions.disabledCommands.forEach {
                                 append("• `").append(it).append("`\n")
                             }
                         }

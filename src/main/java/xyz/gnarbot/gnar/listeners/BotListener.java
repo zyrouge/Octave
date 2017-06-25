@@ -31,7 +31,7 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            GuildOptions options = Bot.getGuildData(event.getGuild()).getOptions();
+            GuildOptions options = Bot.getOptions().ofGuild(event.getGuild());
 
             if (options.getAutoRole() != null) {
                 Role role = event.getGuild().getRoleById(options.getAutoRole());

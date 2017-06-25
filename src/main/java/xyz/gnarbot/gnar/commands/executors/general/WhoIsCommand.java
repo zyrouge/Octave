@@ -27,7 +27,15 @@ public class WhoIsCommand extends CommandExecutor {
             if (!mentioned.isEmpty()) {
                 member = context.getGuild().getMember(mentioned.get(0));
             } else {
-                member = context.getGuildData().getMemberByName(StringUtils.join(args, " "), true);
+                List<Member> list = context.getGuild().getMembersByName(StringUtils.join(args, " "), false);
+                if (list.isEmpty()) {
+                    list = context.getGuild().getMembersByNickname(StringUtils.join(args, " "), false);
+                    if (list.isEmpty()) {
+                        context.send().error("You did not mention a valid user.").queue();
+                        return;
+                    }
+                }
+                member = list.get(0);
             }
         }
 

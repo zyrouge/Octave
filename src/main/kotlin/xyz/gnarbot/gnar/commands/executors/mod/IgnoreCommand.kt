@@ -65,7 +65,7 @@ class IgnoreCommand : CommandExecutor() {
                     return
                 }
 
-                context.guildData.options.ignoredUsers.let {
+                context.guildOptions.ignoredUsers.let {
                     if (it.contains(member.user.id)) {
                         it.remove(member.user.id)
 
@@ -84,7 +84,7 @@ class IgnoreCommand : CommandExecutor() {
                         }.action().queue()
                     }
                 }
-                context.guildData.options.save()
+                context.guildOptions.save()
             }
             "channel" -> {
                 val channel: TextChannel
@@ -107,7 +107,7 @@ class IgnoreCommand : CommandExecutor() {
                     }
                 }
 
-                context.guildData.options.ignoredChannels.let {
+                context.guildOptions.ignoredChannels.let {
                     if (it.contains(channel.id)) {
                         it.remove(channel.id)
 
@@ -126,7 +126,7 @@ class IgnoreCommand : CommandExecutor() {
                         }.action().queue()
                     }
                 }
-                context.guildData.options.save()
+                context.guildOptions.save()
             }
             "role" -> {
                 val role: Role
@@ -154,7 +154,7 @@ class IgnoreCommand : CommandExecutor() {
                     return
                 }
 
-                context.guildData.options.ignoredRoles.let {
+                context.guildOptions.ignoredRoles.let {
                     if (it.contains(role.id)) {
                         it.remove(role.id)
 
@@ -173,13 +173,13 @@ class IgnoreCommand : CommandExecutor() {
                         }.action().queue()
                     }
                 }
-                context.guildData.options.save()
+                context.guildOptions.save()
             }
             "list" -> {
                 context.send().embed("Ignored Entities") {
                     field("Users") {
                         buildString {
-                            context.guildData.options.ignoredUsers.let {
+                            context.guildOptions.ignoredUsers.let {
                                 if (it.isEmpty()) {
                                     append("None of the users are ignored.")
                                 } else it.forEach {
@@ -190,7 +190,7 @@ class IgnoreCommand : CommandExecutor() {
                     }
                     field("Channel") {
                         buildString {
-                            context.guildData.options.ignoredChannels.let {
+                            context.guildOptions.ignoredChannels.let {
                                 if (it.isEmpty()) {
                                     append("None of the channels are ignored.")
                                 } else it.forEach {
@@ -201,7 +201,7 @@ class IgnoreCommand : CommandExecutor() {
                     }
                     field("Roles") {
                         buildString {
-                            context.guildData.options.ignoredRoles.let {
+                            context.guildOptions.ignoredRoles.let {
                                 if (it.isEmpty()) {
                                     append("None of the roles are ignored.")
                                 } else it.forEach {

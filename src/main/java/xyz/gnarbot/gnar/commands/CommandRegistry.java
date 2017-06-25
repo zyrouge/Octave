@@ -104,7 +104,7 @@ public class CommandRegistry {
         //End Media Commands
 
         // Administrator commands
-        register(new SaveCommand());
+//        register(new SaveCommand());
         register(new ShutdownCommand());
         register(new RestartShardsCommand());
         register(new JavascriptCommand());

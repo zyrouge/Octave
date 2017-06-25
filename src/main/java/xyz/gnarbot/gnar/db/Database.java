@@ -2,18 +2,14 @@ package xyz.gnarbot.gnar.db;
 
 import com.rethinkdb.gen.exc.ReqlDriverError;
 import com.rethinkdb.net.Connection;
-import gnu.trove.iterator.TLongObjectIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static com.rethinkdb.RethinkDB.r;
 
@@ -39,7 +35,7 @@ public class Database {
         this.conn = conn;
         this.name = name;
 
-        exec.scheduleAtFixedRate(this::save, 10, 30, TimeUnit.MINUTES);
+//        exec.scheduleAtFixedRate(this::save, 10, 30, TimeUnit.MINUTES);
     }
 
     public boolean isOpen() {
@@ -50,18 +46,18 @@ public class Database {
         conn.close();
     }
 
-    public void save() {
-        LOG.info("Saving to database.");
-        TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
-        while (iter.hasNext()) {
-            iter.advance();
-            GuildData gd = iter.value();
-            gd.save();
-            if (gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
-                iter.remove();
-            }
-        }
-    }
+//    public void save() {
+//        LOG.info("Saving to database.");
+//        TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
+//        while (iter.hasNext()) {
+//            iter.advance();
+//            GuildData gd = iter.value();
+//            gd.save();
+//            if (gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
+//                iter.remove();
+//            }
+//        }
+//    }
 
     @Nullable
     public GuildOptions getGuildOptions(String id) {

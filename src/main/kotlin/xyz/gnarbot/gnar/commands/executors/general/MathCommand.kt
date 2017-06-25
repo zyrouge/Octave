@@ -28,8 +28,6 @@ class MathCommand : CommandExecutor() {
         }
 
         context.send().embed("Math") {
-
-
             val script = if (args.size == 1) {
                 args[0]
             } else {
@@ -37,6 +35,8 @@ class MathCommand : CommandExecutor() {
             }
 
             val exp = Expression(script)
+            exp.parserFlag.setAllowRanges(false)
+            exp.parserFlag.setAllowLoops(false)
 
             try {
                 field("Script") {
