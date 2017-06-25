@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.utils;
 import okhttp3.Credentials;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.json.XML;
@@ -47,7 +48,7 @@ public class MyAnimeListAPI {
                     .header("Authorization", Credentials.basic(username, password))
                     .build();
             try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-                JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
+                JSONObject jso = new JSONArray(new JSONTokener(response.body().byteStream())).getJSONObject(0);
                 response.close();
                 if (jso.has("user") && jso.getJSONObject("user").has("id")) {
                     lastLogIn = System.currentTimeMillis();
@@ -67,7 +68,7 @@ public class MyAnimeListAPI {
                 .header("Authorization", Credentials.basic(username, password))
                 .build();
         try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-            JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
+            JSONObject jso = new JSONArray(new JSONTokener(response.body().byteStream())).getJSONObject(0);
             response.close();
             return jso;
         } catch (IOException e) {
