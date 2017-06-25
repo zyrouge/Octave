@@ -21,7 +21,6 @@ class BotConfiguration(file: File) {
     var name: String
     var game: String
     var avatar: String
-    var consoleChannelID: Long
 
     var prefix: String
 
@@ -53,7 +52,6 @@ class BotConfiguration(file: File) {
         name = config["bot", "name"].getString("Gnar")
         game = config["bot", "game"].getString("%d | _help")
         avatar = config["bot", "avatar"].string
-        consoleChannelID = config["bot", "console channel id"].getLong(0)
 
         prefix = config["commands", "prefix"].getString("_")
         admins = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
@@ -85,7 +83,6 @@ class BotConfiguration(file: File) {
         name = config["bot", "name"].getString("Gnar")
         game = config["bot", "game"].getString("%d | _help")
         avatar = config["bot", "avatar"].string
-        consoleChannelID = config["bot", "console channel id"].getLong(0)
 
         prefix = config["commands", "prefix"].getString("_")
         admins = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))

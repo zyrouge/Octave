@@ -10,7 +10,8 @@ public class OptionsRegistry {
     }
 
     public GuildOptions ofGuild(Guild guild) {
-        return ofGuild(guild.getIdLong());
+        GuildOptions options = ofGuild(guild.getIdLong());
+        return options != null ? options : new GuildOptions(guild.getId());
     }
 
     public void deleteGuild(long id) {
