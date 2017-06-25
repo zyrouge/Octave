@@ -29,7 +29,10 @@ public class MangaSearchCommand extends CommandExecutor {
             }
             String mangaSearch = StringUtils.join(args, "%20");
             JSONObject obj = Bot.getMALAPI().makeRequest(Bot.getMALAPI().SEARCH_MANGA, "q=" + mangaSearch);
-
+            if (obj == null){
+                context.send().error("Received nothing from the API! *(This does not mean that there are no results though)*").complete();
+                return;
+            }
             if (!obj.has("manga")){
                 context.send().error("Nothing found with that search term!").complete();
                 return;
@@ -115,7 +118,7 @@ public class MangaSearchCommand extends CommandExecutor {
                 //    msg.addReaction(reactID + "\u20E3").queue();
                 //}
             }else{
-                context.send().error("I could not find anything by that title.");
+                context.send().error("I could not find anything by that title.").complete();
             }
         }
     }
