@@ -35,6 +35,8 @@ public final class Bot {
     public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
     public static final Database DATABASE = new Database("bot");
 
+    private static MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+
     protected static final GuildCountListener guildCountListener = new GuildCountListener();
     protected static final BotListener botListener = new BotListener();
     protected static final EventWaiter waiter = new EventWaiter();
@@ -46,7 +48,6 @@ public final class Bot {
 
     private static final TLongObjectMap<GuildData> guildDataMap = new TLongObjectHashMap<>();
 
-    private static MyAnimeListAPI malAPI;
 
     public static LoadState STATE = LoadState.LOADING;
 
@@ -62,6 +63,8 @@ public final class Bot {
         LOG.info("Admins:\t" + CONFIG.getAdmins().size());
         LOG.info("JDA:\t\t" + JDAInfo.VERSION);
 
+        STATE = LoadState.COMPLETE;
+
         for (int i = 0; i < KEYS.getShards(); i++) {
             Shard shard = new Shard(i);
             shards.add(shard);
@@ -73,16 +76,6 @@ public final class Bot {
         }
 
         LOG.info("The bot is now fully connected to Discord.");
-
-
-        if (!(KEYS.getMalPassword().equalsIgnoreCase("") && KEYS.getMalUsername().equalsIgnoreCase(""))){
-            malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
-        }else{
-            malAPI = new MyAnimeListAPI(true);
-        }
-
-        STATE = LoadState.COMPLETE;
-
     }
 
     public static MyAnimeListAPI getMALAPI() {

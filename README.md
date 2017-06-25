@@ -20,13 +20,16 @@ Note that only experienced developers should use or modify the bot.
     - Fork the repository by clicking the __Fork__ button located on the top right of the project.
     - Run the Git command `git clone git@github.com:Gnar-Team/Gnar-bot.git` or use other services to
         clone your fork.
-- **Step 2:** Inside of the `data/` folder, you will see a `credentials.conf.example` file, this will 
+- **Step 2:** You will see a `credentials.conf.example` file, this will 
         lay out the required credentials for the bot's many APIs and Discord token. 
         Replace each one with the necessary token needed for the supplied section.
-- **Step 3:** Compile the bot. This project uses **Java 8** and **Kotlin 1.1.2**.
+- **Step 3:** Compile the bot. This project uses **Java 8** and **Kotlin 1.1.3**.
     - Run the Gradle command `gradlew shadowJar` to create a fully shaded jar with all of the necessary
         dependencies.
-- **Step 4:** Once compilation is done, you can run the bot by grabbing the `.jar` file from `build/libs` 
+- **Step 4:** Gnar-bot requires RethinkDB in order to setup. The RethinkDB requires a database name that
+    can be specified inside `credentials.conf` along with other necessary credentials. The database needs to
+    have 3 tables: `guilds` `keys` `users` in order for the bot to work.
+- **Step 5:** Once compilation is done, you can run the bot by grabbing the `.jar` file from `build/libs` 
         and running `java -jar Gnar-bot-1.0-all.jar`.
 
 ## Main Contributors
@@ -35,7 +38,7 @@ Note that only experienced developers should use or modify the bot.
 * [Gatt](https://github.com/RealGatt)
 
 ## Dependencies
-* [Kotlin 1.12](https://kotlinlang.org/)
+* [Kotlin 1.1](https://kotlinlang.org/)
 * [JDA 3.1](https://github.com/DV8FromTheWorld/JDA)
 * [LavaPlayer](https://github.com/sedmelluq/lavaplayer)
 * [Guava](https://github.com/google/guava)

@@ -13,7 +13,6 @@ import xyz.gnarbot.gnar.utils.Context;
 public class SaveCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-//        Bot.DATABASE.save();
 
 //        context.send().info("Saved objects but release " + Bot.getGuildDataMap().size() + " GD objects.").queue();
     }
