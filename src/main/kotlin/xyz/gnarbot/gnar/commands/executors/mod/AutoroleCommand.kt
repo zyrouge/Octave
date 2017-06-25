@@ -34,7 +34,7 @@ class AutoroleCommand : ManagedCommand() {
 
         context.send().embed("Ignore") {
             description {
-                "Users joining the channel will now be granted the role ${role.asMention}."
+                "Users joining the guild will now be granted the role ${role.asMention}."
             }
         }.action().queue()
 
@@ -47,7 +47,7 @@ class AutoroleCommand : ManagedCommand() {
 
         context.send().embed("Ignore") {
             description {
-                "Unset autorole. Users joining the channel will not be granted any role."
+                "Unset autorole. Users joining the guild will not be granted any role."
             }
         }.action().queue()
 
