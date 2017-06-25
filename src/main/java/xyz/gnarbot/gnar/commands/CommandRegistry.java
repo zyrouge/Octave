@@ -101,6 +101,8 @@ public class CommandRegistry {
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
         register(new XKCDCommand());
+        register(new AnimeSearchCommand());
+        register(new MangaSearchCommand());
         //End Media Commands
 
         // Administrator commands

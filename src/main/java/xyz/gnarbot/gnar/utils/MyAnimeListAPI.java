@@ -4,6 +4,7 @@ import okhttp3.Credentials;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.json.XML;
 
 import java.io.IOException;
@@ -46,15 +47,13 @@ public class MyAnimeListAPI {
                     .header("Authorization", Credentials.basic(username, password))
                     .build();
             try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-                String responseSt = response.body().string();
-                JSONObject jso = convertXML(responseSt);
+                JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
                 response.close();
                 if (jso.has("user") && jso.getJSONObject("user").has("id")) {
                     lastLogIn = System.currentTimeMillis();
                     return true;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
                 return false;
             }
             return false;
@@ -68,20 +67,11 @@ public class MyAnimeListAPI {
                 .header("Authorization", Credentials.basic(username, password))
                 .build();
         try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-            String responseSTR = response.body().string();
-            JSONObject jso = convertXML(responseSTR);
+            JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
             response.close();
-
             return jso;
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }
-
-    public JSONObject convertXML(String xml){
-        return XML.toJSONObject(xml);
-    }
-
-
 }

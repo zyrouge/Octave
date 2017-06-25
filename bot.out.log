@@ -1,0 +1,15 @@
+[01:35:35] [main] [Database] ERROR - Database connection failed.
+[01:35:35] [main] [Bot] INFO - Initializing the Discord bot.
+[01:35:35] [main] [Bot] INFO - Name:	Gnar
+[01:35:35] [main] [Bot] INFO - JDAs:	1
+[01:35:35] [main] [Bot] INFO - Prefix:	_
+[01:35:35] [main] [Bot] INFO - Admins:	2
+[01:35:35] [main] [Bot] INFO - JDA:		3.1.1_217
+[01:35:35] [main] [Bot] INFO - Building shard 0.
+[01:35:36] [main] [JDA] INFO - Login Successful!
+[01:35:36] [JDA MainWS-ReadThread] [JDASocket] INFO - Connected to WebSocket
+[01:35:37] [JDA MainWS-ReadThread] [JDA] INFO - Finished Loading!
+[01:35:37] [JDA MainWS-ReadThread] [Bot] INFO - JDA instance is ready.
+[01:35:37] [main] [Bot] INFO - The bot is now fully connected to Discord.
+[01:35:37] [main] [Bot] INFO - New MAL Class created
+[01:35:37] [main] [Bot] INFO - Attempting to log in.
