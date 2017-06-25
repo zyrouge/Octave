@@ -34,13 +34,13 @@ public class RedeemCommand extends CommandExecutor {
             }
             switch (key.getType()) {
                 case PREMIUM:
-                    context.getGuildData().getOptions().addPremium(key.getDuration());
-                    context.getGuildData().getOptions().save();
+                    context.getGuildOptions().addPremium(key.getDuration());
+                    context.getGuildOptions().save();
                     Bot.DATABASE.deleteKey(id);
                     context.send().embed("Premium Code")
                             .setColor(Color.ORANGE)
                             .setDescription("Redeemed key `" + key + "`. **Thank you for supporting the bot's development!**\n")
-                            .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getGuildData().getOptions().getPremiumUntil())) + "`.")
+                            .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getGuildOptions().getPremiumUntil())) + "`.")
                             .field("Donator Perks", true, () ->
                                     " • `_volume` Change the volume of the music player!\n"
                                             + " • `_soundcloud` Search SoundCloud!\n"
