@@ -27,15 +27,15 @@ public class Database {
                 LOG.info("Connected to database.");
             } else {
                 LOG.info("Database of " + name + " is not present. Closing connection.");
+                System.exit(0);
                 close();
             }
         } catch (ReqlDriverError e) {
-            LOG.error("Database connection failed.");
+            LOG.error("Database connection failed.", e);
+            System.exit(0);
         }
         this.conn = conn;
         this.name = name;
-
-//        exec.scheduleAtFixedRate(this::save, 10, 30, TimeUnit.MINUTES);
     }
 
     public boolean isOpen() {
