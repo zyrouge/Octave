@@ -16,6 +16,7 @@ import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.GuildCountListener;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
+import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 
 import java.io.File;
@@ -45,6 +46,8 @@ public final class Bot {
 
     private static final TLongObjectMap<GuildData> guildDataMap = new TLongObjectHashMap<>();
 
+    private static MyAnimeListAPI malAPI;
+
     public static LoadState STATE = LoadState.LOADING;
 
     public static void main(String[] args) {
@@ -69,9 +72,21 @@ public final class Bot {
             shard.getJda().getPresence().setGame(Game.of(String.format(CONFIG.getGame(), shard.getId())));
         }
 
+        LOG.info("The bot is now fully connected to Discord.");
+
+
+        if (!(KEYS.getMalPassword().equalsIgnoreCase("") && KEYS.getMalUsername().equalsIgnoreCase(""))){
+            malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+        }else{
+            malAPI = new MyAnimeListAPI(true);
+        }
+
         STATE = LoadState.COMPLETE;
 
-        LOG.info("The bot is now fully connected to Discord.");
+    }
+
+    public static MyAnimeListAPI getMALAPI() {
+        return malAPI;
     }
 
     public static CommandRegistry getCommandRegistry() {

@@ -44,4 +44,7 @@ class Credentials(file: File) {
     val cat: String? = config["cat"].string
     val imgFlip: String? = config["imgflip"].string
     val mashape: String? = config["mashape"].string
+
+    val malUsername: String? = config["mal credentials", "username"].string
+    val malPassword: String? = config["mal credentials", "password"].string
 }
