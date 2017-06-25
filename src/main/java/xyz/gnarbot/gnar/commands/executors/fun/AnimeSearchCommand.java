@@ -24,6 +24,12 @@ public class AnimeSearchCommand extends CommandExecutor {
         if (args.length < 1){
             context.send().error("No arguments provided. Grrr! `_anime [search term]`").complete();
         }else {
+
+            if (!Bot.getMALAPI().isCanAttemptLogIn()){
+                context.send().error("I've been disabled by our developers for now.").complete();
+                return;
+            }
+
             if (!Bot.getMALAPI().isLoggedIn()) {
                 context.send().error("Please wait one second! I'm still logging in!").complete();
                 return;

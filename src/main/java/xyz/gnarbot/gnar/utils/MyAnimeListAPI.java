@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils;
 
+import okhttp3.CacheControl;
 import okhttp3.Credentials;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -80,5 +81,7 @@ public class MyAnimeListAPI {
         return XML.toJSONObject(xml);
     }
 
-
+    public boolean isCanAttemptLogIn() {
+        return canAttemptLogIn;
+    }
 }
