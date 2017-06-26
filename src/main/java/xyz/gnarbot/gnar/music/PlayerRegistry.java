@@ -40,8 +40,8 @@ public class PlayerRegistry {
         MusicManager manager = registry.get(id);
         if (manager != null) {
             manager.destroy();
-            registry.remove(id);
         }
+        registry.remove(id);
     }
 
     public void destroy(Guild guild) {

@@ -23,14 +23,14 @@ class SkipCommand : CommandExecutor() {
             return
         }
 
-        if (!(context.member.hasPermission(Permission.MANAGE_CHANNEL)
-                || manager.player.playingTrack.userData == context.member)) {
+        if (!(manager.player.playingTrack.userData == context.member
+                || context.member.hasPermission(Permission.MANAGE_CHANNEL))) {
             context.send().error("You did not request this track.").queue()
             return
         }
 
         if (manager.scheduler.queue.isEmpty()) {
-            Bot.getPlayers().destroy(context.guild)
+            Bot.getPlayers().destroy(context.guild.idLong)
         } else {
             manager.scheduler.nextTrack()
         }

@@ -87,7 +87,7 @@ public class BotListener extends ListenerAdapter {
                 if (botChannel == null || !channelLeft.equals(botChannel)) return;
 
                 if (botChannel.getMembers().size() == 1) {
-                    Bot.getPlayers().destroy(guild);
+                    Bot.getPlayers().destroy(guild.getIdLong());
                 }
             }
         }

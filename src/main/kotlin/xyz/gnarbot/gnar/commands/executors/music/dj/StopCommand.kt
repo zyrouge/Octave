@@ -31,7 +31,7 @@ class StopCommand : CommandExecutor() {
             return
         }
 
-        Bot.getPlayers().destroy(context.guild)
+        Bot.getPlayers().destroy(context.guild.idLong)
 
         context.send().embed("Stop Playback") {
             setColor(Bot.CONFIG.musicColor)

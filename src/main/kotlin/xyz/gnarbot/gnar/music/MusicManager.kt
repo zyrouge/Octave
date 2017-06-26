@@ -22,7 +22,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
 
-class MusicManager(private val id: Long, private val jda: JDA) {
+class MusicManager(val id: Long, private val jda: JDA) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
             registerSourceManager(YoutubeAudioSourceManager())
@@ -89,10 +89,12 @@ class MusicManager(private val id: Long, private val jda: JDA) {
         when {
             !Bot.CONFIG.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
+                Bot.getPlayers().destroy(id)
                 return false
             }
             !guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
                 context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
+                Bot.getPlayers().destroy(id)
                 return false
             }
             else -> {
@@ -119,6 +121,9 @@ class MusicManager(private val id: Long, private val jda: JDA) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
+                        if (scheduler.queue.isEmpty()) {
+                            Bot.getPlayers().destroy(id)
+                        }
                         return
                     }
                     openAudioConnection(context.member.voiceState.channel, context)
@@ -156,6 +161,9 @@ class MusicManager(private val id: Long, private val jda: JDA) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
+                        if (scheduler.queue.isEmpty()) {
+                            Bot.getPlayers().destroy(id)
+                        }
                         return
                     }
                     openAudioConnection(context.member.voiceState.channel, context)
@@ -184,6 +192,9 @@ class MusicManager(private val id: Long, private val jda: JDA) {
             }
 
             override fun noMatches() {
+                if (scheduler.queue.isEmpty()) {
+                    Bot.getPlayers().destroy(id)
+                }
                 context.send().error("Nothing found by `$trackUrl`.").queue()
             }
 
