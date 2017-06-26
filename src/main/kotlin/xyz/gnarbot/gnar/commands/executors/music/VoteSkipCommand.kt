@@ -20,7 +20,12 @@ import java.util.concurrent.TimeUnit
 )
 class VoteSkipCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        val manager = context.guildData.musicManager
+        val manager = Bot.getPlayers().getExisting(context.guild)
+        if (manager == null) {
+            context.send().error("There's no music player in this guild.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            return
+        }
 
         val member = context.guild.getMember(context.message.author)
 
@@ -82,7 +87,7 @@ class VoteSkipCommand : CommandExecutor() {
                             if (skip > stay) {
                                 appendln("The vote has passed! The song has been skipped.")
                                 if (manager.scheduler.queue.isEmpty()) {
-                                    context.guildData.musicManager.reset()
+                                    Bot.getPlayers().destroy(context.guild)
                                 } else {
                                     manager.scheduler.nextTrack()
                                 }

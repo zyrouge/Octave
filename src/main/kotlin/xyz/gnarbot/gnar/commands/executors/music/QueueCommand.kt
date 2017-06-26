@@ -17,7 +17,14 @@ import xyz.gnarbot.gnar.utils.Utils
 )
 class QueueCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        val queue = context.guildData.musicManager.scheduler.queue
+        val manager = Bot.getPlayers().getExisting(context.guild)
+        if (manager == null) {
+            context.send().error("There's no music player in this guild.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            return
+        }
+
+        val queue = manager.scheduler.queue
 
         PaginatorBuilder(Bot.getWaiter())
                 .setTitle("Music Queue")

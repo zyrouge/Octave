@@ -6,6 +6,8 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.exceptions.RateLimitedException
+import xyz.gnarbot.gnar.utils.CountUpdater
+import java.util.concurrent.TimeUnit
 import javax.security.auth.login.LoginException
 
 class Shard(val id: Int) {
@@ -18,12 +20,18 @@ class Shard(val id: Int) {
         setAutoReconnect(true)
         setAudioEnabled(true)
         setAudioSendFactory(NativeAudioSendFactory())
-        addEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
+        addEventListener(Bot.waiter, Bot.botListener)
         setEnableShutdownHook(true)
         setGame(Game.of("LOADING..."))
     }
 
     lateinit var jda: JDA
+
+    val countUpdater = CountUpdater(this)
+
+    init {
+        Bot.getExecutor().scheduleAtFixedRate(countUpdater::update, 10, 10, TimeUnit.MINUTES)
+    }
 
     fun build() = try {
         Bot.LOG.info("Building shard $id.")
@@ -42,7 +50,7 @@ class Shard(val id: Int) {
     fun revive() {
         Bot.LOG.info("Reviving shard $id.")
 
-        jda.removeEventListener(Bot.guildCountListener, Bot.waiter, Bot.botListener)
+        jda.removeEventListener(Bot.waiter, Bot.botListener)
         jda.shutdown(false)
 
         build()

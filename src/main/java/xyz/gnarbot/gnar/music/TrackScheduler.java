@@ -4,8 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.music.RepeatOption;
-import xyz.gnarbot.gnar.guilds.GuildData;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class TrackScheduler extends AudioEventAdapter {
-    private final GuildData guildData;
+    private final MusicManager musicManager;
     private final AudioPlayer player;
 
     private final Queue<AudioTrack> queue;
@@ -23,8 +23,8 @@ public class TrackScheduler extends AudioEventAdapter {
     /**
      * @param player The audio player this scheduler uses
      */
-    public TrackScheduler(GuildData guildData, AudioPlayer player) {
-        this.guildData = guildData;
+    public TrackScheduler(MusicManager manager, AudioPlayer player) {
+        this.musicManager = manager;
         this.player = player;
         this.queue = new LinkedList<>();
     }
@@ -75,7 +75,7 @@ public class TrackScheduler extends AudioEventAdapter {
                 }
                 case NONE:
                     if (queue.isEmpty()) {
-                        guildData.getMusicManager().reset();
+                        Bot.getPlayers().destroy(musicManager.getGuild());
                         return;
                     }
                     nextTrack();

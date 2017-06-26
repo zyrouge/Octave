@@ -14,15 +14,15 @@ import java.awt.Color
 
 object CommandDispatcher {
     fun handleEvent(event: GuildMessageReceivedEvent) {
-        val gd = Bot.getGuildData(event.guild)
-
         if (event.author == null || event.member == null) {
             return
         }
 
         launch(CommonPool) {
-            if (callCommand(Context(event))) {
-                gd.shard.requests++
+            Context(event).let {
+                if (callCommand(it)) {
+                    it.shard.requests++
+                }
             }
         }
     }

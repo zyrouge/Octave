@@ -31,8 +31,6 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 return@search
             }
 
-            val manager = context.guildData.musicManager
-
             val botChannel = context.guild.selfMember.voiceState.channel
             val userChannel = context.member.voiceState.channel
 
@@ -71,6 +69,8 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                     for (result in results) {
                         addOption("`${Utils.getTimestamp(result.info.length)}` ${b(result.info.title link result.info.uri)}") {
                             if (context.member.voiceState.inVoiceChannel()) {
+                                val manager = Bot.getPlayers().get(context.guild)
+
                                 manager.loadAndPlay(context, result.info.uri)
                             } else {
                                 context.send().error("You're not in a voice channel anymore!").queue()

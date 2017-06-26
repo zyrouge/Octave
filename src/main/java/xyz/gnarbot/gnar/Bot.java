@@ -1,20 +1,16 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
-import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.listeners.BotListener;
-import xyz.gnarbot.gnar.listeners.GuildCountListener;
+import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
@@ -22,6 +18,8 @@ import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Main bot class.
@@ -30,6 +28,7 @@ import java.util.List;
  */
 public final class Bot {
     public static final Logger LOG = LoggerFactory.getLogger("Bot");
+    public static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static final Credentials KEYS = new Credentials(new File("credentials.conf"));
     public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
@@ -37,17 +36,14 @@ public final class Bot {
 
     private static MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
 
-    protected static final GuildCountListener guildCountListener = new GuildCountListener();
     protected static final BotListener botListener = new BotListener();
     protected static final EventWaiter waiter = new EventWaiter();
 
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
+    private static final PlayerRegistry playerRegistry = new PlayerRegistry();
 
     private static final List<Shard> shards = new ArrayList<>();
-
-    private static final TLongObjectMap<GuildData> guildDataMap = new TLongObjectHashMap<>();
-
 
     public static LoadState STATE = LoadState.LOADING;
 
@@ -86,6 +82,18 @@ public final class Bot {
         return commandRegistry;
     }
 
+    public static PlayerRegistry getPlayers() {
+        return playerRegistry;
+    }
+
+    public static OptionsRegistry getOptions() {
+        return optionsRegistry;
+    }
+
+    public static ScheduledExecutorService getExecutor() {
+        return executor;
+    }
+
     public static EventWaiter getWaiter() {
         return waiter;
     }
@@ -94,33 +102,6 @@ public final class Bot {
         return shards;
     }
 
-    public static TLongObjectMap<GuildData> getGuildDataMap() {
-        return guildDataMap;
-    }
-
-    public static GuildData getGuildData(long id) {
-        GuildData data = guildDataMap.get(id);
-        if (data == null) {
-            data = new GuildData(id);
-            guildDataMap.put(id, data);
-        }
-        return data;
-    }
-
-    public static GuildData getGuildData(Guild guild) {
-        return getGuildData(guild.getIdLong());
-    }
-
-    public static void clearGuildData() {
-        for (GuildData gd : getGuildDataMap().valueCollection()) {
-            gd.getMusicManager().reset();
-        }
-        getGuildDataMap().clear();
-    }
-
-    public static OptionsRegistry getOptions() {
-        return optionsRegistry;
-    }
 
     public static Shard getShard(int id) {
         return shards.get(id);

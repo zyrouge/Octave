@@ -15,8 +15,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
-import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
+import xyz.gnarbot.gnar.music.MusicManager;
 
 public class BotListener extends ListenerAdapter {
     @Override
@@ -36,6 +36,11 @@ public class BotListener extends ListenerAdapter {
             if (options.getAutoRole() != null) {
                 Role role = event.getGuild().getRoleById(options.getAutoRole());
 
+                if (role == null) {
+                    options.setAutoRole(null);
+                    return;
+                }
+
                 if (!event.getGuild().getSelfMember().canInteract(role)) {
                     options.setAutoRole(null);
                     return;
@@ -49,7 +54,13 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            Bot.getGuildDataMap().remove(event.getGuild().getIdLong());
+            MusicManager manager = Bot.getPlayers().getExisting(event.getGuild());
+            if (manager != null) {
+                manager.getPlayer().destroy();
+                Bot.getPlayers().getRegistry().remove(event.getGuild().getIdLong());
+            }
+            event.getGuild().getAudioManager().setSendingHandler(null);
+            event.getGuild().getAudioManager().closeAudioConnection();
         }
     }
 
@@ -76,8 +87,7 @@ public class BotListener extends ListenerAdapter {
                 if (botChannel == null || !channelLeft.equals(botChannel)) return;
 
                 if (botChannel.getMembers().size() == 1) {
-                    GuildData data = Bot.getGuildData(event.getGuild());
-                    data.getMusicManager().reset();
+                    Bot.getPlayers().destroy(guild);
                 }
             }
         }

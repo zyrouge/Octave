@@ -15,13 +15,20 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class ShuffleCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
-        if (context.guildData.musicManager.scheduler.queue.isEmpty()) {
+        val manager = Bot.getPlayers().getExisting(context.guild)
+        if (manager == null) {
+            context.send().error("There's no music player in this guild.\n" +
+                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            return
+        }
+
+        if (manager.scheduler.queue.isEmpty()) {
             context.send().error("The queue is empty.\n" +
                     "\uD83C\uDFB6` _play (song/url)` to add some music!").queue()
             return
         }
 
-        context.guildData.musicManager.scheduler.shuffle()
+        manager.scheduler.shuffle()
 
         context.send().embed("Shuffle Queue") {
             setColor(Bot.CONFIG.musicColor)

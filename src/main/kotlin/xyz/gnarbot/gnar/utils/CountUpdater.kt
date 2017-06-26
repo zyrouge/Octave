@@ -1,0 +1,107 @@
+package xyz.gnarbot.gnar.utils
+
+import okhttp3.*
+import org.json.JSONObject
+import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.Shard
+import java.io.IOException
+
+class CountUpdater(val shard: Shard) {
+    fun update() {
+        updateCarbonitex()
+        updateAbal()
+        updateDiscordBots()
+    }
+
+    private fun updateDiscordBots() {
+        if (Bot.KEYS.discordBots == null) return
+
+        val json =  JSONObject()
+                .put("server_count", shard.jda.guilds.size)
+                .put("shard_id", shard.id)
+                .put("shard_count", Bot.KEYS.shards)
+
+        val request = Request.Builder()
+                .url("https://discordbots.org/api/bots/201503408652419073/stats")
+                .header("User-Agent", "Gnar Bot")
+                .header("Authorization", Bot.KEYS.discordBots)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
+                .build()
+
+        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Bot.LOG.error("DiscordBots update failed for shard " + shard.id, e)
+                call.cancel()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Bot.LOG.info("DiscordBots " + response.code() + " for shard " + shard.id)
+                response.close()
+            }
+        })
+    }
+
+    private fun updateAbal() {
+        if (Bot.KEYS.abal == null) return
+
+        val json =  JSONObject()
+                .put("server_count", shard.jda.guilds.size)
+                .put("shard_id", shard.id)
+                .put("shard_count", Bot.KEYS.shards)
+
+        val request = Request.Builder()
+                .url("https://bots.discord.pw/api/bots/201503408652419073/stats")
+                .header("User-Agent", "Gnar Bot")
+                .header("Authorization", Bot.KEYS.abal)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
+                .build()
+
+        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Bot.LOG.error("Abal update failed for shard " + shard.id, e)
+                call.cancel()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Bot.LOG.info("Abal " + response.code() + " for shard " + shard.id)
+                response.close()
+            }
+        })
+    }
+
+    private fun updateCarbonitex() {
+        if (Bot.KEYS.abal == null) return
+        if (Bot.KEYS.carbonitex == null) return
+
+        val json = JSONObject()
+                .put("key", Bot.KEYS.carbonitex)
+                .put("shardid", shard.id)
+                .put("shardcount", Bot.KEYS.shards)
+                .put("servercount", shard.jda.guilds.size)
+
+        val request = Request.Builder()
+                .url("https://www.carbonitex.net/discord/data/botdata.php")
+                .header("User-Agent", "Gnar Bot")
+                .header("Authorization", Bot.KEYS.abal)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
+                .build()
+
+        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Bot.LOG.error("Carbonitex update failed for shard " + shard.id, e)
+                call.cancel()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Bot.LOG.info("Carbonitex " + response.code() + " for shard " + shard.id)
+                response.close()
+            }
+        })
+    }
+}

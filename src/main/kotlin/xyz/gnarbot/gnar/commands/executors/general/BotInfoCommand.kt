@@ -24,12 +24,9 @@ class BotInfoCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        var voiceConnections = 0
-
         var requests = 0
         var textChannels = 0
         var voiceChannels = 0
-        val guildData = Bot.getGuildDataMap().size()
         var guilds = 0
 
         var users = 0
@@ -50,10 +47,6 @@ class BotInfoCommand : CommandExecutor() {
                         else -> {}
                     }
                 }
-
-                guild?.selfMember?.voiceState?.channel?.let {
-                    voiceConnections++
-                }
             }
 
             users += shard.jda.users.size
@@ -70,10 +63,10 @@ class BotInfoCommand : CommandExecutor() {
 
             field("Text Channels", true) { textChannels }
             field("Voice Channels", true) { voiceChannels }
-            field("Voice Connections", true) { voiceConnections }
+            field("Voice Connections", true) { Bot.getPlayers().size() }
 
             field("Guilds", true) { guilds }
-            field("Guild Data", true) { guildData }
+            field(true)
             field("Uptime", true) { "${d}d ${h % 24}h ${m % 60}m ${s % 60}s" }
 
             field("Users", true) {

@@ -19,8 +19,6 @@ class PlayCommand : CommandExecutor() {
     val footnote = "You can search and pick results using _youtube or _soundcloud while in a channel."
 
     override fun execute(context: Context, args: Array<String>) {
-        val manager = context.guildData.musicManager
-        
         val botChannel = context.guild.selfMember.voiceState.channel
         val userChannel = context.member.voiceState.channel
 
@@ -30,6 +28,13 @@ class PlayCommand : CommandExecutor() {
         }
 
         if (args.isEmpty()) {
+            val manager = Bot.getPlayers().getExisting(context.guild)
+            if (manager == null) {
+                context.send().error("There's no music player in this guild.\n" +
+                        "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+                return
+            }
+
             if (manager.player.isPaused) {
                 manager.player.isPaused = false
                 context.send().embed("Play Music") {
@@ -48,6 +53,8 @@ class PlayCommand : CommandExecutor() {
         }
 
         if ("https://" in args[0] || "http://" in args[0]) {
+            val manager = Bot.getPlayers().get(context.guild)
+
             manager.loadAndPlay(context, args[0], footnote)
         } else {
             val query = args.joinToString(" ").trim()
@@ -73,6 +80,8 @@ class PlayCommand : CommandExecutor() {
                 }
 
                 val result = results[0]
+
+                val manager = Bot.getPlayers().get(context.guild)
 
                 manager.loadAndPlay(context, result.info.uri, footnote)
             }

@@ -17,7 +17,6 @@ public class Database {
     public static final Logger LOG = LoggerFactory.getLogger("Database");
     private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     private final Connection conn;
-    private final String name;
 
     public Database(String name) {
         Connection conn = null;
@@ -25,6 +24,7 @@ public class Database {
             conn = r.connection().hostname("localhost").port(28015).connect();
             if (r.dbList().<List<String>>run(conn).contains(name)) {
                 LOG.info("Connected to database.");
+                conn.use(name);
             } else {
                 LOG.info("Database of " + name + " is not present. Closing connection.");
                 System.exit(0);
@@ -35,7 +35,6 @@ public class Database {
             System.exit(0);
         }
         this.conn = conn;
-        this.name = name;
     }
 
     public boolean isOpen() {
@@ -61,33 +60,33 @@ public class Database {
 
     @Nullable
     public GuildOptions getGuildOptions(String id) {
-        return isOpen() ? r.db(name).table("guilds").get(id).run(conn, GuildOptions.class) : null;
+        return isOpen() ? r.table("guilds").get(id).run(conn, GuildOptions.class) : null;
     }
 
     public void saveGuildOptions(GuildOptions guildData) {
-        if (isOpen()) r.db(name).table("guilds").insert(guildData)
+        if (isOpen()) r.table("guilds").insert(guildData)
                 .optArg("conflict", "replace")
                 .runNoReply(conn);
     }
 
     public void deleteGuildOptions(String id) {
-        if (isOpen()) r.db(name).table("guilds").get(id)
+        if (isOpen()) r.table("guilds").get(id)
                 .delete()
                 .runNoReply(conn);
     }
 
     @Nullable
     public Key getPremiumKey(String id) {
-        return isOpen() ? r.db(name).table("keys").get(id).run(conn, Key.class) : null;
+        return isOpen() ? r.table("keys").get(id).run(conn, Key.class) : null;
     }
 
     public void savePremiumKey(Key key) {
-        if (isOpen()) r.db(name).table("keys").insert(key)
+        if (isOpen()) r.table("keys").insert(key)
                 .runNoReply(conn);
     }
 
     public void deleteKey(String id) {
-        if (isOpen()) r.db(name).table("keys").get(id)
+        if (isOpen()) r.table("keys").get(id)
                 .delete()
                 .runNoReply(conn);
     }
