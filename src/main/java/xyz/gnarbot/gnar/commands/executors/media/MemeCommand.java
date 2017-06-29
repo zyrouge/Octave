@@ -26,7 +26,7 @@ import java.util.TreeMap;
         aliases = "meme",
         usage = "-meme_name | _top | _bottom",
         description = "Create the dankest memes ever.",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class MemeCommand extends CommandExecutor {
     private static final Map<String, String> map = new TreeMap<>();

@@ -4,14 +4,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioTrack
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack
-import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
@@ -22,16 +17,10 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
 
-class MusicManager(val id: Long, private val jda: JDA) {
+class MusicManager(val id: Long, val jda: JDA) {
     companion object {
-        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().apply {
-            registerSourceManager(YoutubeAudioSourceManager())
-            registerSourceManager(SoundCloudAudioSourceManager())
-            registerSourceManager(VimeoAudioSourceManager())
-            registerSourceManager(BandcampAudioSourceManager())
-            registerSourceManager(TwitchStreamAudioSourceManager())
-            registerSourceManager(BeamAudioSourceManager())
-        }
+        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
+                .apply(AudioSourceManagers::registerRemoteSources)
 
         fun search(query: String, maxResults: Int, callback: (List<AudioTrack>) -> Unit) {
             playerManager.loadItem(query, object : AudioLoadResultHandler {
@@ -119,8 +108,15 @@ class MusicManager(val id: Long, private val jda: JDA) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
+                    if (Bot.getPlayers().size() > 450) {
+                        context.send().error("Music is currently at max capacity right now. Please trt again later.").queue()
+                        return
+                    }
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
+
+                        // Track is not supposed to load and the queue is empty
+                        // destroy player
                         if (scheduler.queue.isEmpty()) {
                             Bot.getPlayers().destroy(id)
                         }
@@ -159,8 +155,15 @@ class MusicManager(val id: Long, private val jda: JDA) {
                 }
 
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
+                    if (Bot.getPlayers().size() > 450) {
+                        context.send().error("Music is currently at max capacity right now. Please trt again later.").queue()
+                        return
+                    }
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
+
+                        // Track is not supposed to load and the queue is empty
+                        // destroy player
                         if (scheduler.queue.isEmpty()) {
                             Bot.getPlayers().destroy(id)
                         }
@@ -192,6 +195,8 @@ class MusicManager(val id: Long, private val jda: JDA) {
             }
 
             override fun noMatches() {
+                // No track found and queue is empty
+                // destroy player
                 if (scheduler.queue.isEmpty()) {
                     Bot.getPlayers().destroy(id)
                 }

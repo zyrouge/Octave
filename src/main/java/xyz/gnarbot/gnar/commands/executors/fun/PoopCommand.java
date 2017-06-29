@@ -12,7 +12,8 @@ import java.util.StringJoiner;
         aliases = {"poop"},
         usage = "[string]",
         description = "Shit your heart out.",
-        category = Category.FUN)
+        category = Category.FUN
+)
 public class PoopCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

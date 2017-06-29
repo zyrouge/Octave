@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.media
 
 import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -13,7 +14,8 @@ import java.io.IOException
 @Command(
         aliases = arrayOf("google"),
         usage = "-query...",
-        description = "Who needs browsers!?"
+        description = "Who needs browsers!?",
+        category = Category.MEDIA
 )
 class GoogleCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

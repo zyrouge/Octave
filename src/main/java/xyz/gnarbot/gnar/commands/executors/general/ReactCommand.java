@@ -7,7 +7,6 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Arrays;
 
-//TODO REMOVE THE EDITZ
 @Command(aliases = "react",
         usage = "(message-id) (emoji...)",
         description = "Make GNAR react to something, against it's " + "will. You evil prick.")
@@ -36,7 +35,7 @@ public class ReactCommand extends CommandExecutor {
                     msg.addReaction(r).queue();
                 }
             }
-        });
+        }, t -> context.send().error("Invalid message ID `" + args[0] + "`.").queue());
     }
 }
 

@@ -15,7 +15,8 @@ import java.util.WeakHashMap;
 
 @Command(
         aliases = "pbot",
-        category = Category.FUN)
+        category = Category.FUN
+)
 public class PandoraBotCommand extends CommandExecutor {
     private static final ChatterBotFactory factory = new ChatterBotFactory();
     private static ChatterBot bot = null;
@@ -33,7 +34,7 @@ public class PandoraBotCommand extends CommandExecutor {
         }
 
         if (args.length > 0) {
-            if ("reset".equals(args[1])) {
+            if ("reset".equals(args[0])) {
                 sessions.put(context.getGuild().getIdLong(), null);
             }
         }

@@ -97,12 +97,12 @@ public class CommandRegistry {
         //End Poll Commands
 
         //Media Commands
+        register(new AnimeSearchCommand());
+        register(new MangaSearchCommand());
         register(new CatsCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
         register(new XKCDCommand());
-        register(new AnimeSearchCommand());
-        register(new MangaSearchCommand());
         //End Media Commands
 
         // Administrator commands
@@ -130,6 +130,7 @@ public class CommandRegistry {
             register(new PauseCommand());
             register(new StopCommand());
             register(new SkipCommand());
+            register(new ForceSkipCommand());
             register(new ShuffleCommand());
             register(new NowPlayingCommand());
             register(new QueueCommand());

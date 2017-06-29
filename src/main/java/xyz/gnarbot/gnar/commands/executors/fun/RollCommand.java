@@ -11,7 +11,8 @@ import java.util.Random;
         aliases = {"roll"},
         usage = "-max_value",
         description = "Roll a random number from 0 to argument.",
-        category = Category.FUN)
+        category = Category.FUN
+)
 public class RollCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

@@ -24,7 +24,7 @@ import java.util.Arrays;
 @Command(
         aliases = {"trump", "executiveorder"},
         description = "Our president.",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class ExecutiveOrderCommand extends CommandExecutor {
     @Override

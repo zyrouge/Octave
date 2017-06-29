@@ -13,7 +13,7 @@ import java.util.Random;
         aliases = {"c&h", "cah"},
         description = "Get Cyanide and Happiness comics.",
         usage = "~id",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class ExplosmCommand extends CommandExecutor {
     @Override

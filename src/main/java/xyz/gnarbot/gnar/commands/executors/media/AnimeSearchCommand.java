@@ -14,10 +14,12 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 
 import java.awt.*;
 
-@Command(aliases = {"anime", "animesearch", "malanime"},
+@Command(
+        aliases = {"anime", "animesearch", "malanime"},
         usage = "{anime name}",
         description = "Search for an Anime via MyAnimeList",
-        category = Category.FUN)
+        category = Category.MEDIA
+)
 public class AnimeSearchCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

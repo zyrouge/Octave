@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Context;
 @Command(
         aliases = "rcg",
         description = "Generate random Cyanide and Happiness comic.",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class ExplosmRCGCommand extends CommandExecutor {
     @Override

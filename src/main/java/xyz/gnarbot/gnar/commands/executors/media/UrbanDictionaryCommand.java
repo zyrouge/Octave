@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.fun;
+package xyz.gnarbot.gnar.commands.executors.media;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 @Command(
         aliases = {"urbandict", "ub", "urbandictionary"},
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override

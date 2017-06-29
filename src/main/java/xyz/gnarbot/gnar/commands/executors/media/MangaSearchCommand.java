@@ -15,10 +15,12 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 /**
  * Created by Gatt on 20/06/2017.
  */
-@Command(aliases = {"manga", "mangasearch", "malmanga"},
+@Command(
+        aliases = {"manga", "mangasearch", "malmanga"},
         usage = "{manga name}",
         description = "Search for an Manga via MymangaList",
-        category = Category.FUN)
+        category = Category.MEDIA
+)
 public class MangaSearchCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

@@ -25,22 +25,13 @@ public class QuoteCommand extends CommandExecutor {
 
         for (String id : args) {
             if (!id.contains("#")) {
-                try {
-                    final TextChannel _targetChannel = targetChannel;
-                    context.getMessage().getChannel().getMessageById(id).queue(msg -> _targetChannel.sendMessage(
-                            new EmbedBuilder()
-                                    .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
-                                    .setDescription(msg.getContent())
-                                    .build()
-                            ).queue()
-                    );
-                } catch (Exception e) {
-                    try {
-                        context.send()
-                                .error("Could not find a message with the ID " + id + " within this channel.")
-                                .queue(Utils.deleteMessage(5));
-                    } catch (Exception ignore) {}
-                }
+                final TextChannel _targetChannel = targetChannel;
+                context.getMessage().getChannel().getMessageById(id).queue(msg ->
+                        _targetChannel.sendMessage(new EmbedBuilder()
+                                .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
+                                .setDescription(msg.getContent())
+                                .build()
+                        ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
             }
         }
 

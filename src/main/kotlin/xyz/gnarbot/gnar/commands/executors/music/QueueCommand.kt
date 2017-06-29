@@ -33,7 +33,7 @@ class QueueCommand : CommandExecutor() {
                     if (queue.isEmpty()) {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")
                     } else for (track in queue) {
-                        add("`[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__ from ${track.getUserData(Member::class.java).asMention}")
+                        add("`[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__ ${track.getUserData(Member::class.java).asMention}")
                     }
                 }
                 .build().display(context.channel)

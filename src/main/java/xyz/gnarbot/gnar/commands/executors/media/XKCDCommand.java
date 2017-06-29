@@ -18,7 +18,7 @@ import java.util.Random;
 @Command(
         aliases = "xkcd",
         description = "Grab some XKCD comics.",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class XKCDCommand extends CommandExecutor {
     @Override

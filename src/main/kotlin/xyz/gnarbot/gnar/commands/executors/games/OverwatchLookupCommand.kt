@@ -6,6 +6,7 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import org.json.JSONTokener
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -13,9 +14,12 @@ import xyz.gnarbot.gnar.utils.HttpUtils
 import java.awt.Color
 import java.io.IOException
 
-@Command(aliases = arrayOf("overwatch", "ow"),
+@Command(
+        aliases = arrayOf("overwatch", "ow"),
         usage = "(BattleTag#0000) [region]",
-        description = "Look up Overwatch information about a player.")
+        description = "Look up Overwatch information about a player.",
+        category = Category.GAMES
+)
 class OverwatchLookupCommand : CommandExecutor() {
     private val regions = arrayOf("us", "eu", "kr")
 

@@ -8,7 +8,8 @@ import xyz.gnarbot.gnar.utils.Context;
 @Command(
         aliases = "goodshit",
         description = "go౦ԁ sHit\uD83D\uDC4C.",
-        category = Category.FUN)
+        category = Category.FUN
+)
 public class GoodShitCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
@@ -21,6 +22,5 @@ public class GoodShitCommand extends CommandExecutor {
                 "\uD83D\uDC4CНO0ОଠOOOOOОଠଠOoooᵒᵒᵒᵒᵒᵒᵒᵒᵒ\uD83D\uDC4C \uD83D\uDC4C\uD83D\uDC4C \uD83D\uDC4C " +
                 "\uD83D\uDCAF \uD83D\uDC4C \uD83D\uDC40 \uD83D\uDC40 \uD83D\uDC40 \uD83D\uDC4C\uD83D\uDC4CGood shit")
                 .queue();
-
     }
 }

@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -17,9 +18,12 @@ import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 
-@Command(aliases = {"game", "gamelookup"},
+@Command(
+        aliases = {"game", "gamelookup"},
         usage = "(Game name)",
-        description = "Look up information about a game.")
+        description = "Look up information about a game.",
+        category = Category.GAMES
+)
 public class GameLookupCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

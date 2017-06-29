@@ -8,6 +8,7 @@ import java.io.IOException
 
 class CountUpdater(val shard: Shard) {
     fun update() {
+        Bot.LOG.info("Sending shard updates for shard ${shard.id}")
         updateCarbonitex()
         updateAbal()
         updateDiscordBots()
@@ -32,12 +33,11 @@ class CountUpdater(val shard: Shard) {
 
         HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Bot.LOG.error("DiscordBots update failed for shard " + shard.id, e)
+                Bot.LOG.error("DiscordBots update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
             }
 
             override fun onResponse(call: Call, response: Response) {
-                Bot.LOG.info("DiscordBots " + response.code() + " for shard " + shard.id)
                 response.close()
             }
         })
@@ -62,12 +62,11 @@ class CountUpdater(val shard: Shard) {
 
         HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Bot.LOG.error("Abal update failed for shard " + shard.id, e)
+                Bot.LOG.error("Abal update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
             }
 
             override fun onResponse(call: Call, response: Response) {
-                Bot.LOG.info("Abal " + response.code() + " for shard " + shard.id)
                 response.close()
             }
         })
@@ -94,12 +93,11 @@ class CountUpdater(val shard: Shard) {
 
         HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Bot.LOG.error("Carbonitex update failed for shard " + shard.id, e)
+                Bot.LOG.error("Carbonitex update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
             }
 
             override fun onResponse(call: Call, response: Response) {
-                Bot.LOG.info("Carbonitex " + response.code() + " for shard " + shard.id)
                 response.close()
             }
         })

@@ -34,16 +34,19 @@ object CommandDispatcher {
      * @return If the call was successful.
      */
     fun callCommand(context: Context) : Boolean {
+        // Check if the person is to be ignored
         if (isIgnored(context, context.member)) {
             return false
         }
 
+        // Send a message if bot cant use embeds.
         if (!context.guild.selfMember.hasPermission(Permission.MESSAGE_EMBED_LINKS)) {
             context.send().text("The bot needs the `Embed Links` permission to show messages.")
                     .queue(Utils.deleteMessage(15))
             return false
         }
 
+        // Prefix check
         val content = context.message.rawContent
         if (!content.startsWith(Bot.CONFIG.prefix)) return false
 
@@ -61,6 +64,7 @@ object CommandDispatcher {
 
         val args = tokens.copyOfRange(1, tokens.size)
 
+        // _<cmd> ? or _<cmd> help message
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
             context.send().embed("Command Information") {
                 field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
@@ -81,6 +85,7 @@ object CommandDispatcher {
         val message = context.message
         val member = context.member
 
+        // If the user if not in admins list, run these checks
         if (member.user.idLong !in Bot.CONFIG.admins) {
             if (cmd.info.admin) {
                 context.send().error("This command is for bot administrators only.").queue()
@@ -125,6 +130,7 @@ object CommandDispatcher {
                 }
             }
         } else {
+            // otherwise run the only essential check
             if (cmd.info.scope == Scope.VOICE) {
                 if (member.voiceState.channel == null) {
                     context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
@@ -138,13 +144,17 @@ object CommandDispatcher {
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
-        } catch (e: RuntimeException) {
+        } catch (e: Exception) {
             context.send().exception(e).queue()
             e.printStackTrace()
         }
         return false
     }
 
+    // Ignore check:
+    // Optional ignores: user, channel, role
+    // Do not ignore if user have administrator role
+    // Do not ignore if user is bot administrator
     private fun isIgnored(context: Context, member: Member): Boolean {
         return (context.guildOptions.ignoredUsers.contains(member.user.id)
                 || context.guildOptions.ignoredChannels.contains(context.channel.id)

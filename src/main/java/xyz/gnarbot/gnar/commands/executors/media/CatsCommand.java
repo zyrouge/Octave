@@ -14,7 +14,7 @@ import java.net.URL;
 @Command(
         aliases = {"cats", "cat"},
         description = "Grab random cats for you.",
-        category = Category.FUN
+        category = Category.MEDIA
 )
 public class CatsCommand extends CommandExecutor {
     @Override
