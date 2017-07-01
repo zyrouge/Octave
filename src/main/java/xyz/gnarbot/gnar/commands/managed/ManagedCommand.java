@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.managed;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
+import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.ResponseBuilder;
@@ -17,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class ManagedCommand extends CommandExecutor {
-    protected final List<Entry> paths = new ArrayList<>();
+    private final List<Entry> paths = new ArrayList<>();
 
     public ManagedCommand() {
         Method[] methods = getClass().getDeclaredMethods();
@@ -26,13 +27,14 @@ public abstract class ManagedCommand extends CommandExecutor {
             if (an == null) {
                 return 0;
             }
-            return an.position();
+            return an.value();
         }));
         for (Method method : methods) {
             if (!method.isAnnotationPresent(Executor.class)) continue;
             if (method.getParameters()[0].getType() != Context.class) {
                 throw new RuntimeException("?");
             }
+
             Arg[] args = new Arg[method.getParameterCount()];
             args[0] = Arg.of(method.getName());
             Parameter[] params = method.getParameters();
@@ -64,9 +66,9 @@ public abstract class ManagedCommand extends CommandExecutor {
 
         main: for (Entry entry : paths) {
             Arg[] types = entry.args;
-            if (args.length != types.length) continue;
+            if (args.length < types.length) continue;
 
-            Object[] arguments = new Object[args.length];
+            Object[] arguments = new Object[types.length];
             arguments[0] = context;
 
             if (types[0].parse(context, args[0]) == null) {
@@ -76,7 +78,9 @@ public abstract class ManagedCommand extends CommandExecutor {
             for (int i = 1; i < types.length; i++) {
                 Arg type = types[i];
 
-                arguments[i] = type.parse(context, args[i]);
+                arguments[i] = i == types.length - 1
+                        ? type.parse(context, StringUtils.join(Arrays.copyOfRange(args, i, args.length), " "))
+                        : type.parse(context, args[i]);
 
                 if (arguments[i] == null) {
                     continue main;
@@ -131,7 +135,7 @@ public abstract class ManagedCommand extends CommandExecutor {
         paths.add(entry);
     }
 
-    protected class Entry {
+    private class Entry {
         private final Arg[] args;
         private final String description;
         private final Method method;
@@ -140,18 +144,6 @@ public abstract class ManagedCommand extends CommandExecutor {
             this.args = args;
             this.description = description;
             this.method = method;
-        }
-
-        public Arg[] getArgs() {
-            return args;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public Method getExecutor() {
-            return method;
         }
     }
 }

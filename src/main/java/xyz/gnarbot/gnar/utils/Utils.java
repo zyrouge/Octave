@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.Message;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -19,12 +20,15 @@ public class Utils {
     public static final Pattern TIMESTAMP_PATTERN =
             Pattern.compile("(-?\\d+)\\s*((?:d(?:ay(?:s)?)?)|(?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))?");
 
+    // https://regex101.com/r/VXEl27/1/
+    public static final Pattern ARGUMENT_PATTERN =
+            Pattern.compile("`{3}(?:\\w+\\n)?([\\s\\S]*?)`{3}|`([^`]+)`|(\\S+)");
+
     public static long parseTimestamp(String s) {
         s = s.toLowerCase();
         long ms = 0;
 
         Matcher matcher = TIMESTAMP_PATTERN.matcher(s);
-
         while (matcher.find()) {
             String numStr = matcher.group(1);
             String unitStr = matcher.group(2);
@@ -67,42 +71,20 @@ public class Utils {
     }
 
     public static String[] stringSplit(String s) {
-        List<String> f = new ArrayList<>();
+        List<String> parts = new ArrayList<>();
 
-        int p = 0;
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == ' ') {
-                f.add(s.substring(p, i));
-                p = i + 1;
-                while (i < s.length() - 1 && s.charAt(i + 1) == ' ') {
-                    i++;
-                    p++;
+        Matcher matcher = ARGUMENT_PATTERN.matcher(s);
+        outer: while (matcher.find()) {
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                String match = matcher.group(i);
+                if (match != null) {
+                    parts.add(StringUtils.stripEnd(match, null));
+                    continue outer;
                 }
-            } else if (s.charAt(i) == '`') {
-                if (s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
-                    int start = i + 3;
-                    i += 3;
-                    while (i < s.length() - 3 && !s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
-                        i++;
-                    }
-                    if (s.substring(i, Math.min(i + 3, s.length())).equals("```")) {
-                        int end = i;
-                        f.add(s.substring(start, end));
-                        i += 3;
-                        p = i;
-                    } else { // unterminated
-                        f.add(s.substring(start, i));
-                    }
-                }
-            } else if (s.charAt(i) == '\n'
-                    || s.charAt(i) == '\r' && s.charAt(i + 1) == '\n') {
-                f.add(s.substring(p, i + 1));
-                p = i + 1;
             }
         }
-        f.add(s.substring(p));
 
-        return f.toArray(new String[f.size()]);
+        return parts.toArray(new String[parts.size()]);
     }
 
     public static String getTimestamp(long milliseconds) {

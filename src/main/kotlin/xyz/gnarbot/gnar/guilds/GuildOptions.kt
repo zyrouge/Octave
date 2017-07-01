@@ -12,6 +12,7 @@ data class GuildOptions @ConstructorProperties("id") constructor(val id: String)
     var ignoredUsers: MutableSet<String> = hashSetOf()
     var ignoredRoles: MutableSet<String> = hashSetOf()
     var autoRole: String? = null
+    var selfRoles: MutableSet<String> = hashSetOf()
 
     var premiumUntil: Long = 0
 

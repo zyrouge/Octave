@@ -108,10 +108,6 @@ class MusicManager(val id: Long, val jda: JDA) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
-                    if (Bot.getPlayers().size() > 450) {
-                        context.send().error("Music is currently at max capacity right now. Please trt again later.").queue()
-                        return
-                    }
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
 
@@ -155,10 +151,6 @@ class MusicManager(val id: Long, val jda: JDA) {
                 }
 
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
-                    if (Bot.getPlayers().size() > 450) {
-                        context.send().error("Music is currently at max capacity right now. Please trt again later.").queue()
-                        return
-                    }
                     if (!context.member.voiceState.inVoiceChannel()) {
                         context.send().error("You left the channel before the track is loaded.").queue()
 

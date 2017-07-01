@@ -13,7 +13,7 @@ public class PingCommand extends CommandExecutor {
 
         context.send().text("Checking ping...").queue(msg -> {
             long ping = System.currentTimeMillis() - time;
-            context.send().text("**Response Time**: " + ping + " ms\n"
+            msg.editMessage("**Response Time**: " + ping + " ms\n"
                     + "**Discord API**: " + context.getJda().getPing() + " ms").queue();
         });
     }

@@ -15,10 +15,10 @@ import xyz.gnarbot.gnar.utils.Context
         description = "Set auto-roles that are assigned to users on joining.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
-        permissions = arrayOf(Permission.ADMINISTRATOR)
+        permissions = arrayOf(Permission.MANAGE_SERVER)
 )
-class AutoroleCommand : ManagedCommand() {
-    @Executor(position = 0, description = "Set the auto-role.")
+class AutoRoleCommand : ManagedCommand() {
+    @Executor(0, description = "Set the auto-role.")
     fun set(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
             context.send().error("You can't grant the public role!").queue()
@@ -30,28 +30,37 @@ class AutoroleCommand : ManagedCommand() {
             return
         }
 
+        if (role.id == context.guildOptions.autoRole) {
+            context.send().error("${role.asMention} is already set as the auto-role.").queue()
+            return
+        }
+
+
         context.guildOptions.autoRole = role.id
+        context.guildOptions.save()
 
         context.send().embed("Ignore") {
             description {
                 "Users joining the guild will now be granted the role ${role.asMention}."
             }
         }.action().queue()
-
-        context.guildOptions.save()
     }
 
-    @Executor(position = 1, description = "Unset the auto-role.")
+    @Executor(1, description = "Unset the auto-role.")
     fun unset(context: Context) {
+        if (context.guildOptions.autoRole == null) {
+            context.send().error("This guild doesn't have an auto-role.").queue()
+            return
+        }
+
         context.guildOptions.autoRole = null
+        context.guildOptions.save()
 
         context.send().embed("Ignore") {
             description {
                 "Unset autorole. Users joining the guild will not be granted any role."
             }
         }.action().queue()
-
-        context.guildOptions.save()
     }
 
     override fun noMatches(context: Context, args: Array<String>) {

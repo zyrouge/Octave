@@ -31,11 +31,7 @@ class RestartCommand : CommandExecutor() {
             return
         }
 
-        var track = manager.player.playingTrack
-
-        if (track == null) {
-            track = manager.scheduler.lastTrack
-        }
+        val track = manager.player.playingTrack ?: manager.scheduler.lastTrack
 
         if (track != null) {
             context.send().embed("Restart Song") {

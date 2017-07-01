@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import xyz.gnarbot.gnar.Bot;
@@ -73,6 +74,16 @@ public class TrackScheduler extends AudioEventAdapter {
                     nextTrack();
             }
         }
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        // TODO add requested channel
+    }
+
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        // TODO add requested channel
     }
 
     public RepeatOption getRepeatOption() {

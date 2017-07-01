@@ -6,17 +6,27 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.gnarbot.gnar.Bot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerRegistry {
     public static final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
     private TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
 
+    public PlayerRegistry() {
+        Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 1, 1, TimeUnit.HOURS);
+    }
+
     @Nonnull
     public MusicManager get(Guild guild) {
+        if (size() >= 450) {
+            throw new IllegalStateException("Music is currently at maximum capacity, please try again later.");
+        }
+
         MusicManager manager = registry.get(guild.getIdLong());
 
         if (manager == null) {
@@ -56,7 +66,7 @@ public class PlayerRegistry {
         return registry.containsKey(guild.getIdLong());
     }
 
-    public void clear() {
+    public void shutdown() {
         for (MusicManager manager : registry.valueCollection()) {
             manager.destroy();
         }
@@ -64,13 +74,22 @@ public class PlayerRegistry {
     }
 
     public void clear(boolean force) {
+        LOG.info("Cleaning up players (forceful: " + force + ")");
         TLongObjectIterator<MusicManager> iterator = registry.iterator();
         while (iterator.hasNext()) {
             iterator.advance();
-            if (force || iterator.value().getPlayer().getPlayingTrack() == null) {
-                iterator.remove();
+            try {
+                if (force
+                        || !iterator.value().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
+                        || iterator.value().getPlayer().getPlayingTrack() == null) {
+                    iterator.value().destroy();
+                    iterator.remove();
+                }
+            } catch (Exception e) {
+                LOG.warn("Exception occured while trying to clean up guild " + iterator.value().getId(), e);
             }
         }
+        LOG.info("Finished cleaning up players.");
     }
 
     public TLongObjectMap<MusicManager> getRegistry() {

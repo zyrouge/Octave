@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.Context;
 public class ShutdownCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        Bot.getPlayers().clear();
+        Bot.getPlayers().shutdown();
         for (Shard s : Bot.getShards()) {
             s.getJda().shutdown(true);
         }

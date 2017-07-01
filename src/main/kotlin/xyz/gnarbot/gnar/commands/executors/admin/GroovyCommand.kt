@@ -33,7 +33,7 @@ class GroovyCommand : CommandExecutor() {
             field("Running", false) { script }
             field("Result", false) {
                 try {
-                    scriptEngine.eval(script, scope).toString()
+                    scriptEngine.eval(script, scope)
                 } catch (e: ScriptException) {
                     setColor(Color.RED)
                     "The error `$e` occurred while executing the Groovy statement."

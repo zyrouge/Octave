@@ -7,10 +7,7 @@ import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
-import xyz.gnarbot.gnar.commands.executors.mod.AutoroleCommand;
-import xyz.gnarbot.gnar.commands.executors.mod.IgnoreCommand;
-import xyz.gnarbot.gnar.commands.executors.mod.ManageCommandsCommand;
-import xyz.gnarbot.gnar.commands.executors.mod.PruneCommand;
+import xyz.gnarbot.gnar.commands.executors.mod.*;
 import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.PauseCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.RestartCommand;
@@ -50,6 +47,7 @@ public class CommandRegistry {
         register(new BotInfoCommand());
         register(new DonateCommand());
         register(new RedeemCommand());
+        register(new IAmCommand());
         //End General Commands
 
         //Fun Commands
@@ -80,7 +78,8 @@ public class CommandRegistry {
         register(new ManageCommandsCommand());
         register(new IgnoreCommand());
         register(new PruneCommand());
-        register(new AutoroleCommand());
+        register(new AutoRoleCommand());
+        register(new SelfRoleCommand());
         //End Mod Commands
 
         //Testing Commands

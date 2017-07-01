@@ -86,11 +86,7 @@ class VoteSkipCommand : CommandExecutor() {
                         buildString {
                             if (skip > stay) {
                                 appendln("The vote has passed! The song has been skipped.")
-                                if (manager.scheduler.queue.isEmpty()) {
-                                    Bot.getPlayers().destroy(context.guild.idLong)
-                                } else {
-                                    manager.scheduler.nextTrack()
-                                }
+                                manager.scheduler.nextTrack()
                             } else {
                                 appendln("The vote has failed! The song will stay.")
                             }

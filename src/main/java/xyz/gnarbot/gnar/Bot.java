@@ -28,7 +28,7 @@ import java.util.concurrent.ScheduledExecutorService;
  */
 public final class Bot {
     public static final Logger LOG = LoggerFactory.getLogger("Bot");
-    public static final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    public static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     public static final Credentials KEYS = new Credentials(new File("credentials.conf"));
     public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
@@ -88,10 +88,6 @@ public final class Bot {
 
     public static OptionsRegistry getOptions() {
         return optionsRegistry;
-    }
-
-    public static ScheduledExecutorService getExecutor() {
-        return executor;
     }
 
     public static EventWaiter getWaiter() {
