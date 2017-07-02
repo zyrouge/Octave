@@ -36,6 +36,9 @@ public @interface Command {
     /** @return If the command can be disabled. */
     boolean toggleable() default true;
 
+    /** @return Command cooldown in milliseconds. */
+    long cooldown() default 0L;
+
     /** @return The category of the command. */
     Category category() default Category.GENERAL;
 

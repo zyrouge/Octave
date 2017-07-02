@@ -1,9 +1,11 @@
 package xyz.gnarbot.gnar.commands
 
+import gnu.trove.map.hash.TLongLongHashMap
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
+import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
@@ -13,8 +15,10 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 
 object CommandDispatcher {
+    private val cooldownMap = TLongLongHashMap()
+
     fun handleEvent(event: GuildMessageReceivedEvent) {
-        if (event.author == null || event.member == null) {
+        if (!event.message.content.startsWith(Bot.CONFIG.prefix)) {
             return
         }
 
@@ -46,9 +50,20 @@ object CommandDispatcher {
             return false
         }
 
+        // PROCESS TIMEOUT
+        if (isRateLimited(context.user)) {
+            val newCD = (cooldownMap[context.user.idLong] - System.currentTimeMillis()) * 2
+            // double the remaining time to prevent spamming
+            rateLimit(context.user, newCD)
+            context.send().text("\u23F1 **Too fast!** Try again in `${Utils.getTimestamp(newCD)}`.")
+                    .queue(Utils.deleteMessage(5))
+            return false
+        }
+
         // Prefix check
         val content = context.message.rawContent
-        if (!content.startsWith(Bot.CONFIG.prefix)) return false
+        // Already checked.
+        // if (!content.startsWith(Bot.CONFIG.prefix)) return false
 
         // Split the message.
         val tokens = Utils.stringSplit(content)
@@ -60,9 +75,11 @@ object CommandDispatcher {
             return false
         }
 
-        val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
 
+        val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
         val args = tokens.copyOfRange(1, tokens.size)
+
+        rateLimit(context.user, cmd.info.cooldown)
 
         // _<cmd> ? or _<cmd> help message
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
@@ -161,5 +178,15 @@ object CommandDispatcher {
                 || context.guildOptions.ignoredRoles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins
+    }
+
+    // Checks for ratelimit
+    private fun isRateLimited(user: User) = System.currentTimeMillis() < cooldownMap.get(user.idLong)
+
+    // Set ratelimit
+    private fun rateLimit(user: User, ms: Long) {
+        if (ms != 0L) {
+            cooldownMap.put(user.idLong, System.currentTimeMillis() + ms)
+        }
     }
 }

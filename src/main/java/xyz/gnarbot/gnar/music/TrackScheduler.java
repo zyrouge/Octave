@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.music.RepeatOption;
+import xyz.gnarbot.gnar.utils.TrackContext;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -78,12 +79,21 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        // TODO add requested channel
+        track.getUserData(TrackContext.class).getRequestedChannel()
+                .sendMessage(
+                        "**ERROR:** The track " + track.getInfo().title + " is stuck longer than "
+                                + thresholdMs + "ms threshold."
+                ).queue();
     }
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        // TODO add requested channel
+        track.getUserData(TrackContext.class).getRequestedChannel()
+                .sendMessage(
+                        "**ERROR:** The track " + track.getInfo().title + " encountered an exception.\n"
+                                + "Severity: " + exception.severity + "\n"
+                                + "Details: " + exception.getMessage()
+                ).queue();
     }
 
     public RepeatOption getRepeatOption() {

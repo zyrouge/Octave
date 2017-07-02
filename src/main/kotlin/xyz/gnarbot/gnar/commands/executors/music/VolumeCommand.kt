@@ -59,10 +59,8 @@ class VolumeCommand : CommandExecutor() {
             return
         }
 
-        val amount = args[0].toDoubleOrNull()?.toInt()?.coerceIn(0, 100) ?: kotlin.run {
-            context.send().error("Volume must be an integer.").queue()
-            return
-        }
+        val amount = args[0].toDoubleOrNull()?.toInt()?.coerceIn(0, 150)
+                ?: return context.send().error("Volume must be an integer.").queue()
 
         val old = manager.player.volume
 

@@ -23,9 +23,7 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            if (event.getMessage().getContent().startsWith(Bot.CONFIG.getPrefix())) {
-                CommandDispatcher.INSTANCE.handleEvent(event);
-            }
+            CommandDispatcher.INSTANCE.handleEvent(event);
         }
     }
 

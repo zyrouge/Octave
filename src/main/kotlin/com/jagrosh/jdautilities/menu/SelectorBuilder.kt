@@ -18,6 +18,6 @@ class SelectorBuilder(waiter: EventWaiter) : MenuBuilder<SelectorBuilder>(waiter
     }
 
     override fun build(): Selector {
-        return Selector(waiter, type, user, title, description, color, options, timeout, unit, finally)
+        return Selector(waiter, user, title, description, color, fields, type, options, timeout, unit, finally)
     }
 }

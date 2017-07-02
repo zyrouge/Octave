@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import com.jagrosh.jdautilities.menu.PaginatorBuilder
-import net.dv8tion.jda.core.entities.Member
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
@@ -25,6 +25,7 @@ class QueueCommand : CommandExecutor() {
         }
 
         val queue = manager.scheduler.queue
+        var queueLength = 0L
 
         PaginatorBuilder(Bot.getWaiter())
                 .setTitle("Music Queue")
@@ -33,9 +34,22 @@ class QueueCommand : CommandExecutor() {
                     if (queue.isEmpty()) {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")
                     } else for (track in queue) {
-                        add("`[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__ ${track.getUserData(Member::class.java).asMention}")
+                        add("`[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__ " +
+                                track.getUserData(TrackContext::class.java).requester.asMention)
+                        queueLength += track.duration
                     }
                 }
+                .field("Now Playing", false) {
+                    val track = manager.player.playingTrack
+                    if (track == null) {
+                        "Nothing"
+                    } else {
+                        "**[${track.info.title}](${track.info.uri})**"
+                    }
+                }
+                .field("Entries", true, queue.size)
+                .field("Total Duration", true, Utils.getTimestamp(queueLength))
+                .field("Repeating", true, manager.scheduler.repeatOption)
                 .build().display(context.channel)
     }
 }

@@ -16,6 +16,8 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.TrackContext
+import xyz.gnarbot.gnar.utils.ln
 
 class MusicManager(val id: Long, val jda: JDA) {
     companion object {
@@ -74,7 +76,10 @@ class MusicManager(val id: Long, val jda: JDA) {
         closeAudioConnection()
     }
 
-    fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
+    fun
+
+
+            openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
         when {
             !Bot.CONFIG.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
@@ -133,7 +138,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                     }
                 }
 
-                track.userData = context.member
+                track.userData = TrackContext(context.member, context.channel)
 
                 scheduler.queue(track)
 
@@ -165,15 +170,16 @@ class MusicManager(val id: Long, val jda: JDA) {
                 }
 
                 val tracks = playlist.tracks
+                var ignored = 0
 
                 var added = 0
                 for (track in tracks) {
                     if (scheduler.queue.size + 1 >= Bot.CONFIG.queueLimit) {
-                        context.send().info("Ignored ${tracks.size - added} songs as the queue can not exceed ${Bot.CONFIG.queueLimit} songs.").queue()
+                        ignored = tracks.size - added
                         break
                     }
 
-                    track.userData = context.member
+                    track.userData = TrackContext(context.member, context.channel)
 
                     scheduler.queue(track)
                     added++
@@ -181,7 +187,16 @@ class MusicManager(val id: Long, val jda: JDA) {
 
                 context.send().embed("Music Queue") {
                     setColor(Bot.CONFIG.musicColor)
-                    setDescription("Added `$added` tracks to queue from playlist `${playlist.name}`.")
+
+                    description {
+                        buildString {
+                            append("Added `$added` tracks to queue from playlist `${playlist.name}`.").ln()
+                            if (ignored > 0) {
+                                append("Ignored `$ignored` songs as the queue can not exceed `${Bot.CONFIG.queueLimit}` songs.")
+                            }
+                        }
+                    }
+
                     footer { footnote }
                 }.action().queue()
             }

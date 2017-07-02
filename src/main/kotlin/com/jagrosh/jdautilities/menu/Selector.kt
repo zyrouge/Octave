@@ -3,6 +3,7 @@ package com.jagrosh.jdautilities.menu
 import com.jagrosh.jdautilities.waiter.EventWaiter
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.MessageEmbed
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
@@ -12,16 +13,17 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class Selector(val waiter: EventWaiter,
+class Selector(waiter: EventWaiter,
+               user: User?,
+               title: String,
+               description: String?,
+               color: Color?,
+               fields: List<MessageEmbed.Field>,
                val type: Type,
-               val user: User?,
-               val title: String,
-               val description: String?,
-               val color: Color?,
                val options: List<Entry>,
-               val timeout: Long,
-               val unit: TimeUnit,
-               val finally: (Message?) -> Unit) {
+               timeout: Long,
+               unit: TimeUnit,
+               finally: (Message?) -> Unit) : Menu(waiter, user, title, description, color, fields, timeout, unit, finally) {
     enum class Type {
         REACTIONS,
         MESSAGE
@@ -47,24 +49,25 @@ class Selector(val waiter: EventWaiter,
         }
 
         channel.sendMessage(embed(title) {
-            setDescription(description)
-
-            when (type) {
-                Type.REACTIONS -> {
-                    appendDescription("\n**Pick a reaction corresponding to the options.**")
-                }
-                Type.MESSAGE -> {
-                    appendDescription("\n**Type a number corresponding to the options. ie: `0` or `cancel`**")
-                }
-            }
-
             setColor(color)
-            field("Options") {
+            description {
                 buildString {
+                    append(description).ln().ln()
                     options.forEachIndexed { index, (name) ->
                         append("${'\u0030' + index}\u20E3 $name").ln()
                     }
                 }
+            }
+
+            field("Select an Option") {
+                when (type) {
+                    Type.REACTIONS -> "Pick a reaction corresponding to the options."
+                    Type.MESSAGE -> "Type a number corresponding to the options. ie: `0` or `cancel`"
+                }
+            }
+
+            super.fields.forEach {
+                addField(it)
             }
 
             setFooter("This selection will time out in $timeout ${unit.toString().toLowerCase()}.", null)

@@ -6,15 +6,18 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.util.concurrent.TimeUnit
 
-@Command(aliases = arrayOf("poll"),
+@Command(
+        aliases = arrayOf("poll"),
         usage = "(option 1);(option 2);...",
-        description = "Create a poll.")
+        description = "Create a poll.",
+        cooldown = 120000 // 2 minutes
+)
 class PollCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val options = args.joinToString(" ").split(';').map(String::trim)
 
         if (options.size <= 1) {
-            context.send().error("Please offer more options for the poll.").queue()
+            context.send().error("Please offer more options for the poll. `_poll (option 1);(option 2);...`").queue()
             return
         }
         

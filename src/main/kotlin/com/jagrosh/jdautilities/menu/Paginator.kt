@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.waiter.EventWaiter
 import net.dv8tion.jda.core.MessageBuilder
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.MessageEmbed
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent
@@ -13,15 +14,16 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class Paginator(val waiter: EventWaiter,
-                val user: User?,
-                val title: String,
-                val description: String?,
-                val color: Color?,
+class Paginator(waiter: EventWaiter,
+                user: User?,
+                title: String,
+                description: String?,
+                color: Color?,
+                fields: List<MessageEmbed.Field>,
                 val list: List<List<String>>,
-                val timeout: Long,
-                val unit: TimeUnit,
-                val finally: (Message?) -> Unit) {
+                timeout: Long,
+                unit: TimeUnit,
+                finally: (Message?) -> Unit) : Menu(waiter, user, title, description, color, fields, timeout, unit, finally) {
     val LEFT = "\u25C0"
     val STOP = "\u23F9"
     val RIGHT = "\u25B6"
@@ -137,6 +139,11 @@ class Paginator(val waiter: EventWaiter,
                     }
                 }
             }
+
+            super.fields.forEach {
+                addField(it)
+            }
+
             setFooter("Page $pageNum/${list.size}", null)
         }.build()).build()
     }

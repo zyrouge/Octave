@@ -16,7 +16,8 @@ import java.util.concurrent.TimeoutException
 @Command(
         aliases = arrayOf("math"),
         usage = "(expression)",
-        description = "Calculate fancy math expressions."
+        description = "Calculate fancy math expressions.",
+        cooldown = 3000
 )
 class MathCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -33,8 +34,6 @@ class MathCommand : CommandExecutor() {
             }
 
             val exp = Expression(script)
-            exp.parserFlag.setAllowRanges(false)
-            exp.parserFlag.setAllowLoops(false)
 
             try {
                 field("Script") {

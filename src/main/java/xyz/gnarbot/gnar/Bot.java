@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.avarel.aje.ast.GlobalVisitorSettings;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
@@ -50,6 +51,11 @@ public final class Bot {
     public static void main(String[] args) {
         SimpleLogToSLF4JAdapter.install();
         DiscordLogBack.enable();
+
+        // AJE settings
+        GlobalVisitorSettings.SIZE_LIMIT = 100;
+        GlobalVisitorSettings.ITERATION_LIMIT = 100;
+        GlobalVisitorSettings.MILLISECONDS_LIMIT = 5;
 
         LOG.info("Initializing the Discord bot.");
 

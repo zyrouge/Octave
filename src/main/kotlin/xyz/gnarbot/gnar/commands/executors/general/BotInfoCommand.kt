@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.ln
 import java.lang.management.ManagementFactory
 
 @Command(
-        aliases = arrayOf("info", "botinfo"),
+        aliases = arrayOf("about", "info", "botinfo"),
         description = "Show information about the bot."
 )
 class BotInfoCommand : CommandExecutor() {

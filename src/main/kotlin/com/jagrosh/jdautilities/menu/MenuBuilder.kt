@@ -1,11 +1,14 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package com.jagrosh.jdautilities.menu
 
 import com.jagrosh.jdautilities.waiter.EventWaiter
+import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.MessageEmbed
 import net.dv8tion.jda.core.entities.User
 import java.awt.Color
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 @Suppress("UNCHECKED_CAST")
 abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
@@ -20,6 +23,7 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
     protected var finally: (Message?) -> Unit = DEFAULT_FINALLY
     protected var timeout: Long = 20
     protected var unit: TimeUnit = TimeUnit.SECONDS
+    protected val fields: MutableList<MessageEmbed.Field> = arrayListOf()
 
     fun setTitle(title: String): T {
         this.title = title
@@ -48,6 +52,35 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
     fun setTimeout(timeout: Long, unit: TimeUnit): T {
         this.timeout = timeout
         this.unit = unit
+        return this as T
+    }
+
+    fun addField(field: MessageEmbed.Field?): T {
+        return if (field == null) this as T else addField(field.name, field.value, field.isInline)
+    }
+
+    fun addField(name: String?, value: String?, inline: Boolean): T {
+        if (name == null && value == null) {
+            return this as T
+        }
+        fields.add(MessageEmbed.Field(name, value, inline))
+        return this as T
+    }
+
+    fun addBlankField(inline: Boolean): T {
+        fields.add(MessageEmbed.Field(EmbedBuilder.ZERO_WIDTH_SPACE, EmbedBuilder.ZERO_WIDTH_SPACE, inline))
+        return this as T
+    }
+
+    inline fun field(inline: Boolean = false) = addBlankField(inline)
+
+    inline fun field(name: String?, inline: Boolean = false, value: Any?): T {
+        addField(name, value.toString(), inline)
+        return this as T
+    }
+
+    inline fun field(name: String?, inline: Boolean = false, value: () -> Any?): T {
+        addField(name, value().toString(), inline)
         return this as T
     }
 

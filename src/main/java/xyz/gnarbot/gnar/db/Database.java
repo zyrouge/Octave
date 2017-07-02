@@ -27,8 +27,8 @@ public class Database {
                 conn.use(name);
             } else {
                 LOG.info("Database of " + name + " is not present. Closing connection.");
-                System.exit(0);
                 close();
+                System.exit(0);
             }
         } catch (ReqlDriverError e) {
             LOG.error("Database connection failed.", e);
