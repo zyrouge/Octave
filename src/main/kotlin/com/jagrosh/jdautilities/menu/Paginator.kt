@@ -132,9 +132,9 @@ class Paginator(waiter: EventWaiter,
             val items = list[pageNum - 1]
             description {
                 buildString {
-                    description?.let { append(it).ln() }
+                    description?.let { append(it).ln().ln() }
                     items.forEachIndexed { index, s ->
-                        append("**").append(index + (pageNum - 1) * list[0].size).append("** ")
+                        append('`').append(index + (pageNum - 1) * list[0].size).append("` ")
                         append(s).ln()
                     }
                 }

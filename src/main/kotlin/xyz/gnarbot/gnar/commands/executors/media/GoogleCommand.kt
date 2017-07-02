@@ -13,14 +13,14 @@ import java.io.IOException
 
 @Command(
         aliases = arrayOf("google"),
-        usage = "-query...",
+        usage = "(query...)",
         description = "Who needs browsers!?",
         category = Category.MEDIA
 )
 class GoogleCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Gotta have something to search Google.").queue()
+            context.send().error("Put something to search Google.").queue()
             return
         }
 

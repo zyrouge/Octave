@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -20,7 +21,7 @@ import java.io.IOException;
 
 @Command(
         aliases = {"game", "gamelookup"},
-        usage = "(Game name)",
+        usage = "(game name)",
         description = "Look up information about a game.",
         category = Category.GAMES
 )
@@ -49,13 +50,13 @@ public class GameLookupCommand extends CommandExecutor {
 
             HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     call.cancel();
                     context.send().error("Failure to query API.").queue();
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     JSONArray jsa = new JSONArray(new JSONTokener(response.body().byteStream()));
 
                     if (jsa.length() == 0) {

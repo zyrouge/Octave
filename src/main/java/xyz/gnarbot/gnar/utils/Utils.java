@@ -17,18 +17,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
-    public static final Pattern TIMESTAMP_PATTERN =
+    private static final Pattern TIME_PATTERN =
             Pattern.compile("(-?\\d+)\\s*((?:d(?:ay(?:s)?)?)|(?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))?");
 
+    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("^(\\d+)(?::(\\d+))?(?::(\\d+))?$");
+
     // https://regex101.com/r/VXEl27/1/
-    public static final Pattern ARGUMENT_PATTERN =
+    private static final Pattern ARGUMENT_PATTERN =
             Pattern.compile("`{3}(?:\\w+\\n)?([\\s\\S]*?)`{3}|`([^`]+)`|(\\S+)");
 
-    public static long parseTimestamp(String s) {
+    public static String getTime(long ms) {
+        long s = ms / 1000;
+        long m = s / 60;
+        long h = m / 60;
+        long d = h / 24;
+
+        return d + "d " + h % 24 + "h " + m % 60 + "m " + s % 60 + "s";
+    }
+
+    public static long parseTime(String s) {
         s = s.toLowerCase();
         long ms = 0;
 
-        Matcher matcher = TIMESTAMP_PATTERN.matcher(s);
+        Matcher matcher = TIME_PATTERN.matcher(s);
         while (matcher.find()) {
             String numStr = matcher.group(1);
             String unitStr = matcher.group(2);
@@ -85,6 +96,45 @@ public class Utils {
         }
 
         return parts.toArray(new String[parts.size()]);
+    }
+
+    public static long parseTimestamp(String str) throws NumberFormatException {
+        long seconds = 0;
+        long minutes = 0;
+        long hours = 0;
+
+        Matcher m = TIMESTAMP_PATTERN.matcher(str);
+
+        if (!m.find()) {
+            throw new IllegalArgumentException(str + " is not a valid timestamp");
+        }
+
+        int capturedGroups = 0;
+        if (m.group(1) != null) capturedGroups++;
+        if (m.group(2) != null) capturedGroups++;
+        if (m.group(3) != null) capturedGroups++;
+
+        switch (capturedGroups) {
+            case 0:
+                throw new IllegalArgumentException(str + " is not a valid timestamp");
+            case 1:
+                seconds = Integer.parseInt(m.group(1));
+                break;
+            case 2:
+                minutes = Integer.parseInt(m.group(1));
+                seconds = Integer.parseInt(m.group(2));
+                break;
+            case 3:
+                hours = Integer.parseInt(m.group(1));
+                minutes = Integer.parseInt(m.group(2));
+                seconds = Integer.parseInt(m.group(3));
+                break;
+        }
+
+        minutes = minutes + hours * 60;
+        seconds = seconds + minutes * 60;
+
+        return seconds * 1000;
     }
 
     public static String getTimestamp(long milliseconds) {

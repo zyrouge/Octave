@@ -7,7 +7,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = {"invite", "invitebot"},
-        description = "Get a link to invite Gnar_ to your server."
+        description = "Get a link to invite the bot to your server."
 )
 public class InviteBotCommand extends CommandExecutor {
     @Override

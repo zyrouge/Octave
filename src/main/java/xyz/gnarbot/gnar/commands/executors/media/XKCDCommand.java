@@ -4,6 +4,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import xyz.gnarbot.gnar.commands.Category;
@@ -17,6 +18,7 @@ import java.util.Random;
 
 @Command(
         aliases = "xkcd",
+        usage = "[comic #]",
         description = "Grab some XKCD comics.",
         category = Category.MEDIA
 )
@@ -30,13 +32,13 @@ public class XKCDCommand extends CommandExecutor {
 
         HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 call.cancel();
                 context.send().error("Unable to grab xkcd comic.").queue();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JSONObject latestJso = new JSONObject(new JSONTokener(response.body().byteStream()));
 
                 int min = 500;
@@ -72,13 +74,13 @@ public class XKCDCommand extends CommandExecutor {
 
                 HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
                     @Override
-                    public void onFailure(Call call, IOException e) {
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
                         call.cancel();
                         context.send().error("Unable to grab xkcd comic.").queue();
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
 
                         String title = jso.getString("title");

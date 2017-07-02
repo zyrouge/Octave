@@ -12,6 +12,7 @@ import java.util.Date;
 
 @Command(
         aliases = "redeem",
+        usage = "(key)",
         description = "Redeem a premium key."
 )
 public class RedeemCommand extends CommandExecutor {

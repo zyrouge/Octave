@@ -15,6 +15,8 @@ import java.util.WeakHashMap;
 
 @Command(
         aliases = "pbot",
+        usage = "(words...)",
+        description = "Talk with a bot, you lonely thing.",
         category = Category.FUN
 )
 public class PandoraBotCommand extends CommandExecutor {

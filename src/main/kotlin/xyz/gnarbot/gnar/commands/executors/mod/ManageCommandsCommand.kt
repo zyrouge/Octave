@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.ln
 //TODO incomplete
 @Command(
         aliases = arrayOf("cmd", "command", "cmds", "commands"),
-        usage = "[commands...]",
+        usage = "(enable|disable|list) [commands...]",
         description = "Manage usage of commands.",
         toggleable = false,
         category = Category.MODERATION,

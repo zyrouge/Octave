@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("iam"),
-        usage = "(@role)",
+        usage = "(a|not) (@role)",
         description = "Assign yourself a self-role."
 )
 class IAmCommand : ManagedCommand() {

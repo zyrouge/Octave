@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.code
 
 @Command(
         aliases = arrayOf("ascii"),
-        usage = "-string",
+        usage = "(words...)",
         description = "ASCII text art!"
 )
 class ASCIICommand : CommandExecutor() {

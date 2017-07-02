@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "tts",
-        usage = "(string)",
+        usage = "(words...)",
         description = "Text to speech fun.",
         category = Category.FUN,
         scope = Scope.TEXT,

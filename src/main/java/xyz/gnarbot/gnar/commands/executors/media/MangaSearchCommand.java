@@ -12,13 +12,10 @@ import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.EmbedMaker;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 
-/**
- * Created by Gatt on 20/06/2017.
- */
 @Command(
         aliases = {"manga", "mangasearch", "malmanga"},
-        usage = "{manga name}",
-        description = "Search for an Manga via MymangaList",
+        usage = "(manga name)",
+        description = "Search for an manga via MymangaList.",
         category = Category.MEDIA
 )
 public class MangaSearchCommand extends CommandExecutor {

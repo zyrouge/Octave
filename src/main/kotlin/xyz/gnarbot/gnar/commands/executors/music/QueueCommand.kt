@@ -11,7 +11,6 @@ import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
         aliases = arrayOf("queue", "list"),
-        usage = "[clear]",
         description = "Shows the music that's currently queued.",
         category = Category.MUSIC
 )
@@ -20,7 +19,7 @@ class QueueCommand : CommandExecutor() {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+                    "\uD83C\uDFB6` _play (song/url)` in a voice channel to start playing some music!").queue()
             return
         }
 

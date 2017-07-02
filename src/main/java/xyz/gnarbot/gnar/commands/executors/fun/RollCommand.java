@@ -5,35 +5,34 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
-import java.util.Random;
-
 @Command(
         aliases = {"roll"},
-        usage = "-max_value",
+        usage = "(max value)",
         description = "Roll a random number from 0 to argument.",
         category = Category.FUN
 )
 public class RollCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        try {
-            if (args.length >= 1) {
-                if (Integer.valueOf(args[0]) <= 0) {
-                    context.send().error("Number need to be > 0.").queue();
-                    return;
-                }
-
-                context.send().embed("Roll a Number")
-                        .description(() -> "You rolled a **"
-                                + new Random().nextInt(Integer.valueOf(args[0]))
-                                + "** from range **[0 to " + args[0]+ "]**.")
-                        .action().queue();
-
-            } else {
-                context.send().error("Insufficient amount of arguments.").queue();
+        if (args.length >= 1) {
+            int maxValue;
+            try {
+                maxValue = Integer.valueOf(args[0]);
+            } catch (NumberFormatException e) {
+                context.send().error("That wasn't a number.").queue();
+                return;
             }
-        } catch (Exception e) {
-            context.send().error("Only numbers are allowed.\n\n**Example:**\n\n[_roll 10]()").queue();
+
+            if (maxValue <= 0) {
+                context.send().error("Number need to be > 0.").queue();
+                return;
+            }
+
+            context.send().embed("Roll a Number")
+                    .setDescription("You rolled a **" + Math.random() * (maxValue + 1) + "**.")
+                    .action().queue();
+        } else {
+            context.send().error("Insufficient amount of arguments. ie. `_roll 5`").queue();
         }
     }
 }

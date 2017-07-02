@@ -16,95 +16,29 @@ class BotConfiguration(file: File) {
     val loader: ConfigurationLoader<CommentedConfigurationNode> =
             HoconConfigurationLoader.builder().setPath(file.toPath()).build()
 
-    var config: CommentedConfigurationNode
+    var config: CommentedConfigurationNode = loader.load()
 
-    var name: String
-    var game: String
-    var avatar: String
+    val name: String = config["bot", "name"].getString("Gnar")
+    val game: String = config["bot", "game"].getString("%d | _help")
+    val avatar: String? = config["bot", "avatar"].string
 
-    var prefix: String
+    val prefix: String = config["commands", "prefix"].getString("_")
 
-    var admins: List<Long>
-    var donors: List<Long>
+    val admins: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
 
-    var musicEnabled: Boolean
-    var queueLimit: Int
+    val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
+    val queueLimit: Int = config["music", "queue limit"].getInt(20)
 
-    var durationLimitText: String
-    var durationLimit: Duration
+    val durationLimitText: String = config["music", "duration limit"].getString("2 hours")
+    val durationLimit: Duration = durationLimitText.toDuration()
 
-    var voteSkipCooldownText: String
-    var voteSkipCooldown: Duration
+    val voteSkipCooldownText: String = config["music", "vote skip cooldown"].getString("35 seconds")
+    val voteSkipCooldown: Duration = voteSkipCooldownText.toDuration()
 
-    var voteSkipDurationText: String
-    var voteSkipDuration: Duration
+    val voteSkipDurationText: String = config["music", "vote skip duration"].getString("20 seconds")
+    val voteSkipDuration: Duration = voteSkipDurationText.toDuration()
 
-    var searchDurationText: String
-    var searchDuration: Duration
-
-    var accentColor : Color
-    var musicColor: Color
-    var errorColor: Color
-
-    init {
-        config = loader.load()
-
-        name = config["bot", "name"].getString("Gnar")
-        game = config["bot", "game"].getString("%d | _help")
-        avatar = config["bot", "avatar"].string
-
-        prefix = config["commands", "prefix"].getString("_")
-        admins = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
-        donors = config["commands", "donors"].getList(TypeToken.of(Long::class.javaObjectType))
-
-        musicEnabled = config["music", "enabled"].getBoolean(true)
-        queueLimit = config["music", "queue limit"].getInt(20)
-
-        durationLimitText = config["music", "duration limit"].getString("2 hours")
-        durationLimit = durationLimitText.toDuration()
-
-        voteSkipCooldownText = config["music", "vote skip cooldown"].getString("35 seconds")
-        voteSkipCooldown = voteSkipCooldownText.toDuration()
-
-        voteSkipDurationText = config["music", "vote skip duration"].getString("20 seconds")
-        voteSkipDuration = voteSkipDurationText.toDuration()
-
-        searchDurationText = config["music", "search duration"].getString("2 minutes")
-        searchDuration = searchDurationText.toDuration()
-
-        accentColor = config["colors", "accent"].getString("0x0050af").let { Color.decode(it) }
-        musicColor = config["colors", "music"].getString("0x00dd58").let { Color.decode(it) }
-        errorColor = config["colors", "error"].getString("0xFF0000").let { Color.decode(it) }
-    }
-
-    fun reload() {
-        config = loader.load()
-
-        name = config["bot", "name"].getString("Gnar")
-        game = config["bot", "game"].getString("%d | _help")
-        avatar = config["bot", "avatar"].string
-
-        prefix = config["commands", "prefix"].getString("_")
-        admins = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
-        donors = config["commands", "donors"].getList(TypeToken.of(Long::class.javaObjectType))
-
-        musicEnabled = config["music", "enabled"].getBoolean(true)
-        queueLimit = config["music", "queue limit"].getInt(20)
-
-        durationLimitText = config["music", "duration limit"].getString("2 hours")
-        durationLimit = durationLimitText.toDuration()
-
-        voteSkipCooldownText = config["music", "vote skip cooldown"].getString("35 seconds")
-        voteSkipCooldown = voteSkipCooldownText.toDuration()
-
-        voteSkipDurationText = config["music", "vote skip duration"].getString("20 seconds")
-        voteSkipDuration = voteSkipDurationText.toDuration()
-
-        searchDurationText = config["music", "search duration"].getString("2 minutes")
-        searchDuration = searchDurationText.toDuration()
-
-        accentColor = config["colors", "accent"].getString("0x0050af").let { Color.decode(it) }
-        musicColor = config["colors", "music"].getString("0x00dd58").let { Color.decode(it) }
-        errorColor = config["colors", "error"].getString("0xFF0000").let { Color.decode(it) }
-    }
+    val accentColor : Color = config["colors", "accent"].getString("0x0050af").let { Color.decode(it) }
+    val musicColor: Color = config["colors", "music"].getString("0x00dd58").let { Color.decode(it) }
+    val errorColor: Color = config["colors", "error"].getString("0xFF0000").let { Color.decode(it) }
 }

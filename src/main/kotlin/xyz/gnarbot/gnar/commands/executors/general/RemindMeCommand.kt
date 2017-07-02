@@ -8,22 +8,21 @@ import java.util.concurrent.TimeUnit
 
 @Command(
         aliases = arrayOf("remindme", "remind"),
-        usage = "(duration) (time unit) (msg)"
+        usage = "(duration) (time unit) (msg)",
+        description = "Send you a reminder after an amount of time."
 )
 class RemindMeCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.size >= 3) {
             val string = args.copyOfRange(2, args.size).joinToString(" ")
 
-            val time = args[0].toIntOrNull() ?: kotlin.run {
-                context.send().error("The time number was not an integer.").queue()
-                return
-            }
+            val time = args[0].toIntOrNull()
+                    ?: return context.send().error("The time number was not an integer. ie: `remind 3 minutes destroy the world`").queue()
 
             val timeUnit = try {
                 TimeUnit.valueOf(args[1].toUpperCase())
             } catch (e: IllegalArgumentException) {
-                context.send().error("The specified time unit was invalid. \n`${TimeUnit.values().contentToString()}`").queue()
+                context.send().error("The specified time unit was invalid, use one of these: \n`${TimeUnit.values().contentToString()}`").queue()
                 return
             }
 

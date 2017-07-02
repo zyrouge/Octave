@@ -23,10 +23,11 @@ import java.util.Arrays;
 
 @Command(
         aliases = {"trump", "executiveorder"},
+        usage = "(words...)",
         description = "Our president.",
         category = Category.MEDIA
 )
-public class ExecutiveOrderCommand extends CommandExecutor {
+public class TrumpCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         try (InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg")) {

@@ -9,7 +9,12 @@ class PaginatorBuilder(waiter: EventWaiter) : MenuBuilder<PaginatorBuilder>(wait
     private var itemsPerPage = 10
 
     fun add(item: String): PaginatorBuilder {
-        items.add(item)
+        this.items.add(item)
+        return this
+    }
+
+    fun addAll(items: Collection<String>): PaginatorBuilder {
+        this.items.addAll(items)
         return this
     }
 

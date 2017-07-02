@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -18,7 +19,7 @@ import java.net.URISyntaxException;
 
 @Command(
         aliases = {"yodatalk"},
-        usage = "(sentence)",
+        usage = "(words...)",
         description = "Learn to speak like Yoda, you will.",
         category = Category.FUN
 )
@@ -50,13 +51,13 @@ public class YodaTalkCommand extends CommandExecutor {
 
             HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
+                public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     call.cancel();
                     context.send().error("Failure to query API.").queue();
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     context.send().embed("Yoda-Speak")
                             .setDescription(response.body().string())
                             .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")

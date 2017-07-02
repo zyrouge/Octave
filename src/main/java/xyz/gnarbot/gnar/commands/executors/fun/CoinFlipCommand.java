@@ -7,7 +7,11 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Random;
 
-@Command(aliases = {"coinflip", "flip"}, description = "Heads or Tails?", category = Category.FUN)
+@Command(
+        aliases = {"coinflip", "flip"},
+        description = "Heads or Tails?",
+        category = Category.FUN
+)
 public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

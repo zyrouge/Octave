@@ -50,7 +50,7 @@ public class GenerateKeyCommand extends CommandExecutor {
             return;
         }
 
-        long duration = Utils.parseTimestamp(StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " "));
+        long duration = Utils.parseTime(StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " "));
 
         if (duration < 0) {
             context.send().error("Negative duration, we get it you vape.").queue();
@@ -65,6 +65,6 @@ public class GenerateKeyCommand extends CommandExecutor {
             builder.append(key.getId()).append('\n');
             key.save();
         }
-        context.getUser().openPrivateChannel().queue(it -> it.sendMessage(Utils.hasteBin(builder.toString())).queue());
+        context.getUser().openPrivateChannel().queue(it -> it.sendMessage("```\n" + builder.toString() + "```").queue());
     }
 }

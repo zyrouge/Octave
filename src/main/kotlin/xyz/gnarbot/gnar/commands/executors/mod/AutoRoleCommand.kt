@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         aliases = arrayOf("autorole"),
-        usage = "(set|unset)",
+        usage = "(set|unset) [@role]",
         description = "Set auto-roles that are assigned to users on joining.",
         category = Category.MODERATION,
         scope = Scope.TEXT,

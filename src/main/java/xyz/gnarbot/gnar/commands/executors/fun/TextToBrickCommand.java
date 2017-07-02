@@ -1,14 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "ttb",
-        usage = "(string)",
-        description = "Text to bricks fun."
+        usage = "(words...)",
+        description = "Text to bricks fun.",
+        category = Category.FUN
 )
 public class TextToBrickCommand extends CommandExecutor {
     @Override

@@ -51,7 +51,7 @@ public class CommandRegistry {
         //End General Commands
 
         //Fun Commands
-        register(new ExecutiveOrderCommand());
+        register(new TrumpCommand());
         register(new ASCIICommand());
         register(new CoinFlipCommand());
         register(new DialogCommand());
@@ -66,8 +66,8 @@ public class CommandRegistry {
         //register(new ServersSharedCommand());
         register(new TextToSpeechCommand());
         register(new ReactCommand());
-        register(new TriviaAnswerCommand());
-        register(new TriviaCommand());
+        //register(new TriviaAnswerCommand());
+        //register(new TriviaCommand());
         //register(new GraphCommand());
 
         register(new PandoraBotCommand());
@@ -113,7 +113,6 @@ public class CommandRegistry {
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new GenerateKeyCommand());
-        register(new ReloadConfigCommand());
         register(new EmoteListCommand());
 
 
@@ -137,7 +136,7 @@ public class CommandRegistry {
             register(new RepeatCommand());
             register(new VoteSkipCommand());
             register(new VolumeCommand());
-            register(new SeekCommand());
+            register(new JumpCommand());
         }
 
         register(new YoutubeCommand());

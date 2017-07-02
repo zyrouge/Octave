@@ -16,8 +16,8 @@ import java.awt.*;
 
 @Command(
         aliases = {"anime", "animesearch", "malanime"},
-        usage = "{anime name}",
-        description = "Search for an Anime via MyAnimeList",
+        usage = "(anime name)",
+        description = "Search for an anime via MyAnimeList.",
         category = Category.MEDIA
 )
 public class AnimeSearchCommand extends CommandExecutor {

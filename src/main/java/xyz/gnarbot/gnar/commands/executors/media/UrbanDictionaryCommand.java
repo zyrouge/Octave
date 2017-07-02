@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.Bot;
@@ -20,6 +21,8 @@ import java.net.URISyntaxException;
 
 @Command(
         aliases = {"urbandict", "ub", "urbandictionary"},
+        usage = "(word)",
+        description = "Crowd-sourced definitions of the internet.",
         category = Category.MEDIA
 )
 public class UrbanDictionaryCommand extends CommandExecutor {
@@ -51,12 +54,12 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
         HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 context.send().error("Failed to find that word.").queue();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 JSONArray words = new JSONObject(response.body().string()).getJSONArray("list");
 
                 if (words.length() < 1) {

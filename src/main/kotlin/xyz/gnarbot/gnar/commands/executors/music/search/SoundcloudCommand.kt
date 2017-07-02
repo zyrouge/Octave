@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.ln
 @xyz.gnarbot.gnar.commands.Command(
         aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
-        description = "Search and see YouTube results.",
+        description = "Search and see SoundCloud results.",
         donor = true,
         scope = xyz.gnarbot.gnar.commands.Scope.TEXT,
         category = xyz.gnarbot.gnar.commands.Category.MUSIC

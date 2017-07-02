@@ -1,22 +1,22 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.*
+import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.link
+import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("help", "guide"),
         usage = "[command]",
-        description = "Display GN4R's list of commands.",
+        description = "Display the bot's list of commands.",
         toggleable = false
 )
 class HelpCommand : CommandExecutor() {
-    var lazyEmbed: MessageEmbed? = null
-
     override fun execute(context: Context, args: Array<String>) {
         val registry = Bot.getCommandRegistry()
 
@@ -49,37 +49,29 @@ class HelpCommand : CommandExecutor() {
 
         val cmds = registry.entries
 
-        if (lazyEmbed == null) {
-            lazyEmbed = embed("Documentation") {
-                setColor(Bot.CONFIG.accentColor)
-                setDescription("The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`.")
+        context.send().embed("Documentation") {
+            setColor(Bot.CONFIG.accentColor)
+            setDescription("The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`.")
 
-                for (category in Category.values()) {
-                    if (!category.show) continue
+            for (category in Category.values()) {
+                if (!category.show) continue
 
-                    val filtered = cmds.filter {
-                        it.info.category == category
-                    }
-                    if (filtered.isEmpty()) continue
-
-                    field("${category.title} — ${filtered.size}\n") {
-                        filtered.joinToString("`   `", "`", "`") { it.info.aliases.first() }
-                    }
+                val filtered = cmds.filter {
+                    it.info.category == category
                 }
+                if (filtered.isEmpty()) continue
 
-                field("Donations", true) {
-                    buildString {
-                        append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
-                        append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
-                    }
+                field("${category.title} — ${filtered.size}\n") {
+                    filtered.joinToString("`   `", "`", "`") { it.info.aliases.first() }
                 }
-            }.build()
-        }
+            }
 
-        context.channel.sendMessage(lazyEmbed).queue()
-
-//        context.send().info("Gnar's guide has been directly messaged to you.\n"
-//                + "Need more support? Reach us on our __**[official support server](https://discord.gg/NQRpmr2)**__.\n"
-//                + "Please consider donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__.").queue()
+            field("Donations", true) {
+                buildString {
+                    append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
+                    append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
+                }
+            }
+        }.action().queue()
     }
 }

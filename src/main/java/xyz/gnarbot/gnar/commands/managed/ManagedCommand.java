@@ -12,6 +12,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -35,25 +36,27 @@ public abstract class ManagedCommand extends CommandExecutor {
                 throw new RuntimeException("?");
             }
 
-            Arg[] args = new Arg[method.getParameterCount()];
-            args[0] = Arg.of(method.getName());
+            Parser[] parsers = new Parser[method.getParameterCount()];
+            parsers[0] = Parser.of(method.getName());
             Parameter[] params = method.getParameters();
-            for (int i = 1; i < args.length; i++) {
+            for (int i = 1; i < parsers.length; i++) {
                 if (params[i].getType() == String.class) {
-                    args[i] = Arg.STRING;
+                    parsers[i] = Parser.STRING;
                 } else if (params[i].getType() == int.class
                         || params[i].getType() == Integer.class) {
-                    args[i] = Arg.INTEGER;
+                    parsers[i] = Parser.INTEGER;
                 } else if (params[i].getType() == Member.class) {
-                    args[i] = Arg.MEMBER;
+                    parsers[i] = Parser.MEMBER;
                 } else if (params[i].getType() == Channel.class) {
-                    args[i] = Arg.CHANNEL;
+                    parsers[i] = Parser.CHANNEL;
                 } else if (params[i].getType() == Role.class) {
-                    args[i] = Arg.ROLE;
+                    parsers[i] = Parser.ROLE;
+                } else if (params[i].getType() == Duration.class) {
+                    parsers[i] = Parser.DURATION;
                 }
             }
 
-            addPath(new Entry(args, method.getAnnotation(Executor.class).description(), method));
+            addPath(new Entry(parsers, method.getAnnotation(Executor.class).description(), method));
         }
     }
 
@@ -65,7 +68,7 @@ public abstract class ManagedCommand extends CommandExecutor {
         }
 
         main: for (Entry entry : paths) {
-            Arg[] types = entry.args;
+            Parser[] types = entry.parsers;
             if (args.length < types.length) continue;
 
             Object[] arguments = new Object[types.length];
@@ -76,7 +79,7 @@ public abstract class ManagedCommand extends CommandExecutor {
             }
 
             for (int i = 1; i < types.length; i++) {
-                Arg type = types[i];
+                Parser type = types[i];
 
                 arguments[i] = i == types.length - 1
                         ? type.parse(context, StringUtils.join(Arrays.copyOfRange(args, i, args.length), " "))
@@ -106,9 +109,9 @@ public abstract class ManagedCommand extends CommandExecutor {
 
         for (Entry entry : paths) {
             builder.append('`');
-            for (int i = 0; i < entry.args.length; i++) {
-                builder.append(entry.args[i].getName());
-                if (i < entry.args.length - 1) {
+            for (int i = 0; i < entry.parsers.length; i++) {
+                builder.append(entry.parsers[i].getName());
+                if (i < entry.parsers.length - 1) {
                     builder.append(' ');
                 }
             }
@@ -136,12 +139,12 @@ public abstract class ManagedCommand extends CommandExecutor {
     }
 
     private class Entry {
-        private final Arg[] args;
+        private final Parser[] parsers;
         private final String description;
         private final Method method;
 
-        private Entry(Arg[] args, String description, Method method) {
-            this.args = args;
+        private Entry(Parser[] parsers, String description, Method method) {
+            this.parsers = parsers;
             this.description = description;
             this.method = method;
         }

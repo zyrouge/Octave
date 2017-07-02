@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.link
         category = Category.MUSIC
 )
 class NowPlayingCommand : CommandExecutor() {
-    private val totalBlocks = 15
+    private val totalBlocks = 20
 
     override fun execute(context: Context, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
@@ -43,7 +43,7 @@ class NowPlayingCommand : CommandExecutor() {
             val position = Utils.getTimestamp(track.position)
             val duration = Utils.getTimestamp(track.duration)
 
-            field("Progress", true) {
+            field("Progress", false) {
                 val percent = track.position.toDouble() / track.duration
                 buildString {
                     for (i in 0 until totalBlocks) {

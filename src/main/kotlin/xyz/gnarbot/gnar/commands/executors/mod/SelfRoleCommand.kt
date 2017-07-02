@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         aliases = arrayOf("selfroles", "selfrole"),
-        usage = "(add|remove|clear)",
+        usage = "(add|remove|clear) [@role]",
         description = "Set self-roles that users can assign to themselves.",
         category = Category.MODERATION,
         scope = Scope.TEXT,

@@ -12,7 +12,8 @@ import java.time.OffsetDateTime
 
 @Command(
         aliases = arrayOf("prune", "delmessages", "delmsgs"),
-        usage = "(amount)", description = "Delete up to 100 messages.",
+        usage = "(amount)",
+        description = "Delete up to 100 messages.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.MESSAGE_MANAGE)

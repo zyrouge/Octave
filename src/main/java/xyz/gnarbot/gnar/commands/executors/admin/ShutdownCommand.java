@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         aliases = "shutdown",
+        description = "Shutdown the bot.",
         admin = true,
         category = Category.NONE
 )
