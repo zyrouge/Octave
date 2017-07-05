@@ -34,8 +34,7 @@ class StopCommand : CommandExecutor() {
         Bot.getPlayers().destroy(context.guild.idLong)
 
         context.send().embed("Stop Playback") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("Playback has been completely stopped and the queue has been cleared.")
+            desc { "Playback has been completely stopped and the queue has been cleared." }
         }.action().queue()
     }
 }

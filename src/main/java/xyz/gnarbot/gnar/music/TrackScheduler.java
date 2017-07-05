@@ -6,7 +6,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.executors.music.RepeatOption;
 import xyz.gnarbot.gnar.utils.TrackContext;
 
 import java.util.Collections;

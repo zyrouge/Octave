@@ -24,7 +24,8 @@ public class PlayerRegistry {
     @Nonnull
     public MusicManager get(Guild guild) {
         if (size() >= 450) {
-            throw new IllegalStateException("Music is currently at maximum capacity, please try again later.");
+            throw new IllegalStateException("Music is currently at maximum capacity, please try again later.\n"
+                    + "Please consider donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__ to help us get better servers.");
         }
 
         MusicManager manager = registry.get(guild.getIdLong());

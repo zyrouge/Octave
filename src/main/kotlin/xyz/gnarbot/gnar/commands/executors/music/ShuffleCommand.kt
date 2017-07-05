@@ -31,8 +31,7 @@ class ShuffleCommand : CommandExecutor() {
         manager.scheduler.shuffle()
 
         context.send().embed("Shuffle Queue") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("Player has been shuffled")
+            desc { "Player has been shuffled" }
         }.action().queue()
     }
 }

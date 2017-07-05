@@ -2,13 +2,15 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 
 import com.jagrosh.jdautilities.menu.SelectorBuilder
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.link
 import xyz.gnarbot.gnar.utils.ln
+import java.awt.Color
 
-@xyz.gnarbot.gnar.commands.Command(
+@Command(
         aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
         description = "Search and see SoundCloud results.",
@@ -37,10 +39,10 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("SoundCloud Results", "https://soundcloud.com", "https://soundcloud.com/favicon.ico")
-                    setThumbnail("https://gnarbot.xyz/assets/img/soundcloud.png")
-                    setColor(java.awt.Color(255, 110, 0))
+                    thumbnail { "https://gnarbot.xyz/assets/img/soundcloud.png" }
+                    color { Color(255, 110, 0) }
 
-                    description {
+                    desc {
                         buildString {
                             for (result in results) {
 
@@ -62,7 +64,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 SelectorBuilder(Bot.getWaiter()).apply {
                     setTitle("SoundCloud Results")
                     setDescription("Select one of the following options to play them in your current music channel.")
-                    setColor(java.awt.Color(255, 110, 0))
+                    setColor(Color(255, 110, 0))
 
                     setUser(context.user)
 

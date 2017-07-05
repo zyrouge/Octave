@@ -28,7 +28,7 @@ class QueueCommand : CommandExecutor() {
 
         PaginatorBuilder(Bot.getWaiter())
                 .setTitle("Music Queue")
-                .setColor(Bot.CONFIG.musicColor)
+                .setColor(context.guild.selfMember.color)
                 .apply {
                     if (queue.isEmpty()) {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")

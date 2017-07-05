@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.managed.Executor
 import xyz.gnarbot.gnar.commands.managed.ManagedCommand
 import xyz.gnarbot.gnar.utils.Context
@@ -14,7 +13,6 @@ import xyz.gnarbot.gnar.utils.Context
         usage = "(set|unset) [@role]",
         description = "Set auto-roles that are assigned to users on joining.",
         category = Category.MODERATION,
-        scope = Scope.TEXT,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class AutoRoleCommand : ManagedCommand() {
@@ -40,7 +38,7 @@ class AutoRoleCommand : ManagedCommand() {
         context.guildOptions.save()
 
         context.send().embed("Ignore") {
-            description {
+            desc {
                 "Users joining the guild will now be granted the role ${role.asMention}."
             }
         }.action().queue()
@@ -57,7 +55,7 @@ class AutoRoleCommand : ManagedCommand() {
         context.guildOptions.save()
 
         context.send().embed("Ignore") {
-            description {
+            desc {
                 "Unset autorole. Users joining the guild will not be granted any role."
             }
         }.action().queue()

@@ -5,6 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.RepeatOption
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -45,8 +46,14 @@ class RepeatCommand : CommandExecutor() {
         manager.scheduler.repeatOption = option
 
         context.send().embed("Repeat Queue") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("\uD83D\uDD01 Music player was set to __**${manager.scheduler.repeatOption}**__.")
+            desc {
+                when (manager.scheduler.repeatOption) {
+                    RepeatOption.QUEUE -> "\uD83D\uDD01"
+                    RepeatOption.SONG -> "\uD83D\uDD02"
+                    RepeatOption.NONE -> "\u274C"
+                    else -> "\u2753"
+                } + " Music player was set to __**${manager.scheduler.repeatOption}**__."
+            }
         }.action().queue()
     }
 }

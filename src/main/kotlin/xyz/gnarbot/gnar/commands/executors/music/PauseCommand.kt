@@ -1,6 +1,5 @@
-package xyz.gnarbot.gnar.commands.executors.music.dj
+package xyz.gnarbot.gnar.commands.executors.music
 
-import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -9,13 +8,12 @@ import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        aliases = arrayOf("restart"),
-        description = "Restart the current song.",
+        aliases = arrayOf("pause"),
+        description = "Pause or resume the music player.",
         category = Category.MUSIC,
-        scope = Scope.VOICE,
-        permissions = arrayOf(Permission.MANAGE_CHANNEL)
+        scope = Scope.VOICE
 )
-class RestartCommand : CommandExecutor() {
+class PauseCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
@@ -31,17 +29,21 @@ class RestartCommand : CommandExecutor() {
             return
         }
 
-        val track = manager.player.playingTrack ?: manager.scheduler.lastTrack
-
-        if (track != null) {
-            context.send().embed("Restart Song") {
-                setColor(Bot.CONFIG.musicColor)
-                setDescription("Restarting track: `${track.info.title}`.")
-            }.action().queue()
-
-            manager.player.playTrack(track.makeClone())
-        } else {
-            context.send().error("No track has been previously started.").queue()
+        if (manager.player.playingTrack == null) {
+            context.send().error("Can not pause or resume player because there is no track loaded for playing.").queue()
+            return
         }
+
+        manager.player.isPaused = !manager.player.isPaused
+
+        context.send().embed("Playback Control") {
+            desc {
+                if (manager.player.isPaused) {
+                    "The player has been paused."
+                } else {
+                    "The player has resumed playing."
+                }
+            }
+        }.action().queue()
     }
 }

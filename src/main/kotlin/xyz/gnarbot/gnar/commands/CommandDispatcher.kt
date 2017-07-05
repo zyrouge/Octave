@@ -18,6 +18,18 @@ object CommandDispatcher {
     private val cooldownMap = TLongLongHashMap()
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
+        // Don't do anything if the bot can't even speak.
+        if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_WRITE)) {
+            return
+        }
+
+        // Send a message if bot cant use embeds.
+        if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
+            event.channel.sendMessage("The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}}` permission to show messages.")
+                    .queue(Utils.deleteMessage(15))
+            return
+        }
+
         if (!event.message.content.startsWith(Bot.CONFIG.prefix)) {
             return
         }
@@ -40,13 +52,6 @@ object CommandDispatcher {
     fun callCommand(context: Context) : Boolean {
         // Check if the person is to be ignored
         if (isIgnored(context, context.member)) {
-            return false
-        }
-
-        // Send a message if bot cant use embeds.
-        if (!context.guild.selfMember.hasPermission(Permission.MESSAGE_EMBED_LINKS)) {
-            context.send().text("The bot needs the `Embed Links` permission to show messages.")
-                    .queue(Utils.deleteMessage(15))
             return false
         }
 
@@ -111,8 +116,8 @@ object CommandDispatcher {
 
             if (cmd.info.donor && !context.guildOptions.isPremium()) {
                 context.send().embed("Donators Only") {
-                    setColor(Color.ORANGE)
-                    description {
+                    color { Color.ORANGE }
+                    desc {
                         buildString {
                             append("🌟 This command is for donators' servers only.").ln()
                             append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()

@@ -16,25 +16,33 @@ public class TextToBrickCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
         if (args.length == 0) {
-            context.send().error("Please provide a query.").queue();
+            context.send().error("Please provide words. `_ttb meme`").queue();
             return;
         }
 
-        context.send().embed("Text to Brick")
-                .description(() -> {
-                    StringBuilder sb = new StringBuilder();
-                    for (String a : StringUtils.join(args, " ").split("")) {
-                        if (Character.isLetter(a.toLowerCase().charAt(0))) {
-                            sb.append(":regional_indicator_").append(a.toLowerCase()).append(":");
-                        } else {
-                            if (" ".equals(a)) {
-                                sb.append(" ");
-                            }
-                            sb.append(a);
-                        }
-                    }
-                    return sb.toString();
-                })
-                .action().queue();
+        char[] array = StringUtils.join(args, " ").toUpperCase().toCharArray();
+
+        if (array.length > 100) {
+            context.send().error("Alright, that's way too long.").queue();
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : array) {
+            if (Character.isLetter(c)) {
+                sb.appendCodePoint(0x1F1E6 + c - 'A');
+            } else {
+                sb.append(c);
+            }
+            sb.append(' ');
+        }
+
+        if (sb.length() > 2000) {
+            context.send().error("Too many characters.");
+            return;
+        }
+
+        context.send().text(sb.toString()).queue();
     }
 }

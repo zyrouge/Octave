@@ -4,8 +4,10 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
-@Command(aliases = "ping",
-        description = "Show the bot's current response time.")
+@Command(
+        aliases = "ping",
+        description = "Show the bot's current response time."
+)
 public class PingCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
@@ -14,7 +16,7 @@ public class PingCommand extends CommandExecutor {
         context.send().text("Checking ping...").queue(msg -> {
             long ping = System.currentTimeMillis() - time;
             msg.editMessage("**Response Time**: " + ping + " ms\n"
-                    + "**Discord API**: " + context.getJda().getPing() + " ms").queue();
+                    + "**Discord API**: " + context.getJDA().getPing() + " ms").queue();
         });
     }
 }

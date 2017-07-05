@@ -96,8 +96,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                 guild.audioManager.openAudioConnection(channel)
 
                 context.send().embed("Music Playback") {
-                    setColor(Bot.CONFIG.musicColor)
-                    setDescription("Joining channel `${channel.name}`.")
+                    desc { "Joining channel `${channel.name}`." }
                 }.action().queue()
                 return true
             }
@@ -143,8 +142,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    color { Bot.CONFIG.musicColor }
-                    description { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
+                    desc { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
                     footer { footnote }
                 }.action().queue()
             }
@@ -186,9 +184,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                 }
 
                 context.send().embed("Music Queue") {
-                    setColor(Bot.CONFIG.musicColor)
-
-                    description {
+                    desc {
                         buildString {
                             append("Added `$added` tracks to queue from playlist `${playlist.name}`.").ln()
                             if (ignored > 0) {
@@ -211,6 +207,13 @@ class MusicManager(val id: Long, val jda: JDA) {
             }
 
             override fun loadFailed(e: FriendlyException) {
+                // No track found and queue is empty
+                // destroy player
+
+
+                if (scheduler.queue.isEmpty()) {
+                    Bot.getPlayers().destroy(id)
+                }
                 context.send().exception(e).queue()
             }
         })

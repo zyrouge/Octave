@@ -6,10 +6,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
-import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.ln
+import xyz.gnarbot.gnar.utils.*
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -55,8 +52,7 @@ class VoteSkipCommand : CommandExecutor() {
         manager.isVotingToSkip = true
 
         context.send().embed("Vote Skip") {
-            setColor(Bot.CONFIG.musicColor)
-            description {
+            desc {
                 buildString {
                     append(b(context.message.author.name))
                     append(" has voted to **skip** the current track!")
@@ -69,7 +65,7 @@ class VoteSkipCommand : CommandExecutor() {
             it.addReaction("👎").queue()
 
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
-                setDescription("Voting has ended! Check the newer messages for results.")
+                desc { "Voting has ended! Check the newer messages for results." }
                 clearFields()
             }.build()).queueAfter(Bot.CONFIG.voteSkipDuration.seconds, TimeUnit.SECONDS) {
                 var skip = 0
@@ -81,8 +77,7 @@ class VoteSkipCommand : CommandExecutor() {
                 }
 
                 context.send().embed("Vote Skip") {
-                    setColor(Bot.CONFIG.musicColor)
-                    description {
+                    desc {
                         buildString {
                             if (skip > stay) {
                                 appendln("The vote has passed! The song has been skipped.")

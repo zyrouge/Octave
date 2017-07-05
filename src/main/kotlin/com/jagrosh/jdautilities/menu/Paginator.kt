@@ -31,7 +31,8 @@ class Paginator(waiter: EventWaiter,
     fun display(channel: TextChannel) {
         if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
             channel.sendMessage(embed("Error") {
-                description {
+                color { Color.RED }
+                desc {
                     buildString {
                         append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
                         append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
@@ -49,6 +50,7 @@ class Paginator(waiter: EventWaiter,
     fun display(message: Message) {
         if (!message.textChannel.guild.selfMember.hasPermission(message.textChannel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
             message.channel.sendMessage(embed("Error") {
+                color { Color.RED }
                 description {
                     buildString {
                         append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
@@ -147,4 +149,6 @@ class Paginator(waiter: EventWaiter,
             setFooter("Page $pageNum/${list.size}", null)
         }.build()).build()
     }
+
+
 }

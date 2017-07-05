@@ -28,8 +28,8 @@ public class RollCommand extends CommandExecutor {
                 return;
             }
 
-            context.send().embed("Roll a Number")
-                    .setDescription("You rolled a **" + Math.random() * (maxValue + 1) + "**.")
+            context.send().embed()
+                    .setDescription("\uD83C\uDFB2 You rolled a **" + (int) (Math.random() * maxValue + 1) + "**.")
                     .action().queue();
         } else {
             context.send().error("Insufficient amount of arguments. ie. `_roll 5`").queue();

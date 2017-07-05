@@ -37,9 +37,7 @@ class VolumeCommand : CommandExecutor() {
 
         if (args.isEmpty()) {
             context.send().embed("Music Volume") {
-                setColor(Bot.CONFIG.musicColor)
-
-                description {
+                desc {
                     val percent = manager.player.volume.toDouble() / 100
                     buildString {
                         for (i in 0 until totalBlocks) {
@@ -67,9 +65,7 @@ class VolumeCommand : CommandExecutor() {
         manager.player.volume = amount
 
         context.send().embed("Music Volume") {
-            setColor(Bot.CONFIG.musicColor)
-
-            description {
+            desc {
                 val percent = amount.toDouble() / 100
                 buildString {
                     for (i in 0 until totalBlocks) {

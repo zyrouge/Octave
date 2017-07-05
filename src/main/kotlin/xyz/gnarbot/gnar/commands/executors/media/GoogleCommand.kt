@@ -43,7 +43,7 @@ class GoogleCommand : CommandExecutor() {
                 setAuthor("Google Results", "https://www.google.com/", "https://www.google.com/favicon.ico")
                 setThumbnail("https://gnarbot.xyz/assets/img/google.png")
 
-                description {
+                desc {
                     var count = 0
 
                     buildString {

@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -17,14 +16,13 @@ import xyz.gnarbot.gnar.utils.ln
         usage = "(user|channel|role|list) [?entity]",
         description = "Make the bot ignore certain users, channels or roles.",
         category = Category.MODERATION,
-        scope = Scope.TEXT,
         permissions = arrayOf(Permission.ADMINISTRATOR)
 )
 class IgnoreCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Ignore Management") {
-                description { info.description }
+                desc { info.description }
                 field("Options") {
                     buildString {
                         append("`user (user)` • Ignore/unignore a user.").ln()
@@ -70,7 +68,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.remove(member.user.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "No longer ignoring user ${member.asMention}."
                             }
                         }.action().queue()
@@ -78,7 +76,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.add(member.user.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "Ignored user ${member.asMention}."
                             }
                         }.action().queue()
@@ -112,7 +110,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.remove(channel.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "No longer ignoring channel ${channel.asMention}."
                             }
                         }.action().queue()
@@ -120,7 +118,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.add(channel.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "Ignored channel ${channel.asMention}."
                             }
                         }.action().queue()
@@ -159,7 +157,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.remove(role.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "No longer ignoring role ${role.asMention}."
                             }
                         }.action().queue()
@@ -167,7 +165,7 @@ class IgnoreCommand : CommandExecutor() {
                         it.add(role.id)
 
                         context.send().embed("Ignore") {
-                            description {
+                            desc {
                                 "Ignored role ${role.asMention}."
                             }
                         }.action().queue()

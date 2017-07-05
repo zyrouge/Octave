@@ -15,8 +15,6 @@ import java.util.Random;
 public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        context.send().embed("Coin Flip")
-                .setDescription(new Random().nextInt(2) == 0 ? "Heads" : "Tails!")
-                .action().queue();
+        context.send().embed().setDescription(new Random().nextInt(2) == 0 ? "Heads!" : "Tails!").action().queue();
     }
 }

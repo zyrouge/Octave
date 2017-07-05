@@ -17,7 +17,7 @@ class DialogCommand : CommandExecutor() {
                 .split("\n")
 
         context.send().embed {
-            description {
+            desc {
                 buildString {
                     appendln("```")
                     appendln("╔═══════════════════════════╗ ")

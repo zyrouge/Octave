@@ -4,13 +4,14 @@ import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.desc
 import java.util.concurrent.TimeUnit
 
 @Command(
         aliases = arrayOf("poll"),
         usage = "(option 1);(option 2);...",
         description = "Create a poll.",
-        cooldown = 120000 // 2 minutes
+        cooldown = 10000 // 2 minutes
 )
 class PollCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -22,7 +23,7 @@ class PollCommand : CommandExecutor() {
         }
         
         context.send().embed("Poll") {
-            setDescription("Vote through clicking the reactions on the choices below!")
+            desc { "Vote through clicking the reactions on the choices below!" }
             field("Options") {
                 buildString {
                     options.forEachIndexed { index, option ->
@@ -30,18 +31,18 @@ class PollCommand : CommandExecutor() {
                     }
                 }
             }
-            setFooter("Results will be final in 2 minutes.", null)
+            footer { "Results will be final in 2 minutes." }
         }.action().queue {
             for (index in 0..options.size - 1) {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
 
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
-                setDescription("Voting has ended! Check the results in the newer messages!")
+                desc { "Voting has ended! Check the results in the newer messages!" }
                 clearFields()
             }.build()).queueAfter(2, TimeUnit.MINUTES) {
                 context.send().embed("Poll Results") {
-                    setDescription("Voting has ended! Here are the results!")
+                    desc { "Voting has ended! Here are the results!" }
 
                     var topVotes = 0
                     val winners = mutableListOf<Int>()

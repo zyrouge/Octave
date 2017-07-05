@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.music
+package xyz.gnarbot.gnar.commands.executors.music.dj
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
@@ -27,8 +27,7 @@ class ForceSkipCommand : CommandExecutor() {
         manager.scheduler.nextTrack()
 
         context.send().embed("Skip Current Track") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("The track was skipped.")
+            desc { "The track was skipped." }
         }.action().queue()
     }
 }

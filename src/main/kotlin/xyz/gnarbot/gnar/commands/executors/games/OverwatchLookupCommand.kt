@@ -23,7 +23,7 @@ import java.io.IOException
 class OverwatchLookupCommand : CommandExecutor() {
     private val regions = arrayOf("us", "eu", "kr")
 
-    public override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().error("Insufficient arguments. `${info.usage}`.").queue()
             return
@@ -93,7 +93,7 @@ class OverwatchLookupCommand : CommandExecutor() {
                 }// Region arg not provided. Search for first non-null region.
 
                 context.send().embed("Overwatch Stats: $tag") {
-                    description {
+                    desc {
                         buildString {
                             appendln("Battle Tag: **__[$tag](https://playoverwatch.com/en-gb/career/pc/$region/$tag)__**")
                             appendln("Region: **__[${region!!.toUpperCase()}](http://masteroverwatch.com/leaderboards/pc/$region/mode/ranked/category/skillrating)__**")
@@ -150,7 +150,6 @@ class OverwatchLookupCommand : CommandExecutor() {
                         }
                     }
 
-                    val sideColor: Color? = null
                     var rankName: String? = null
 
                     overall.optJSONObject("competitive")?.let {
@@ -181,31 +180,31 @@ class OverwatchLookupCommand : CommandExecutor() {
 
                                     when {
                                         rank < 1500 -> {
-                                            setColor(Color(150, 90, 56))
+                                            color { Color(150, 90, 56) }
                                             rankName = "Bronze"
                                         }
                                         rank in 1500..1999 -> {
-                                            setColor(Color(168, 168, 168))
+                                            color { Color(168, 168, 168) }
                                             rankName = "Silver"
                                         }
                                         rank in 2000..2499 -> {
-                                            setColor(Color(201, 137, 16))
+                                            color { Color(201, 137, 16) }
                                             rankName = "Gold"
                                         }
                                         rank in 2500..2999 -> {
-                                            setColor(Color(229, 228, 226))
+                                            color { Color(229, 228, 226) }
                                             rankName = "Platinum"
                                         }
                                         rank in 3000..3499 -> {
-                                            setColor(Color(63, 125, 255))
+                                            color { Color(63, 125, 255) }
                                             rankName = "Diamond"
                                         }
                                         rank in 3500..3999 -> {
-                                            setColor(Color(255, 184, 12))
+                                            color { Color(255, 184, 12) }
                                             rankName = "Master"
                                         }
                                         rank >= 4000 -> {
-                                            setColor(Color(238, 180, 255))
+                                            color { Color(238, 180, 255) }
                                             rankName = "Grand Master"
                                         }
                                     }
@@ -225,8 +224,7 @@ class OverwatchLookupCommand : CommandExecutor() {
                         }
                     }
 
-                    setColor(sideColor)
-                    setThumbnail(avatar)
+                    thumbnail { avatar }
                 }.action().queue()
             }
         })

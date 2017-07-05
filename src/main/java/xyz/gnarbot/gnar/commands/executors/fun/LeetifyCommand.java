@@ -33,14 +33,17 @@ public class LeetifyCommand extends CommandExecutor {
 
     @Override
     public void execute(Context context, String[] args) {
+        if (args.length == 0) {
+            context.send().error("Please provide words. `_leet meme`").queue();
+            return;
+        }
+
         String s = StringUtils.join(args, " ");
 
         for (Map.Entry<String, String> entry : substitutions.entrySet()) {
             s = s.replaceAll(entry.getKey(), entry.getValue());
         }
 
-        context.send().embed("Leet it")
-                .setDescription(s)
-                .action().queue();
+        context.send().text(s).queue();
     }
 }

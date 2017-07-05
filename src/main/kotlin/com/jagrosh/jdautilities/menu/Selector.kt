@@ -36,7 +36,8 @@ class Selector(waiter: EventWaiter,
     fun display(channel: TextChannel) {
         if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
             channel.sendMessage(embed("Error") {
-                description {
+                color { Color.RED }
+                desc {
                     buildString {
                         append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
                         append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
@@ -49,7 +50,7 @@ class Selector(waiter: EventWaiter,
         }
 
         channel.sendMessage(embed(title) {
-            setColor(color)
+            color { channel.guild.selfMember.color }
             description {
                 buildString {
                     append(description).ln().ln()

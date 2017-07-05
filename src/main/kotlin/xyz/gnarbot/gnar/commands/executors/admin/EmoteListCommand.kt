@@ -31,7 +31,7 @@ class EmoteListCommand : CommandExecutor() {
 
             val emotePage = pages[page - 1]
 
-            description {
+            desc {
                 buildString {
                     emotePage.forEach {
                         appendln("${it.asMention} `:${it.name}:`")

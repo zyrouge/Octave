@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.ln
 class DonateCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         context.send().embed("Donations") {
-            description {
+            desc {
                 buildString {
                     append("Want to donate to support Gnar?").ln()
                     append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()

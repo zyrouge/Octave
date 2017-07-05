@@ -50,8 +50,7 @@ class HelpCommand : CommandExecutor() {
         val cmds = registry.entries
 
         context.send().embed("Documentation") {
-            setColor(Bot.CONFIG.accentColor)
-            setDescription("The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`.")
+            desc { "The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`." }
 
             for (category in Category.values()) {
                 if (!category.show) continue

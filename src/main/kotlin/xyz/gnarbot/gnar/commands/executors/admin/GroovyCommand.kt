@@ -4,7 +4,6 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import java.awt.Color
 import javax.script.*
 
 @Command(
@@ -29,17 +28,12 @@ class GroovyCommand : CommandExecutor() {
 
         scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
 
-        context.send().embed("Groovy") {
-            field("Running", false) { script }
-            field("Result", false) {
-                try {
-                    scriptEngine.eval(script, scope)
-                } catch (e: ScriptException) {
-                    setColor(Color.RED)
-                    "The error `$e` occurred while executing the Groovy statement."
-                }
-            }
-        }.action().queue()
-    }
+        val result = try {
+            scriptEngine.eval(script, scope)
+        } catch (e: ScriptException) {
+            return context.send().exception(e).queue()
+        }
 
+        context.send().text(result.toString()).queue()
+    }
 }

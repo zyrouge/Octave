@@ -28,8 +28,7 @@ class JumpCommand : ManagedCommand() {
         manager.player.playingTrack.position = duration.toMillis().coerceIn(0, manager.player.playingTrack.duration)
 
         context.send().embed("Jump To") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.")
+            desc { "The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}." }
         }.action().queue()
     }
 
@@ -43,8 +42,7 @@ class JumpCommand : ManagedCommand() {
                 .coerceIn(0, manager.player.playingTrack.duration)
 
         context.send().embed("Jump Forward") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.")
+            desc { "The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}." }
         }.action().queue()
     }
 
@@ -58,8 +56,7 @@ class JumpCommand : ManagedCommand() {
                 .coerceIn(0, manager.player.playingTrack.duration)
 
         context.send().embed("Jump Backward") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.")
+            desc { "The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}." }
         }.action().queue()
     }
 

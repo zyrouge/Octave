@@ -1,9 +1,8 @@
 package xyz.gnarbot.gnar.utils
 
-import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.requests.RestAction
-import xyz.gnarbot.gnar.Bot
+import java.awt.Color
 
 class ResponseBuilder(val context: Context) {
     /**
@@ -13,11 +12,7 @@ class ResponseBuilder(val context: Context) {
      * @return The Message created by this function.
      */
     fun text(text: String): RestAction<Message> {
-        return if (context.channel.canTalk()) {
-            context.channel.sendMessage(text)
-        } else {
-            context.user.openPrivateChannel().complete().sendMessage(text)
-        }
+        return context.channel.sendMessage(text)
     }
 
     /**
@@ -29,8 +24,8 @@ class ResponseBuilder(val context: Context) {
     fun info(msg: String): RestAction<Message> {
         return embed {
             title { "Info" }
-            description { msg }
-            setColor(Bot.CONFIG.accentColor)
+            desc  { msg }
+            color { context.guild.selfMember.color }
         }.action()
     }
 
@@ -42,9 +37,9 @@ class ResponseBuilder(val context: Context) {
      */
     fun error(msg: String): RestAction<Message> {
         return embed {
-            setTitle("Error")
-            setDescription(msg)
-            setColor(Bot.CONFIG.errorColor)
+            title { "Error" }
+            desc  { msg }
+            color { Color.RED }
         }.action()
     }
 
@@ -54,11 +49,7 @@ class ResponseBuilder(val context: Context) {
      * @return The Message created by this function.
      */
     fun exception(exception: Exception): RestAction<Message> {
-        return embed {
-            setTitle("Exception")
-            setDescription(exception.message)
-            setColor(Bot.CONFIG.errorColor)
-        }.action()
+        return error("${exception.javaClass.simpleName}: ${exception.message ?: ""}")
     }
 
     /**
@@ -69,8 +60,8 @@ class ResponseBuilder(val context: Context) {
      */
     @JvmOverloads
     fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
-        setTitle(title)
-        setColor(Bot.CONFIG.accentColor)
+        title { title }
+        color { context.guild.selfMember.color ?: Color.WHITE }
     }
 
     /**
@@ -86,11 +77,7 @@ class ResponseBuilder(val context: Context) {
     @Suppress("NOTHING_TO_INLINE")
     inner class ResponseEmbedBuilder : EmbedProxy<ResponseEmbedBuilder>() {
         fun action(): RestAction<Message> {
-            return if (context.guild.selfMember.hasPermission(context.channel, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS)) {
-                context.channel.sendMessage(build())
-            } else {
-                context.user.openPrivateChannel().complete().sendMessage(build())
-            }
+            return context.channel.sendMessage(build())
         }
     }
 }

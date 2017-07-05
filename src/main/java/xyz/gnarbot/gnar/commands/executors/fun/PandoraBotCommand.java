@@ -50,7 +50,7 @@ public class PandoraBotCommand extends CommandExecutor {
             String input = StringUtils.join(args, " ");
 
             String output = session.think(input);
-            context.send().embed("PandoraBot")
+            context.send().embed()
                     .setDescription(output)
                     .action().queue();
         } catch (Exception e) {

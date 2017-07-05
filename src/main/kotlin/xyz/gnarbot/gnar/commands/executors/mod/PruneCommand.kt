@@ -12,7 +12,7 @@ import java.time.OffsetDateTime
 
 @Command(
         aliases = arrayOf("prune", "delmessages", "delmsgs"),
-        usage = "(amount)",
+        usage = "(2-100)",
         description = "Delete up to 100 messages.",
         category = Category.MODERATION,
         scope = Scope.TEXT,
@@ -22,7 +22,7 @@ class PruneCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Prune Messages") {
-                description { info.description }
+                desc { info.description }
                 field("Options") {
                     buildString {
                         append("`(amount)` • Delete that amount of messages (up to 100).").ln()

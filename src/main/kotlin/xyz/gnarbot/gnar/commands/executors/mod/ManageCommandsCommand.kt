@@ -21,7 +21,7 @@ class ManageCommandsCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Command Management") {
-                description {
+                desc {
                     "Enable or disable certain commands."
                 }
                 field("Options") {
@@ -56,6 +56,7 @@ class ManageCommandsCommand : CommandExecutor() {
                 }
 
                 context.guildOptions.disabledCommands.removeAll(list)
+                context.guildOptions.save()
 
                 context.send().info("Enabling ${list.joinToString { "`$it`" }}.").queue()
             }
@@ -89,12 +90,13 @@ class ManageCommandsCommand : CommandExecutor() {
                 }
 
                 context.guildOptions.disabledCommands.addAll(list)
+                context.guildOptions.save()
 
                 context.send().info("Disabling ${list.joinToString { "`$it`" }}.").queue()
             }
             "list" -> {
                 context.send().embed("Disabled Commands") {
-                    description {
+                    desc {
                         if (context.guildOptions.disabledCommands.isEmpty()) {
                             "No commands disabled!? Hooray!"
                         } else buildString {

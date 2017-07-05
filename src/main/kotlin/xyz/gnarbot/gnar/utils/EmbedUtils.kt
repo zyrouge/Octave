@@ -3,12 +3,12 @@
 package xyz.gnarbot.gnar.utils
 
 import net.dv8tion.jda.core.EmbedBuilder
-import xyz.gnarbot.gnar.Bot
+import java.awt.Color
 
 @JvmOverloads
 fun embed(title: String? = null): EmbedMaker = EmbedMaker().apply {
     title { title }
-    color { Bot.CONFIG.accentColor }
+    color { Color(0x00dd58) }
 }
 
 inline fun embed(title: String? = null, value: EmbedMaker.() -> Unit): EmbedMaker {
@@ -24,6 +24,11 @@ inline fun EmbedBuilder.field(name: String?, inline: Boolean = false, value: Any
 
 inline fun EmbedBuilder.field(name: String?, inline: Boolean = false, value: () -> Any?): EmbedBuilder {
     addField(name, value().toString(), inline)
+    return this
+}
+
+inline fun EmbedBuilder.desc(value: () -> Any?): EmbedBuilder {
+    this.description(value)
     return this
 }
 

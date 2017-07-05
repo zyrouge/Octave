@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.ResponseBuilder;
+import xyz.gnarbot.gnar.utils.EmbedMaker;
 
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
@@ -122,8 +122,9 @@ public abstract class ManagedCommand extends CommandExecutor {
             builder.append("\n");
         }
 
-        ResponseBuilder.ResponseEmbedBuilder eb = context.send().embed("_" + getInfo().aliases()[0]);
+        EmbedMaker eb = new EmbedMaker();
 
+        eb.setTitle("_" + getInfo().aliases()[0]);
         if (args.length != 0) {
             eb.setTitle("Invalid arguments.");
             eb.setColor(Color.RED);
@@ -131,7 +132,8 @@ public abstract class ManagedCommand extends CommandExecutor {
         eb.appendDescription(getInfo().description());
         if (info != null) eb.appendDescription("\n" + info);
         eb.addField("Arguments", builder.toString(), false);
-        eb.action().queue();
+
+        context.getChannel().sendMessage(eb.build()).queue();
     }
 
     private void addPath(Entry entry) {

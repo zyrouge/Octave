@@ -44,7 +44,7 @@ public final class Context {
         return this.guildOptions;
     }
 
-    public final JDA getJda() {
+    public final JDA getJDA() {
         return this.jda;
     }
 

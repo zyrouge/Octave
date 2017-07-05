@@ -36,12 +36,6 @@ class MathCommand : CommandExecutor() {
             val exp = Expression(script)
 
             try {
-                field("Script") {
-                    code {
-                        script
-                    }
-                }
-
                 val expr = exp.compile()
 
                 var ast: String? = null
@@ -73,17 +67,17 @@ class MathCommand : CommandExecutor() {
                 field("Error") {
                     e.message
                 }
-                setColor(Color.RED)
+                color { Color.RED }
             } catch (e : ExecutionException) {
                 field("Error") {
                     e.cause?.message ?: e.message
                 }
-                setColor(Color.RED)
+                color { Color.RED }
             } catch (e : TimeoutException) {
                 field("Error") {
                     "Script took too long to execute."
                 }
-                setColor(Color.RED)
+                color { Color.RED }
             }
         }.action().queue()
     }

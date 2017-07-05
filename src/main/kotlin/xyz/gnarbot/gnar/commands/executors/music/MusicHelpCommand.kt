@@ -18,13 +18,12 @@ class MusicHelpCommand : CommandExecutor() {
 
         val cmds = registry.entries
         context.send().embed("Music Commands") {
-            description {
+            desc {
                 buildString {
                     append("Check out Gnar's music commands! Certain commands are donator exclusive, please consider ")
                     append("donating to our __**[Patreon](https://www.patreon.com/gnarbot)**__ to gain access to them.").ln()
                 }
             }
-            setColor(Bot.CONFIG.musicColor)
 
             val category = Category.MUSIC
 

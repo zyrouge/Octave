@@ -58,7 +58,7 @@ public class YodaTalkCommand extends CommandExecutor {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    context.send().embed("Yoda-Speak")
+                    context.send().embed()
                             .setDescription(response.body().string())
                             .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
                             .action().queue();

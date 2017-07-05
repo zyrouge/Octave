@@ -26,7 +26,7 @@ class IAmCommand : ManagedCommand() {
         context.guild.controller.addRolesToMember(context.member, role).queue()
 
         context.send().embed("Self-Roles") {
-            description {
+            desc {
                 "You're now a ${role.asMention}."
             }
         }.action().queue()
@@ -46,7 +46,7 @@ class IAmCommand : ManagedCommand() {
         context.guild.controller.removeRolesFromMember(context.member, role).queue()
 
         context.send().embed("Self-Roles") {
-            description {
+            desc {
                 "You're no longer a ${role.asMention}."
             }
         }.action().queue()
@@ -55,7 +55,7 @@ class IAmCommand : ManagedCommand() {
     @Executor(2, description = "List self-assignable roles.")
     fun list(context: Context) {
         context.send().embed("Self-Roles") {
-            description {
+            desc {
                 if (context.guildOptions.selfRoles.isEmpty()) {
                     "This guild doesn't have any self-assignable roles."
                 } else {

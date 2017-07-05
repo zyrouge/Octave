@@ -31,8 +31,7 @@ class SkipCommand : CommandExecutor() {
         manager.scheduler.nextTrack()
 
         context.send().embed("Skip Current Track") {
-            setColor(Bot.CONFIG.musicColor)
-            setDescription("The track was skipped.")
+            desc { "The track was skipped." }
         }.action().queue()
     }
 }

@@ -47,7 +47,7 @@ public class PoopCommand extends CommandExecutor {
         joiner.add(poopArt);
         joiner.add("░░░░░░░░░░░░░░░░░░░░░░░");
 
-        context.send().embed("Pooping Memes")
+        context.send().embed()
                 .setDescription(joiner.toString())
                 .action().queue();
     }

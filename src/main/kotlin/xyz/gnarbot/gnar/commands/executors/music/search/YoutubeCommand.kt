@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.*
+import java.awt.Color
 
 @xyz.gnarbot.gnar.commands.Command(
         aliases = arrayOf("youtube", "yt"),
@@ -35,10 +36,10 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("YouTube Results", "https://www.youtube.com", "https://www.youtube.com/favicon.ico")
-                    setThumbnail("https://gnarbot.xyz/assets/img/youtube.png")
-                    setColor(java.awt.Color(141, 20, 0))
+                    thumbnail { "https://gnarbot.xyz/assets/img/youtube.png" }
+                    color { Color(141, 20, 0) }
 
-                    description {
+                    desc {
                         buildString {
                             for (result in results) {
 
@@ -60,7 +61,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 SelectorBuilder(Bot.getWaiter()).apply {
                     setTitle("YouTube Results")
                     setDescription("Select one of the following options to play them in your current music channel.")
-                    setColor(java.awt.Color(141, 20, 0))
+                    setColor(Color(141, 20, 0))
 
                     setUser(context.user)
 
