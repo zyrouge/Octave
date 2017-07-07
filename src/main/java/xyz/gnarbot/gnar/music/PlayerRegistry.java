@@ -22,16 +22,14 @@ public class PlayerRegistry {
     }
 
     @Nonnull
-    public MusicManager get(Guild guild) {
-        if (size() >= 500) {
-            if (!Bot.getOptions().ofGuild(guild).isPremium()) {
-                throw new MusicLimitException();
-            }
-        }
-
+    public MusicManager get(Guild guild) throws MusicLimitException {
         MusicManager manager = registry.get(guild.getIdLong());
 
         if (manager == null) {
+            if (size() >= 500 && !Bot.getOptions().ofGuild(guild).isPremium()) {
+                throw new MusicLimitException();
+            }
+
             manager = new MusicManager(guild.getIdLong(), guild.getJDA());
             registry.put(guild.getIdLong(), manager);
         }

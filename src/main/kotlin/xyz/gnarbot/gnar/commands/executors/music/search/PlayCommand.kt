@@ -5,6 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
@@ -51,7 +52,12 @@ class PlayCommand : CommandExecutor() {
         }
 
         if ("https://" in args[0] || "http://" in args[0]) {
-            val manager = Bot.getPlayers().get(context.guild)
+            val manager = try {
+                Bot.getPlayers().get(context.guild)
+            } catch (e: MusicLimitException) {
+                e.sendToContext(context)
+                return
+            }
 
             manager.loadAndPlay(context, args[0], footnote)
         } else {
@@ -79,7 +85,12 @@ class PlayCommand : CommandExecutor() {
 
                 val result = results[0]
 
-                val manager = Bot.getPlayers().get(context.guild)
+                val manager = try {
+                    Bot.getPlayers().get(context.guild)
+                } catch (e: MusicLimitException) {
+                    e.sendToContext(context)
+                    return@search
+                }
 
                 manager.loadAndPlay(context, result.info.uri, footnote)
             }

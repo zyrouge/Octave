@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
@@ -175,9 +174,6 @@ object CommandDispatcher {
         try {
             cmd.execute(context, args)
             return true
-        } catch (e: MusicLimitException) {
-            context.send().error("Music is currently at maximum capacity, please try again later.\n"
-                    + "Please consider donating to our Patreon @ https://www.patreon.com/gnarbot to help us get better servers.").queue()
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
         } catch (e: Exception) {

@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 import com.jagrosh.jdautilities.menu.SelectorBuilder
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.b
@@ -14,7 +15,6 @@ import java.awt.Color
         aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
         description = "Search and see SoundCloud results.",
-        donor = true,
         scope = xyz.gnarbot.gnar.commands.Scope.TEXT,
         category = xyz.gnarbot.gnar.commands.Category.MUSIC
 )
@@ -71,7 +71,12 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                     for (result in results) {
                         addOption("`${Utils.getTimestamp(result.info.length)}` ${b(result.info.title link result.info.uri)}") {
                             if (context.member.voiceState.inVoiceChannel()) {
-                                val manager = Bot.getPlayers().get(context.guild)
+                                val manager = try {
+                                    Bot.getPlayers().get(context.guild)
+                                } catch (e: MusicLimitException) {
+                                    e.sendToContext(context)
+                                    return@addOption
+                                }
 
                                 manager.loadAndPlay(context, result.info.uri)
                             } else {

@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.menu.SelectorBuilder
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.*
 import java.awt.Color
@@ -68,7 +69,12 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                     for (result in results) {
                         addOption("`${Utils.getTimestamp(result.info.length)}` ${b(result.info.title link result.info.uri)}") {
                             if (context.member.voiceState.inVoiceChannel()) {
-                                val manager = Bot.getPlayers().get(context.guild)
+                                val manager = try {
+                                    Bot.getPlayers().get(context.guild)
+                                } catch (e: MusicLimitException) {
+                                    e.sendToContext(context)
+                                    return@addOption
+                                }
 
                                 manager.loadAndPlay(context, result.info.uri)
                             } else {
