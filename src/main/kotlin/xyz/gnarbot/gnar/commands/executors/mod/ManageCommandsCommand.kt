@@ -5,10 +5,10 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.managed.CommandTemplate
+import xyz.gnarbot.gnar.commands.managed.Executor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
-//TODO incomplete
 @Command(
         aliases = arrayOf("cmd", "command", "cmds", "commands"),
         usage = "(enable|disable|list) [commands...]",
@@ -17,100 +17,91 @@ import xyz.gnarbot.gnar.utils.ln
         category = Category.MODERATION,
         permissions = arrayOf(Permission.ADMINISTRATOR)
 )
-class ManageCommandsCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
-        if (args.isEmpty()) {
-            context.send().embed("Command Management") {
-                desc {
-                    "Enable or disable certain commands."
-                }
-                field("Options") {
-                    buildString {
-                        append("`enable` • Enable a command.").ln()
-                        append("`disable` • Disable a command.").ln()
-                        append("`list` • List disabled commands.").ln()
-                    }
-                }
-            }.action().queue()
+class ManageCommandsCommand : CommandTemplate() {
+    @Executor(0, description = "Enable commands.")
+    fun enable(context: Context, cmd: String) {
+        val aliases = lookupCommand(cmd)?.info?.aliases
+
+        if (aliases == null || aliases.isEmpty()) {
+            context.send().error("`$cmd` is not a valid command.").queue()
             return
         }
 
-        when (args[0]) {
-            "enable" -> {
-                if (args.size != 2) {
-                    context.send().error("Please input a command argument `ie. _cmd enable roll`.").queue()
-                    return
-                }
-                val aliases = lookupCommand(args[1])?.info?.aliases
+        val list = aliases.filter(context.guildOptions.disabledCommands::contains)
 
-                if (aliases == null || aliases.isEmpty()) {
-                    context.send().error("`${args[1]}` is not a valid command.").queue()
-                    return
-                }
-
-                val list = aliases.filter(context.guildOptions.disabledCommands::contains)
-
-                if (list.isEmpty()) {
-                    context.send().error("`${args[1]}` is not disabled.").queue()
-                    return
-                }
-
-                context.guildOptions.disabledCommands.removeAll(list)
-                context.guildOptions.save()
-
-                context.send().info("Enabling ${list.joinToString { "`$it`" }}.").queue()
-            }
-            "disable" -> {
-                if (args.size != 2) {
-                    context.send().error("Please input a command argument `ie. _cmd disable roll`.").queue()
-                    return
-                }
-                val info = lookupCommand(args[1])?.info
-
-                if (info == null) {
-                    context.send().error("`${args[1]}` is not a valid command.").queue()
-                    return
-                } else if (!info.toggleable) {
-                    context.send().error("`${args[1]}` can not be toggled.").queue()
-                    return
-                }
-
-                val aliases = info.aliases
-
-                if (aliases.isEmpty()) {
-                    context.send().error("`${args[1]}` is not a valid command.").queue()
-                    return
-                }
-
-                val list = aliases.filterNot(context.guildOptions.disabledCommands::contains)
-
-                if (list.isEmpty()) {
-                    context.send().error("`${args[1]}` is already disabled.").queue()
-                    return
-                }
-
-                context.guildOptions.disabledCommands.addAll(list)
-                context.guildOptions.save()
-
-                context.send().info("Disabling ${list.joinToString { "`$it`" }}.").queue()
-            }
-            "list" -> {
-                context.send().embed("Disabled Commands") {
-                    desc {
-                        if (context.guildOptions.disabledCommands.isEmpty()) {
-                            "No commands disabled!? Hooray!"
-                        } else buildString {
-                            context.guildOptions.disabledCommands.forEach {
-                                append("• `").append(it).append("`\n")
-                            }
-                        }
-                    }
-                }.action().queue()
-            }
-            else -> {
-                context.send().error("Invalid argument. Try `enable`, `disable`, or `list` instead.").queue()
-            }
+        if (list.isEmpty()) {
+            context.send().error("`$cmd` is not disabled.").queue()
+            return
         }
+
+        context.guildOptions.disabledCommands.removeAll(list)
+        context.guildOptions.save()
+
+        context.send().info("Enabling ${list.joinToString { "`$it`" }}.").queue()
+    }
+
+    @Executor(1, description = "Disable commands..")
+    fun disable(context: Context, cmd: String) {
+        val info = lookupCommand(cmd)?.info
+
+        if (info == null) {
+            context.send().error("`$cmd` is not a valid command.").queue()
+            return
+        } else if (!info.toggleable) {
+            context.send().error("`$cmd` can not be toggled.").queue()
+            return
+        }
+
+        val aliases = info.aliases
+
+        if (aliases.isEmpty()) {
+            context.send().error("`$cmd` is not a valid command.").queue()
+            return
+        }
+
+        val list = aliases.filterNot(context.guildOptions.disabledCommands::contains)
+
+        if (list.isEmpty()) {
+            context.send().error("`$cmd` is already disabled.").queue()
+            return
+        }
+
+        context.guildOptions.disabledCommands.addAll(list)
+        context.guildOptions.save()
+
+        context.send().info("Disabling ${list.joinToString { "`$it`" }}.").queue()
+    }
+
+    @Executor(2, description = "Clear all disabled commands.")
+    fun clear(context: Context) {
+        if (context.guildOptions.disabledCommands.isEmpty()) {
+            context.send().error("This guild doesn't have any disabled commands.").queue()
+            return
+        }
+
+        context.guildOptions.disabledCommands.clear()
+        context.guildOptions.save()
+
+        context.send().embed("Command Management") {
+            desc {
+                "Cleared the list of self-assignable roles."
+            }
+        }.action().queue()
+    }
+
+    @Executor(3, description = "List all disabled commands.")
+    fun list(context: Context) {
+        context.send().embed("Disabled Commands") {
+            desc {
+                if (context.guildOptions.disabledCommands.isEmpty()) {
+                    "No commands disabled!? Hooray!"
+                } else buildString {
+                    context.guildOptions.disabledCommands.forEach {
+                        append("• `").append(it).append("`\n")
+                    }
+                }
+            }
+        }.action().queue()
     }
 
     private fun lookupCommand(label: String): CommandExecutor? {

@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.managed;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.Duration;
@@ -43,7 +44,7 @@ public class Parser {
             }
         }
     };
-    public static final Parser CHANNEL = new Parser("(#channel)") {
+    public static final Parser TEXT_CHANNEL = new Parser("(#channel)") {
         private final Pattern pattern = Pattern.compile("<#(\\d+)>");
 
         @Override
@@ -55,6 +56,13 @@ public class Parser {
                 List<TextChannel> list = c.getGuild().getTextChannelsByName(s, false);
                 return list.isEmpty() ? null : list.get(0);
             }
+        }
+    };
+    public static final Parser VOICE_CHANNEL = new Parser("(voice channel)") {
+        @Override
+        public Object parse(Context c, String s) {
+            List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
+            return list.isEmpty() ? null : list.get(0);
         }
     };
     public static final Parser ROLE = new Parser("(@role)") {
@@ -131,6 +139,10 @@ public class Parser {
     }
 
     public String getName() {
+        return name;
+    }
+
+    public String toString() {
         return name;
     }
 

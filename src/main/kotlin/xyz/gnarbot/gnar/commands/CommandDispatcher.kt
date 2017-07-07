@@ -4,11 +4,13 @@ import gnu.trove.map.hash.TLongLongHashMap
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.Channel
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
@@ -127,43 +129,55 @@ object CommandDispatcher {
                 }.action().queue()
                 return false
             }
+        }
 
-            if (cmd.info.guildOwner && context.guild.owner != member) {
-                context.send().error("This command is for server owners only.").queue()
+        if (cmd.info.guildOwner && context.guild.owner != member) {
+            context.send().error("This command is for server owners only.").queue()
+            return false
+        }
+
+        if (cmd.info.category == Category.MUSIC) {
+            val musicTextChannel = context.guildOptions.requestChannel?.let { context.guild.getTextChannelById(it) }
+            if (musicTextChannel != null && musicTextChannel != context.channel) {
+                context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used in ${musicTextChannel.asMention}.").queue()
                 return false
             }
+        }
 
-            if (cmd.info.scope == Scope.VOICE) {
-                if (member.voiceState.channel == null) {
-                    context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
-                    return false
-                }
-            }
+        if (cmd.info.scope == Scope.VOICE) {
+            if (member.voiceState.channel == null) {
+                context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
+                return false
+            } else if (context.guildOptions.musicChannels.isNotEmpty()
+                    && member.voiceState.channel.id !in context.guildOptions.musicChannels) {
+                val channels = context.guildOptions.musicChannels
+                        .map { context.guild.getVoiceChannelById(it) }
+                        .filterNotNull()
+                        .map(Channel::getName)
 
-            if (cmd.info.permissions.isNotEmpty()) {
-                if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
-                    val requirements = cmd.info.permissions.map(Permission::getName)
-                    context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
-                        Scope.GUILD -> "the guild `${message.guild.name}`."
-                        Scope.TEXT -> "the text channel `${message.textChannel.name}`."
-                        Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
-                    }).queue()
-                    return false
-                }
+                context.send().error("Music can only be played in: `$channels`.").queue()
+                return false
             }
-        } else {
-            // otherwise run the only essential check
-            if (cmd.info.scope == Scope.VOICE) {
-                if (member.voiceState.channel == null) {
-                    context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
-                    return false
-                }
+        }
+
+        if (cmd.info.permissions.isNotEmpty()) {
+            if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+                val requirements = cmd.info.permissions.map(Permission::getName)
+                context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
+                    Scope.GUILD -> "the guild `${message.guild.name}`."
+                    Scope.TEXT -> "the text channel `${message.textChannel.name}`."
+                    Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
+                }).queue()
+                return false
             }
         }
 
         try {
             cmd.execute(context, args)
             return true
+        } catch (e: MusicLimitException) {
+            context.send().error("Music is currently at maximum capacity, please try again later.\n"
+                    + "Please consider donating to our Patreon @ https://www.patreon.com/gnarbot to help us get better servers.").queue()
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
         } catch (e: Exception) {

@@ -1,11 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.managed.CommandTemplate
 import xyz.gnarbot.gnar.commands.managed.Executor
-import xyz.gnarbot.gnar.commands.managed.ManagedCommand
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -16,7 +17,7 @@ import xyz.gnarbot.gnar.utils.ln
         category = Category.MODERATION,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
-class SelfRoleCommand : ManagedCommand() {
+class SelfRoleCommand : CommandTemplate() {
     @Executor(0, description = "Add a self-role.")
     fun add(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
@@ -86,11 +87,10 @@ class SelfRoleCommand : ManagedCommand() {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
-                        context.guildOptions.selfRoles.map {
-                            context.guild.getRoleById(it)
-                        }.filterNotNull().forEach {
-                            append("• ").append(it.asMention).ln()
-                        }
+                        context.guildOptions.selfRoles.map(context.guild::getRoleById)
+                                .filterNotNull()
+                                .map(IMentionable::getAsMention)
+                                .forEach { append("• ").append(it).ln() }
                     }
                 }
             }

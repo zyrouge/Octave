@@ -1,12 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.JDAInfo
-import net.dv8tion.jda.core.OnlineStatus
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.link
 import xyz.gnarbot.gnar.utils.ln
 import java.lang.management.ManagementFactory
 
@@ -30,25 +28,10 @@ class BotInfoCommand : CommandExecutor() {
         var guilds = 0
 
         var users = 0
-        var offline = 0
-        var online = 0
-        var inactive = 0
 
         for (shard in Bot.getShards()) {
             guilds += shard.jda.guilds.size
             requests += shard.requests
-
-            for (guild in shard.jda.guilds) {
-                for (member in guild.members) {
-                    when (member.onlineStatus) {
-                        OnlineStatus.ONLINE -> online++
-                        OnlineStatus.OFFLINE -> offline++
-                        OnlineStatus.IDLE -> inactive++
-                        else -> {}
-                    }
-                }
-            }
-
             users += shard.jda.users.size
             textChannels += shard.jda.textChannels.size
             voiceChannels += shard.jda.voiceChannels.size
@@ -57,35 +40,35 @@ class BotInfoCommand : CommandExecutor() {
         val commandSize = registry.entries.count { it.info.category.show }
 
         context.send().embed("Bot Information") {
-            field("Requests", true) { requests }
+            thumbnail { context.jda.selfUser.avatarUrl }
+            desc {
+                "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld."
+            }
+
+            field("Session Requests", true) { requests }
             field("Requests Per Hour", true) { requests / Math.max(1, h) }
-            field("Website", true) { "gnarbot.xyz" link "https://gnarbot.xyz" }
 
             field("Text Channels", true) { textChannels }
             field("Voice Channels", true) { voiceChannels }
-            field("Voice Connections", true) { Bot.getPlayers().size() }
 
             field("Guilds", true) { guilds }
-            field(true)
+            field("Voice Connections", true) { Bot.getPlayers().size() }
+
+            field("Users", true) { users }
             field("Uptime", true) { "${d}d ${h % 24}h ${m % 60}m ${s % 60}s" }
 
-            field("Users", true) {
+            field("General", true) {
                 buildString {
-                    append("Total: ").append(users).ln()
-                    append("Online: ").append(online).ln()
-                    append("Offline: ").append(offline).ln()
-                    append("Inactive: ").append(inactive).ln()
+                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**").ln()
+                    append("Commands: **$commandSize**").ln()
+                    append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
                 }
             }
-
-
-            field("Others", true) {
+            field("Credits", true) {
                 buildString {
                     append("The Serious: **[Avarel](https://github.com/Avarel)**").ln()
                     append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**").ln()
                     append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
-                    append("Commands: **$commandSize**").ln()
-                    append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
                 }
             }
         }.action().queue()

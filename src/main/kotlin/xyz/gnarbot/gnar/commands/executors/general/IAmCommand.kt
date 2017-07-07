@@ -2,8 +2,8 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.managed.CommandTemplate
 import xyz.gnarbot.gnar.commands.managed.Executor
-import xyz.gnarbot.gnar.commands.managed.ManagedCommand
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.ln
         usage = "(a|not) (@role)",
         description = "Assign yourself a self-role."
 )
-class IAmCommand : ManagedCommand() {
+class IAmCommand : CommandTemplate() {
     @Executor(0, description = "Assign yourself a self-role.")
     fun a(context: Context, role: Role) {
         if (role.id !in context.guildOptions.selfRoles) {

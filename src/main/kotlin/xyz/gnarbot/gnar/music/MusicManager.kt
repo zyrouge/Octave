@@ -4,9 +4,14 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioTrack
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
@@ -21,8 +26,14 @@ import xyz.gnarbot.gnar.utils.ln
 
 class MusicManager(val id: Long, val jda: JDA) {
     companion object {
-        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-                .apply(AudioSourceManagers::registerRemoteSources)
+        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
+            it.registerSourceManager(YoutubeAudioSourceManager())
+            it.registerSourceManager(SoundCloudAudioSourceManager())
+            it.registerSourceManager(BandcampAudioSourceManager())
+            it.registerSourceManager(VimeoAudioSourceManager())
+            it.registerSourceManager(TwitchStreamAudioSourceManager())
+            it.registerSourceManager(BeamAudioSourceManager())
+        }
 
         fun search(query: String, maxResults: Int, callback: (List<AudioTrack>) -> Unit) {
             playerManager.loadItem(query, object : AudioLoadResultHandler {
@@ -76,10 +87,7 @@ class MusicManager(val id: Long, val jda: JDA) {
         closeAudioConnection()
     }
 
-    fun
-
-
-            openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
+    fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
         when {
             !Bot.CONFIG.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
@@ -122,7 +130,9 @@ class MusicManager(val id: Long, val jda: JDA) {
                         }
                         return
                     }
-                    openAudioConnection(context.member.voiceState.channel, context)
+                    if (!openAudioConnection(context.member.voiceState.channel, context)) {
+                        return
+                    }
                 }
 
                 if (scheduler.queue.size >= Bot.CONFIG.queueLimit) {
@@ -164,7 +174,9 @@ class MusicManager(val id: Long, val jda: JDA) {
                         }
                         return
                     }
-                    openAudioConnection(context.member.voiceState.channel, context)
+                    if (!openAudioConnection(context.member.voiceState.channel, context)) {
+                        return
+                    }
                 }
 
                 val tracks = playlist.tracks

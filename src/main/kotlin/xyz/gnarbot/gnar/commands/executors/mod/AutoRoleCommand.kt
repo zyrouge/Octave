@@ -4,8 +4,8 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.managed.CommandTemplate
 import xyz.gnarbot.gnar.commands.managed.Executor
-import xyz.gnarbot.gnar.commands.managed.ManagedCommand
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.Context
         category = Category.MODERATION,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
-class AutoRoleCommand : ManagedCommand() {
+class AutoRoleCommand : CommandTemplate() {
     @Executor(0, description = "Set the auto-role.")
     fun set(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
@@ -68,7 +68,7 @@ class AutoRoleCommand : ManagedCommand() {
             if (role == null) {
                 append("__None__")
             } else {
-                append(context.guild.getRoleById(role).asMention)
+                context.guild.getRoleById(role)?.asMention?.let { append(it) }
             }
         })
     }

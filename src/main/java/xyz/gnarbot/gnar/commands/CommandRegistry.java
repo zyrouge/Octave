@@ -79,6 +79,7 @@ public class CommandRegistry {
         register(new PruneCommand());
         register(new AutoRoleCommand());
         register(new SelfRoleCommand());
+        register(new MusicSettingsCommand());
         //End Mod Commands
 
         //Testing Commands

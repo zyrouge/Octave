@@ -6,8 +6,6 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.link
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
@@ -50,7 +48,12 @@ class HelpCommand : CommandExecutor() {
         val cmds = registry.entries
 
         context.send().embed("Documentation") {
-            desc { "The prefix of the bot on this server is `" + Bot.CONFIG.prefix + "`." }
+            desc {
+                buildString {
+                    append("The prefix of the bot on this server is `").append(Bot.CONFIG.prefix).append("`.").ln()
+                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**").ln()
+                }
+            }
 
             for (category in Category.values()) {
                 if (!category.show) continue
@@ -62,13 +65,6 @@ class HelpCommand : CommandExecutor() {
 
                 field("${category.title} — ${filtered.size}\n") {
                     filtered.joinToString("`   `", "`", "`") { it.info.aliases.first() }
-                }
-            }
-
-            field("Donations", true) {
-                buildString {
-                    append(b("Patreon" link "https://www.patreon.com/gnarbot")).ln()
-                    append(b("PayPal" link "https://gnarbot.xyz/donate")).ln()
                 }
             }
         }.action().queue()

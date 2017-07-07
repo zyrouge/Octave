@@ -7,12 +7,30 @@ import java.beans.ConstructorProperties
 import java.lang.System.currentTimeMillis
 
 data class GuildOptions @ConstructorProperties("id") constructor(val id: String): ManagedObject {
+
+    /** Aliases of disabled commands. */
     var disabledCommands: MutableSet<String> = hashSetOf()
+
+    /** String IDs of ignored channels. */
     var ignoredChannels: MutableSet<String> = hashSetOf()
+
+    /** String IDs of ignored users. */
     var ignoredUsers: MutableSet<String> = hashSetOf()
+
+    /** String IDs of ignored roles. */
     var ignoredRoles: MutableSet<String> = hashSetOf()
+
+    /** String ID of the auto-role. */
     var autoRole: String? = null
+
+    /** String IDs of the self-assignable roles. */
     var selfRoles: MutableSet<String> = hashSetOf()
+
+    /** String ID of the text channel music can be requested in. */
+    var requestChannel: String? = null
+
+    /** String IDs of voice channels that music can be used in. */
+    var musicChannels: MutableSet<String> = hashSetOf()
 
     var premiumUntil: Long = 0
 

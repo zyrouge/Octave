@@ -1,8 +1,9 @@
 package xyz.gnarbot.gnar.commands.managed;
 
-import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -18,10 +19,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public abstract class ManagedCommand extends CommandExecutor {
-    private final List<Entry> paths = new ArrayList<>();
+public abstract class CommandTemplate extends CommandExecutor {
+    private final List<Entry> entries = new ArrayList<>();
 
-    public ManagedCommand() {
+    public CommandTemplate() {
         Method[] methods = getClass().getDeclaredMethods();
         Arrays.sort(methods, Comparator.comparingInt(a -> {
             Executor an = a.getAnnotation(Executor.class);
@@ -47,10 +48,12 @@ public abstract class ManagedCommand extends CommandExecutor {
                     parsers[i] = Parser.INTEGER;
                 } else if (params[i].getType() == Member.class) {
                     parsers[i] = Parser.MEMBER;
-                } else if (params[i].getType() == Channel.class) {
-                    parsers[i] = Parser.CHANNEL;
+                } else if (params[i].getType() == TextChannel.class) {
+                    parsers[i] = Parser.TEXT_CHANNEL;
                 } else if (params[i].getType() == Role.class) {
                     parsers[i] = Parser.ROLE;
+                } else if (params[i].getType() == VoiceChannel.class) {
+                    parsers[i] = Parser.VOICE_CHANNEL;
                 } else if (params[i].getType() == Duration.class) {
                     parsers[i] = Parser.DURATION;
                 }
@@ -67,7 +70,7 @@ public abstract class ManagedCommand extends CommandExecutor {
             return;
         }
 
-        main: for (Entry entry : paths) {
+        main: for (Entry entry : entries) {
             Parser[] types = entry.parsers;
             if (args.length < types.length) continue;
 
@@ -107,8 +110,8 @@ public abstract class ManagedCommand extends CommandExecutor {
     protected void noMatches(Context context, String[] args, String info) {
         StringBuilder builder = new StringBuilder();
 
-        for (Entry entry : paths) {
-            builder.append('`');
+        for (Entry entry : entries) {
+            builder.append("• `");
             for (int i = 0; i < entry.parsers.length; i++) {
                 builder.append(entry.parsers[i].getName());
                 if (i < entry.parsers.length - 1) {
@@ -117,12 +120,13 @@ public abstract class ManagedCommand extends CommandExecutor {
             }
             builder.append("`");
             if (entry.description != null) {
-                builder.append(" • ").append(entry.description);
+                builder.append("\n").append(entry.description);
             }
-            builder.append("\n");
+            builder.append("\n\n");
         }
 
         EmbedMaker eb = new EmbedMaker();
+        eb.setColor(context.getGuild().getSelfMember().getColor());
 
         eb.setTitle("_" + getInfo().aliases()[0]);
         if (args.length != 0) {
@@ -137,7 +141,7 @@ public abstract class ManagedCommand extends CommandExecutor {
     }
 
     private void addPath(Entry entry) {
-        paths.add(entry);
+        entries.add(entry);
     }
 
     private class Entry {
