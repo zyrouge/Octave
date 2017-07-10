@@ -43,9 +43,8 @@ public class RedeemCommand extends CommandExecutor {
                             .setDescription("Redeemed key `" + key + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getGuildOptions().getPremiumUntil())) + "`.")
                             .field("Donator Perks", true, () ->
-                                    " • `_volume` Change the volume of the music player!\n"
-                                            + " • `_soundcloud` Search SoundCloud!\n"
-                                            + " • `_seek` Change the music player's position marker!\n")
+                                    " • `volume` Change the volume of the music player!\n"
+                                            + " • `seek` Change the music player's position marker!\n")
                             .action().queue();
                     break;
                 default:

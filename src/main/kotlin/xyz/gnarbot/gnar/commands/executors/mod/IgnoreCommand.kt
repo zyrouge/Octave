@@ -7,8 +7,8 @@ import net.dv8tion.jda.core.entities.Role
 import net.dv8tion.jda.core.entities.TextChannel
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.managed.CommandTemplate
-import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.template.CommandTemplate
+import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.ln
         usage = "(user|channel|role|list) [?entity]",
         description = "Make the bot ignore certain users, channels or roles.",
         category = Category.MODERATION,
-        permissions = arrayOf(Permission.ADMINISTRATOR)
+        permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class IgnoreCommand : CommandTemplate() {
     @Executor(0, description = "Ignore/unignore users.")

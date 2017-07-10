@@ -3,12 +3,10 @@
 package xyz.gnarbot.gnar.utils
 
 import net.dv8tion.jda.core.EmbedBuilder
-import java.awt.Color
 
 @JvmOverloads
 fun embed(title: String? = null): EmbedMaker = EmbedMaker().apply {
     title { title }
-    color { Color(0x00dd58) }
 }
 
 inline fun embed(title: String? = null, value: EmbedMaker.() -> Unit): EmbedMaker {

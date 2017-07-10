@@ -2,8 +2,8 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.managed.CommandTemplate
-import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.template.CommandTemplate
+import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 

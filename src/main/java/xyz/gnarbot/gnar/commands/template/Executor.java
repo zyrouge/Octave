@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.managed;
+package xyz.gnarbot.gnar.commands.template;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

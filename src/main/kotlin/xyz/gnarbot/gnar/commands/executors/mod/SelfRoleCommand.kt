@@ -5,8 +5,8 @@ import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.managed.CommandTemplate
-import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.template.CommandTemplate
+import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -15,11 +15,16 @@ import xyz.gnarbot.gnar.utils.ln
         usage = "(add|remove|clear) [@role]",
         description = "Set self-roles that users can assign to themselves.",
         category = Category.MODERATION,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class SelfRoleCommand : CommandTemplate() {
     @Executor(0, description = "Add a self-role.")
     fun add(context: Context, role: Role) {
+        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+            context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
+            return
+        }
+
         if (role == context.guild.publicRole) {
             context.send().error("You can't add the public role!").queue()
             return
@@ -87,6 +92,11 @@ class SelfRoleCommand : CommandTemplate() {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
+                        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+                            append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
+                            return
+                        }
+
                         context.guildOptions.selfRoles.map(context.guild::getRoleById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)

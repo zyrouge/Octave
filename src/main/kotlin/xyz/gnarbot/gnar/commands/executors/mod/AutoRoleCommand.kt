@@ -4,8 +4,8 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.managed.CommandTemplate
-import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.template.CommandTemplate
+import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -13,11 +13,16 @@ import xyz.gnarbot.gnar.utils.Context
         usage = "(set|unset) [@role]",
         description = "Set auto-roles that are assigned to users on joining.",
         category = Category.MODERATION,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class AutoRoleCommand : CommandTemplate() {
     @Executor(0, description = "Set the auto-role.")
     fun set(context: Context, role: Role) {
+        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+            context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
+            return
+        }
+
         if (role == context.guild.publicRole) {
             context.send().error("You can't grant the public role!").queue()
             return
@@ -37,7 +42,7 @@ class AutoRoleCommand : CommandTemplate() {
         context.guildOptions.autoRole = role.id
         context.guildOptions.save()
 
-        context.send().embed("Ignore") {
+        context.send().embed("Auto-Role") {
             desc {
                 "Users joining the guild will now be granted the role ${role.asMention}."
             }
@@ -54,7 +59,7 @@ class AutoRoleCommand : CommandTemplate() {
         context.guildOptions.autoRole = null
         context.guildOptions.save()
 
-        context.send().embed("Ignore") {
+        context.send().embed("Auto-Role") {
             desc {
                 "Unset autorole. Users joining the guild will not be granted any role."
             }
@@ -63,6 +68,11 @@ class AutoRoleCommand : CommandTemplate() {
 
     override fun noMatches(context: Context, args: Array<String>) {
         noMatches(context, args, buildString {
+            if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+                append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
+                return
+            }
+
             val role = context.guildOptions.autoRole
             append("Current auto-role: ")
             if (role == null) {

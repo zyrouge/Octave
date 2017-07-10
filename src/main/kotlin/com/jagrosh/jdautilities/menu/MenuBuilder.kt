@@ -17,7 +17,7 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
     }
 
     protected var user: User? = null
-    protected var title: String = "Menu"
+    protected var title: String? = "Menu"
     protected var description: String? = null
     protected var color: Color? = null
     protected var finally: (Message?) -> Unit = DEFAULT_FINALLY
@@ -25,17 +25,17 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
     protected var unit: TimeUnit = TimeUnit.SECONDS
     protected val fields: MutableList<MessageEmbed.Field> = arrayListOf()
 
-    fun setTitle(title: String): T {
+    fun setTitle(title: String?): T {
         this.title = title
         return this as T
     }
 
-    fun setDescription(description: String): T {
+    fun setDescription(description: String?): T {
         this.description = description
         return this as T
     }
 
-    fun setColor(color: Color): T {
+    fun setColor(color: Color?): T {
         this.color = color
         return this as T
     }

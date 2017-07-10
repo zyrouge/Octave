@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.listeners;
 
 
 import gnu.trove.iterator.TLongObjectIterator;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -43,7 +44,8 @@ public class BotListener extends ListenerAdapter {
                 }
 
                 // If bot cant interact with role then unset
-                if (!event.getGuild().getSelfMember().canInteract(role)) {
+                if (!event.getGuild().getSelfMember().canInteract(role)
+                        || !event.getGuild().getSelfMember().hasPermission(Permission.MANAGE_ROLES)) {
                     options.setAutoRole(null);
                     return;
                 }

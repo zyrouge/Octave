@@ -74,12 +74,14 @@ public class CommandRegistry {
         //End Fun Commands
 
         //Mod Commands
+        register(new PrefixCommand());
         register(new ManageCommandsCommand());
         register(new IgnoreCommand());
         register(new PruneCommand());
         register(new AutoRoleCommand());
         register(new SelfRoleCommand());
         register(new MusicSettingsCommand());
+        register(new ResetSettingsCommand());
         //End Mod Commands
 
         //Testing Commands

@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
+import java.awt.Color
 
 @Command(
         aliases = arrayOf("queue", "list"),
@@ -28,7 +29,7 @@ class QueueCommand : CommandExecutor() {
 
         PaginatorBuilder(Bot.getWaiter())
                 .setTitle("Music Queue")
-                .setColor(context.guild.selfMember.color)
+                .setColor(context.guild.selfMember.color ?: Color.WHITE)
                 .apply {
                     if (queue.isEmpty()) {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")

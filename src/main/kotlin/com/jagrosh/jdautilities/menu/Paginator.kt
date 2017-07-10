@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class Paginator(waiter: EventWaiter,
                 user: User?,
-                title: String,
+                title: String?,
                 description: String?,
                 color: Color?,
                 fields: List<MessageEmbed.Field>,

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 
 class Selector(waiter: EventWaiter,
                user: User?,
-               title: String,
+               title: String?,
                description: String?,
                color: Color?,
                fields: List<MessageEmbed.Field>,

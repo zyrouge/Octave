@@ -7,6 +7,8 @@ import java.beans.ConstructorProperties
 import java.lang.System.currentTimeMillis
 
 data class GuildOptions @ConstructorProperties("id") constructor(val id: String): ManagedObject {
+    /** Server bot prefix. */
+    var prefix: String = Bot.CONFIG.prefix
 
     /** Aliases of disabled commands. */
     var disabledCommands: MutableSet<String> = hashSetOf()
@@ -25,6 +27,10 @@ data class GuildOptions @ConstructorProperties("id") constructor(val id: String)
 
     /** String IDs of the self-assignable roles. */
     var selfRoles: MutableSet<String> = hashSetOf()
+
+    /** DJ role will be the only ones who can use music and
+     *  bypass all permission requirements for music automatically. */
+    var djRole: String? = null
 
     /** String ID of the text channel music can be requested in. */
     var requestChannel: String? = null

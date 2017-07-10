@@ -18,10 +18,14 @@ public final class Context {
     private final User user;
 
     public Context(GuildMessageReceivedEvent event) {
+        this(event, Bot.getOptions().ofGuild(event.getGuild()));
+    }
+
+    public Context(GuildMessageReceivedEvent event, GuildOptions guildOptions) {
         this.message = event.getMessage();
         this.channel = event.getChannel();
         this.guild = event.getGuild();
-        this.guildOptions = Bot.getOptions().ofGuild(this.guild);
+        this.guildOptions = guildOptions == null ? Bot.getOptions().ofGuild(guild) : guildOptions;
         this.jda = event.getJDA();
         this.shard = Bot.getShard(this.jda);
         this.member = event.getMember();

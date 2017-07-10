@@ -39,7 +39,7 @@ public class TextToBrickCommand extends CommandExecutor {
         }
 
         if (sb.length() > 2000) {
-            context.send().error("Too many characters.");
+            context.send().error("Too many characters.").queue();
             return;
         }
 

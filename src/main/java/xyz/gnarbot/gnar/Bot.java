@@ -35,7 +35,8 @@ public final class Bot {
     public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
     public static final Database DATABASE = new Database("bot");
 
-    private static MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+    private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+    //private static final PokeApiClient pokeAPI = new PokeApiClient();
 
     protected static final BotListener botListener = new BotListener();
     protected static final EventWaiter waiter = new EventWaiter();
@@ -59,11 +60,11 @@ public final class Bot {
 
         LOG.info("Initializing the Discord bot.");
 
-        LOG.info("Name:\t" + CONFIG.getName());
-        LOG.info("JDAs:\t" + KEYS.getShards());
+        LOG.info("Name  :\t" + CONFIG.getName());
+        LOG.info("Shards:\t" + KEYS.getShards());
         LOG.info("Prefix:\t" + CONFIG.getPrefix());
-        LOG.info("Admins:\t" + CONFIG.getAdmins().size());
-        LOG.info("JDA:\t\t" + JDAInfo.VERSION);
+        LOG.info("Admins:\t" + CONFIG.getAdmins());
+        LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
         STATE = LoadState.COMPLETE;
 
@@ -83,6 +84,10 @@ public final class Bot {
     public static MyAnimeListAPI getMALAPI() {
         return malAPI;
     }
+
+//    public static PokeApiClient getPokeAPI() {
+//        return pokeAPI;
+//    }
 
     public static CommandRegistry getCommandRegistry() {
         return commandRegistry;

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class Menu(val waiter: EventWaiter,
                     val user: User?,
-                    val title: String,
+                    val title: String?,
                     val description: String?,
                     val color: Color?,
                     val fields: List<MessageEmbed.Field>,

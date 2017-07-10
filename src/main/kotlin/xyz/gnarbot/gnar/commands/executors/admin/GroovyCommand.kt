@@ -34,6 +34,10 @@ class GroovyCommand : CommandExecutor() {
             return context.send().exception(e).queue()
         }
 
-        context.send().text(result.toString()).queue()
+        if (result != null) {
+            context.send().text(result.toString()).queue()
+        } else {
+            context.message.addReaction("\uD83D\uDC4C").queue()
+        }
     }
 }

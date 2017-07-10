@@ -18,7 +18,7 @@ class BotConfiguration(file: File) {
     var config: CommentedConfigurationNode = loader.load()
 
     val name: String = config["bot", "name"].getString("Gnar")
-    val game: String = config["bot", "game"].getString("%d | _help")
+    val game: String = config["bot", "game"].getString("Shard %d @ Gnar")
     val avatar: String? = config["bot", "avatar"].string
 
     val prefix: String = config["commands", "prefix"].getString("_")

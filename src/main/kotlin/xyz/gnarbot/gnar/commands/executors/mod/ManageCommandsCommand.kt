@@ -5,8 +5,8 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.managed.CommandTemplate
-import xyz.gnarbot.gnar.commands.managed.Executor
+import xyz.gnarbot.gnar.commands.template.CommandTemplate
+import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.Context
         description = "Manage usage of commands.",
         toggleable = false,
         category = Category.MODERATION,
-        permissions = arrayOf(Permission.ADMINISTRATOR)
+        permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ManageCommandsCommand : CommandTemplate() {
     @Executor(0, description = "Enable commands.")
@@ -40,7 +40,7 @@ class ManageCommandsCommand : CommandTemplate() {
         context.send().info("Enabling ${list.joinToString { "`$it`" }}.").queue()
     }
 
-    @Executor(1, description = "Disable commands..")
+    @Executor(1, description = "Disable commands.")
     fun disable(context: Context, cmd: String) {
         val info = lookupCommand(cmd)?.info
 

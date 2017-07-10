@@ -86,6 +86,11 @@ public class MemeCommand extends CommandExecutor {
         String query = StringUtils.join(args, " ");
         String[] arguments = query.split("\\|");
 
+        if (args.length < 3) {
+            context.send().error("Insufficient arguments... `_meme (meme name) | (top text) | (bottom text)`").queue();
+            return;
+        }
+
         int ld = 999;
         String id = null;
 

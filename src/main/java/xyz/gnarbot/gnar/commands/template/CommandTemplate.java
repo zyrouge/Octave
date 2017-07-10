@@ -1,9 +1,5 @@
-package xyz.gnarbot.gnar.commands.managed;
+package xyz.gnarbot.gnar.commands.template;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -13,7 +9,6 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -41,25 +36,10 @@ public abstract class CommandTemplate extends CommandExecutor {
             parsers[0] = Parser.of(method.getName());
             Parameter[] params = method.getParameters();
             for (int i = 1; i < parsers.length; i++) {
-                if (params[i].getType() == String.class) {
-                    parsers[i] = Parser.STRING;
-                } else if (params[i].getType() == int.class
-                        || params[i].getType() == Integer.class) {
-                    parsers[i] = Parser.INTEGER;
-                } else if (params[i].getType() == Member.class) {
-                    parsers[i] = Parser.MEMBER;
-                } else if (params[i].getType() == TextChannel.class) {
-                    parsers[i] = Parser.TEXT_CHANNEL;
-                } else if (params[i].getType() == Role.class) {
-                    parsers[i] = Parser.ROLE;
-                } else if (params[i].getType() == VoiceChannel.class) {
-                    parsers[i] = Parser.VOICE_CHANNEL;
-                } else if (params[i].getType() == Duration.class) {
-                    parsers[i] = Parser.DURATION;
-                }
+                parsers[i] = Parser.of(params[i].getType());
             }
 
-            addPath(new Entry(parsers, method.getAnnotation(Executor.class).description(), method));
+            addMethod(new Entry(parsers, method.getAnnotation(Executor.class).description(), method));
         }
     }
 
@@ -128,7 +108,7 @@ public abstract class CommandTemplate extends CommandExecutor {
         EmbedMaker eb = new EmbedMaker();
         eb.setColor(context.getGuild().getSelfMember().getColor());
 
-        eb.setTitle("_" + getInfo().aliases()[0]);
+        eb.setTitle(getInfo().aliases()[0]);
         if (args.length != 0) {
             eb.setTitle("Invalid arguments.");
             eb.setColor(Color.RED);
@@ -140,7 +120,7 @@ public abstract class CommandTemplate extends CommandExecutor {
         context.getChannel().sendMessage(eb.build()).queue();
     }
 
-    private void addPath(Entry entry) {
+    private void addMethod(Entry entry) {
         entries.add(entry);
     }
 

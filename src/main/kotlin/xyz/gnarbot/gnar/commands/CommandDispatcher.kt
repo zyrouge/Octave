@@ -19,6 +19,15 @@ object CommandDispatcher {
     private val cooldownMap = TLongLongHashMap()
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
+        val guildOptions = Bot.getOptions().ofGuild(event.guild)
+
+        val content = event.message.rawContent
+        if (!content.startsWith(guildOptions.prefix)
+                && !content.startsWith(Bot.CONFIG.prefix)
+                && !content.startsWith("gnar ", true)) {
+            return
+        }
+
         // Don't do anything if the bot can't even speak.
         if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_WRITE)) {
             return
@@ -31,15 +40,11 @@ object CommandDispatcher {
             return
         }
 
-        if (!event.message.content.startsWith(Bot.CONFIG.prefix)) {
-            return
-        }
-
         launch(CommonPool) {
-            Context(event).let {
-                if (callCommand(it)) {
-                    it.shard.requests++
-                }
+            val context = Context(event, guildOptions)
+
+            if (callCommand(context)) {
+                context.shard.requests++
             }
         }
     }
@@ -58,11 +63,8 @@ object CommandDispatcher {
 
         // PROCESS TIMEOUT
         if (isRateLimited(context.user)) {
-            val newCD = (cooldownMap[context.user.idLong] - System.currentTimeMillis()) * 2
-            // double the remaining time to prevent spamming
-            rateLimit(context.user, newCD)
-            context.send().text("\u23F1 **Too fast!** Try again in `${Utils.getTimestamp(newCD)}`.")
-                    .queue(Utils.deleteMessage(5))
+            val remainingTimeout = cooldownMap[context.user.idLong] - System.currentTimeMillis()
+            context.send().text("\u23F1 **Too fast!** Try again in `${Utils.getTimestamp(remainingTimeout)}`.").queue()
             return false
         }
 
@@ -71,10 +73,25 @@ object CommandDispatcher {
         // Already checked.
         // if (!content.startsWith(Bot.CONFIG.prefix)) return false
 
-        // Split the message.
-        val tokens = Utils.stringSplit(content)
+        val contentPrefixStrip = if (content.startsWith(context.guildOptions.prefix)) {
+            content.substring(context.guildOptions.prefix.length)
+        } else if (content.startsWith(Bot.CONFIG.prefix)) {
+            content.substring(Bot.CONFIG.prefix.length)
+        } else if (content.startsWith("gnar ", true)) {
+            content.substring("gnar ".length)
+        } else {
+            return false
+        }
 
-        val label = tokens[0].substring(Bot.CONFIG.prefix.length).toLowerCase().trim()
+        // Split the message.
+        val tokens = Utils.stringSplit(contentPrefixStrip)
+
+        // shouldnt happen but oh well
+        if (tokens.isEmpty()) {
+            return false
+        }
+
+        val label = tokens[0].toLowerCase().trim()
 
         if (label in context.guildOptions.disabledCommands) {
             context.send().error("This command is disabled by the server owner.").queue()
@@ -90,10 +107,12 @@ object CommandDispatcher {
         // _<cmd> ? or _<cmd> help message
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
             context.send().embed("Command Information") {
-                field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                field("Aliases") { cmd.info.aliases.joinToString(", ") }
                 field("Usage") { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                 if (cmd.info.donor) {
-                    field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
+                    field("Donator") {
+                        "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them."
+                    }
                 }
 
                 if (cmd.info.permissions.isNotEmpty()) {
@@ -108,8 +127,10 @@ object CommandDispatcher {
         val message = context.message
         val member = context.member
 
-        // If the user if not in admins list, run these checks
-        if (member.user.idLong !in Bot.CONFIG.admins) {
+        // Admins bypass permission requirements
+        //
+        val memberIsAdmin = member.user.idLong in Bot.CONFIG.admins
+        if (!memberIsAdmin) {
             if (cmd.info.admin) {
                 context.send().error("This command is for bot administrators only.").queue()
                 return false
@@ -141,6 +162,12 @@ object CommandDispatcher {
                 context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used in ${musicTextChannel.asMention}.").queue()
                 return false
             }
+
+            val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
+            if (djRole != null && djRole !in member.roles) {
+                context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used by ${djRole.asMention}.").queue()
+                return false
+            }
         }
 
         if (cmd.info.scope == Scope.VOICE) {
@@ -159,7 +186,7 @@ object CommandDispatcher {
             }
         }
 
-        if (cmd.info.permissions.isNotEmpty()) {
+        if (!memberIsAdmin && cmd.info.permissions.isNotEmpty()) {
             if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
                 val requirements = cmd.info.permissions.map(Permission::getName)
                 context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
