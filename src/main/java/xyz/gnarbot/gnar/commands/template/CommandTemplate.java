@@ -36,7 +36,7 @@ public abstract class CommandTemplate extends CommandExecutor {
             parsers[0] = Parser.of(method.getName());
             Parameter[] params = method.getParameters();
             for (int i = 1; i < parsers.length; i++) {
-                parsers[i] = Parser.of(params[i].getType());
+                parsers[i] = Parser.ofClass(params[i].getType());
             }
 
             addMethod(new Entry(parsers, method.getAnnotation(Executor.class).description(), method));

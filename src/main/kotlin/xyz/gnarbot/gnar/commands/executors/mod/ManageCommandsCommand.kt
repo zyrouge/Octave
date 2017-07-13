@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.Role
 import net.dv8tion.jda.core.entities.TextChannel
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -25,12 +24,17 @@ import xyz.gnarbot.gnar.utils.ln
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ManageCommandsCommand : CommandTemplate() {
-    @Executor(0, description = "Allow a user to use this command.")
-    fun allow(context: Context, cmd: String, member: Member) {
-        val info = lookupCommand(cmd)?.info
-        if (!isNotValid(context, info)) return
+    @Executor(0, description = "Add a user to the command's allowed users list.")
+    fun allowUser(context: Context, cmd: CommandExecutor, member: Member) {
+        val info = cmd.info
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        println("yey")
+
+        if (isNotValid(context, info)) return
+
+        println("yay")
+
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (member.user.id in it.allowedUsers) {
                 context.send().error("${member.asMention} is already in the allowed users list.").queue()
                 return
@@ -38,15 +42,23 @@ class ManageCommandsCommand : CommandTemplate() {
 
             it.allowedUsers.add(member.user.id)
             context.guildOptions.save()
+
+            context.send().embed("Command Management") {
+                desc {
+                    buildString {
+                        append("Added ${member.asMention} to the allowed members list.")
+                    }
+                }
+            }.action().queue()
         }
     }
 
-    @Executor(1, description = "Allow a role to use this command.")
-    fun allow(context: Context, cmd: String, role: Role) {
-        val info = lookupCommand(cmd)?.info
-        if (!isNotValid(context, info)) return
+    @Executor(1, description = "Add a role to the command's allowed roles list.")
+    fun allowRole(context: Context, cmd: CommandExecutor, role: Role) {
+        val info = cmd.info
+        if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (role.id in it.allowedRoles) {
                 context.send().error("${role.asMention} is already in the allowed roles list.").queue()
                 return
@@ -54,15 +66,23 @@ class ManageCommandsCommand : CommandTemplate() {
 
             it.allowedRoles.add(role.id)
             context.guildOptions.save()
+
+            context.send().embed("Command Management") {
+                desc {
+                    buildString {
+                        append("Added ${role.asMention} to the allowed roles list.")
+                    }
+                }
+            }.action().queue()
         }
     }
 
-    @Executor(2, description = "Allow a channel to use this command.")
-    fun allow(context: Context, cmd: String, channel: TextChannel) {
-        val info = lookupCommand(cmd)?.info
+    @Executor(2, description = "Add a channel to the command's allowed channels list.")
+    fun allowChannel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+        val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (channel.id in it.allowedChannels) {
                 context.send().error("${channel.asMention} is already in the allowed channels list.").queue()
                 return
@@ -70,15 +90,23 @@ class ManageCommandsCommand : CommandTemplate() {
 
             it.allowedChannels.add(channel.id)
             context.guildOptions.save()
+
+            context.send().embed("Command Management") {
+                desc {
+                    buildString {
+                        append("Added ${channel.asMention} to the allowed channels list.")
+                    }
+                }
+            }.action().queue()
         }
     }
 
-    @Executor(3, description = "Disallow an allowed user from using this command.")
-    fun disallow(context: Context, cmd: String, member: Member) {
-        val info = lookupCommand(cmd)?.info
+    @Executor(3, description ="Remove a user from the command's allowed users list.")
+    fun disallowUser(context: Context, cmd: CommandExecutor, member: Member) {
+        val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedUsers.isEmpty()) {
                 context.send().error("The allowed members list is empty, all members are able to use the command.").queue()
                 return
@@ -91,15 +119,23 @@ class ManageCommandsCommand : CommandTemplate() {
 
             it.allowedUsers.remove(member.user.id)
             context.guildOptions.save()
+
+            context.send().embed("Command Management") {
+                desc {
+                    buildString {
+                        append("Removed ${member.asMention} from the allowed users list.")
+                    }
+                }
+            }.action().queue()
         }
     }
 
-    @Executor(4, description = "Disallow an allowed role from using this command.")
-    fun disallow(context: Context, cmd: String, role: Role) {
-        val info = lookupCommand(cmd)?.info
+    @Executor(4, description = "Remove a role from the command's allowed roles list.")
+    fun disallowRole(context: Context, cmd: CommandExecutor, role: Role) {
+        val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedRoles.isEmpty()) {
                 context.send().error("The allowed roles list is empty, all roles are able to use the command.").queue()
                 return
@@ -112,15 +148,23 @@ class ManageCommandsCommand : CommandTemplate() {
 
             it.allowedRoles.remove(role.id)
             context.guildOptions.save()
+
+            context.send().embed("Command Management") {
+                desc {
+                    buildString {
+                        append("Removed ${role.asMention} from the allowed channels list.")
+                    }
+                }
+            }.action().queue()
         }
     }
 
-    @Executor(5, description = "Disallow an allowed channel from using this command.")
-    fun disallow(context: Context, cmd: String, channel: TextChannel) {
-        val info = lookupCommand(cmd)?.info
+    @Executor(5, description = "Remove a channel from the command's allowed channels list.")
+    fun disallowChannel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+        val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info?.id, ::CommandOptions).let {
+        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedChannels.isEmpty()) {
                 context.send().error("The allowed channels list is empty, all channels are able to use the command.").queue()
                 return
@@ -145,8 +189,8 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(6, description = "Show the options of the command.")
-    fun options(context: Context, cmd: String) {
-        val info = lookupCommand(cmd)?.info
+    fun options(context: Context, cmd: CommandExecutor) {
+        val info = cmd.info
 
         if (info == null) {
             context.send().error("`$cmd` is not a valid command.").queue()
@@ -157,7 +201,7 @@ class ManageCommandsCommand : CommandTemplate() {
         if (options == null) {
             context.send().embed("Command Management") {
                 desc {
-                    "This command is allowed to everybody."
+                    "This command is allowed to everybody with the appropriate permission."
                 }
             }.action().queue()
             return
@@ -211,6 +255,23 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
+    @Executor(7, description = "Clear all command options.")
+    fun clear(context: Context) {
+        if (context.guildOptions.commandOptions.isEmpty()) {
+            context.send().error("This guild doesn't have any commands options.").queue()
+            return
+        }
+
+        context.guildOptions.commandOptions.clear()
+        context.guildOptions.save()
+
+        context.send().embed("Command Management") {
+            desc {
+                "Cleared the command options."
+            }
+        }.action().queue()
+    }
+
     override fun noMatches(context: Context?, args: Array<out String>?) {
         noMatches(context, args, buildString {
             append("If you allow entities (user, role, channel) to use the command, ")
@@ -218,23 +279,9 @@ class ManageCommandsCommand : CommandTemplate() {
         })
     }
 
-    private fun lookupCommand(label: String): CommandExecutor? {
-        return Bot.getCommandRegistry().getCommand(label)
-    }
-
-    private fun isNotValid(context: Context, info: Command?): Boolean {
-        if (info == null) {
-            context.send().error("`$info` is not a valid command.").queue()
-            return true
-        } else if (!info.toggleable) {
+    private fun isNotValid(context: Context, info: Command): Boolean {
+        if (!info.toggleable) {
             context.send().error("`$info` can not be toggled.").queue()
-            return true
-        }
-
-        val aliases = info.aliases
-
-        if (aliases.isEmpty()) {
-            context.send().error("`$info` is not a valid command.").queue()
             return true
         }
 

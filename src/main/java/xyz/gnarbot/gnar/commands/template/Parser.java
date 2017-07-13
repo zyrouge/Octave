@@ -4,6 +4,8 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.Duration;
@@ -75,6 +77,12 @@ public abstract class Parser<T> {
                 List<Role> list = c.getGuild().getRolesByName(s, false);
                 return list.isEmpty() ? null : list.get(0);
             }
+        }
+    };
+    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(command)") {
+        @Override
+        public CommandExecutor parse(Context c, String s) {
+            return Bot.getCommandRegistry().getCommand(s);
         }
     };
     public static final Parser<Duration> DURATION = new Parser<Duration>("(time)") {
@@ -156,10 +164,11 @@ public abstract class Parser<T> {
         parserMap.put(TextChannel.class, TEXT_CHANNEL);
         parserMap.put(VoiceChannel.class, VOICE_CHANNEL);
         parserMap.put(Duration.class, DURATION);
+        parserMap.put(CommandExecutor.class, COMMAND);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Parser<T> of(Class<T> cls) {
+    public static <T> Parser<T> ofClass(Class<T> cls) {
         return (Parser<T>) parserMap.get(cls);
     }
 }
