@@ -20,6 +20,7 @@ import xyz.gnarbot.gnar.utils.HttpUtils;
 import java.io.IOException;
 
 @Command(
+        id = 15,
         aliases = {"game", "gamelookup"},
         usage = "(game name)",
         description = "Look up information about a game.",

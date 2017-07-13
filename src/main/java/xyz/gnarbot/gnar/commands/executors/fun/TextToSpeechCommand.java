@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.commands.Scope;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 11,
         aliases = "tts",
         usage = "(words...)",
         description = "Text to speech fun.",

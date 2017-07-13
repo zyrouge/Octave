@@ -5,7 +5,11 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.lang.management.ManagementFactory
 
-@Command(aliases = arrayOf("uptime"), description = "Show the getBot's uptime.")
+@Command(
+        id = 49,
+        aliases = arrayOf("uptime"),
+        description = "Show the getBot's uptime."
+)
 class UptimeCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val s = ManagementFactory.getRuntimeMXBean().uptime / 1000

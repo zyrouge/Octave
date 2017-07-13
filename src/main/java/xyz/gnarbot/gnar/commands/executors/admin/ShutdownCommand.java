@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 2,
         aliases = "shutdown",
         description = "Shutdown the bot.",
         admin = true,
@@ -18,7 +19,7 @@ public class ShutdownCommand extends CommandExecutor {
     public void execute(Context context, String[] args) {
         Bot.getPlayers().shutdown();
         for (Shard s : Bot.getShards()) {
-            s.getJda().shutdown(true);
+            s.getJda().shutdown();
         }
         System.exit(21);
     }

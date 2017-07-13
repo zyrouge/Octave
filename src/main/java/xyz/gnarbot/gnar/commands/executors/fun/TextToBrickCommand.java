@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 10,
         aliases = "ttb",
         usage = "(words...)",
         description = "Text to bricks fun.",

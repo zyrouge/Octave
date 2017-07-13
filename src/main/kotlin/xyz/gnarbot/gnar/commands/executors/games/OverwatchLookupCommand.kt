@@ -15,6 +15,7 @@ import java.awt.Color
 import java.io.IOException
 
 @Command(
+        id = 41,
         aliases = arrayOf("overwatch", "ow"),
         usage = "(BattleTag#0000) [region]",
         description = "Look up Overwatch information about a player.",

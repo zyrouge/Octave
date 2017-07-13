@@ -7,9 +7,12 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
-@Command(aliases = {"quote", "quotemsg"},
+@Command(
+        id = 19,
+        aliases = {"quote", "quotemsg"},
         usage = "(message id) [#channel]",
-        description = "Quote somebody else..")
+        description = "Quote somebody else.."
+)
 public class QuoteCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

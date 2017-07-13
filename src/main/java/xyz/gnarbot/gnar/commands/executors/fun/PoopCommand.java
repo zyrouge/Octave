@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.util.StringJoiner;
 
 @Command(
+        id = 8,
         aliases = {"poop"},
         usage = "[string]",
         description = "Shit your heart out.",

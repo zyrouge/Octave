@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 17,
         aliases = {"invite", "invitebot"},
         description = "Get a link to invite the bot to your server."
 )

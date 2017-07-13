@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 72,
         aliases = arrayOf("shuffle"),
         description = "Shuffle the music queue.",
         category = Category.MUSIC,

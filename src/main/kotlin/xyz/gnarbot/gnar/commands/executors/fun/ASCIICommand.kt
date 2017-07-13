@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 
 @Command(
+        id = 39,
         aliases = arrayOf("ascii"),
         usage = "(words...)",
         description = "ASCII text art!"

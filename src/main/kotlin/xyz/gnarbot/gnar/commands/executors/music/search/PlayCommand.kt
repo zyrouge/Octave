@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 62,
         aliases = arrayOf("play"),
         usage = "[url|YT search]",
         description = "Joins and play music in a channel.",

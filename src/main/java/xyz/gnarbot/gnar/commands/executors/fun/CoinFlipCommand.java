@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.util.Random;
 
 @Command(
+        id = 3,
         aliases = {"coinflip", "flip"},
         description = "Heads or Tails?",
         category = Category.FUN

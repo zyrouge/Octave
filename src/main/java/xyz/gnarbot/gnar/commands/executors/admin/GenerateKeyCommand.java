@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @Command(
+        id = 1,
         aliases = "genkey",
         admin = true,
         category = Category.NONE

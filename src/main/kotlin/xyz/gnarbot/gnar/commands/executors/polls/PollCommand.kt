@@ -8,10 +8,11 @@ import xyz.gnarbot.gnar.utils.desc
 import java.util.concurrent.TimeUnit
 
 @Command(
+        id = 76,
         aliases = arrayOf("poll"),
         usage = "(option 1);(option 2);...",
         description = "Create a poll.",
-        cooldown = 10000 // 2 minutes
+        cooldown = 10000
 )
 class PollCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

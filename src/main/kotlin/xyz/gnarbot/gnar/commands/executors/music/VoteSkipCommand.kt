@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.utils.*
 import java.util.concurrent.TimeUnit
 
 @Command(
+        id = 75,
         aliases = arrayOf("voteskip"),
         description = "Vote to skip the current music track.",
         scope = Scope.VOICE,

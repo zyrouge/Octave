@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 38,
         aliases = arrayOf("throwError"),
         admin = true,
         category = Category.NONE

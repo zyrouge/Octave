@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 44,
         aliases = arrayOf("help", "guide"),
         usage = "[command]",
         description = "Display the bot's list of commands.",

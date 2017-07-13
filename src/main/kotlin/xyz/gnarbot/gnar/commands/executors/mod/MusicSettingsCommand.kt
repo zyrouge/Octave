@@ -13,6 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 55,
         aliases = arrayOf("musicconfig", "musicsettings"),
         description = "Change music settings.",
         category = Category.MODERATION,
@@ -158,8 +159,7 @@ class MusicSettingsCommand : CommandTemplate() {
             }
             field("DJ Role") {
                 buildString {
-                    append("If this role is set, music commands will only be able to be used by this role.").ln()
-                    append("Users with this role will also bypass all music permission requirements by the bot.").ln().ln()
+                    append("If this role is set, anyone with this role will bypass music permission requirements.").ln().ln()
                     append(context.guildOptions.djRole?.let { context.guild.getRoleById(it) }?.asMention ?: "None")
                 }
             }

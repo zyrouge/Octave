@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Random;
 
 @Command(
+        id = 31,
         aliases = "xkcd",
         usage = "[comic #]",
         description = "Grab some XKCD comics.",

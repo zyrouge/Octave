@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.utils.Context
 import javax.script.*
 
 @Command(
+        id = 36,
         aliases = arrayOf("js"),
         description = "Run JS scripts.",
         admin = true,

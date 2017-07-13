@@ -8,15 +8,14 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 @Command(
-        aliases = arrayOf("math"),
+        id = 46,
+        aliases = arrayOf("aje"),
         usage = "(expression)",
-        description = "Calculate fancy math expressions.",
+        description = "User-eval.",
         cooldown = 3000
 )
 class MathCommand : CommandExecutor() {
@@ -38,22 +37,18 @@ class MathCommand : CommandExecutor() {
             try {
                 val expr = exp.compile()
 
-                var ast: String? = null
+                val ast: String = buildString {
+                    expr.ast(this, "", true)
+                }
 
-                val result = CompletableFuture.supplyAsync {
-                    ast = buildString {
-                        expr.ast(this, "", true)
-                    }
-
-                    expr.compute()
-                }.get(500, TimeUnit.MILLISECONDS)
+                val result = expr.compute()
 
                 field("AST") {
                     code {
-                        if (ast == null || ast!!.length > MessageEmbed.VALUE_MAX_LENGTH / 2) {
+                        if (ast.length > MessageEmbed.VALUE_MAX_LENGTH / 2) {
                             "AST can not be displayed."
                         } else {
-                            ast!!
+                            ast
                         }
                     }
                 }

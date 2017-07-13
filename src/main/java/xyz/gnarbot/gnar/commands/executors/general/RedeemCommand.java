@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.util.Date;
 
 @Command(
+        id = 21,
         aliases = "redeem",
         usage = "(key)",
         description = "Redeem a premium key."

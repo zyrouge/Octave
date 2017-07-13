@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.ln
 import java.lang.management.ManagementFactory
 
 @Command(
+        id = 42,
         aliases = arrayOf("about", "info", "botinfo"),
         description = "Show information about the bot."
 )

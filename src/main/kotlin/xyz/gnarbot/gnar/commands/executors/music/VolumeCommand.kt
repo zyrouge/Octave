@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.link
 
 @Command(
+        id = 74,
         aliases = arrayOf("volume"),
         description = "Set the volume of the music player.",
         usage = "(loudness %)",

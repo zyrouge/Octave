@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 6,
         aliases = "lenny",
         usage = "[integer]",
         description = "( ͡° ͜ʖ ͡° )",

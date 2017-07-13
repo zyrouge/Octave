@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
 
 @Command(
+        id = 69,
         aliases = arrayOf("queue", "list"),
         description = "Shows the music that's currently queued.",
         category = Category.MUSIC

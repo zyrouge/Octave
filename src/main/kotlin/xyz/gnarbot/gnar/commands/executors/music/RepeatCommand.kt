@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.music.RepeatOption
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 70,
         aliases = arrayOf("repeat"),
         usage = "(song, playlist, none)",
         description = "Set if the music player should repeat.",

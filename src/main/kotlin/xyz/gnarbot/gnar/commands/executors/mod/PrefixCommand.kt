@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 56,
         aliases = arrayOf("prefix"),
         usage = "(set|reset) [string]",
         description = "Set the prefix of the bot. Default prefix will still be valid however.",

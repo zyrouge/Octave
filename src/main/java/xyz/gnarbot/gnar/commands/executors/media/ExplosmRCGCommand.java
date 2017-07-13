@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 26,
         aliases = "rcg",
         description = "Generate random Cyanide and Happiness comic.",
         category = Category.MEDIA

@@ -4,11 +4,11 @@ import net.dv8tion.jda.core.entities.Guild;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.Utils;
 
-import java.time.Instant;
-import java.util.Date;
-
-@Command(aliases = {"guild", "server"},
+@Command(
+        id = 16,
+        aliases = {"guild", "server"},
         description = "Get information this guild."
 )
 public class GuildInfoCommand extends CommandExecutor {
@@ -27,7 +27,7 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("Members", true, guild.getMembers().size())
                 .field("Default Channel", true, guild.getPublicChannel().getAsMention())
                 .field("Premium", true, context.getGuildOptions().isPremium()
-                        ? "This guild is premium until `" + Date.from(Instant.ofEpochMilli(context.getGuildOptions().getPremiumUntil())) + "`."
+                        ? "Premium status expires in `" + Utils.getTime(context.getGuildOptions().remainingPremium()) + "`."
                         : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/gnarbot)**__ to find out more.")
                 .action().queue();
     }

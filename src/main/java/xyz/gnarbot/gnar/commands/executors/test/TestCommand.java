@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
 @Command(
+        id = 32,
         aliases = "wow",
         admin = true,
         category = Category.NONE,

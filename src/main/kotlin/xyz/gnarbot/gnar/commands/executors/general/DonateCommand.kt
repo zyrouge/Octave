@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.utils.link
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 43,
         aliases = arrayOf("donate"),
         description = "Show the getBot's uptime."
 )

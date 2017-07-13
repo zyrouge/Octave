@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 59,
         aliases = arrayOf("selfroles", "selfrole"),
         usage = "(add|remove|clear) [@role]",
         description = "Set self-roles that users can assign to themselves.",

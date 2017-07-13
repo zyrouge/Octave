@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.Utils
 import java.time.Duration
 
 @Command(
+        id = 65,
         aliases = arrayOf("jump", "seek"),
         usage = "(to|forward|backward) (time)",
         description = "Set the time marker of the music playback.",

@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.TriviaQuestions;
 
 @Command(
+        id = 12,
         aliases = "answer",
         category = Category.FUN
 )

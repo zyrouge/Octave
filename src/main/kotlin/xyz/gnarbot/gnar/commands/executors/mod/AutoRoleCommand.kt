@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 52,
         aliases = arrayOf("autorole"),
         usage = "(set|unset) [@role]",
         description = "Set auto-roles that are assigned to users on joining.",

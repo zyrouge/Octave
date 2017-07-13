@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.general
+package xyz.gnarbot.gnar.commands.executors.mod
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 58,
         aliases = arrayOf("resetall"),
         description = "Reset all music settings.",
         category = Category.MODERATION,

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Command(
+        id = 5,
         aliases = {"leet"},
         usage = "(words...)",
         description = "Leet a string!",

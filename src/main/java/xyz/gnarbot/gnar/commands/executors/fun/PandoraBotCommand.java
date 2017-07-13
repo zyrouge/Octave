@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 @Command(
+        id = 7,
         aliases = "pbot",
         usage = "(words...)",
         description = "Talk with a bot, you lonely thing.",

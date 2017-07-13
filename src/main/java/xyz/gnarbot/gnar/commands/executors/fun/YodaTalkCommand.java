@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Command(
+        id = 14,
         aliases = {"yodatalk"},
         usage = "(words...)",
         description = "Learn to speak like Yoda, you will.",

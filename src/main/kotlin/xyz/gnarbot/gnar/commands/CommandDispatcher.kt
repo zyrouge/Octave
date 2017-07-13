@@ -93,13 +93,33 @@ object CommandDispatcher {
 
         val label = tokens[0].toLowerCase().trim()
 
-        if (label in context.guildOptions.disabledCommands) {
-            context.send().error("This command is disabled by the server owner.").queue()
-            return false
-        }
+//        if (label in context.guildOptions.disabledCommands) {
+//            context.send().error("This command is disabled by the server owner.").queue()
+//            return false
+//        }
 
 
         val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
+
+
+
+        context.guildOptions.commandOptions[cmd.info.id]?.let {
+            if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
+                context.send().error("\uD83C\uDFB6 You are not one of the users allowed to use this command.").queue()
+                return false
+            }
+            if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
+                context.send().error("\uD83C\uDFB6 Your role is not allowed to use this command.").queue()
+                return false
+            }
+            if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
+                context.send().error("\uD83C\uDFB6 This channel is not allowed to use this command.").queue()
+                return false
+            }
+        }
+
+
+
         val args = tokens.copyOfRange(1, tokens.size)
 
         rateLimit(context.user, cmd.info.cooldown)
@@ -136,7 +156,7 @@ object CommandDispatcher {
                 return false
             }
 
-            if (cmd.info.donor && !context.guildOptions.isPremium()) {
+            if (cmd.info.donor && !context.guildOptions.isPremium) {
                 context.send().embed("Donators Only") {
                     color { Color.ORANGE }
                     desc {
@@ -162,12 +182,6 @@ object CommandDispatcher {
                 context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used in ${musicTextChannel.asMention}.").queue()
                 return false
             }
-
-            val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
-            if (djRole != null && djRole !in member.roles) {
-                context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used by ${djRole.asMention}.").queue()
-                return false
-            }
         }
 
         if (cmd.info.scope == Scope.VOICE) {
@@ -176,6 +190,7 @@ object CommandDispatcher {
                 return false
             } else if (context.guildOptions.musicChannels.isNotEmpty()
                     && member.voiceState.channel.id !in context.guildOptions.musicChannels) {
+
                 val channels = context.guildOptions.musicChannels
                         .map { context.guild.getVoiceChannelById(it) }
                         .filterNotNull()
@@ -187,7 +202,10 @@ object CommandDispatcher {
         }
 
         if (!memberIsAdmin && cmd.info.permissions.isNotEmpty()) {
-            if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+            val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
+            val isDJ = djRole !in member.roles
+
+            if ((cmd.info.scope != Scope.VOICE || !isDJ) && !cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
                 val requirements = cmd.info.permissions.map(Permission::getName)
                 context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
                     Scope.GUILD -> "the guild `${message.guild.name}`."

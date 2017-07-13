@@ -26,12 +26,12 @@ public class Database {
                 LOG.info("Connected to database.");
                 conn.use(name);
             } else {
-                LOG.info("Database of " + name + " is not present. Closing connection.");
+                LOG.info("Rethink Database `" + name + "` is not present. Closing connection.");
                 close();
                 System.exit(0);
             }
         } catch (ReqlDriverError e) {
-            LOG.error("Database connection failed.", e);
+            LOG.error("Rethink Database connection failed.", e);
             System.exit(0);
         }
         this.conn = conn;

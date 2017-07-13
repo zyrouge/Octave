@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Command(
+        id = 30,
         aliases = {"urbandict", "ub", "urbandictionary"},
         usage = "(word)",
         description = "Crowd-sourced definitions of the internet.",

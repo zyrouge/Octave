@@ -12,6 +12,7 @@ import xyz.gnarbot.gnar.utils.ln
 import java.io.IOException
 
 @Command(
+        id = 50,
         aliases = arrayOf("google"),
         usage = "(query...)",
         description = "Who needs browsers!?",

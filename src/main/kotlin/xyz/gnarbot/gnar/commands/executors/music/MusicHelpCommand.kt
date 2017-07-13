@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.general
+package xyz.gnarbot.gnar.commands.executors.music
 
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 66,
         aliases = arrayOf("music", "musichelp"),
         description = "Display Gnar's music commands in the channel.",
         category = Category.MUSIC

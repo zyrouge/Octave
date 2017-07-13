@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Command(
+        id = 28,
         aliases = "meme",
         usage = "(meme name) | (top text) | (bottom text)",
         description = "Create the dankest memes ever.",

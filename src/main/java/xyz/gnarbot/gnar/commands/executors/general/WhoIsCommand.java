@@ -11,7 +11,9 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Command(aliases = {"whois", "infoof", "infoon", "user", "who"},
+@Command(
+        id = 22,
+        aliases = {"whois", "infoof", "infoon", "user", "who"},
         usage = "[user]",
         description = "Get information on a user."
 )

@@ -15,6 +15,7 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import java.awt.*;
 
 @Command(
+        id = 23,
         aliases = {"anime", "animesearch", "malanime"},
         usage = "(anime name)",
         description = "Search for an anime via MyAnimeList.",

@@ -1,5 +1,7 @@
 package xyz.gnarbot.gnar.commands;
 
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
@@ -30,6 +32,8 @@ public class CommandRegistry {
 
     /** The mapped registry of invoking key to the classes. */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
+
+    private final TIntSet idSet = new TIntHashSet();
 
     public CommandRegistry() {
         register(new HelpCommand());
@@ -155,6 +159,12 @@ public class CommandRegistry {
             throw new IllegalStateException("@Command annotation not found for class: " + cls.getName());
         }
 
+        if (idSet.contains(cmd.getInfo().id())) {
+            throw new IllegalStateException("@Command duplicate ID for class: " + cls.getName());
+        } else {
+            idSet.add(cmd.getInfo().id());
+        }
+
         for (String alias : cmd.getInfo().aliases()) {
             registerCommand(alias, cmd);
         }
@@ -167,7 +177,7 @@ public class CommandRegistry {
      */
     private void registerCommand(String label, CommandExecutor cmd) {
         if (commandEntryMap.containsKey(label.toLowerCase())) {
-            throw new IllegalStateException("Command " + label + " is already registered.");
+            throw new IllegalStateException("Command alias already registered: " + label);
         }
         commandEntryMap.put(label.toLowerCase(), cmd);
     }

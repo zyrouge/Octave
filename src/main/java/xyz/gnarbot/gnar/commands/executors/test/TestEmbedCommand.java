@@ -13,10 +13,13 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.awt.*;
 import java.util.Random;
 
-@Command(aliases = "embedthis",
+@Command(
+        id = 33,
+        aliases = "embedthis",
         usage = "(argument)",
         category = Category.NONE,
-        admin = true)
+        admin = true
+)
 public class TestEmbedCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

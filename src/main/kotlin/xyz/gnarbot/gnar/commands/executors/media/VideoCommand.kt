@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 51,
         aliases = arrayOf("video", "vid"),
         usage = "(query...)",
         description = "Search and get a YouTube video.",

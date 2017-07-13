@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 37,
         aliases = arrayOf("restartShards"),
         description = "Restart all Shard instances.",
         admin = true,

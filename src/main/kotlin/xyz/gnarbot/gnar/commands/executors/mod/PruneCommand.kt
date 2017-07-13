@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.ln
 import java.time.OffsetDateTime
 
 @Command(
+        id = 57,
         aliases = arrayOf("prune", "delmessages", "delmsgs"),
         usage = "(2-100)",
         description = "Delete up to 100 messages.",

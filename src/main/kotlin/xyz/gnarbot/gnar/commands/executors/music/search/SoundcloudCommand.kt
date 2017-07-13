@@ -12,6 +12,7 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 
 @Command(
+        id = 63,
         aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
         description = "Search and see SoundCloud results.",

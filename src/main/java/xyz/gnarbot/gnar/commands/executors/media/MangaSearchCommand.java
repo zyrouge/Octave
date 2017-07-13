@@ -13,6 +13,7 @@ import xyz.gnarbot.gnar.utils.EmbedMaker;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 
 @Command(
+        id = 27,
         aliases = {"manga", "mangasearch", "malmanga"},
         usage = "(manga name)",
         description = "Search for an manga via MymangaList.",

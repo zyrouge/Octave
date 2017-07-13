@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.utils.inlineCode
 import xyz.gnarbot.gnar.utils.link
 
 @Command(
+        id = 67,
         aliases = arrayOf("nowplaying", "np"),
         description = "Shows what's currently playing.",
         category = Category.MUSIC

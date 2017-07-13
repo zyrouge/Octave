@@ -7,9 +7,12 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import java.util.Arrays;
 
-@Command(aliases = "react",
+@Command(
+        id = 20,
+        aliases = "react",
         usage = "(message id) (emoji...)",
-        description = "Make GNAR react to something, against it's " + "will. You evil prick.")
+        description = "Make GNAR react to something, against it's " + "will. You evil prick."
+)
 public class ReactCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {

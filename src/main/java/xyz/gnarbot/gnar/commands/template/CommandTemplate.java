@@ -106,7 +106,10 @@ public abstract class CommandTemplate extends CommandExecutor {
         }
 
         EmbedMaker eb = new EmbedMaker();
-        eb.setColor(context.getGuild().getSelfMember().getColor());
+
+        Color color = context.getGuild().getSelfMember().getColor();
+        if (color == null) color = Color.WHITE;
+        eb.setColor(color);
 
         eb.setTitle(getInfo().aliases()[0]);
         if (args.length != 0) {

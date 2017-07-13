@@ -5,7 +5,12 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
-@Command(aliases = "8ball", usage = "(question)", description = "Test your wildest dreams!", category = Category.FUN)
+@Command(
+        id = 4,
+        aliases = "8ball",
+        usage = "(question)",
+        description = "Test your wildest dreams!", category = Category.FUN
+)
 public class EightBallCommand extends CommandExecutor {
     private final String[] responses = {
             "It is certain.", "It is decidedly so.", "Without a doubt.", "Yes, definitely.", "You may rely on it.",

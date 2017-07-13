@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 48,
         aliases = arrayOf("shards", "shard", "shardinfo"),
         description = "Get shard information.",
         category = Category.NONE

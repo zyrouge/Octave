@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
 
 @Command(
+        id = 24,
         aliases = {"cats", "cat"},
         description = "Grab random cats for you.",
         category = Category.MEDIA

@@ -22,6 +22,7 @@ import java.text.AttributedString;
 import java.util.Arrays;
 
 @Command(
+        id = 29,
         aliases = {"trump", "executiveorder"},
         usage = "(words...)",
         description = "Our president.",

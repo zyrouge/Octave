@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.TrackContext
 
 @Command(
+        id = 73,
         aliases = arrayOf("skip"),
         description = "Skip the current music track if you're the requester.",
         category = Category.MUSIC,

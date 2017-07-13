@@ -9,6 +9,7 @@ import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
+        id = 61,
         aliases = arrayOf("stop", "reset"),
         description = "Stop and clear the music player.",
         category = Category.MUSIC,

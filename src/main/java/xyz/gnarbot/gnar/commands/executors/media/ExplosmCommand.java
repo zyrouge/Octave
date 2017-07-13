@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.util.Random;
 
 @Command(
+        id = 25,
         aliases = {"c&h", "cah"},
         description = "Get Cyanide and Happiness comics.",
         usage = "~id",

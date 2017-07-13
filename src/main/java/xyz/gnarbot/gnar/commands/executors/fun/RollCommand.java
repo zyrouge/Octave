@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
+        id = 9,
         aliases = {"roll"},
         usage = "(max value)",
         description = "Roll a random number from 0 to argument.",

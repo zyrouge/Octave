@@ -13,6 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
 @Command(
+        id = 53,
         aliases = arrayOf("ignore"),
         usage = "(user|channel|role|list) [?entity]",
         description = "Make the bot ignore certain users, channels or roles.",

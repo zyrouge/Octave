@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.utils.Context
 import javax.script.*
 
 @Command(
+        id = 35,
         aliases = arrayOf("gv"),
         description = "Run Groovy scripts.",
         admin = true,
