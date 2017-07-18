@@ -23,9 +23,9 @@ class Shard(val id: Int) {
         setMaxReconnectDelay(32)
         setAudioEnabled(true)
         setAudioSendFactory(NativeAudioSendFactory())
-        addEventListener(Bot.waiter, Bot.botListener)
+        addEventListener(Bot.waiter, Bot.botListener, Bot.voiceListener)
         setEnableShutdownHook(true)
-        setGame(Game.of("LOADING..."))
+        setGame(Game.of("Loading..."))
     }
 
     lateinit var jda: JDA
@@ -53,8 +53,8 @@ class Shard(val id: Int) {
     fun revive() {
         Bot.LOG.info("Reviving shard $id.")
 
-        jda.removeEventListener(Bot.waiter, Bot.botListener)
-        jda.shutdown(false)
+        jda.removeEventListener(Bot.waiter, Bot.botListener, Bot.voiceListener)
+        jda.shutdown()
 
         build()
     }

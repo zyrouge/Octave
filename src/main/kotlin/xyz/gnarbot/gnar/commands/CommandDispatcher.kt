@@ -35,7 +35,8 @@ object CommandDispatcher {
 
         // Send a message if bot cant use embeds.
         if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
-            event.channel.sendMessage("The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}}` permission to show messages.")
+            event.channel.sendMessage("The bot needs the `" + Permission.MESSAGE_EMBED_LINKS.getName() +
+                            "` permission in this channel to show messages.")
                     .queue(Utils.deleteMessage(15))
             return
         }
@@ -102,19 +103,25 @@ object CommandDispatcher {
         val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
 
 
+        val message = context.message
+        val member = context.member
+        val botAdmin = member.user.idLong in Bot.CONFIG.admins
 
-        context.guildOptions.commandOptions[cmd.info.id]?.let {
-            if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
-                context.send().error("\uD83C\uDFB6 You are not one of the users allowed to use this command.").queue()
-                return false
-            }
-            if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
-                context.send().error("\uD83C\uDFB6 Your role is not allowed to use this command.").queue()
-                return false
-            }
-            if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
-                context.send().error("\uD83C\uDFB6 This channel is not allowed to use this command.").queue()
-                return false
+
+        if (!(botAdmin || context.member.hasPermission(Permission.ADMINISTRATOR))) {
+            context.guildOptions.commandOptions[cmd.info.id]?.let {
+                if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
+                    context.send().error("You are not one of the users allowed to use this command.").queue()
+                    return false
+                }
+                if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
+                    context.send().error("Your role is not allowed to use this command.").queue()
+                    return false
+                }
+                if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
+                    context.send().error("This channel is not allowed to use this command.").queue()
+                    return false
+                }
             }
         }
 
@@ -123,6 +130,7 @@ object CommandDispatcher {
         val args = tokens.copyOfRange(1, tokens.size)
 
         rateLimit(context.user, cmd.info.cooldown)
+
 
         // _<cmd> ? or _<cmd> help message
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
@@ -144,13 +152,9 @@ object CommandDispatcher {
             return true
         }
 
-        val message = context.message
-        val member = context.member
 
         // Admins bypass permission requirements
-        //
-        val memberIsAdmin = member.user.idLong in Bot.CONFIG.admins
-        if (!memberIsAdmin) {
+        if (!botAdmin) {
             if (cmd.info.admin) {
                 context.send().error("This command is for bot administrators only.").queue()
                 return false
@@ -201,7 +205,7 @@ object CommandDispatcher {
             }
         }
 
-        if (!memberIsAdmin && cmd.info.permissions.isNotEmpty()) {
+        if (!botAdmin && cmd.info.permissions.isNotEmpty()) {
             val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
             val isDJ = djRole !in member.roles
 

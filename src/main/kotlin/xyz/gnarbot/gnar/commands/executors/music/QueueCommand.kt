@@ -20,8 +20,7 @@ class QueueCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` in a voice channel to start playing some music!").queue()
+            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
@@ -35,9 +34,16 @@ class QueueCommand : CommandExecutor() {
                     if (queue.isEmpty()) {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")
                     } else for (track in queue) {
-                        add("`[${Utils.getTimestamp(track.duration)}]` __[${track.info.title}](${track.info.uri})__ " +
-                                track.getUserData(TrackContext::class.java).requester.asMention)
+                        add(buildString {
+                            append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
+                            append(track.info.title)
+                            append("](").append(track.info.uri).append(")__ ")
+                            append(context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)
+                                        .asMention)
+                        })
                         queueLength += track.duration
+
+                        //context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)
                     }
                 }
                 .field("Now Playing", false) {

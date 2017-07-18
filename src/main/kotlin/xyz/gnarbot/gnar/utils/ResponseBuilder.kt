@@ -1,10 +1,11 @@
 package xyz.gnarbot.gnar.utils
 
 import net.dv8tion.jda.core.entities.Message
+import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.requests.RestAction
 import java.awt.Color
 
-class ResponseBuilder(val context: Context) {
+class ResponseBuilder(private val channel: TextChannel) {
     /**
      * Quick-reply to a message.
      *
@@ -12,7 +13,7 @@ class ResponseBuilder(val context: Context) {
      * @return The Message created by this function.
      */
     fun text(text: String): RestAction<Message> {
-        return context.channel.sendMessage(text)
+        return channel.sendMessage(text)
     }
 
     /**
@@ -25,7 +26,7 @@ class ResponseBuilder(val context: Context) {
         return embed {
             title { "Info" }
             desc  { msg }
-            color { context.guild.selfMember.color }
+            color { channel.guild.selfMember.color }
         }.action()
     }
 
@@ -61,7 +62,7 @@ class ResponseBuilder(val context: Context) {
     @JvmOverloads
     fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
         title { title }
-        color { context.guild.selfMember.color ?: Color.WHITE }
+        color { channel.guild.selfMember.color ?: Color.WHITE }
     }
 
     /**
@@ -77,7 +78,7 @@ class ResponseBuilder(val context: Context) {
     @Suppress("NOTHING_TO_INLINE")
     inner class ResponseEmbedBuilder : EmbedProxy<ResponseEmbedBuilder>() {
         fun action(): RestAction<Message> {
-            return context.channel.sendMessage(build())
+            return channel.sendMessage(build())
         }
     }
 }

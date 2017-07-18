@@ -65,6 +65,6 @@ public final class Context {
     }
 
     public final ResponseBuilder send() {
-        return new ResponseBuilder(this);
+        return new ResponseBuilder(channel);
     }
 }

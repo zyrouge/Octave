@@ -12,6 +12,7 @@ import xyz.gnarbot.gnar.commands.executors.media.*;
 import xyz.gnarbot.gnar.commands.executors.mod.*;
 import xyz.gnarbot.gnar.commands.executors.music.*;
 import xyz.gnarbot.gnar.commands.executors.music.dj.ForceSkipCommand;
+import xyz.gnarbot.gnar.commands.executors.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.StopCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.SoundcloudCommand;
@@ -134,6 +135,7 @@ public class CommandRegistry {
             register(new PauseCommand());
             register(new StopCommand());
             register(new SkipCommand());
+            register(new MoveCommand());
             register(new ForceSkipCommand());
             register(new ShuffleCommand());
             register(new NowPlayingCommand());

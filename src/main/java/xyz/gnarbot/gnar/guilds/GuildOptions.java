@@ -32,6 +32,7 @@ public final class GuildOptions implements ManagedObject {
     private String djRole;
     private String requestChannel;
     private Set<String> musicChannels;
+    private int musicVolume = 100;
 
     private long premiumUntil;
 
@@ -123,7 +124,16 @@ public final class GuildOptions implements ManagedObject {
         return musicChannels;
     }
 
+    public void setMusicVolume(int musicVolume) {
+        this.musicVolume = musicVolume;
+    }
 
+    public int getMusicVolume() {
+        if (!isPremium()) {
+            return 100;
+        }
+        return musicVolume;
+    }
 
     public Map<Integer, CommandOptions> getCommandOptions() {
         if (commandOptions == null) {

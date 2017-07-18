@@ -78,7 +78,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        track.getUserData(TrackContext.class).getRequestedChannel()
+        musicManager.getGuild().getTextChannelById(track.getUserData(TrackContext.class).getRequestedChannel())
                 .sendMessage(
                         "**ERROR:** The track " + track.getInfo().title + " is stuck longer than "
                                 + thresholdMs + "ms threshold."
@@ -87,7 +87,7 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        track.getUserData(TrackContext.class).getRequestedChannel()
+        musicManager.getGuild().getTextChannelById(track.getUserData(TrackContext.class).getRequestedChannel())
                 .sendMessage(
                         "**ERROR:** The track " + track.getInfo().title + " encountered an exception.\n"
                                 + "Severity: " + exception.severity + "\n"

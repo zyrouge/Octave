@@ -3,15 +3,10 @@ package xyz.gnarbot.gnar.listeners;
 
 import gnu.trove.iterator.TLongObjectIterator;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.VoiceChannel;
 import net.dv8tion.jda.core.events.*;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
-import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
@@ -67,40 +62,6 @@ public class BotListener extends ListenerAdapter {
             }
             event.getGuild().getAudioManager().setSendingHandler(null);
             event.getGuild().getAudioManager().closeAudioConnection();
-        }
-    }
-
-    @Override
-    public void onGenericGuildVoice(GenericGuildVoiceEvent event) {
-        if (Bot.STATE == LoadState.COMPLETE) {
-            if (event instanceof GuildVoiceLeaveEvent || event instanceof GuildVoiceMoveEvent) {
-                // If the bot left the channel, destroy player.
-                if (event.getMember().getUser() == event.getJDA().getSelfUser()) {
-                    Bot.getPlayers().destroy(event.getGuild().getIdLong());
-                    return;
-                }
-
-                Guild guild = event.getGuild();
-                if (guild == null) return;
-
-                VoiceChannel botChannel = guild.getSelfMember().getVoiceState().getChannel();
-                VoiceChannel channelLeft;
-
-                // People left the bot's current channel.
-                if (event instanceof GuildVoiceLeaveEvent) {
-                    channelLeft = ((GuildVoiceLeaveEvent) event).getChannelLeft();
-                } else {
-                    channelLeft = ((GuildVoiceMoveEvent) event).getChannelLeft();
-                }
-
-                if (botChannel == null || !channelLeft.equals(botChannel)) return;
-
-                // If the everyone left and the only remaining person is the bot
-                // Size check will suffice since we already checked if its the bot earlier
-                if (botChannel.getMembers().size() == 1) {
-                    Bot.getPlayers().destroy(guild.getIdLong());
-                }
-            }
         }
     }
 

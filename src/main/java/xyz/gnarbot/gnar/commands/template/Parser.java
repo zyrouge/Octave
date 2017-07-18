@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
@@ -152,6 +153,7 @@ public abstract class Parser<T> {
         return name;
     }
 
+    @Nullable
     public abstract T parse(Context c, String s);
 
     private static final HashMap<Class<?>, Parser<?>> parserMap = new HashMap<>();

@@ -4,10 +4,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.inlineCode
-import xyz.gnarbot.gnar.utils.link
+import xyz.gnarbot.gnar.utils.*
 
 @Command(
         id = 67,
@@ -16,21 +13,19 @@ import xyz.gnarbot.gnar.utils.link
         category = Category.MUSIC
 )
 class NowPlayingCommand : CommandExecutor() {
-    private val totalBlocks = 10
+    private val totalBlocks = 20
 
     override fun execute(context: Context, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
         val track = manager.player.playingTrack
 
         if (track == null) {
-            context.send().error("The player is not currently playing anything.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            context.send().error("The player is not currently playing anything.\n$PLAY_MESSAGE").queue()
             return
         }
 
@@ -42,12 +37,22 @@ class NowPlayingCommand : CommandExecutor() {
             val position = Utils.getTimestamp(track.position)
             val duration = Utils.getTimestamp(track.duration)
 
-            field("Time", true) {
-                inlineCode { "[$position / $duration]" }
+            field("Requester", true) {
+                context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)?.asMention
+                        ?: "Not Found"
+            }
+
+            field("Request Channel", true) {
+                context.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)?.asMention
+                        ?: "Not Found"
             }
 
             field("Repeating", true) {
                 manager.scheduler.repeatOption
+            }
+
+            field("Time", true) {
+                inlineCode { "[$position / $duration]" }
             }
 
             field("Progress", true) {

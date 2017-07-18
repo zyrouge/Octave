@@ -15,14 +15,21 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
+import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.ResponseBuilder
 import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.ln
+import java.util.concurrent.TimeUnit
 
 class MusicManager(val id: Long, val jda: JDA) {
     companion object {
@@ -60,11 +67,14 @@ class MusicManager(val id: Long, val jda: JDA) {
         }
     }
 
+    var leaveTask: Job? = null
+
     val guild: Guild get() = jda.getGuildById(id)
 
-
     /** @return Audio player for the guild. */
-    val player: AudioPlayer = playerManager.createPlayer()
+    val player: AudioPlayer = playerManager.createPlayer().also {
+        it.volume = Bot.getOptions().ofGuild(guild).musicVolume
+    }
 
     /**  @return Track scheduler for the player.*/
     val scheduler: TrackScheduler = TrackScheduler(this, player).also(player::addListener)
@@ -76,6 +86,13 @@ class MusicManager(val id: Long, val jda: JDA) {
      * @return Voting cooldown.
      */
     var lastVoteTime: Long = 0L
+
+    val currentRequestChannel: TextChannel?
+        get() {
+            return player.playingTrack.getUserData(TrackContext::class.java)?.requestedChannel?.let {
+                guild.getTextChannelById(it)
+            }
+        }
 
     /**
      * @return Whether there is a vote to skip the song or not.
@@ -111,9 +128,52 @@ class MusicManager(val id: Long, val jda: JDA) {
         }
     }
 
+    fun moveAudioConnection(channel: VoiceChannel) {
+        guild.let {
+            if (!guild.selfMember.voiceState.inVoiceChannel()) {
+                throw IllegalStateException("Bot is not in a voice channel")
+            }
+
+            player.isPaused = true
+            it.audioManager.openAudioConnection(channel)
+            player.isPaused = false
+
+            currentRequestChannel?.let { requestChannel ->
+                ResponseBuilder(requestChannel).embed("Music Playback") {
+                    desc { "Moving to channel `${channel.name}`." }
+                }.action().queue()
+            }
+        }
+    }
+
     fun closeAudioConnection() {
-        guild.audioManager.closeAudioConnection()
-        guild.audioManager.sendingHandler = null
+        guild.let {
+            it.audioManager.closeAudioConnection()
+            it.audioManager.sendingHandler = null
+        }
+    }
+
+    fun isAlone(): Boolean {
+        return guild.selfMember.voiceState.channel.members.let {
+            it.size == 1 && it[0] == guild.selfMember
+        }
+    }
+
+    fun queueLeave() {
+        leaveTask?.cancel()
+        leaveTask = createLeaveTask(id)
+        player.isPaused = true
+    }
+
+    fun cancelLeave() {
+        leaveTask?.cancel()
+        leaveTask = null
+        player.isPaused = false
+    }
+
+    private fun createLeaveTask(id: Long) = launch(CommonPool) {
+        delay(30, TimeUnit.SECONDS)
+        Bot.getPlayers().destroy(id)
     }
 
     fun loadAndPlay(context: Context, trackUrl: String, footnote: String? = null) {
@@ -147,7 +207,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                     }
                 }
 
-                track.userData = TrackContext(context.member, context.channel)
+                track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
 
                 scheduler.queue(track)
 
@@ -189,7 +249,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                         break
                     }
 
-                    track.userData = TrackContext(context.member, context.channel)
+                    track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
 
                     scheduler.queue(track)
                     added++

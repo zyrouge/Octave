@@ -19,12 +19,11 @@ class SkipCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
-        if (manager.player.playingTrack.getUserData(TrackContext::class.java).requester != context.member) {
+        if (manager.player.playingTrack.getUserData(TrackContext::class.java).requester != context.member.user.idLong) {
             context.send().error("You did not request this track.").queue()
             return
         }

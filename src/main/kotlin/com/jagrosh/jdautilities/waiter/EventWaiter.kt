@@ -66,6 +66,7 @@ class EventWaiter : EventListener {
 
     fun <T: Event> waitFor(cls: Class<T>, action: Consumer<T>) : WaiterBuilder<T> = WaiterBuilder(cls) { action.accept(it) }
 
+    // builder
     inner class WaiterBuilder<T: Event>(private var cls: Class<T>, private var action: (T) -> Unit) {
         private var predicate: ((T) -> Boolean) = { true }
 

@@ -64,15 +64,13 @@ class JumpCommand : CommandTemplate() {
     fun check(context: Context): Boolean {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` in a voice channel to start playing some music!").queue()
+            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return false
         }
 
         val botChannel = context.guild.selfMember.voiceState.channel
         if (botChannel == null) {
-            context.send().error("The bot is not currently in a channel.\n" +
-                    "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
+            context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
             return false
         }
 

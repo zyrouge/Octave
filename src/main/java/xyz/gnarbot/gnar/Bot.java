@@ -10,6 +10,7 @@ import xyz.avarel.aje.ast.GlobalVisitorSettings;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
+import xyz.gnarbot.gnar.listener.VoiceListener;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
@@ -39,6 +40,7 @@ public final class Bot {
     //private static final PokeApiClient pokeAPI = new PokeApiClient();
 
     protected static final BotListener botListener = new BotListener();
+    protected static final VoiceListener voiceListener = new VoiceListener();
     protected static final EventWaiter waiter = new EventWaiter();
 
     private static final CommandRegistry commandRegistry = new CommandRegistry();
