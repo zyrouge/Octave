@@ -30,6 +30,11 @@ class RepeatCommand : CommandExecutor() {
             return
         }
 
+        if (context.member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
         if (args.isEmpty()) {
             context.send().error("Please input one of these valid options `${RepeatOption.values().joinToString()}`").queue()
             return

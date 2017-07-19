@@ -26,6 +26,17 @@ class VoteSkipCommand : CommandExecutor() {
 
         val member = context.guild.getMember(context.message.author)
 
+        val botChannel = context.guild.selfMember.voiceState.channel
+        if (botChannel == null) {
+            context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
+            return
+        }
+
+        if (member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
         if (manager.player.playingTrack == null) {
             context.send().error("There isn't a song playing.").queue()
             return

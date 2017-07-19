@@ -24,7 +24,7 @@ public class LeetifyCommand extends CommandExecutor {
         put("e", "3");
         put("l", "1");
         put("s", "5");
-        put("S", "\\$");
+        put("S", "$");
         put("o", "0");
         put("t", "7");
         put("i", "!");

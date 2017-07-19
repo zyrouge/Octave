@@ -36,6 +36,7 @@ public class TrumpCommand extends CommandExecutor {
 
             Graphics2D g2 = image.createGraphics();
 
+
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
             String query = StringUtils.join(Arrays.asList(args), " ");
@@ -85,6 +86,7 @@ public class TrumpCommand extends CommandExecutor {
                 drawPosY += layout.getDescent() + layout.getLeading();
                 drawPosX -= 1;
             }
+
 
             File file = new File("saved.png");
 

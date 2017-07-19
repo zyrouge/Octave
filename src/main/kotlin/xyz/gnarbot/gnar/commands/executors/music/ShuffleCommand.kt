@@ -22,6 +22,17 @@ class ShuffleCommand : CommandExecutor() {
             return
         }
 
+        val botChannel = context.guild.selfMember.voiceState.channel
+        if (botChannel == null) {
+            context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
+            return
+        }
+
+        if (context.member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
         if (manager.scheduler.queue.isEmpty()) {
             context.send().error("The queue is empty.\n$PLAY_MESSAGE").queue()
             return

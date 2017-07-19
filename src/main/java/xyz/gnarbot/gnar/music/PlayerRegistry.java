@@ -26,7 +26,7 @@ public class PlayerRegistry {
         MusicManager manager = registry.get(guild.getIdLong());
 
         if (manager == null) {
-            if (size() >= 500 && !Bot.getOptions().ofGuild(guild).isPremium()) {
+            if (size() >= Bot.CONFIG.getMusicLimit() && !Bot.getOptions().ofGuild(guild).isPremium()) {
                 throw new MusicLimitException();
             }
 

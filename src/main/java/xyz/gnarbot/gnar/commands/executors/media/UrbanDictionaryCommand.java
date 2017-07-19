@@ -9,6 +9,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -61,7 +62,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONArray words = new JSONObject(response.body().string()).getJSONArray("list");
+                JSONArray words = new JSONObject(new JSONTokener(response.body().byteStream())).getJSONArray("list");
 
                 if (words.length() < 1) {
                     context.send().error("Could not find that word.").queue();
@@ -70,11 +71,14 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
                 JSONObject word = words.getJSONObject(0);
 
-                context.send().embed("Urban Dictionary")
+                context.send().embed()
+                        .setTitle(word.getString("word"), word.getString("permalink"))
                         .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
-                        .field("Word", true, "[" + word.getString("word") + "](" + word.getString("permalink") + ")")
-                        .field("Definition", true, word.optString("definition"))
-                        .field("Example", true, word.optString("example"))
+                        .setDescription("Definition by " + word.optString("author"))
+                        .field("\uD83D\uDC4D Upvotes", true, word.optInt("thumbs_up"))
+                        .field("\uD83D\uDC4E Downvotes", true, word.optInt("thumbs_down"))
+                        .field("Definition", false, word.optString("definition"))
+                        .field("Example", false, word.optString("example"))
                         .action().queue();
             }
         });

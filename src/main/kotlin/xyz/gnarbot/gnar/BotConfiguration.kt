@@ -18,7 +18,7 @@ class BotConfiguration(file: File) {
     var config: CommentedConfigurationNode = loader.load()
 
     val name: String = config["bot", "name"].getString("Gnar")
-    val game: String = config["bot", "game"].getString("Shard %d @ Gnar")
+    val game: String = config["bot", "game"].getString("_help | %d")
     val avatar: String? = config["bot", "avatar"].string
 
     val prefix: String = config["commands", "prefix"].getString("_")
@@ -27,6 +27,7 @@ class BotConfiguration(file: File) {
 
     val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
     val queueLimit: Int = config["music", "queue limit"].getInt(20)
+    val musicLimit: Int = config["music", "limit"].getInt(500)
 
     val durationLimitText: String = config["music", "duration limit"].getString("2 hours")
     val durationLimit: Duration = durationLimitText.toDuration()

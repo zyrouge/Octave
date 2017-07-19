@@ -5,7 +5,6 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.executors.music.PLAY_MESSAGE
 import xyz.gnarbot.gnar.utils.Context
 
@@ -14,7 +13,6 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("stop", "leave", "reset"),
         description = "Stop and clear the music player.",
         category = Category.MUSIC,
-        scope = Scope.VOICE,
         permissions = arrayOf(Permission.MANAGE_CHANNEL)
 )
 class StopCommand : CommandExecutor() {

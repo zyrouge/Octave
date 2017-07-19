@@ -13,10 +13,10 @@ import xyz.gnarbot.gnar.utils.Context
 @Command(
         id = 77,
         aliases = arrayOf("move"),
-        description = "Stop and clear the music player.",
+        description = "Move the bot to a channel.",
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        permissions = arrayOf(Permission.MANAGE_CHANNEL)
+        permissions = arrayOf(Permission.VOICE_MOVE_OTHERS)
 )
 class MoveCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
@@ -32,12 +32,11 @@ class MoveCommand : CommandExecutor() {
             return
         }
 
-        if (args.isEmpty()) {
-            context.send().error("Please put a valid music channel. `_move Target Channel`").queue()
-            return
+        val targetChannel = if (args.isEmpty()) {
+            context.member.voiceState.channel
+        } else {
+            Parser.VOICE_CHANNEL.parse(context, args.joinToString(" "))
         }
-
-        val targetChannel = Parser.VOICE_CHANNEL.parse(context, args.joinToString(" "))
 
         if (targetChannel == null) {
             context.send().error("That's not a valid music channel.").queue()
@@ -51,11 +50,9 @@ class MoveCommand : CommandExecutor() {
 
         if (context.guildOptions.musicChannels.isNotEmpty()) {
             if (targetChannel.id !in context.guildOptions.musicChannels) {
-                manager.currentRequestChannel?.let { requestChannel ->
-                    context.send().error(
-                            "Can not join `${targetChannel.name}`, it isn't one of the designated music channels."
-                    ).queue()
-                }
+                context.send().error(
+                        "Can not join `${targetChannel.name}`, it isn't one of the designated music channels."
+                ).queue()
                 return
             }
         }

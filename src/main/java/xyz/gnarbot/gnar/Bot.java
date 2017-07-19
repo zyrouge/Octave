@@ -37,7 +37,8 @@ public final class Bot {
     public static final Database DATABASE = new Database("bot");
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
-    //private static final PokeApiClient pokeAPI = new PokeApiClient();
+//    private static final PokeApiClient pokeAPI = new PokeApiClient();
+//    private static final PokeApiCache pokeCache = new PokeApiCache();
 
     protected static final BotListener botListener = new BotListener();
     protected static final VoiceListener voiceListener = new VoiceListener();
@@ -89,6 +90,10 @@ public final class Bot {
 
 //    public static PokeApiClient getPokeAPI() {
 //        return pokeAPI;
+//    }
+//
+//    public static PokeApiCache getPokeCache() {
+//        return pokeCache;
 //    }
 
     public static CommandRegistry getCommandRegistry() {

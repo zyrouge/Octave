@@ -33,6 +33,8 @@ public class TextToBrickCommand extends CommandExecutor {
         for (char c : array) {
             if (Character.isLetter(c)) {
                 sb.appendCodePoint(0x1F1E6 + c - 'A');
+            } else if (Character.isDigit(c) || c == '#' || c == '*') {
+                sb.append(c).append('\u20E3');
             } else {
                 sb.append(c);
             }

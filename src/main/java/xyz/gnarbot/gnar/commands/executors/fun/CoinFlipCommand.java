@@ -5,8 +5,6 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
-import java.util.Random;
-
 @Command(
         id = 3,
         aliases = {"coinflip", "flip"},
@@ -16,6 +14,6 @@ import java.util.Random;
 public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        context.send().embed().setDescription(new Random().nextInt(2) == 0 ? "Heads!" : "Tails!").action().queue();
+        context.send().embed().setDescription((int) (Math.random() * 2) == 0 ? "Heads!" : "Tails!").action().queue();
     }
 }

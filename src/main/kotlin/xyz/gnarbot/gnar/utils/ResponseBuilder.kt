@@ -49,8 +49,8 @@ class ResponseBuilder(private val channel: TextChannel) {
      *
      * @return The Message created by this function.
      */
-    fun exception(exception: Exception): RestAction<Message> {
-        return error("${exception.javaClass.simpleName}: ${exception.message ?: ""}")
+    fun exception(throwable: Throwable): RestAction<Message> {
+        return error("${throwable.javaClass.simpleName}: ${throwable.message ?: ""}")
     }
 
     /**

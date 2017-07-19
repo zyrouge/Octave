@@ -5,7 +5,6 @@ import org.apache.commons.lang3.text.WordUtils
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import java.util.*
 
 @Command(
         id = 40,
@@ -36,7 +35,7 @@ class DialogCommand : CommandExecutor() {
                             .map { "║ $it ║" }
                             .forEach { appendln(it) }
 
-                    when (Random().nextInt(4)) {
+                    when ((Math.random() * 4).toInt()) {
                         0 -> {
                             appendln("║  ┌─────────┐  ┌────────┐  ║")
                             appendln("║  │   Yes   │  │   No   │  ║")

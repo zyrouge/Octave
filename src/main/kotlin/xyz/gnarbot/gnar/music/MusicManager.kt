@@ -116,6 +116,11 @@ class MusicManager(val id: Long, val jda: JDA) {
                 Bot.getPlayers().destroy(id)
                 return false
             }
+            channel.userLimit != 0 && channel.members.size >= channel.userLimit -> {
+                context.send().error("The bot can't join due to the user limit.").queue()
+                Bot.getPlayers().destroy(id)
+                return false
+            }
             else -> {
                 guild.audioManager.sendingHandler = sendHandler
                 guild.audioManager.openAudioConnection(channel)

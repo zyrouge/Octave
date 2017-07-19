@@ -29,13 +29,12 @@ class Paginator(waiter: EventWaiter,
     val RIGHT = "\u25B6"
 
     fun display(channel: TextChannel) {
-        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EMBED_LINKS)) {
+        if (!channel.guild.selfMember.hasPermission(channel, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             channel.sendMessage(embed("Error") {
                 color { Color.RED }
                 desc {
                     buildString {
-                        append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}`, ")
-                        append("`${Permission.MESSAGE_MANAGE.getName()}` and ")
+                        append("The bot requires the permission `${Permission.MESSAGE_ADD_REACTION.getName()}` and ")
                         append("`${Permission.MESSAGE_EMBED_LINKS.getName()}` for pagination menus.")
                     }
                 }
@@ -136,7 +135,7 @@ class Paginator(waiter: EventWaiter,
                 buildString {
                     description?.let { append(it).ln().ln() }
                     items.forEachIndexed { index, s ->
-                        append('`').append(index + (pageNum - 1) * list[0].size).append("` ")
+                        append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
                         append(s).ln()
                     }
                 }

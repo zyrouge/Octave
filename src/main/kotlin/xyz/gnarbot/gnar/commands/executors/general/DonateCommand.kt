@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.ln
 @Command(
         id = 43,
         aliases = arrayOf("donate"),
-        description = "Show the getBot's uptime."
+        description = "Show the donation info."
 )
 class DonateCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

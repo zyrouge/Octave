@@ -35,11 +35,16 @@ class QueueCommand : CommandExecutor() {
                         add("**Empty queue.** Add some music with `_play url|YT search`.")
                     } else for (track in queue) {
                         add(buildString {
+                            track.getUserData(TrackContext::class.java)?.requester?.let {
+                                context.guild.getMemberById(it)?.let {
+                                    append(it.asMention)
+                                    append(' ')
+                                }
+                            }
+
                             append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
                             append(track.info.title)
-                            append("](").append(track.info.uri).append(")__ ")
-                            append(context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)
-                                        .asMention)
+                            append("](").append(track.info.uri).append(")__")
                         })
                         queueLength += track.duration
 

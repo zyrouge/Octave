@@ -23,7 +23,7 @@ public class ExplosmCommand extends CommandExecutor {
             Document document;
 
             int min = 1500;
-            int max = 4500;
+            int max = 4600;
 
             String rand;
 

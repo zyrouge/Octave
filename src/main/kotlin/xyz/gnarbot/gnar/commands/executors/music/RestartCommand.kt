@@ -28,6 +28,11 @@ class RestartCommand : CommandExecutor() {
             return
         }
 
+        if (context.member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
         val track = manager.player.playingTrack ?: manager.scheduler.lastTrack
 
         if (track != null) {

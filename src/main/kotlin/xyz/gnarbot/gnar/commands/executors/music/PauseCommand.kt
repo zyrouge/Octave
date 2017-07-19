@@ -28,6 +28,11 @@ class PauseCommand : CommandExecutor() {
             return
         }
 
+        if (context.member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
         if (manager.player.playingTrack == null) {
             context.send().error("Can not pause or resume player because there is no track loaded for playing.").queue()
             return

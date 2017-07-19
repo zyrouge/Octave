@@ -95,6 +95,7 @@ public class CommandRegistry {
 
         //Game Commands
         register(new OverwatchLookupCommand());
+//        register(new PokemonCommand());
         register(new GameLookupCommand());
         //End Game Commands
 
@@ -135,6 +136,7 @@ public class CommandRegistry {
             register(new PauseCommand());
             register(new StopCommand());
             register(new SkipCommand());
+            register(new RemoveCommand());
             register(new MoveCommand());
             register(new ForceSkipCommand());
             register(new ShuffleCommand());

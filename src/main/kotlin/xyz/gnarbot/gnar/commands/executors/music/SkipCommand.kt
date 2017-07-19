@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
+import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -23,7 +24,19 @@ class SkipCommand : CommandExecutor() {
             return
         }
 
-        if (manager.player.playingTrack.getUserData(TrackContext::class.java).requester != context.member.user.idLong) {
+        val botChannel = context.guild.selfMember.voiceState.channel
+        if (botChannel == null) {
+            context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
+            return
+        }
+
+        if (context.member.voiceState.channel != botChannel) {
+            context.send().error("You're not in the same channel as the bot.").queue()
+            return
+        }
+
+        if (manager.player.playingTrack.getUserData(TrackContext::class.java).requester != context.member.user.idLong
+                && !context.member.hasPermission(Permission.MANAGE_CHANNEL)) {
             context.send().error("You did not request this track.").queue()
             return
         }
