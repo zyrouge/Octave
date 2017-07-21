@@ -6,7 +6,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.link
 
 @Command(
         id = 74,
@@ -39,11 +38,13 @@ class VolumeCommand : CommandExecutor() {
                 desc {
                     val percent = manager.player.volume.toDouble() / 100
                     buildString {
-                        for (i in 0 until totalBlocks) {
-                            if (i / totalBlocks.toDouble() > percent) {
+                        append("[")
+                        for (i in 0..totalBlocks - 1) {
+                            if ((percent * (totalBlocks - 1)).toInt() == i) {
                                 append("\u25AC")
+                                append("]()")
                             } else {
-                                append("\u25AC" link "")
+                                append("\u25AC")
                             }
                         }
                         append(" **%.0f**%%".format(percent * 100))
@@ -70,18 +71,24 @@ class VolumeCommand : CommandExecutor() {
             desc {
                 val percent = amount.toDouble() / 100
                 buildString {
-                    for (i in 0 until totalBlocks) {
-                        if (i / totalBlocks.toDouble() > percent) {
+                    append("[")
+                    for (i in 0..totalBlocks - 1) {
+                        if ((percent * (totalBlocks - 1)).toInt() == i) {
                             append("\u25AC")
+                            append("]()")
                         } else {
-                            append("\u25AC" link "")
+                            append("\u25AC")
                         }
                     }
                     append(" **%.0f**%%".format(percent * 100))
                 }
             }
 
-            setFooter("Volume changed from $old% to $amount%.", null)
+            if (old == amount) {
+                setFooter("Volume remained the same.", null)
+            } else {
+                setFooter("Volume changed from $old% to $amount%.", null)
+            }
         }.action().queue()
     }
 }

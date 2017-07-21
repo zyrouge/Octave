@@ -12,8 +12,7 @@ import xyz.gnarbot.gnar.utils.ln
         id = 44,
         aliases = arrayOf("help", "guide"),
         usage = "[command]",
-        description = "Display the bot's list of commands.",
-        toggleable = false
+        description = "Display the bot's list of commands."
 )
 class HelpCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {

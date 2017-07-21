@@ -32,9 +32,6 @@ public @interface Command {
     /** @return If the command requires the user to be a donator. */
     boolean donor() default false;
 
-    /** @return If the command requires the member to be the guild's owner. */
-    boolean guildOwner() default false;
-
     /** @return If the command can be disabled. */
     boolean toggleable() default true;
 

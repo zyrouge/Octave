@@ -19,7 +19,6 @@ import xyz.gnarbot.gnar.commands.executors.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
-import xyz.gnarbot.gnar.commands.executors.test.TestEmbedCommand;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -40,6 +39,7 @@ public class CommandRegistry {
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
+        register(new AJECommand());
         register(new MathCommand());
         register(new RemindMeCommand());
         register(new GoogleCommand());
@@ -52,10 +52,11 @@ public class CommandRegistry {
         register(new DonateCommand());
         register(new RedeemCommand());
         register(new IAmCommand());
+        register(new QuoteCommand());
         //End General Commands
 
         //Fun Commands
-        register(new TrumpCommand());
+
         register(new ASCIICommand());
         register(new CoinFlipCommand());
         register(new DialogCommand());
@@ -65,14 +66,9 @@ public class CommandRegistry {
         register(new EightBallCommand());
         register(new LeetifyCommand());
         register(new LennyCommand());
-        //register(new ProgressionCommand());
-        //register(new GoogleyEyesCommand());
-        //register(new ServersSharedCommand());
+        register(new TextToBrickCommand());
         register(new TextToSpeechCommand());
         register(new ReactCommand());
-        //register(new TriviaAnswerCommand());
-        //register(new TriviaCommand());
-        //register(new GraphCommand());
 
         register(new PandoraBotCommand());
         register(new MemeCommand());
@@ -106,6 +102,7 @@ public class CommandRegistry {
         //Media Commands
         register(new AnimeSearchCommand());
         register(new MangaSearchCommand());
+        register(new TrumpCommand());
         register(new CatsCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
@@ -122,12 +119,7 @@ public class CommandRegistry {
         register(new ThrowError());
         register(new GenerateKeyCommand());
         register(new EmoteListCommand());
-
-
-        // Test Commands
-        register(new TestEmbedCommand());
-        register(new QuoteCommand());
-        register(new TextToBrickCommand());
+        register(new SudoCommand());
 
         //MUSIC COMMAND
         if (Bot.CONFIG.getMusicEnabled()) {

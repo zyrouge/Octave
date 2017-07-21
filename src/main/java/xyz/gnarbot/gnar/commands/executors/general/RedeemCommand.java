@@ -29,11 +29,11 @@ public class RedeemCommand extends CommandExecutor {
         Key key = Bot.DATABASE.getPremiumKey(id);
 
         if (key != null) {
-            if (System.currentTimeMillis() > key.getExpiresBy()) {
-                context.send().error("That code has expired.").queue();
-                key.delete();
-                return;
-            }
+//            if (System.currentTimeMillis() > key.getExpiresBy()) {
+//                context.send().error("That code has expired.").queue();
+//                key.delete();
+//                return;
+//            }
             switch (key.getType()) {
                 case PREMIUM:
                     context.getGuildOptions().addPremium(key.getDuration());

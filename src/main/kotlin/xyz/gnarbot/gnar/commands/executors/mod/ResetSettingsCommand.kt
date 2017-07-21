@@ -12,6 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("resetall"),
         description = "Reset all music settings.",
         category = Category.MODERATION,
+        toggleable = false,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ResetSettingsCommand : CommandExecutor() {

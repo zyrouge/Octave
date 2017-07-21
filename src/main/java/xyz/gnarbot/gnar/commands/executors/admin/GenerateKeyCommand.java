@@ -58,7 +58,7 @@ public class GenerateKeyCommand extends CommandExecutor {
             return;
         }
 
-        long expiresBy = System.currentTimeMillis() + Duration.ofDays(30).toMillis();
+        long expiresBy = System.currentTimeMillis() + Duration.ofDays(365).toMillis();
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < num; i++) {

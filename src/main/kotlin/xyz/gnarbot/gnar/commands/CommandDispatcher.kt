@@ -1,12 +1,11 @@
 package xyz.gnarbot.gnar.commands
 
-import gnu.trove.map.hash.TLongLongHashMap
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Channel
+import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
@@ -16,7 +15,9 @@ import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 
 object CommandDispatcher {
-    private val cooldownMap = TLongLongHashMap()
+    //private val cooldownMap = TLongLongHashMap()
+
+    private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
         val guildOptions = Bot.getOptions().ofGuild(event.guild)
@@ -24,7 +25,7 @@ object CommandDispatcher {
         val content = event.message.rawContent
         if (!content.startsWith(guildOptions.prefix)
                 && !content.startsWith(Bot.CONFIG.prefix)
-                && !content.startsWith("gnar ", true)) {
+                && !content.startsWith(namePrefix, true)) {
             return
         }
 
@@ -44,148 +45,103 @@ object CommandDispatcher {
         launch(CommonPool) {
             val context = Context(event, guildOptions)
 
-            if (callCommand(context)) {
+            if (splitCommand(context)) {
                 context.shard.requests++
             }
         }
     }
 
-    /**
-     * Call the command based on the message content.
-     *
-     * @param message Message object.
-     * @return If the call was successful.
-     */
-    fun callCommand(context: Context) : Boolean {
-        // Check if the person is to be ignored
-        if (isIgnored(context, context.member)) {
-            return false
+    fun splitCommand(context: Context): Boolean {
+        val content = context.message.rawContent?.let {
+            when {
+                it.startsWith(context.guildOptions.prefix) -> it.substring(context.guildOptions.prefix.length)
+                it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
+                it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
+                else -> return false
+            }
         }
 
-        // PROCESS TIMEOUT
-        if (isRateLimited(context.user)) {
-            val remainingTimeout = cooldownMap[context.user.idLong] - System.currentTimeMillis()
-            context.send().text("\u23F1 **Too fast!** Try again in `${Utils.getTimestamp(remainingTimeout)}`.").queue()
-            return false
-        }
+        // Split the message. In house split for special syntax.
+        val tokens = Utils.stringSplit(content)
 
-        // Prefix check
-        val content = context.message.rawContent
-        // Already checked.
-        // if (!content.startsWith(Bot.CONFIG.prefix)) return false
-
-        val contentPrefixStrip = if (content.startsWith(context.guildOptions.prefix)) {
-            content.substring(context.guildOptions.prefix.length)
-        } else if (content.startsWith(Bot.CONFIG.prefix)) {
-            content.substring(Bot.CONFIG.prefix.length)
-        } else if (content.startsWith("gnar ", true)) {
-            content.substring("gnar ".length)
-        } else {
-            return false
-        }
-
-        // Split the message.
-        val tokens = Utils.stringSplit(contentPrefixStrip)
-
-        // shouldnt happen but oh well
+        // Should not happen but as a guard.
         if (tokens.isEmpty()) {
             return false
         }
 
         val label = tokens[0].toLowerCase().trim()
 
-//        if (label in context.guildOptions.disabledCommands) {
-//            context.send().error("This command is disabled by the server owner.").queue()
-//            return false
-//        }
-
-
         val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
 
+        val args = tokens.copyOfRange(1, tokens.size)
+
+        return callCommand(context, cmd, args)
+    }
+
+    /**
+     * Call the command based on the message content.
+     *
+     * @return If the call was successful.
+     */
+    fun callCommand(context: Context, cmd: CommandExecutor, args: Array<String>) : Boolean {
+        // Check if the person is to be ignored
+        if (isIgnored(context, context.member)) {
+            return false
+        }
 
         val message = context.message
         val member = context.member
-        val botAdmin = member.user.idLong in Bot.CONFIG.admins
+
+        // Bot administrator check.
+        if (cmd.info.admin && member.user.idLong !in Bot.CONFIG.admins) {
+            context.send().error("This command is for bot administrators only.").queue()
+            return false
+        }
 
 
-        if (!(botAdmin || context.member.hasPermission(Permission.ADMINISTRATOR))) {
+        // Command settings check.
+        if (!context.member.hasPermission(Permission.ADMINISTRATOR)) {
             context.guildOptions.commandOptions[cmd.info.id]?.let {
                 if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
                     context.send().error("You are not one of the users allowed to use this command.").queue()
                     return false
                 }
                 if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
-                    context.send().error("Your role is not allowed to use this command.").queue()
+                    context.send().error("You don't have one of the roles allowed to use this command.").queue()
                     return false
                 }
                 if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
-                    context.send().error("This channel is not allowed to use this command.").queue()
+                    val channels = it.allowedChannels.map(context.guild::getTextChannelById)
+                            .filterNotNull()
+                            .map(IMentionable::getAsMention)
+                            .joinToString(", ")
+
+                    context.send().error("This command can only be used in $channels.").queue()
                     return false
                 }
             }
         }
 
-
-
-        val args = tokens.copyOfRange(1, tokens.size)
-
-        rateLimit(context.user, cmd.info.cooldown)
-
-
         // _<cmd> ? or _<cmd> help message
+        // Delegate to _help <cmd>
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
-            context.send().embed("Command Information") {
-                field("Aliases") { cmd.info.aliases.joinToString(", ") }
-                field("Usage") { "${Bot.CONFIG.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
-                if (cmd.info.donor) {
-                    field("Donator") {
-                        "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them."
-                    }
-                }
-
-                if (cmd.info.permissions.isNotEmpty()) {
-                    field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
-                }
-
-                field("Description") { cmd.info.description }
-            }.action().queue()
+            Bot.getCommandRegistry().getCommand("help").execute(context, arrayOf(cmd.info.aliases.first()))
             return true
         }
 
-
-        // Admins bypass permission requirements
-        if (!botAdmin) {
-            if (cmd.info.admin) {
-                context.send().error("This command is for bot administrators only.").queue()
-                return false
-            }
-
-            if (cmd.info.donor && !context.guildOptions.isPremium) {
-                context.send().embed("Donators Only") {
-                    color { Color.ORANGE }
-                    desc {
-                        buildString {
-                            append("🌟 This command is for donators' servers only.").ln()
-                            append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
-                            append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
-                        }
+        // Donator check
+        if (cmd.info.donor && !context.guildOptions.isPremium) {
+            context.send().embed("Donators Only") {
+                color { Color.ORANGE }
+                desc {
+                    buildString {
+                        append("🌟 This command is for donators' servers only.").ln()
+                        append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
+                        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
                     }
-                }.action().queue()
-                return false
-            }
-        }
-
-        if (cmd.info.guildOwner && context.guild.owner != member) {
-            context.send().error("This command is for server owners only.").queue()
+                }
+            }.action().queue()
             return false
-        }
-
-        if (cmd.info.category == Category.MUSIC) {
-            val musicTextChannel = context.guildOptions.requestChannel?.let { context.guild.getTextChannelById(it) }
-            if (musicTextChannel != null && musicTextChannel != context.channel) {
-                context.send().error("\uD83C\uDFB6 Music commands in this guild can only be used in ${musicTextChannel.asMention}.").queue()
-                return false
-            }
         }
 
         if (cmd.info.scope == Scope.VOICE) {
@@ -205,18 +161,20 @@ object CommandDispatcher {
             }
         }
 
-        if (!botAdmin && cmd.info.permissions.isNotEmpty()) {
+        if (cmd.info.permissions.isNotEmpty()) {
             val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
             val isDJ = djRole !in member.roles
 
-            if ((cmd.info.scope != Scope.VOICE || !isDJ) && !cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
-                val requirements = cmd.info.permissions.map(Permission::getName)
-                context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
-                    Scope.GUILD -> "the guild `${message.guild.name}`."
-                    Scope.TEXT -> "the text channel `${message.textChannel.name}`."
-                    Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
-                }).queue()
-                return false
+            if (cmd.info.scope != Scope.VOICE || !isDJ) {
+                if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+                    val requirements = cmd.info.permissions.map(Permission::getName)
+                    context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
+                        Scope.GUILD -> "the guild `${message.guild.name}`."
+                        Scope.TEXT -> "the text channel `${message.textChannel.name}`."
+                        Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
+                    }).queue()
+                    return false
+                }
             }
         }
 
@@ -244,13 +202,13 @@ object CommandDispatcher {
                 && member.user.idLong !in Bot.CONFIG.admins
     }
 
-    // Checks for ratelimit
-    private fun isRateLimited(user: User) = System.currentTimeMillis() < cooldownMap.get(user.idLong)
-
-    // Set ratelimit
-    private fun rateLimit(user: User, ms: Long) {
-        if (ms != 0L) {
-            cooldownMap.put(user.idLong, System.currentTimeMillis() + ms)
-        }
-    }
+//    // Checks for ratelimit
+//    private fun isRateLimited(user: User) = System.currentTimeMillis() < cooldownMap.get(user.idLong)
+//
+//    // Set ratelimit
+//    private fun rateLimit(user: User, ms: Long) {
+//        if (ms != 0L) {
+//            cooldownMap.put(user.idLong, System.currentTimeMillis() + ms)
+//        }
+//    }
 }

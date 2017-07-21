@@ -14,12 +14,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@JsonIgnoreProperties("disabledCommands")
+@JsonIgnoreProperties({"disabledCommands", "requestChannel"})
 public final class GuildOptions implements ManagedObject {
     private final String id;
     private String prefix;
 
-    @JsonSerialize(contentAs = CommandOptions.class)
+    @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
     private Map<Integer, CommandOptions> commandOptions;
 
     private Set<String> ignoredChannels;
@@ -30,7 +30,6 @@ public final class GuildOptions implements ManagedObject {
     private Set<String> selfRoles;
 
     private String djRole;
-    private String requestChannel;
     private Set<String> musicChannels;
     private int musicVolume = 100;
 
@@ -40,7 +39,6 @@ public final class GuildOptions implements ManagedObject {
     public GuildOptions(String id) {
         this.id = id;
     }
-
 
 
     @NotNull
@@ -109,15 +107,6 @@ public final class GuildOptions implements ManagedObject {
         this.djRole = djRole;
     }
 
-    @Nullable
-    public final String getRequestChannel() {
-        return requestChannel;
-    }
-
-    public final void setRequestChannel(@Nullable String requestChannel) {
-        this.requestChannel = requestChannel;
-    }
-
     @NotNull
     public final Set<String> getMusicChannels() {
         if (musicChannels == null) musicChannels = new HashSet<>();
@@ -129,11 +118,11 @@ public final class GuildOptions implements ManagedObject {
     }
 
     public int getMusicVolume() {
-        if (!isPremium()) {
-            return 100;
-        }
         return musicVolume;
     }
+
+
+
 
     public Map<Integer, CommandOptions> getCommandOptions() {
         if (commandOptions == null) {

@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -86,7 +87,23 @@ public abstract class Parser<T> {
             return Bot.getCommandRegistry().getCommand(s);
         }
     };
-    public static final Parser<Duration> DURATION = new Parser<Duration>("(time)") {
+    public static final Parser<Category> CATEGORY = new Parser<Category>("([category])") {
+        private final Pattern pattern = Pattern.compile("\\[(\\w+)]");
+
+        @Override
+        public Category parse(Context c, String s) {
+            Matcher matcher = pattern.matcher(s);
+            if (matcher.find()) {
+                try {
+                    return Category.valueOf(matcher.group(1).toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }
+            return null;
+        }
+    };
+    public static final Parser<Duration> DURATION = new Parser<Duration>("(time hh:mm:ss)") {
         private final Pattern pattern = Pattern.compile("^(\\d+)(?::(\\d+))?(?::(\\d+))?$");
 
         @Override
@@ -167,6 +184,7 @@ public abstract class Parser<T> {
         parserMap.put(VoiceChannel.class, VOICE_CHANNEL);
         parserMap.put(Duration.class, DURATION);
         parserMap.put(CommandExecutor.class, COMMAND);
+        parserMap.put(Category.class, CATEGORY);
     }
 
     @SuppressWarnings("unchecked")

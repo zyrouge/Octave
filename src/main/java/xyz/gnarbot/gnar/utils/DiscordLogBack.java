@@ -36,7 +36,6 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
             content = ":warning: Received a message but it was too long. " + Utils.hasteBin(content);
         }
 
-
         Request request = new Request.Builder()
                 .url(Bot.KEYS.getConsoleWebhook())
                 .header("Content-Type", "application/json")

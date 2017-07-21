@@ -74,7 +74,7 @@ public class MemeCommand extends CommandExecutor {
             return;
         }
 
-        if (args.length > 0 && args[0].equalsIgnoreCase("list")) {
+        if (args[0].equalsIgnoreCase("list")) {
             new PaginatorBuilder(Bot.getWaiter())
                     .setTitle("Meme list")
                     .setDescription("Use one of these like so: `_meme (meme name) | (top text) | (bottom text)`")
@@ -92,7 +92,7 @@ public class MemeCommand extends CommandExecutor {
             return;
         }
 
-        int ld = 999;
+        int ld = Integer.MAX_VALUE;
         String id = null;
 
         for (Map.Entry<String, String> entry : map.entrySet()) {

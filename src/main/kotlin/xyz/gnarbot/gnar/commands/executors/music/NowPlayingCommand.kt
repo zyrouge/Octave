@@ -4,7 +4,10 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.*
+import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.TrackContext
+import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.inlineCode
 
 @Command(
         id = 67,
@@ -58,11 +61,13 @@ class NowPlayingCommand : CommandExecutor() {
             field("Progress", true) {
                 val percent = track.position.toDouble() / track.duration
                 buildString {
-                    for (i in 0 until totalBlocks) {
-                        if (i / totalBlocks.toDouble() > percent) {
+                    append("[")
+                    for (i in 0..totalBlocks - 1) {
+                        if ((percent * (totalBlocks - 1)).toInt() == i) {
                             append("\u25AC")
+                            append("]()")
                         } else {
-                            append("\u25AC" link "")
+                            append("\u25AC")
                         }
                     }
                     append(" **%.1f**%%".format(percent * 100))

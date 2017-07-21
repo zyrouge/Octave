@@ -8,7 +8,7 @@ import java.lang.management.ManagementFactory
 @Command(
         id = 49,
         aliases = arrayOf("uptime"),
-        description = "Show the getBot's uptime."
+        description = "Show the bot's uptime."
 )
 class UptimeCommand : CommandExecutor() {
     override fun execute(context: Context, args: Array<String>) {
