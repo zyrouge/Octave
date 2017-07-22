@@ -45,7 +45,7 @@ dependencies {
     // Other dependencies
     compile group: 'xyz.avarel', name: 'AJE', version: '3.5.0'
 
-    compile group: 'xyz.avarel', name: 'aljava', version: '0.0.1'
+    compile group: 'xyz.avarel', name: 'aljava', version: '0.0.3'
     compile group: 'org.scilab.forge', name: 'jlatexmath', version: '1.0.6'
 
     compile group: 'me.sargunvohra.lib', name: 'pokekotlin', version: '2.3.0'

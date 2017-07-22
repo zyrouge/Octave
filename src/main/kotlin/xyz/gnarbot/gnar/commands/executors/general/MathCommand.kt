@@ -28,25 +28,53 @@ class MathCommand : CommandExecutor() {
 
         val str = args.joinToString(" ")
 
-        val file: File = File("temp.png").also(File::deleteOnExit)
+        val finalTex = if (str.contains("=")) {
+            val eq = Parser(Lexer(str)).parseEquation()
 
-        if (str.contains("=")) {
-            val expr = Parser(Lexer(str)).parseEquation()
-            val results = expr.solveFor("x")
+            val eqTex = eq.toTex().replace("=", "&=")
 
-            val tex = results.joinToString(", ", "[", "]") {
-                if (it is TexElement) {
-                    it.toTex()
-                } else {
-                    it.toString()
+            val simpleEq = eq.simplify()
+            val simpleEqTex = if (simpleEq.toString() != eq.toString()) {
+                simpleEq.toTex().replace("=", "&=")
+            } else null
+
+            val results = eq.solveFor("x")
+            val resultsTex = "x &= " + if (results.size == 1) {
+                results[0].let {
+                    if (it is TexElement) it.toTex() else it.toString()
+                }
+            } else {
+                results.joinToString(", ", "[", "]") {
+                    if (it is TexElement) it.toTex() else it.toString()
                 }
             }
 
-            writeTexToFile(tex, file)
+            "\\begin{align}${if (eqTex == resultsTex) {
+                resultsTex
+            } else if (simpleEqTex == null) {
+                "$eqTex\\\\$resultsTex"
+            } else {
+                "$eqTex\\\\$simpleEqTex\\\\$resultsTex"
+            }}\\end{align}"
         } else {
             val expr = Parser(Lexer(str)).parse()
-            writeTexToFile(expr.simplify().toTex(), file)
+
+            val exprTex = expr.toTex()
+
+            val simpleExpr = expr.simplify()
+            val simpleExprTex = if (simpleExpr.toString() != expr.toString()) {
+                simpleExpr.toTex()
+            } else null
+
+            "\\begin{align}${if (simpleExprTex == null) {
+                exprTex
+            } else {
+                "$exprTex\\\\$simpleExprTex"
+            }}\\end{align}"
         }
+
+        val file: File = File("temp.png").also(File::deleteOnExit)
+        writeTexToFile(finalTex, file)
 
         context.channel.sendFile(file, file.name, MessageBuilder().setEmbed(
                 context.send().embed {

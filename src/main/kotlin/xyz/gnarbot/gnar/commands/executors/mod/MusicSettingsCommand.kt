@@ -26,6 +26,11 @@ class MusicSettingsCommand : CommandTemplate() {
             return
         }
 
+        if (channel == context.guild.afkChannel) {
+            context.send().error("`${channel.name}` is the AFK channel, you can't play music there.").queue()
+            return
+        }
+
         context.guildOptions.musicChannels.add(channel.id)
         context.guildOptions.save()
 

@@ -148,6 +148,9 @@ object CommandDispatcher {
             if (member.voiceState.channel == null) {
                 context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()
                 return false
+            } else if (member.voiceState.channel == context.guild.afkChannel) {
+                context.send().error("Music can't be played in the AFK channel.").queue()
+                return false
             } else if (context.guildOptions.musicChannels.isNotEmpty()
                     && member.voiceState.channel.id !in context.guildOptions.musicChannels) {
 

@@ -18,7 +18,7 @@ public class PlayerRegistry {
     private TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
 
     public PlayerRegistry() {
-        Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 20, TimeUnit.MINUTES);
+        Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
     }
 
     @Nonnull
