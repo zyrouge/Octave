@@ -2,10 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.media;
 
 
 import com.jagrosh.jdautilities.menu.PaginatorBuilder;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +44,10 @@ public class MemeCommand extends CommandExecutor {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONArray memeList = new JSONObject(new JSONTokener(response.body().byteStream()))
+                ResponseBody body = response.body();
+                if (body == null) return;
+
+                JSONArray memeList = new JSONObject(new JSONTokener(body.byteStream()))
                         .getJSONObject("data")
                         .getJSONArray("memes");
 
@@ -63,6 +63,12 @@ public class MemeCommand extends CommandExecutor {
 
     @Override
     public void execute(Context context, String[] args) {
+        String mashape = Bot.KEYS.getMashape();
+        if (mashape == null) {
+            context.send().text("Mashape key is null").queue();
+            return;
+        }
+
         if (args.length == 0) {
             context.send().error(
                     "Example Usage:\n\n"
@@ -120,7 +126,7 @@ public class MemeCommand extends CommandExecutor {
 
         Request request = new Request.Builder()
                 .url(url)
-                .header("X-Mashape-Key", Bot.KEYS.getMashape())
+                .header("X-Mashape-Key", mashape)
                 .header("Accept", "application/json")
                 .build();
 
@@ -133,7 +139,10 @@ public class MemeCommand extends CommandExecutor {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()))
+                ResponseBody body = response.body();
+                if (body == null) return;
+
+                JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()))
                         .getJSONObject("data");
 
                 context.send().embed("Meme Generator")

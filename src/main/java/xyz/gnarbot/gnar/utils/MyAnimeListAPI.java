@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.utils;
 import okhttp3.Credentials;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
 import org.json.XML;
@@ -31,11 +32,16 @@ public class MyAnimeListAPI {
                     .header("Authorization", Credentials.basic(username, password))
                     .build();
             try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-                JSONObject jso = XML.toJSONObject(response.body().string());
-                response.close();
-                if (jso.has("user") && jso.getJSONObject("user").has("id")) {
-                    LOG.info("Logged in to MyAnimeListAPI.");
-                    login = true;
+                ResponseBody body = response.body();
+                if (body != null) {
+                    JSONObject jso = XML.toJSONObject(body.string());
+                    response.close();
+                    if (jso.has("user") && jso.getJSONObject("user").has("id")) {
+                        LOG.info("Logged in to MyAnimeListAPI.");
+                        login = true;
+                    }
+                } else {
+                    LOG.error("Response was null when logging in to MyAnimeListAPI");
                 }
             } catch (IOException e) {
                 LOG.info("Error logging in to MyAnimeListAPI.", e);
@@ -51,25 +57,28 @@ public class MyAnimeListAPI {
     }
 
     public JSONObject makeRequest(String target, String query) {
-        if (!isLogin()) {
-            return null;
-        }
+        if (isLogin()) {
+            String url;
+            try {
+                url = new URIBuilder(API_PREFIX + target).addParameter("q", query).toString();
+            } catch (URISyntaxException e) {
+                return null;
+            }
 
-        String url;
-        try {
-            url = new URIBuilder(API_PREFIX + target).addParameter("q", query).toString();
-        } catch (URISyntaxException e) {
-            return null;
-        }
+            Request request = new Request.Builder().url(url)
+                    .header("Authorization", Credentials.basic(username, password))
+                    .build();
+            try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
+                ResponseBody body = response.body();
+                if (body == null) return null;
 
-        Request request = new Request.Builder().url(url)
-                .header("Authorization", Credentials.basic(username, password))
-                .build();
-        try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-            JSONObject jso = XML.toJSONObject(response.body().string());
-            response.close();
-            return jso;
-        } catch (IOException e) {
+                JSONObject jso = XML.toJSONObject(body.string());
+                response.close();
+                return jso;
+            } catch (IOException e) {
+                return null;
+            }
+        } else {
             return null;
         }
     }

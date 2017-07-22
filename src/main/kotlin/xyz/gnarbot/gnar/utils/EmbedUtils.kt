@@ -13,7 +13,7 @@ inline fun embed(title: String? = null, value: EmbedMaker.() -> Unit): EmbedMake
     return embed(title).apply(value)
 }
 
-inline fun EmbedBuilder.field(inline: Boolean = false) = addBlankField(inline)
+inline fun EmbedBuilder.field(inline: Boolean = false): EmbedBuilder = addBlankField(inline)
 
 inline fun EmbedBuilder.field(name: String?, inline: Boolean = false, value: Any?): EmbedBuilder {
     addField(name, value.toString(), inline)

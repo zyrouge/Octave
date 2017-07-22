@@ -1,9 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -40,7 +37,10 @@ public class XKCDCommand extends CommandExecutor {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONObject latestJso = new JSONObject(new JSONTokener(response.body().byteStream()));
+                ResponseBody body = response.body();
+                if (body == null) return;
+
+                JSONObject latestJso = new JSONObject(new JSONTokener(body.byteStream()));
 
                 int min = 500;
                 int max = latestJso.getInt("num");
@@ -82,7 +82,10 @@ public class XKCDCommand extends CommandExecutor {
 
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                        JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
+                        ResponseBody body = response.body();
+                        if (body == null) return;
+
+                        JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()));
 
                         String title = jso.getString("title");
 

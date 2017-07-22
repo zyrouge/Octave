@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ExtractZipFile {
 
     public static void main(String[] args) {

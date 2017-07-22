@@ -108,19 +108,19 @@ public class Util {
 		}
 
 		if (val instanceof Integer) {
-			return new Datum((Integer) val);
+			return new Datum(val);
 		}
 
 		if (val instanceof Number) {
-			return new Datum((Number) val);
+			return new Datum(val);
 		}
 
 		if (val instanceof Boolean) {
-			return new Datum((Boolean) val);
+			return new Datum(val);
 		}
 
 		if (val instanceof String) {
-			return new Datum((String) val);
+			return new Datum(val);
 		}
 
 		if (val == null) {

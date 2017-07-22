@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static com.rethinkdb.RethinkDB.r;
 
 public class Database {
-    public static final Logger LOG = LoggerFactory.getLogger("Database");
+    private static final Logger LOG = LoggerFactory.getLogger("Database");
     private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     private final Connection conn;
 

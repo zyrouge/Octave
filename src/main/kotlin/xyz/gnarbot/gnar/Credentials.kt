@@ -37,7 +37,7 @@ class Credentials(file: File) {
         }
     }
 
-    val consoleWebhook = config["console webhook"].string
+    val consoleWebhook: String? = config["console webhook"].string
 
     val abal: String? = config["server counts", "abal"].string
     val carbonitex: String? = config["server counts", "carbonitex"].string

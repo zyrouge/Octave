@@ -347,24 +347,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(9, description = "Clear all command options.")
-    fun clear(context: Context) {
-        if (context.guildOptions.commandOptions.isEmpty()) {
-            context.send().error("This guild doesn't have any commands options.").queue()
-            return
-        }
-
-        context.guildOptions.commandOptions.clear()
-        context.guildOptions.save()
-
-        context.send().embed("Command Management") {
-            desc {
-                "Cleared the command options."
-            }
-        }.action().queue()
-    }
-
-    @Executor(10, description = "Clear all options for a command.")
+    @Executor(9, description = "Clear all options for a command.")
     fun clear(context: Context, cmd: CommandExecutor) {
         val info = cmd.info
 
@@ -389,6 +372,23 @@ class ManageCommandsCommand : CommandTemplate() {
         context.send().embed("Command Management") {
             desc {
                 "Cleared the command options for ${info.aliases.first()}."
+            }
+        }.action().queue()
+    }
+
+    @Executor(10, description = "Clear all command options.")
+    fun clear(context: Context) {
+        if (context.guildOptions.commandOptions.isEmpty()) {
+            context.send().error("This guild doesn't have any commands options.").queue()
+            return
+        }
+
+        context.guildOptions.commandOptions.clear()
+        context.guildOptions.save()
+
+        context.send().embed("Command Management") {
+            desc {
+                "Cleared the command options."
             }
         }.action().queue()
     }

@@ -1,9 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +27,8 @@ import java.net.URISyntaxException;
 public class UrbanDictionaryCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (Bot.KEYS.getMashape() == null) {
+        String mashape = Bot.KEYS.getMashape();
+        if (mashape == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
@@ -49,7 +47,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
         Request request = new Request.Builder()
                 .url(url)
-                .header("X-Mashape-Key", Bot.KEYS.getMashape())
+                .header("X-Mashape-Key", mashape)
                 .header("Accept", "text/plain")
                 .get()
                 .build();
@@ -62,7 +60,10 @@ public class UrbanDictionaryCommand extends CommandExecutor {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                JSONArray words = new JSONObject(new JSONTokener(response.body().byteStream())).getJSONArray("list");
+                ResponseBody body = response.body();
+                if (body == null) return;
+
+                JSONArray words = new JSONObject(new JSONTokener(body.byteStream())).getJSONArray("list");
 
                 if (words.length() < 1) {
                     context.send().error("Could not find that word.").queue();

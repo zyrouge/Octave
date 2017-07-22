@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class PlayerRegistry {
     public static final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
-    private TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
+    private final TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
 
     public PlayerRegistry() {
         Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
@@ -68,10 +68,7 @@ public class PlayerRegistry {
     }
 
     public void shutdown() {
-        for (MusicManager manager : registry.valueCollection()) {
-            manager.destroy();
-        }
-        registry.clear();
+        clear(true);
     }
 
     public void clear(boolean force) {

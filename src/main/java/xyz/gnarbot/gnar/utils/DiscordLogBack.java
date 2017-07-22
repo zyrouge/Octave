@@ -5,6 +5,7 @@ import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import okhttp3.*;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.Bot;
 
@@ -26,7 +27,8 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
     @Override
     protected void append(ILoggingEvent event) {
         if (!enabled) return;
-        if (Bot.KEYS.getConsoleWebhook() == null) return;
+        String consoleWebhook = Bot.KEYS.getConsoleWebhook();
+        if (consoleWebhook == null) return;
 
         if (!event.getLevel().isGreaterOrEqual(Level.INFO)) return;
 
@@ -37,19 +39,19 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
         }
 
         Request request = new Request.Builder()
-                .url(Bot.KEYS.getConsoleWebhook())
+                .url(consoleWebhook)
                 .header("Content-Type", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, new JSONObject().put("content", content).toString()))
                 .build();
 
         HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 call.cancel();
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 response.close();
             }
         });

@@ -88,17 +88,14 @@ public class TrumpCommand extends CommandExecutor {
             }
 
 
-            File file = new File("saved.png");
+            File file = new File("trump.jpg");
+            file.deleteOnExit();
 
             ImageIO.write(image, "jpg", file);
 
             g2.dispose();
 
             context.getChannel().sendFile(file, null).queue();
-
-            if (!file.delete()) {
-                file.deleteOnExit();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

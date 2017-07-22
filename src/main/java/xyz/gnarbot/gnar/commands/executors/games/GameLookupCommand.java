@@ -1,9 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.games;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +26,8 @@ import java.io.IOException;
 public class GameLookupCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String[] args) {
-        if (Bot.KEYS.getMashape() == null) {
+        String mashape = Bot.KEYS.getMashape();
+        if (mashape == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
@@ -45,7 +43,7 @@ public class GameLookupCommand extends CommandExecutor {
 
             Request request = new Request.Builder()
                     .url(url)
-                    .header("X-Mashape-Key", Bot.KEYS.getMashape())
+                    .header("X-Mashape-Key", mashape)
                     .header("Accept", "application/json")
                     .build();
 
@@ -58,7 +56,10 @@ public class GameLookupCommand extends CommandExecutor {
 
                 @Override
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    JSONArray jsa = new JSONArray(new JSONTokener(response.body().byteStream()));
+                    ResponseBody body = response.body();
+                    if (body == null) return;
+
+                    JSONArray jsa = new JSONArray(new JSONTokener(body.byteStream()));
 
                     if (jsa.length() == 0) {
                         context.send().error("No game found with that title.").queue();

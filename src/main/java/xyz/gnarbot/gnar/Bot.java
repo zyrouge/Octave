@@ -69,13 +69,13 @@ public final class Bot {
         LOG.info("Admins:\t" + CONFIG.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
-        STATE = LoadState.COMPLETE;
-
         for (int i = 0; i < KEYS.getShards(); i++) {
             Shard shard = new Shard(i);
             shards.add(shard);
             shard.build();
         }
+
+        STATE = LoadState.COMPLETE;
 
         for (Shard shard : shards) {
             shard.getJda().getPresence().setGame(Game.of(String.format(CONFIG.getGame(), shard.getId())));

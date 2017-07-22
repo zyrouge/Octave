@@ -20,6 +20,7 @@ public class Util {
 		return new String(buf.array(), StandardCharsets.UTF_8);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T, P> T convertToPojo(Object value, Optional<Class<P>> pojoClass) {
 		return !pojoClass.isPresent() || !(value instanceof Map)
 			? (T) value

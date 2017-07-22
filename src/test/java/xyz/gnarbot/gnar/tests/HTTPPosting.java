@@ -3,15 +3,7 @@ package xyz.gnarbot.gnar.tests;
 public class HTTPPosting {
 //
 //    @Test
-//    public void printRecommendedShardCount() throws UnirestException {
-////        return Unirest.get(Requester.DISCORD_API_PREFIX + "gateway/bot")
-////                .header("Authorization", "Bot " + token)
-////                .header("User-agent", USER_AGENT)
-////                .asJson()
-////                .getBody()
-////                .getObject()
-////                .getInt("shards");
-//
+//    public void printRecommendedShardCount()  {
 //        Request request = new Request.Builder()
 //                .url(Requester.DISCORD_API_PREFIX + "gateway/bot")
 //                .header("User-Agent", "Gnar Bot")

@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.Message;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -157,7 +158,10 @@ public class Utils {
                 .build();
 
         try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
-            JSONObject jso = new JSONObject(new JSONTokener(response.body().byteStream()));
+            ResponseBody body = response.body();
+            if (body == null) return "Response null while posting to HasteBin.";
+
+            JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()));
 
             response.close();
 

@@ -89,9 +89,10 @@ class MusicManager(val id: Long, val jda: JDA) {
 
     val currentRequestChannel: TextChannel?
         get() {
-            return player.playingTrack.getUserData(TrackContext::class.java)?.requestedChannel?.let {
-                guild.getTextChannelById(it)
-            }
+            return player.playingTrack
+                    ?.getUserData(TrackContext::class.java)
+                    ?.requestedChannel
+                    ?.let(guild::getTextChannelById)
         }
 
     /**
@@ -159,9 +160,9 @@ class MusicManager(val id: Long, val jda: JDA) {
     }
 
     fun isAlone(): Boolean {
-        return guild.selfMember.voiceState.channel.members.let {
+        return guild.selfMember.voiceState.channel?.members?.let {
             it.size == 1 && it[0] == guild.selfMember
-        }
+        } ?: true
     }
 
     fun queueLeave() {
