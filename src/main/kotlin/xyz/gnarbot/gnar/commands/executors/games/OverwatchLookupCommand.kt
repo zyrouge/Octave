@@ -20,7 +20,7 @@ import java.io.IOException
         aliases = arrayOf("overwatch", "ow"),
         usage = "(BattleTag#0000) [region]",
         description = "Look up Overwatch information about a player.",
-        category = Category.GAMES
+        category = Category.MEDIA
 )
 class OverwatchLookupCommand : CommandExecutor() {
     private val regions = arrayOf("us", "eu", "kr")

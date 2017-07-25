@@ -33,6 +33,8 @@ public final class GuildOptions implements ManagedObject {
     private Set<String> musicChannels;
     private int musicVolume = 100;
 
+    private boolean autoDelete = false;
+
     private long premiumUntil;
 
     @ConstructorProperties("id")
@@ -122,6 +124,13 @@ public final class GuildOptions implements ManagedObject {
     }
 
 
+    public boolean isAutoDelete() {
+        return autoDelete;
+    }
+
+    public void setAutoDelete(boolean autoDelete) {
+        this.autoDelete = autoDelete;
+    }
 
 
     public Map<Integer, CommandOptions> getCommandOptions() {

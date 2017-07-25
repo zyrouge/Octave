@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.guilds.GuildOptions
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
@@ -20,7 +21,7 @@ object CommandDispatcher {
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
-        val guildOptions = Bot.getOptions().ofGuild(event.guild)
+        val guildOptions: GuildOptions = Bot.getOptions().ofGuild(event.guild)
 
         val content = event.message.rawContent
         if (!content.startsWith(guildOptions.prefix)

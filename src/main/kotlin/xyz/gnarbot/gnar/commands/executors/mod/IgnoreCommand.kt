@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.ln
         aliases = arrayOf("ignore"),
         usage = "(user|channel|role|list) [?entity]",
         description = "Make the bot ignore certain users, channels or roles.",
-        category = Category.CONFIGURATION,
+        category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class IgnoreCommand : CommandTemplate() {

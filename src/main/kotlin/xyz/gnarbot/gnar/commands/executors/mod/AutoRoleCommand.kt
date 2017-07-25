@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("autorole"),
         usage = "(set|unset) [@role]",
         description = "Set auto-roles that are assigned to users on joining.",
-        category = Category.CONFIGURATION,
+        category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class AutoRoleCommand : CommandTemplate() {

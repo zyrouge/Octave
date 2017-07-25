@@ -22,7 +22,7 @@ import java.io.IOException;
         aliases = {"game", "gamelookup"},
         usage = "(game name)",
         description = "Look up information about a game.",
-        category = Category.GAMES
+        category = Category.MEDIA
 )
 public class GameLookupCommand extends CommandExecutor {
     @Override

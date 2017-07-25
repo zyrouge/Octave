@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.`fun`
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
@@ -10,7 +11,8 @@ import xyz.gnarbot.gnar.utils.Context
         id = 40,
         aliases = arrayOf("dialog"),
         usage = "(words...)",
-        description = "Make some of that Windows ASCII art!"
+        description = "Make some of that Windows ASCII art!",
+        category = Category.FUN
 )
 class DialogCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

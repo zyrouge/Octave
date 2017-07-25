@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         aliases = arrayOf("selfroles", "selfrole"),
         usage = "(add|remove|clear) [@role]",
         description = "Set self-roles that users can assign to themselves.",
-        category = Category.CONFIGURATION,
+        category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class SelfRoleCommand : CommandTemplate() {

@@ -21,7 +21,7 @@ import xyz.gnarbot.gnar.utils.ln
         usage = "(enable|disable) [command] (...)",
         description = "Manage usage of commands.",
         toggleable = false,
-        category = Category.CONFIGURATION,
+        category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ManageCommandsCommand : CommandTemplate() {

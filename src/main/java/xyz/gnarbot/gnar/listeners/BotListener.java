@@ -15,12 +15,21 @@ import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
 import xyz.gnarbot.gnar.music.MusicManager;
 
+import java.util.concurrent.TimeUnit;
+
 public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) return;
-
         if (Bot.STATE == LoadState.COMPLETE) {
+            if (event.getAuthor().isBot()) {
+                if (event.getAuthor() == event.getJDA().getSelfUser()) {
+                    if (Bot.getOptions().ofGuild(event.getGuild()).isAutoDelete()) {
+                        event.getMessage().delete().queueAfter(10, TimeUnit.SECONDS);
+                    }
+                }
+                return;
+            }
+
             CommandDispatcher.INSTANCE.handleEvent(event);
         }
     }

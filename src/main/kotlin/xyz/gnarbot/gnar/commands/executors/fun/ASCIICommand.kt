@@ -5,6 +5,7 @@ import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -15,7 +16,8 @@ import xyz.gnarbot.gnar.utils.code
         id = 39,
         aliases = arrayOf("ascii"),
         usage = "(words...)",
-        description = "ASCII text art!"
+        description = "ASCII text art!",
+        category = Category.FUN
 )
 class ASCIICommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

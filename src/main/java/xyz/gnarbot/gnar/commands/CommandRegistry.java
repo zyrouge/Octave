@@ -75,6 +75,7 @@ public class CommandRegistry {
         register(new PrefixCommand());
         register(new ManageCommandsCommand());
         register(new IgnoreCommand());
+        register(new AutoDeleteCommand());
         register(new PruneCommand());
         register(new AutoRoleCommand());
         register(new SelfRoleCommand());
