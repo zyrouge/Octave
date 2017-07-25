@@ -89,7 +89,7 @@ class MusicManager(val guild: Guild) {
 
     val currentRequestChannel: TextChannel?
         get() {
-            return player.playingTrack
+            return (player.playingTrack ?: scheduler.lastTrack)
                     ?.getUserData(TrackContext::class.java)
                     ?.requestedChannel
                     ?.let(guild::getTextChannelById)

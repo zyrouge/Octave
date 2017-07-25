@@ -32,6 +32,7 @@ public final class GuildOptions implements ManagedObject {
     private String djRole;
     private Set<String> musicChannels;
     private int musicVolume = 100;
+    private boolean announce = true;
 
     private boolean autoDelete = false;
 
@@ -122,6 +123,15 @@ public final class GuildOptions implements ManagedObject {
     public int getMusicVolume() {
         return musicVolume;
     }
+
+    public void setAnnounce(boolean announce) {
+        this.announce = announce;
+    }
+
+    public boolean isAnnounce() {
+        return announce;
+    }
+
 
 
     public boolean isAutoDelete() {

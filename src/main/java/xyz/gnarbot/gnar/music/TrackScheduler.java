@@ -5,7 +5,10 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.utils.ResponseBuilder;
 import xyz.gnarbot.gnar.utils.TrackContext;
 
 import java.util.Collections;
@@ -50,31 +53,50 @@ public class TrackScheduler extends AudioEventAdapter {
             return;
         }
 
-        player.startTrack(queue.poll(), false);
+        AudioTrack track = queue.poll();
+        player.startTrack(track, false);
+
+        if (!Bot.getOptions().ofGuild(musicManager.getGuild()).isAnnounce()) return;
+
+        TextChannel channel = musicManager.getCurrentRequestChannel();
+        if (channel == null) return;
+
+        Member member = musicManager.getGuild().getMemberById(track.getUserData(TrackContext.class).getRequester());
+
+        StringBuilder description = new StringBuilder("Now playing __[" + track.getInfo().title + "](" + track.getInfo().uri + ")__");
+        if (member != null) {
+            description.append(" requested by ").append(member.getAsMention());
+        }
+        description.append(".");
+
+        new ResponseBuilder(channel).embed("Music Playback")
+                .setDescription(description)
+                .action().queue();
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         this.lastTrack = track;
 
-        if (endReason.mayStartNext) {
-            switch (repeatOption) {
-                case SONG: {
-                    AudioTrack newTrack = lastTrack.makeClone();
-                    newTrack.setUserData(lastTrack.getUserData());
-                    player.startTrack(newTrack, false);
-                    break;
-                }
-                case QUEUE: {
-                    AudioTrack newTrack = lastTrack.makeClone();
-                    newTrack.setUserData(lastTrack.getUserData());
-                    queue.offer(newTrack);
-                }
-                case NONE:
-                    nextTrack();
-            }
-        } else {
+        if (!endReason.mayStartNext) {
             Bot.getPlayers().destroy(musicManager.getGuild());
+            return;
+        }
+
+        switch (repeatOption) {
+            case SONG: {
+                AudioTrack newTrack = lastTrack.makeClone();
+                newTrack.setUserData(lastTrack.getUserData());
+                player.startTrack(newTrack, false);
+                break;
+            }
+            case QUEUE: {
+                AudioTrack newTrack = lastTrack.makeClone();
+                newTrack.setUserData(lastTrack.getUserData());
+                queue.offer(newTrack);
+            }
+            case NONE:
+                nextTrack();
         }
     }
 

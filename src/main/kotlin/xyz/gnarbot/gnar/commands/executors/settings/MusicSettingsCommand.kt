@@ -19,7 +19,30 @@ import xyz.gnarbot.gnar.utils.ln
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class MusicSettingsCommand : CommandTemplate() {
-    @Executor(0, description = "Add voice channels that Gnar can play music in.")
+    @Executor(0, description = "Toggle music announcement.")
+    fun announcements(context: Context) {
+        if (context.guildOptions.isAnnounce) {
+            context.guildOptions.isAnnounce = false
+            context.guildOptions.save()
+
+            context.send().embed("Music Settings") {
+                desc {
+                    "Announcements for music disabled."
+                }
+            }.action().queue()
+        } else {
+            context.guildOptions.isAnnounce = true
+            context.guildOptions.save()
+
+            context.send().embed("Music Settings") {
+                desc {
+                    "Announcements for music enabled."
+                }
+            }.action().queue()
+        }
+    }
+
+    @Executor(1, description = "Add voice channels that Gnar can play music in.")
     fun addMusicChannel(context: Context, channel: VoiceChannel) {
         if (channel.id in context.guildOptions.musicChannels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
@@ -41,7 +64,7 @@ class MusicSettingsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(1, description = "Remove voice channels that Gnar can play music in.")
+    @Executor(2, description = "Remove voice channels that Gnar can play music in.")
     fun removeMusicChannel(context: Context, channel: VoiceChannel) {
         if (channel.id !in context.guildOptions.musicChannels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
@@ -58,7 +81,7 @@ class MusicSettingsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(2, description = "Set the DJ-role.")
+    @Executor(3, description = "Set the DJ-role.")
     fun setDJRole(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
             context.send().error("You can't set the public role as the DJ role!").queue()
@@ -85,7 +108,7 @@ class MusicSettingsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(3, description = "Unset the DJ-role.")
+    @Executor(4, description = "Unset the DJ-role.")
     fun unsetDJRole(context: Context) {
         if (context.guildOptions.djRole == null) {
             context.send().error("This guild doesn't have an DJ-role.").queue()
@@ -103,7 +126,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
 
-    @Executor(4, description = "List all settings, their description and their values.")
+    @Executor(5, description = "List all settings, their description and their values.")
     fun list(context: Context) {
         context.send().embed("Music Settings") {
             field("Channel") {
