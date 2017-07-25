@@ -1,15 +1,15 @@
 package xyz.gnarbot.gnar.utils;
 
 import net.dv8tion.jda.core.entities.Message;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -169,6 +169,23 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
             return "Error posting to HasteBin.";
+        }
+    }
+
+    public static String getRamMoeImage(String type) {
+        try {
+            OkHttpClient ok = new OkHttpClient();
+            String url = new URIBuilder("https://rra.ram.moe/i/r?type="+type)
+                    .toString();
+            String link = "https://rra.ram.moe";
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("Accept", "application/json")
+                    .build();
+            Response r = ok.newCall(request).execute();
+            return link+new JSONObject (r.body().string()).getString("path");
+        } catch (IOException | URISyntaxException e) {
+            return "Failed to query API.";
         }
     }
 }
