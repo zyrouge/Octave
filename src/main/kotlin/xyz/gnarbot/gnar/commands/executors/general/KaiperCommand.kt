@@ -1,39 +1,37 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.MessageEmbed
-import xyz.avarel.aje.Expression
-import xyz.avarel.aje.exceptions.AJEException
+import xyz.avarel.kaiper.KaiperScript
+import xyz.avarel.kaiper.exceptions.KaiperException
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
-import java.util.concurrent.ExecutionException
-import java.util.concurrent.TimeoutException
 
 @Command(
         id = 46,
-        aliases = arrayOf("aje"),
+        aliases = arrayOf("kaiper", "aje"),
         usage = "(script)",
-        description = "User-eval.",
+        description = "Kaiper lang user-eval.",
         cooldown = 3000
 )
-class AJECommand : CommandExecutor() {
+class KaiperCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             CommandDispatcher.sendHelp(context, info)
             return
         }
 
-        context.send().embed("AJE") {
+        context.send().embed("Kaiper") {
             val script = if (args.size == 1) {
                 args[0]
             } else {
                 args.joinToString(" ")
             }
 
-            val exp = Expression(script)
+            val exp = KaiperScript(script)
 
             try {
                 val expr = exp.compile()
@@ -59,19 +57,9 @@ class AJECommand : CommandExecutor() {
                         result.toString()
                     }
                 }
-            } catch (e : AJEException) {
+            } catch (e : KaiperException) {
                 field("Error") {
                     e.message
-                }
-                color { Color.RED }
-            } catch (e : ExecutionException) {
-                field("Error") {
-                    e.cause?.message ?: e.message
-                }
-                color { Color.RED }
-            } catch (e : TimeoutException) {
-                field("Error") {
-                    "Script took too long to execute."
                 }
                 color { Color.RED }
             }

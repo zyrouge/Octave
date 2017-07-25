@@ -57,7 +57,7 @@ public class BotListener extends ListenerAdapter {
                 }
 
                 // Add the role to the member
-                event.getGuild().getController().addRolesToMember(event.getMember(), role).reason("Auto-role").queue();
+                event.getGuild().getController().addSingleRoleToMember(event.getMember(), role).reason("Auto-role").queue();
             }
         }
     }

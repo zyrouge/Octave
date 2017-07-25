@@ -73,6 +73,8 @@ public class TrackScheduler extends AudioEventAdapter {
                 case NONE:
                     nextTrack();
             }
+        } else {
+            Bot.getPlayers().destroy(musicManager.getGuild());
         }
     }
 

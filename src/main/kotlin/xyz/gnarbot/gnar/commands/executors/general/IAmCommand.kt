@@ -24,7 +24,7 @@ class IAmCommand : CommandTemplate() {
             return context.send().error("You're already a ${role.asMention}.").queue()
         }
 
-        context.guild.controller.addRolesToMember(context.member, role).queue()
+        context.guild.controller.addSingleRoleToMember(context.member, role).queue()
 
         context.send().embed("Self-Roles") {
             desc {
@@ -44,7 +44,7 @@ class IAmCommand : CommandTemplate() {
             return context.send().error("You're not a ${role.asMention}.").queue()
         }
 
-        context.guild.controller.removeRolesFromMember(context.member, role).queue()
+        context.guild.controller.removeSingleRoleFromMember(context.member, role).queue()
 
         context.send().embed("Self-Roles") {
             desc {

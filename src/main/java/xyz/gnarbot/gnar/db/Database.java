@@ -21,7 +21,9 @@ public class Database {
     public Database(String name) {
         Connection conn = null;
         try {
-            conn = r.connection().hostname("localhost").port(28015).connect();
+            Connection.Builder builder = r.connection().hostname("localhost").port(28015);
+            // potential spot for authentication
+            conn = builder.connect();
             if (r.dbList().<List<String>>run(conn).contains(name)) {
                 LOG.info("Connected to database.");
                 conn.use(name);

@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.avarel.aje.ast.GlobalVisitorSettings;
+import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
@@ -56,6 +56,7 @@ public final class Bot {
 
         // AJE settings
         GlobalVisitorSettings.SIZE_LIMIT = 100;
+        GlobalVisitorSettings.RECURSION_DEPTH_LIMIT = 10;
         GlobalVisitorSettings.ITERATION_LIMIT = 100;
         GlobalVisitorSettings.MILLISECONDS_LIMIT = 5;
 

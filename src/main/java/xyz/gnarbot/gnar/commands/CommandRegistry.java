@@ -39,7 +39,7 @@ public class CommandRegistry {
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
-        register(new AJECommand());
+        register(new KaiperCommand());
         register(new MathCommand());
         register(new RemindMeCommand());
         register(new GoogleCommand());

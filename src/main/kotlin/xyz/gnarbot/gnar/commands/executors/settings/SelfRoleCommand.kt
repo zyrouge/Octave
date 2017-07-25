@@ -46,7 +46,7 @@ class SelfRoleCommand : CommandTemplate() {
 
         context.send().embed("Self-Roles") {
             desc {
-                "Added ${role.asMention} to the list of self-assignable roles."
+                "Added ${role.asMention} to the list of self-assignable roles. Users can get them using `_iam`."
             }
         }.action().queue()
     }
