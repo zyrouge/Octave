@@ -44,7 +44,7 @@ public abstract class CommandTemplate extends CommandExecutor {
     }
 
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
             noMatches(context, args);
             return;

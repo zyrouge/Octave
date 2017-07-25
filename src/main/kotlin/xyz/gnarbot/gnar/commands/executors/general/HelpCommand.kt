@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         description = "Display the bot's list of commands."
 )
 class HelpCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val registry = Bot.getCommandRegistry()
 
         if (args.isNotEmpty()) {

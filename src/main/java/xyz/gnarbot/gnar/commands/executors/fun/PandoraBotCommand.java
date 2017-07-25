@@ -27,7 +27,7 @@ public class PandoraBotCommand extends CommandExecutor {
     private static final Map<Long, ChatterBotSession> sessions = new WeakHashMap<>();
 
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (bot == null) {
             try {
                 bot = factory.create(ChatterBotType.PANDORABOTS, "b0dafd24ee35a477");

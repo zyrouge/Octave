@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Emote;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -15,9 +16,9 @@ import java.util.Arrays;
 )
 public class ReactCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length < 2) {
-            context.send().error("Insufficient arguments. `" + getInfo().usage() + "`").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 

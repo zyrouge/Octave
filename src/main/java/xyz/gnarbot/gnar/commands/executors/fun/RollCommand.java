@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.ResponseBuilder;
@@ -12,15 +13,15 @@ import java.util.StringJoiner;
 @Command(
         id = 9,
         aliases = {"roll"},
-        usage = "[(rolls)d](max value)",
+        usage = "[(rolls)d](max value) ie. 2d6",
         description = "Roll a random number from 0 to argument.",
         category = Category.FUN
 )
 public class RollCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length < 1) {
-            context.send().error("Insufficient amount of arguments. ie. `_roll 5` or `_roll 2d6`").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 

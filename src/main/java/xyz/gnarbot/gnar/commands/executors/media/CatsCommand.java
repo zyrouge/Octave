@@ -19,7 +19,7 @@ import java.net.URL;
 )
 public class CatsCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         try {
             String apiKey = Bot.KEYS.getCat();
 
@@ -50,7 +50,6 @@ public class CatsCommand extends CommandExecutor {
             context.send().embed("Random Cat Pictures")
                     .setImage(url)
                     .action().queue();
-
         } catch (Exception e) {
             context.send().error("Unable to find cats to sooth the darkness of your soul.").queue();
             e.printStackTrace();

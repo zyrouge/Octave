@@ -19,7 +19,7 @@ import java.util.List;
 )
 public class WhoIsCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         final Member member;
 
         if (args.length == 0) {

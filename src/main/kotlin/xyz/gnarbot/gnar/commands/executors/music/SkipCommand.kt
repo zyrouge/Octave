@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.TrackContext
         scope = Scope.VOICE
 )
 class SkipCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()

@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.db.Key;
 import xyz.gnarbot.gnar.utils.Context;
@@ -13,14 +14,14 @@ import java.util.Date;
 @Command(
         id = 21,
         aliases = "redeem",
-        usage = "(key)",
-        description = "Redeem a premium key."
+        usage = "(code)",
+        description = "Redeem a key for your server."
 )
 public class RedeemCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            context.send().error("Please provide a redeemable code.").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 

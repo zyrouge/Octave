@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.Context;
 )
 public class InviteBotCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         String link = context.getShard().getJda().asBot().getInviteUrl(Permission.ADMINISTRATOR);
 
         context.send().embed("Get Gnar on your server!")

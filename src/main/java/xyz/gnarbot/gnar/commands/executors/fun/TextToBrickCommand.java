@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -15,9 +16,9 @@ import xyz.gnarbot.gnar.utils.Context;
 )
 public class TextToBrickCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            context.send().error("Please provide words. `_ttb meme`").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 

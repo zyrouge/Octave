@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.TriviaQuestions;
 )
 public class TriviaAnswerCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (TriviaQuestions.isNotSetup()) {
             TriviaQuestions.init();
         }

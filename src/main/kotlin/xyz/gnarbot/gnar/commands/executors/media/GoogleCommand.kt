@@ -4,6 +4,7 @@ import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.b
@@ -19,9 +20,9 @@ import java.io.IOException
         category = Category.MEDIA
 )
 class GoogleCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Put something to search Google.").queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

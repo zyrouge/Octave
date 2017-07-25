@@ -69,27 +69,6 @@ public class CommandRegistry {
         register(new TextToBrickCommand());
         register(new TextToSpeechCommand());
         register(new ReactCommand());
-
-        register(new PandoraBotCommand());
-        register(new MemeCommand());
-        register(new PatCommand());
-        register(new CryCommand());
-        register(new CuddleCommand());
-        register(new HugCommand());
-        register(new KissCommand());
-        register(new LewdCommand());
-        register(new LickCommand());
-        register(new NomCommand());
-        register(new NyanCommand());
-        register(new OwOCommand());
-        register(new PotatoCommand());
-        register(new PoutCommand());
-        register(new RemCommand());
-        register(new SlapCommand());
-        register(new SmugCommand());
-        register(new StareCommand());
-        register(new TickleCommand());
-        register(new TriggeredCommand());
         //End Fun Commands
 
         //Mod Commands
@@ -125,6 +104,7 @@ public class CommandRegistry {
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
         register(new XKCDCommand());
+        register(new ActionCommand());
         //End Media Commands
 
         // Administrator commands

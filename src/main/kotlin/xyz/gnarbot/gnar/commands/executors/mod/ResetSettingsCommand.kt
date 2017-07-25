@@ -11,12 +11,12 @@ import xyz.gnarbot.gnar.utils.Context
         id = 58,
         aliases = arrayOf("resetall"),
         description = "Reset all music settings.",
-        category = Category.MODERATION,
+        category = Category.CONFIGURATION,
         toggleable = false,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ResetSettingsCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         Bot.getOptions().deleteGuild(context.guild)
 
         context.send().embed("Settings") {

@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.Context
         category = Category.NONE
 )
 class SudoCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().error("Put a command pls.").queue()
             return
@@ -27,6 +27,6 @@ class SudoCommand : CommandExecutor() {
             return
         }
 
-        cmd.execute(context, args.copyOfRange(1, args.size))
+        cmd.execute(context, args[0], args.copyOfRange(1, args.size))
     }
 }

@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         category = Category.NONE
 )
 class ShardInfoCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         var page = if (args.isNotEmpty()) {
             args[0].toIntOrNull() ?: 1
         } else {

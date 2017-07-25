@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.ln
         description = "Show the donation info."
 )
 class DonateCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         context.send().embed("Donations") {
             desc {
                 buildString {

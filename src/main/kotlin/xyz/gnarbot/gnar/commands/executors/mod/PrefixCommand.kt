@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
         aliases = arrayOf("prefix"),
         usage = "(set|reset) [string]",
         description = "Set the prefix of the bot. Default prefix will still be valid however.",
-        category = Category.MODERATION,
+        category = Category.CONFIGURATION,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class PrefixCommand : CommandTemplate() {

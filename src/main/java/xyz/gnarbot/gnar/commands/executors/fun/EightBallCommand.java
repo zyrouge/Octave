@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -9,7 +10,7 @@ import xyz.gnarbot.gnar.utils.Context;
         id = 4,
         aliases = "8ball",
         usage = "(question)",
-        description = "Test your wildest dreams!", category = Category.FUN
+        description = "Ask for your wildest dreams!", category = Category.FUN
 )
 public class EightBallCommand extends CommandExecutor {
     private final String[] responses = {
@@ -20,9 +21,9 @@ public class EightBallCommand extends CommandExecutor {
     };
 
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            context.send().error("Ask the 8-ball something.").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 

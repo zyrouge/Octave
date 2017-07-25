@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 )
 public class PoopCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         String poop = StringUtils.join(args, " ");
 
         StringJoiner joiner = new StringJoiner("\n", "```\n", "```");

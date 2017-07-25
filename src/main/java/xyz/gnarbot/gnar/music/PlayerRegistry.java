@@ -30,7 +30,7 @@ public class PlayerRegistry {
                 throw new MusicLimitException();
             }
 
-            manager = new MusicManager(guild.getIdLong(), guild.getJDA());
+            manager = new MusicManager(guild);
             registry.put(guild.getIdLong(), manager);
         }
 
@@ -84,7 +84,7 @@ public class PlayerRegistry {
                     iterator.remove();
                 }
             } catch (Exception e) {
-                LOG.warn("Exception occured while trying to clean up guild " + iterator.value().getId(), e);
+                LOG.warn("Exception occured while trying to clean up guild " + iterator.value().getGuild().getId(), e);
             }
         }
         LOG.info("Finished cleaning up players.");

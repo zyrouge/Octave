@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
         description = "Make some of that Windows ASCII art!"
 )
 class DialogCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val lines = WordUtils
                 .wrap(StringUtils.join(args, ' ').replace("```", ""), 25, null, true)
                 .split("\n")

@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands
 
 enum class Category(val title: String, val show: Boolean = true) {
-    MODERATION("Moderation"),
+    CONFIGURATION("Configuration"),
     MUSIC("Music"),
     GAMES("Games"),
     FUN("Shitpost"),

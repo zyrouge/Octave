@@ -62,7 +62,7 @@ public class MemeCommand extends CommandExecutor {
     }
 
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         String mashape = Bot.KEYS.getMashape();
         if (mashape == null) {
             context.send().text("Mashape key is null").queue();

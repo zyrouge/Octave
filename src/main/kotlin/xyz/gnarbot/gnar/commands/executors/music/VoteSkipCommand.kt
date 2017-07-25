@@ -6,7 +6,10 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
-import xyz.gnarbot.gnar.utils.*
+import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.b
+import xyz.gnarbot.gnar.utils.desc
+import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -17,7 +20,7 @@ import java.util.concurrent.TimeUnit
         category = Category.MUSIC
 )
 class VoteSkipCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
@@ -101,7 +104,7 @@ class VoteSkipCommand : CommandExecutor() {
                     field("Results") {
                         "__$skip Skip Votes__ — __$stay Stay Votes__"
                     }
-                }.action().queue(Utils.deleteMessage(30))
+                }.action().queue()
                 manager.isVotingToSkip = false
             }
         }

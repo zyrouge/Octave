@@ -46,7 +46,7 @@ public class TrackScheduler extends AudioEventAdapter {
      */
     public void nextTrack() {
         if (queue.isEmpty()) {
-            Bot.getPlayers().destroy(musicManager.getId());
+            Bot.getPlayers().destroy(musicManager.getGuild());
             return;
         }
 

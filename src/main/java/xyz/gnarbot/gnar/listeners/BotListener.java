@@ -18,6 +18,8 @@ import xyz.gnarbot.gnar.music.MusicManager;
 public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        if (event.getAuthor().isBot()) return;
+
         if (Bot.STATE == LoadState.COMPLETE) {
             CommandDispatcher.INSTANCE.handleEvent(event);
         }
@@ -54,14 +56,7 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            // Destroy the player of the guild in which the bot left
-            MusicManager manager = Bot.getPlayers().getExisting(event.getGuild());
-            if (manager != null) {
-                manager.getPlayer().destroy();
-                Bot.getPlayers().getRegistry().remove(event.getGuild().getIdLong());
-            }
-            event.getGuild().getAudioManager().setSendingHandler(null);
-            event.getGuild().getAudioManager().closeAudioConnection();
+            Bot.getPlayers().destroy(event.getGuild());
         }
     }
 
@@ -94,8 +89,8 @@ public class BotListener extends ListenerAdapter {
         TLongObjectIterator<MusicManager> iterator = Bot.getPlayers().getRegistry().iterator();
         while (iterator.hasNext()) {
             iterator.advance();
-            if (iterator.value().getJda() == event.getJDA()) {
-                iterator.value().getPlayer().destroy();
+            if (iterator.value().getGuild().getJDA() == event.getJDA()) {
+                iterator.value().destroy();
                 iterator.remove();
             }
         }

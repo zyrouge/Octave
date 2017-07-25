@@ -18,7 +18,7 @@ class GroovyCommand : CommandExecutor() {
         val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("groovy")
     }
 
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val script = args.joinToString(" ")
         if (script.isNullOrEmpty()) {
             context.send().error("Script can not be empty.").queue()

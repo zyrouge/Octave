@@ -19,9 +19,9 @@ public abstract class CommandExecutor {
 
     /**
      * Abstract method to be executed when the command is called.
-     *
-     * @param context Context argument.
+     *  @param context Context argument.
+     * @param label
      * @param args Arguments passed into the execution.
      */
-    public abstract void execute(Context context, String[] args);
+    public abstract void execute(Context context, String label, String[] args);
 }

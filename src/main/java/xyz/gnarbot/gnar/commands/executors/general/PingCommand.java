@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Context;
 )
 public class PingCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         long time = System.currentTimeMillis();
 
         context.send().text("Checking ping...").queue(msg -> {

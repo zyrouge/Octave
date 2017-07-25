@@ -6,6 +6,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
@@ -17,9 +18,9 @@ import xyz.gnarbot.gnar.utils.code
         description = "ASCII text art!"
 )
 class ASCIICommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Please provide a query.").queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

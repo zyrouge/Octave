@@ -19,7 +19,7 @@ import xyz.gnarbot.gnar.utils.Context
 class VolumeCommand : CommandExecutor() {
     private val totalBlocks = 20
 
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()

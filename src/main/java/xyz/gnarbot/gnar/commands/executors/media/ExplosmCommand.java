@@ -18,7 +18,7 @@ import java.util.Random;
 )
 public class ExplosmCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         try {
             Document document;
 

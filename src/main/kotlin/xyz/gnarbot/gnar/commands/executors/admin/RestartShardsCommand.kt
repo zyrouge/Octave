@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.Context
         category = Category.NONE
 )
 class RestartShardsCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Restarting Shards") {
                 desc { "Bot is now restarting." }

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -25,17 +26,21 @@ import java.util.Arrays;
         id = 29,
         aliases = {"trump", "executiveorder"},
         usage = "(words...)",
-        description = "Our president.",
+        description = "Generate a picture of our president.",
         category = Category.MEDIA
 )
 public class TrumpCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
+        if (args.length == 0) {
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
+            return;
+        }
+
         try (InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg")) {
             BufferedImage image = ImageIO.read(is);
 
             Graphics2D g2 = image.createGraphics();
-
 
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 

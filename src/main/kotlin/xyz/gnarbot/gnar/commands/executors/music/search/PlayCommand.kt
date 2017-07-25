@@ -20,7 +20,7 @@ import xyz.gnarbot.gnar.utils.Context
 class PlayCommand : CommandExecutor() {
     val footnote = "You can search and pick results using _youtube or _soundcloud while in a channel."
 
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val botChannel = context.guild.selfMember.voiceState.channel
         val userChannel = context.member.voiceState.channel
 

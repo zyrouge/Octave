@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Utils;
 )
 public class GuildInfoCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         Guild guild = context.getGuild();
 
         context.send().embed("Guild Information")

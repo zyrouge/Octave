@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         id = 55,
         aliases = arrayOf("musicconfig", "musicsettings"),
         description = "Change music settings.",
-        category = Category.MODERATION,
+        category = Category.CONFIGURATION,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class MusicSettingsCommand : CommandTemplate() {

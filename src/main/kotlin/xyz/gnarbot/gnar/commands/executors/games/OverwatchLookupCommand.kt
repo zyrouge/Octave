@@ -8,6 +8,7 @@ import org.json.JSONObject
 import org.json.JSONTokener
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.HttpUtils
@@ -24,9 +25,9 @@ import java.io.IOException
 class OverwatchLookupCommand : CommandExecutor() {
     private val regions = arrayOf("us", "eu", "kr")
 
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Insufficient arguments. `${info.usage}`.").queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

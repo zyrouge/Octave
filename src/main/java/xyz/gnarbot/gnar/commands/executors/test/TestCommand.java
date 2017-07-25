@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.utils.Utils;
 )
 public class TestCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         System.out.println(Utils.hasteBin("what"));
 //        if (Bot.getConfig().getAvatar() != null) {
 //            try (InputStream is = new URL(Bot.getConfig().getAvatar()).openStream()) {

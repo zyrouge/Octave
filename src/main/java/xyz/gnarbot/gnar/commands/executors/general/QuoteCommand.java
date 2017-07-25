@@ -3,9 +3,9 @@ package xyz.gnarbot.gnar.commands.executors.general;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.Utils;
 
 @Command(
         id = 19,
@@ -15,9 +15,9 @@ import xyz.gnarbot.gnar.utils.Utils;
 )
 public class QuoteCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            context.send().error("Provide a message id.").queue();
+            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
             return;
         }
 
@@ -38,8 +38,7 @@ public class QuoteCommand extends CommandExecutor {
             }
         }
 
-        context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!")
-                .queue(Utils.deleteMessage(5));
+        context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!").queue();
     }
 }
 

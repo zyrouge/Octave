@@ -14,7 +14,7 @@ import java.lang.management.ManagementFactory
         description = "Show information about the bot."
 )
 class BotInfoCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val registry = Bot.getCommandRegistry()
 
         // Uptime

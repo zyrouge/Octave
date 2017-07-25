@@ -5,10 +5,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.link
-import xyz.gnarbot.gnar.utils.ln
+import xyz.gnarbot.gnar.utils.*
 import java.awt.Color
 
 @Command(
@@ -20,7 +17,7 @@ import java.awt.Color
         category = xyz.gnarbot.gnar.commands.Category.MUSIC
 )
 class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
-    override fun execute(context: xyz.gnarbot.gnar.utils.Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().error("Input a query to search Soundcloud.").queue()
             return

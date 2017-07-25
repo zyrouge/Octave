@@ -2,37 +2,59 @@ package xyz.gnarbot.gnar.commands.executors.polls
 
 import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.desc
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @Command(
         id = 76,
         aliases = arrayOf("poll"),
-        usage = "(option 1);(option 2);...",
+        usage = "(description) | (time) | (option 1);(option 2);...",
         description = "Create a poll.",
         cooldown = 10000
 )
 class PollCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
-        val options = args.joinToString(" ").split(';').map(String::trim)
+    override fun execute(context: Context, label: String, args: Array<String>) {
+        val parts = args.joinToString(" ").split('|').map(String::trim)
 
-        if (options.size <= 1) {
-            context.send().error("Please offer more options for the poll. `_poll (option 1);(option 2);...`").queue()
+        if (parts.size < 3) {
+            CommandDispatcher.sendHelp(context, info)
             return
         }
-        
+
+        val description = parts[0]
+
+        val time = Utils.parseTime(parts[1])
+
+        if (time < Duration.ofSeconds(10).toMillis()) {
+            context.send().error("Poll duration can't be less than 10 seconds.").queue()
+            return
+        } else if (time > Duration.ofHours(1).toMillis()) {
+            context.send().error("Poll duration can not be greater than 1 hours.").queue()
+            return
+        }
+
+        val options = parts[2].split(';').map(String::trim)
+
+        if (options.size <= 1) {
+            context.send().error("Please offer more than 1 option for the poll. `_poll Why tho? | 1m | (option 1);(option 2);...`").queue()
+            return
+        }
+
         context.send().embed("Poll") {
-            desc { "Vote through clicking the reactions on the choices below!" }
-            field("Options") {
+            desc { description }
+            field("Vote through clicking the reactions on the choices below!") {
                 buildString {
                     options.forEachIndexed { index, option ->
                         appendln("${'\u0030' + index}\u20E3 **$option**")
                     }
                 }
             }
-            footer { "Results will be final in 2 minutes." }
+            footer { "Results will be final in ${parts[1]}." }
         }.action().queue {
             for (index in 0..options.size - 1) {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
@@ -41,14 +63,14 @@ class PollCommand : CommandExecutor() {
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
                 desc { "Voting has ended! Check the results in the newer messages!" }
                 clearFields()
-            }.build()).queueAfter(2, TimeUnit.MINUTES) {
+            }.build()).queueAfter(time, TimeUnit.MILLISECONDS) {
                 context.send().embed("Poll Results") {
-                    desc { "Voting has ended! Here are the results!" }
+                    desc { description }
 
                     var topVotes = 0
                     val winners = mutableListOf<Int>()
 
-                    field("Results") {
+                    field("Voting has ended! Here are the results!") {
                         buildString {
                             it.reactions.forEach { reaction ->
                                 val value = reaction.emote.name[0] - '\u0030'

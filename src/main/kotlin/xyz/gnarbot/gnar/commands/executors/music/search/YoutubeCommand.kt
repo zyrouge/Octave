@@ -19,7 +19,7 @@ import java.awt.Color
         category = Category.MUSIC
 )
 class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().error("Input a query to search YouTube.").queue()
             return

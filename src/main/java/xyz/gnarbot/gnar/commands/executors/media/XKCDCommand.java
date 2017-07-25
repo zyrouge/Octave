@@ -22,8 +22,7 @@ import java.util.Random;
 )
 public class XKCDCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
-
+    public void execute(Context context, String label, String[] args) {
         Request request = new Request.Builder()
                 .url("http://xkcd.com/info.0.json")
                 .build();

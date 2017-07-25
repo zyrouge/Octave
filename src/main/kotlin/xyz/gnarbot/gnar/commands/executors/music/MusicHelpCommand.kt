@@ -18,7 +18,7 @@ import xyz.gnarbot.gnar.utils.ln
         category = Category.MUSIC
 )
 class MusicHelpCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val registry = Bot.getCommandRegistry()
 
         if (args.isNotEmpty() && args[0] == "fix") {

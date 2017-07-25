@@ -16,12 +16,13 @@ import java.util.UUID;
 @Command(
         id = 1,
         aliases = "genkey",
+        usage = "(#) (TYPE) (time)",
         admin = true,
         category = Category.NONE
 )
 public class GenerateKeyCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         if (args.length < 3) {
             context.send().error("Insufficient args.").queue();
             return;

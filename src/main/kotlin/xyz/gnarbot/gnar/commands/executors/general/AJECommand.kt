@@ -4,6 +4,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.avarel.aje.Expression
 import xyz.avarel.aje.exceptions.AJEException
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
@@ -14,14 +15,14 @@ import java.util.concurrent.TimeoutException
 @Command(
         id = 46,
         aliases = arrayOf("aje"),
-        usage = "(expression)",
+        usage = "(script)",
         description = "User-eval.",
         cooldown = 3000
 )
 class AJECommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Please provide an AJE script.").queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

@@ -19,7 +19,6 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.TextChannel
@@ -31,7 +30,10 @@ import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 
-class MusicManager(val id: Long, val jda: JDA) {
+// TEMPORARY TRIAL USING GUILD INSTANCE. Hey, guild shouldn't be invalidated midway through playing right?
+// Should prevent NPE when a guild kicks the bot along with other headaches.
+// In case of disconnect where JDA possibly might invalidate its cache, it's handled by the BotListener.java
+class MusicManager(val guild: Guild) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
             it.registerSourceManager(YoutubeAudioSourceManager())
@@ -68,8 +70,6 @@ class MusicManager(val id: Long, val jda: JDA) {
     }
 
     var leaveTask: Job? = null
-
-    val guild: Guild get() = jda.getGuildById(id)
 
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
@@ -109,17 +109,17 @@ class MusicManager(val id: Long, val jda: JDA) {
         when {
             !Bot.CONFIG.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
-                Bot.getPlayers().destroy(id)
+                Bot.getPlayers().destroy(guild)
                 return false
             }
             !guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
                 context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
-                Bot.getPlayers().destroy(id)
+                Bot.getPlayers().destroy(guild)
                 return false
             }
             channel.userLimit != 0 && channel.members.size >= channel.userLimit -> {
                 context.send().error("The bot can't join due to the user limit.").queue()
-                Bot.getPlayers().destroy(id)
+                Bot.getPlayers().destroy(guild)
                 return false
             }
             else -> {
@@ -138,6 +138,14 @@ class MusicManager(val id: Long, val jda: JDA) {
         guild.let {
             if (!guild.selfMember.voiceState.inVoiceChannel()) {
                 throw IllegalStateException("Bot is not in a voice channel")
+            }
+
+            if (!guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT)) {
+                currentRequestChannel?.let { requestChannel ->
+                    ResponseBuilder(requestChannel).error("I don't have permission to join `${channel.name}`.").queue()
+                }
+                closeAudioConnection()
+                return
             }
 
             player.isPaused = true
@@ -167,7 +175,7 @@ class MusicManager(val id: Long, val jda: JDA) {
 
     fun queueLeave() {
         leaveTask?.cancel()
-        leaveTask = createLeaveTask(id)
+        leaveTask = createLeaveTask()
         player.isPaused = true
     }
 
@@ -177,9 +185,9 @@ class MusicManager(val id: Long, val jda: JDA) {
         player.isPaused = false
     }
 
-    private fun createLeaveTask(id: Long) = launch(CommonPool) {
+    private fun createLeaveTask() = launch(CommonPool) {
         delay(30, TimeUnit.SECONDS)
-        Bot.getPlayers().destroy(id)
+        Bot.getPlayers().destroy(guild)
     }
 
     fun loadAndPlay(context: Context, trackUrl: String, footnote: String? = null) {
@@ -192,7 +200,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                         // Track is not supposed to load and the queue is empty
                         // destroy player
                         if (scheduler.queue.isEmpty()) {
-                            Bot.getPlayers().destroy(id)
+                            Bot.getPlayers().destroy(guild)
                         }
                         return
                     }
@@ -236,7 +244,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                         // Track is not supposed to load and the queue is empty
                         // destroy player
                         if (scheduler.queue.isEmpty()) {
-                            Bot.getPlayers().destroy(id)
+                            Bot.getPlayers().destroy(guild)
                         }
                         return
                     }
@@ -279,7 +287,7 @@ class MusicManager(val id: Long, val jda: JDA) {
                 // No track found and queue is empty
                 // destroy player
                 if (scheduler.queue.isEmpty()) {
-                    Bot.getPlayers().destroy(id)
+                    Bot.getPlayers().destroy(guild)
                 }
                 context.send().error("Nothing found by `$trackUrl`.").queue()
             }
@@ -288,9 +296,8 @@ class MusicManager(val id: Long, val jda: JDA) {
                 // No track found and queue is empty
                 // destroy player
 
-
                 if (scheduler.queue.isEmpty()) {
-                    Bot.getPlayers().destroy(id)
+                    Bot.getPlayers().destroy(guild)
                 }
                 context.send().exception(e).queue()
             }

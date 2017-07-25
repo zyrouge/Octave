@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.ln
         category = Category.NONE
 )
 class ThrowError : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         val cmds = Bot.getCommandRegistry().entries
         context.send().text(
                 Utils.hasteBin(

@@ -6,7 +6,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.ln
 import java.time.OffsetDateTime
 
@@ -15,12 +14,12 @@ import java.time.OffsetDateTime
         aliases = arrayOf("prune", "delmessages", "delmsgs"),
         usage = "(2-100)",
         description = "Delete up to 100 messages.",
-        category = Category.MODERATION,
+        category = Category.CONFIGURATION,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.MESSAGE_MANAGE)
 )
 class PruneCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Prune Messages") {
                 desc { info.description }
@@ -33,12 +32,10 @@ class PruneCommand : CommandExecutor() {
             return
         }
 
-        context.message.delete().queue()
-
         val history = context.channel.history
 
         val amount = args[0].toIntOrNull()?.coerceIn(0, 100) ?: kotlin.run {
-            context.send().error("Improper arguments supplies, must be a number.").queue()
+            context.send().error("Improper arguments supplies, must be a number between `2-100`.").queue()
             return
         }
 
@@ -57,17 +54,14 @@ class PruneCommand : CommandExecutor() {
             when {
                 messages.size >= 2 -> {
                     context.message.textChannel.deleteMessages(messages).queue()
-                    context.send().info("Attempted to delete **${messages.size}** messages.\nDeleting this message in **5** seconds.")
-                            .queue(Utils.deleteMessage(5))
+                    context.send().info("Attempted to delete **${messages.size}** messages.").queue()
                 }
                 messages.size == 1 -> {
                     messages.first().delete().queue()
-                    context.send().info("Attempted to delete **1** messages.\nDeleting this message in **5** seconds.")
-                            .queue(Utils.deleteMessage(5))
+                    context.send().info("Attempted to delete **1** messages.").queue()
                 }
                 else -> {
-                    context.send().info("No messages were found (that are younger than 2 weeks).\nDeleting this message in **5** seconds.")
-                            .queue(Utils.deleteMessage(5))
+                    context.send().info("No messages were found (that are younger than 2 weeks).").queue()
                 }
             }
         }

@@ -7,6 +7,7 @@ import xyz.avarel.aljava.TexElement
 import xyz.avarel.aljava.lexer.Lexer
 import xyz.avarel.aljava.parser.Parser
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.awt.Color
@@ -16,13 +17,14 @@ import javax.imageio.ImageIO
 
 @Command(
         id = 80,
+        usage = "(x+y)^2` or `3x + 4 = 31",
         aliases = arrayOf("math"),
         description = "Do mathematical stuff."
 )
 class MathCommand : CommandExecutor() {
-    override fun execute(context: Context, args: Array<String>) {
+    override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("Put something like `(x+y)^2` or `3x + 4 = 31`.").queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

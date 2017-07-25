@@ -37,8 +37,7 @@ object CommandDispatcher {
         // Send a message if bot cant use embeds.
         if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
             event.channel.sendMessage("The bot needs the `" + Permission.MESSAGE_EMBED_LINKS.getName() +
-                            "` permission in this channel to show messages.")
-                    .queue(Utils.deleteMessage(15))
+                            "` permission in this channel to show messages.").queue()
             return
         }
 
@@ -75,7 +74,7 @@ object CommandDispatcher {
 
         val args = tokens.copyOfRange(1, tokens.size)
 
-        return callCommand(context, cmd, args)
+        return callCommand(context, label, cmd, args)
     }
 
     /**
@@ -83,7 +82,7 @@ object CommandDispatcher {
      *
      * @return If the call was successful.
      */
-    fun callCommand(context: Context, cmd: CommandExecutor, args: Array<String>) : Boolean {
+    fun callCommand(context: Context, label: String, cmd: CommandExecutor, args: Array<String>) : Boolean {
         // Check if the person is to be ignored
         if (isIgnored(context, context.member)) {
             return false
@@ -125,7 +124,7 @@ object CommandDispatcher {
         // _<cmd> ? or _<cmd> help message
         // Delegate to _help <cmd>
         if (args.isNotEmpty() && (args[0] == "help" || args[0] == "?")) {
-            Bot.getCommandRegistry().getCommand("help").execute(context, arrayOf(cmd.info.aliases.first()))
+            sendHelp(context, cmd.info)
             return true
         }
 
@@ -182,7 +181,7 @@ object CommandDispatcher {
         }
 
         try {
-            cmd.execute(context, args)
+            cmd.execute(context, label, args)
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
@@ -203,6 +202,10 @@ object CommandDispatcher {
                 || context.guildOptions.ignoredRoles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins
+    }
+
+    fun sendHelp(context: Context, info: Command) {
+        Bot.getCommandRegistry().getCommand("help").execute(context, "help", arrayOf(info.aliases.first()))
     }
 
 //    // Checks for ratelimit

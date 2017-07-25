@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.utils.Context;
 )
 public class ExplosmRCGCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String[] args) {
+    public void execute(Context context, String label, String[] args) {
         try {
             Document document;
 
