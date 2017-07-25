@@ -56,6 +56,8 @@ public class TrackScheduler extends AudioEventAdapter {
         AudioTrack track = queue.poll();
         player.startTrack(track, false);
 
+        // MUSIC ANNOUNCEMENTS
+
         if (!Bot.getOptions().ofGuild(musicManager.getGuild()).isAnnounce()) return;
 
         TextChannel channel = musicManager.getCurrentRequestChannel();
@@ -63,14 +65,17 @@ public class TrackScheduler extends AudioEventAdapter {
 
         Member member = musicManager.getGuild().getMemberById(track.getUserData(TrackContext.class).getRequester());
 
-        StringBuilder description = new StringBuilder("Now playing __[" + track.getInfo().title + "](" + track.getInfo().uri + ")__");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Now playing __**[")
+                .append(track.getInfo().title).append("](")
+                .append(track.getInfo().uri).append(")**__");
         if (member != null) {
-            description.append(" requested by ").append(member.getAsMention());
+            sb.append(" requested by ").append(member.getAsMention());
         }
-        description.append(".");
+        sb.append(".");
 
         new ResponseBuilder(channel).embed("Music Playback")
-                .setDescription(description)
+                .setDescription(sb)
                 .action().queue();
     }
 
