@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.mod
+package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Channel
@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 55,
-        aliases = arrayOf("musicconfig", "musicsettings"),
+        aliases = arrayOf("music", "musicSettings", "musicconfig"),
         description = "Change music settings.",
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)

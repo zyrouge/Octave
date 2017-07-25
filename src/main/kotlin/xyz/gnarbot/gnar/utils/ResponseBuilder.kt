@@ -6,6 +6,8 @@ import net.dv8tion.jda.core.requests.RestAction
 import java.awt.Color
 
 class ResponseBuilder(private val channel: TextChannel) {
+    constructor(message: Message) : this(message.textChannel)
+
     /**
      * Quick-reply to a message.
      *
@@ -62,7 +64,7 @@ class ResponseBuilder(private val channel: TextChannel) {
     @JvmOverloads
     fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
         title { title }
-        color { channel.guild.selfMember.color ?: Color.WHITE }
+        color { channel.guild.selfMember.color }
     }
 
     /**

@@ -5,6 +5,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.template.Parser
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ln
 
@@ -21,33 +22,52 @@ class HelpCommand : CommandExecutor() {
         if (args.isNotEmpty()) {
             val target = args[0]
 
-            val cmd = registry.getCommand(target)
+            val category = Parser.CATEGORY.parse(context, target)
+            if (category != null) {
+                context.send().embed("${category.title} Commands") {
+                    val filtered = registry.entries.filter {
+                        it.info.category == category
+                    }
 
-            if (cmd == null) {
-                context.send().error("There is no command named `$target`. :cry:").queue()
+                    field("Commands") {
+                        buildString {
+                            filtered.forEach {
+                                append('`')
+                                append(it.info.aliases.first())
+                                append("` • ")
+                                append(it.info.description).ln()
+                            }
+                        }
+                    }
+                }.action().queue()
+
                 return
             }
 
-            context.send().embed("Command Information") {
-                field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
-                field("Usage") { "${context.guildOptions.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
-                if (cmd.info.donor) {
-                    field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
-                }
+            val cmd = registry.getCommand(target)
+            if (cmd != null) {
+                context.send().embed("Command Information") {
+                    field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                    field("Usage") { "${context.guildOptions.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                    if (cmd.info.donor) {
+                        field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
+                    }
 
-                if (cmd.info.permissions.isNotEmpty()) {
-                    field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
-                }
+                    if (cmd.info.permissions.isNotEmpty()) {
+                        field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
+                    }
 
-                field("Description") { cmd.info.description }
-            }.action().queue()
+                    field("Description") { cmd.info.description }
+                }.action().queue()
+            }
 
+            context.send().error("There is no command or category named `$target`. :cry:").queue()
             return
         }
 
         val cmds = registry.entries
 
-        context.send().embed("Documentation") {
+        context.send().embed("Guides") {
             desc {
                 buildString {
                     append("The prefix of the bot on this server is `").append(context.guildOptions.prefix).append("`.").ln()
@@ -67,6 +87,8 @@ class HelpCommand : CommandExecutor() {
                     filtered.joinToString("`   `", "`", "`") { it.info.aliases.first() }
                 }
             }
+
+            footer { "For more information try _help (command) or _help [Category], ex: _help ttb or _help [Music]" }
         }.action().queue()
     }
 }

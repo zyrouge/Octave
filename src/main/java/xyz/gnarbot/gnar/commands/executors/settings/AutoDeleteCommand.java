@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.mod;
+package xyz.gnarbot.gnar.commands.executors.settings;
 
 import net.dv8tion.jda.core.Permission;
 import xyz.gnarbot.gnar.commands.Category;
@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
         id = 81,
-        aliases = "autodel",
+        aliases = {"autodelete", "autodel"},
         scope = Scope.GUILD,
         permissions = Permission.MANAGE_SERVER,
         category = Category.SETTINGS

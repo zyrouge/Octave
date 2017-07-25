@@ -13,7 +13,7 @@ import java.util.List;
 
 @Command(
         id = 22,
-        aliases = {"whois", "infoof", "infoon", "user", "who"},
+        aliases = {"user", "whois", "who"},
         usage = "[user]",
         description = "Get information on a user."
 )
@@ -46,25 +46,29 @@ public class WhoIsCommand extends CommandExecutor {
             return;
         }
 
-        context.send().embed("Who is " + member.getUser().getName() + "?")
+        StringBuilder roleStr = new StringBuilder();
+        for (Role role : member.getRoles()) {
+            roleStr.append(role.getName()).append(' ');
+        }
+
+        context.send().embed("Who is " + member.getEffectiveName() + "?")
                 .setColor(member.getColor())
-                .setThumbnail(member.getUser().getAvatarUrl())
+                .setThumbnail(member.getUser().getEffectiveAvatarUrl())
+
                 .field("Name", true, member.getUser().getName())
                 .field("Discriminator", true, member.getUser().getDiscriminator())
 
                 .field("ID", true, member.getUser().getId())
+                .field("Status", true, StringUtils.capitalize(member.getOnlineStatus().getKey()))
+
+                .field("Account Created", true, member.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .field("Join Date", true, member.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
 
                 .field("Nickname", true, member.getNickname() != null ? member.getNickname() : "No nickname.")
                 .field("Game", true, member.getGame() != null ? member.getGame().getName() : "No game.")
 
-                .field("Roles", false, () -> {
-                    StringBuilder sb = new StringBuilder();
-                    for (Role role : member.getRoles()) {
-                        sb.append("• ").append(role.getName()).append('\n');
-                    }
-                    return sb.toString();
-                })
+                .field("Roles", true, roleStr)
+
                 .action().queue();
     }
 }

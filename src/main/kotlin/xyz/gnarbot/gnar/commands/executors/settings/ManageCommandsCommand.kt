@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.mod
+package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.IMentionable
@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 54,
-        aliases = arrayOf("cmd", "command", "cmds", "commands"),
+        aliases = arrayOf("commands", "cmd", "command", "cmds"),
         usage = "(enable|disable) [command] (...)",
         description = "Manage usage of commands.",
         toggleable = false,

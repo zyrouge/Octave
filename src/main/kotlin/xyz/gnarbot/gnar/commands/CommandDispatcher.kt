@@ -98,7 +98,6 @@ object CommandDispatcher {
             return false
         }
 
-
         // Command settings check.
         if (!context.member.hasPermission(Permission.ADMINISTRATOR)) {
             context.guildOptions.commandOptions[cmd.info.id]?.let {

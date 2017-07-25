@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.mod
+package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
