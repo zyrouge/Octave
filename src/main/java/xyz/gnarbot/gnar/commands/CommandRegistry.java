@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
 import xyz.gnarbot.gnar.commands.executors.music.*;
+import xyz.gnarbot.gnar.commands.executors.music.dj.DiscordFMCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.ForceSkipCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.StopCommand;
@@ -137,6 +138,7 @@ public class CommandRegistry {
             register(new VoteSkipCommand());
             register(new VolumeCommand());
             register(new JumpCommand());
+            register(new DiscordFMCommand());
         }
 
         register(new YoutubeCommand());

@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.music.DiscordFMTrackContext
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Context
 
@@ -39,6 +40,10 @@ class SkipCommand : CommandExecutor() {
                 && !context.member.hasPermission(Permission.MANAGE_CHANNEL)) {
             context.send().error("You did not request this track.").queue()
             return
+        }
+
+        if(manager.discordFMTrack!=null) {
+
         }
 
         manager.scheduler.nextTrack()
