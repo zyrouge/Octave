@@ -37,7 +37,7 @@ public class DiscordFM {
 
             Request.Builder rb = new Request.Builder()
                     .url(url)
-                    .header("Accept", "application/json");
+                    .header("Accept", "application/plain");
 
             if (discordFMKey != null) {
                 rb.header("Authorization", discordFMKey);
