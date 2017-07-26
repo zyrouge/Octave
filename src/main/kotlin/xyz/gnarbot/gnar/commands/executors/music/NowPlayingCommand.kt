@@ -43,7 +43,7 @@ class NowPlayingCommand : CommandExecutor() {
                     buildString {
                         append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
                         member?.let {
-                            append(", requested by $member")
+                            append(", requested by ${member.asMention}")
                         }
                         append('.')
                     }

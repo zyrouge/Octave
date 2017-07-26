@@ -21,7 +21,7 @@ public class DiscordFM {
             "purely-pop", "rock-n-roll", "coffee-house-jazz"
     };
 
-    private static Map<String, List<String>> libraries = new HashMap<>();
+    private static Map<String, List<String>> cache = new HashMap<>();
 
     public static void loadLibraries() {
         for (String lib : LIBRARIES) {
@@ -57,7 +57,7 @@ public class DiscordFM {
                                 .parallel()
                                 .filter(s -> s.startsWith("https://")) // make sure hte line starts with a valid link
                                 .collect(Collectors.toList());
-                        libraries.put(lib, strings);
+                        cache.put(lib, strings);
                     }
                 }
             });
@@ -65,7 +65,7 @@ public class DiscordFM {
     }
 
     public static String getRandomSong(String library) {
-        List<String> urls = libraries.get(library);
+        List<String> urls = cache.get(library);
         return urls.get((int) (Math.random() * urls.size()));
     }
 }

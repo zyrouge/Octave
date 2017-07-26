@@ -47,7 +47,7 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
         return this as T
     }
 
-    inline fun color(lazy: () -> Color): T {
+    inline fun color(lazy: () -> Color?): T {
         return setColor(lazy())
     }
 

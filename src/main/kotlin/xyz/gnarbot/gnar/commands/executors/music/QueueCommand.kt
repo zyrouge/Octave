@@ -30,9 +30,9 @@ class QueueCommand : CommandExecutor() {
             title { "Music Queue" }
             color { context.guild.selfMember.color }
 
-            setEmptyMessage("**Empty queue.** Add some music with `_play url|YT search`.")
-
-            for (track in queue) {
+            if (queue.isEmpty()) {
+                addEntry { "**Empty queue.** Add some music with `_play url|YT search`." }
+            } else for (track in queue) {
                 addEntry {
                     buildString {
                         track.getUserData(TrackContext::class.java)?.requester?.let {
@@ -66,7 +66,7 @@ class QueueCommand : CommandExecutor() {
                     buildString {
                         append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
                         member?.let {
-                            append(", requested by $member")
+                            append(", requested by ${member.asMention}")
                         }
                         append(". When the queue is empty, random tracks from the station will be added.")
                     }

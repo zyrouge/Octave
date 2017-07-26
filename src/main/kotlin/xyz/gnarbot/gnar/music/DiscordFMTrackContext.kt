@@ -19,6 +19,7 @@ class DiscordFMTrackContext(
             override fun trackLoaded(track: AudioTrack) {
                 track.userData = this
                 musicManager.scheduler.queue.offer(track)
+                musicManager.scheduler.nextTrack()
             }
 
             override fun playlistLoaded(playlist: AudioPlaylist) {

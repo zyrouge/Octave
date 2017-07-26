@@ -33,7 +33,6 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
         if (queue.isEmpty()) {
             musicManager.discordFMTrack?.let {
                 it.loadRandomTrack(musicManager)
-                nextTrack()
                 return
             }
 
