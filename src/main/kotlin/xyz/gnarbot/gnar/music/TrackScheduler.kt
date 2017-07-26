@@ -17,7 +17,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
 
     /**
      * Add the next track to queue or play right away if nothing is in the queue.
-
+     *
      * @param track The track to play or add to queue.
      */
     fun queue(track: AudioTrack) {
@@ -68,19 +68,19 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
         }
     }
 
-    override fun onTrackStuck(player: AudioPlayer?, track: AudioTrack?, thresholdMs: Long) {
-        musicManager.guild.getTextChannelById(track!!.getUserData(TrackContext::class.java).requestedChannel)
+    override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
+        musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
                 .respond()
                 .error("The track ${track.info.title} is stuck longer than ${thresholdMs}ms threshold.")
                 .queue()
     }
 
-    override fun onTrackException(player: AudioPlayer?, track: AudioTrack?, exception: FriendlyException?) {
-        musicManager.guild.getTextChannelById(track!!.getUserData(TrackContext::class.java).requestedChannel)
+    override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
+        musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
                 .respond()
                 .error(
                         "The track ${track.info.title} encountered an exception.\n" +
-                        "Severity: ${exception!!.severity}\n" +
+                        "Severity: ${exception.severity}\n" +
                         "Details: ${exception.message}"
                 ).queue()
     }
