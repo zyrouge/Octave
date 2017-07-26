@@ -37,17 +37,29 @@ class NowPlayingCommand : CommandExecutor() {
                 "**[${track.info.title}](${track.info.uri})**"
             }
 
-            val position = Utils.getTimestamp(track.position)
-            val duration = Utils.getTimestamp(track.duration)
+            manager.discordFMTrack?.let {
+                field("Discord.FM") {
+                    val member = context.guild.getMemberById(it.requester)
+                    buildString {
+                        append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
+                        member?.let {
+                            append(", requested by $member")
+                        }
+                        append('.')
+                    }
+                }
+            }
 
             field("Requester", true) {
-                context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)?.asMention
-                        ?: "Not Found"
+                track.getUserData(TrackContext::class.java)?.requester?.let {
+                    context.guild.getMemberById(it)?.asMention
+                } ?: "Not Found"
             }
 
             field("Request Channel", true) {
-                context.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)?.asMention
-                        ?: "Not Found"
+                track.getUserData(TrackContext::class.java)?.requestedChannel?.let {
+                    context.guild.getTextChannelById(it)?.asMention
+                } ?: "Not Found"
             }
 
             field("Repeating", true) {
@@ -55,7 +67,13 @@ class NowPlayingCommand : CommandExecutor() {
             }
 
             field("Time", true) {
-                inlineCode { "[$position / $duration]" }
+                if (track.duration == Long.MAX_VALUE) {
+                    inlineCode { "Streaming" }
+                } else {
+                    val position = Utils.getTimestamp(track.position)
+                    val duration = Utils.getTimestamp(track.duration)
+                    inlineCode { "[$position / $duration]" }
+                }
             }
 
             field("Progress", true) {

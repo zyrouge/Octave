@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
+import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -60,7 +61,15 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            manager.loadAndPlay(context, args[0], footnote)
+            manager.loadAndPlay(
+                    context,
+                    args[0],
+                    TrackContext(
+                            context.member.user.idLong,
+                            context.channel.idLong
+                    ),
+                    footnote
+            )
         } else {
             val query = args.joinToString(" ").trim()
 
@@ -93,7 +102,15 @@ class PlayCommand : CommandExecutor() {
                     return@search
                 }
 
-                manager.loadAndPlay(context, result.info.uri, footnote)
+                manager.loadAndPlay(
+                        context,
+                        result.info.uri,
+                        TrackContext(
+                                context.member.user.idLong,
+                                context.channel.idLong
+                        ),
+                        footnote
+                )
             }
         }
     }

@@ -25,14 +25,30 @@ abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
     protected var unit: TimeUnit = TimeUnit.SECONDS
     protected val fields: MutableList<MessageEmbed.Field> = arrayListOf()
 
+    inline fun title(lazy: () -> String): T {
+        return setTitle(lazy())
+    }
+
     fun setTitle(title: String?): T {
         this.title = title
         return this as T
     }
 
+    inline fun desc(lazy: () -> String): T {
+        return description(lazy)
+    }
+
+    inline fun description(lazy: () -> String): T {
+        return setDescription(lazy())
+    }
+
     fun setDescription(description: String?): T {
         this.description = description
         return this as T
+    }
+
+    inline fun color(lazy: () -> Color): T {
+        return setColor(lazy())
     }
 
     fun setColor(color: Color?): T {

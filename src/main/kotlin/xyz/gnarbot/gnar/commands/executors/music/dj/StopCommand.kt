@@ -16,7 +16,6 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_CHANNEL)
 )
 class StopCommand : CommandExecutor() {
-
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
@@ -30,8 +29,8 @@ class StopCommand : CommandExecutor() {
             return
         }
 
+        manager.discordFMTrack = null
         Bot.getPlayers().destroy(context.guild.idLong)
-        manager.discordFMTrack = ""
 
         context.send().embed("Stop Playback") {
             desc { "Playback has been completely stopped and the queue has been cleared." }

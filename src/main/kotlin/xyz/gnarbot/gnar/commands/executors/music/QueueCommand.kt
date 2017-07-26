@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import com.jagrosh.jdautilities.menu.PaginatorBuilder
+import com.jagrosh.jdautilities.paginator
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -26,41 +26,56 @@ class QueueCommand : CommandExecutor() {
         val queue = manager.scheduler.queue
         var queueLength = 0L
 
-        PaginatorBuilder(Bot.getWaiter())
-                .setTitle("Music Queue")
-                .setColor(context.guild.selfMember.color)
-                .apply {
-                    if (queue.isEmpty()) {
-                        add("**Empty queue.** Add some music with `_play url|YT search`.")
-                    } else for (track in queue) {
-                        add(buildString {
-                            track.getUserData(TrackContext::class.java)?.requester?.let {
-                                context.guild.getMemberById(it)?.let {
-                                    append(it.asMention)
-                                    append(' ')
-                                }
+        Bot.getWaiter().paginator {
+            title { "Music Queue" }
+            color { context.guild.selfMember.color }
+
+            setEmptyMessage("**Empty queue.** Add some music with `_play url|YT search`.")
+
+            for (track in queue) {
+                addEntry {
+                    buildString {
+                        track.getUserData(TrackContext::class.java)?.requester?.let {
+                            context.guild.getMemberById(it)?.let {
+                                append(it.asMention)
+                                append(' ')
                             }
+                        }
 
-                            append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
-                            append(track.info.title)
-                            append("](").append(track.info.uri).append(")__")
-                        })
-                        queueLength += track.duration
-
-                        //context.guild.getMemberById(track.getUserData(TrackContext::class.java).requester)
+                        append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
+                        append(track.info.title)
+                        append("](").append(track.info.uri).append(")__")
                     }
                 }
-                .field("Now Playing", false) {
-                    val track = manager.player.playingTrack
-                    if (track == null) {
-                        "Nothing"
-                    } else {
-                        "**[${track.info.title}](${track.info.uri})**"
+
+                queueLength += track.duration
+            }
+
+            field("Now Playing", false) {
+                val track = manager.player.playingTrack
+                if (track == null) {
+                    "Nothing"
+                } else {
+                    "**[${track.info.title}](${track.info.uri})**"
+                }
+            }
+
+            manager.discordFMTrack?.let {
+                field("Discord.FM") {
+                    val member = context.guild.getMemberById(it.requester)
+                    buildString {
+                        append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
+                        member?.let {
+                            append(", requested by $member")
+                        }
+                        append(". When the queue is empty, random tracks from the station will be added.")
                     }
                 }
-                .field("Entries", true, queue.size)
-                .field("Total Duration", true, Utils.getTimestamp(queueLength))
-                .field("Repeating", true, manager.scheduler.repeatOption)
-                .build().display(context.channel)
+            }
+
+            field("Entries", true) { queue.size }
+            field("Total Duration", true) { Utils.getTimestamp(queueLength) }
+            field("Repeating", true) { manager.scheduler.repeatOption }
+        }.display(context.channel)
     }
 }

@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listener.VoiceListener;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
-import xyz.gnarbot.gnar.utils.DiscordFMLibraries;
+import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
@@ -69,7 +69,7 @@ public final class Bot {
         LOG.info("Admins:\t" + CONFIG.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
-        DiscordFMLibraries.loadLibraries();
+        DiscordFM.loadLibraries();
 
         for (int i = 0; i < KEYS.getShards(); i++) {
             Shard shard = new Shard(i);

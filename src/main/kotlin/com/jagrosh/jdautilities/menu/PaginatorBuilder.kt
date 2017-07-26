@@ -5,11 +5,21 @@ import com.jagrosh.jdautilities.waiter.EventWaiter
 
 class PaginatorBuilder(waiter: EventWaiter) : MenuBuilder<PaginatorBuilder>(waiter) {
     private val items: MutableList<String> = mutableListOf()
+    private var emptyMessage: String? = null
 
     private var itemsPerPage = 10
 
-    fun add(item: String): PaginatorBuilder {
+    inline fun addEntry(lazy: () -> String): PaginatorBuilder {
+        return addEntry(lazy())
+    }
+
+    fun addEntry(item: String): PaginatorBuilder {
         this.items.add(item)
+        return this
+    }
+
+    fun setEmptyMessage(emptyMessage: String?): PaginatorBuilder {
+        this.emptyMessage = emptyMessage
         return this
     }
 
@@ -24,6 +34,7 @@ class PaginatorBuilder(waiter: EventWaiter) : MenuBuilder<PaginatorBuilder>(wait
     }
 
     override fun build(): Paginator {
-        return Paginator(waiter, user, title, description, color, fields, Lists.partition(items, itemsPerPage), timeout, unit, finally)
+        return Paginator(waiter, user, title, description, color, fields, emptyMessage,
+                if (items.isEmpty()) emptyList() else Lists.partition(items, itemsPerPage), timeout, unit, finally)
     }
 }

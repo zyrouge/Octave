@@ -84,7 +84,11 @@ public abstract class Parser<T> {
     public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(command)") {
         @Override
         public CommandExecutor parse(Context c, String s) {
-            return Bot.getCommandRegistry().getCommand(s);
+            if (s.startsWith("_")) {
+                return Bot.getCommandRegistry().getCommand(s.substring(1));
+            } else {
+                return Bot.getCommandRegistry().getCommand(s);
+            }
         }
     };
     public static final Parser<Category> CATEGORY = new Parser<Category>("([category])") {

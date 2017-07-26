@@ -20,6 +20,7 @@ class Paginator(waiter: EventWaiter,
                 description: String?,
                 color: Color?,
                 fields: List<MessageEmbed.Field>,
+                val emptyMessage: String?,
                 val list: List<List<String>>,
                 timeout: Long,
                 unit: TimeUnit,
@@ -130,13 +131,18 @@ class Paginator(waiter: EventWaiter,
 
         return MessageBuilder().setEmbed(embed(title) {
             setColor(color)
-            val items = list[pageNum - 1]
-            description {
-                buildString {
-                    description?.let { append(it).ln().ln() }
-                    items.forEachIndexed { index, s ->
-                        append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
-                        append(s).ln()
+
+            if (list.isEmpty()) {
+                emptyMessage?.let(this::setDescription)
+            } else {
+                val items = list[pageNum - 1]
+                desc {
+                    buildString {
+                        description?.let { append(it).ln().ln() }
+                        items.forEachIndexed { index, s ->
+                            append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
+                            append(s).ln()
+                        }
                     }
                 }
             }

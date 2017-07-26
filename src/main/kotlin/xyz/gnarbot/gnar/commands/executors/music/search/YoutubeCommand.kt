@@ -1,12 +1,13 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
-import com.jagrosh.jdautilities.menu.SelectorBuilder
+import com.jagrosh.jdautilities.selector
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
+import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.*
 import java.awt.Color
 
@@ -61,10 +62,10 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 }.action().queue()
                 return@search
             } else {
-                SelectorBuilder(Bot.getWaiter()).apply {
-                    setTitle("YouTube Results")
-                    setDescription("Select one of the following options to play them in your current music channel.")
-                    setColor(Color(141, 20, 0))
+                Bot.getWaiter().selector {
+                    title { "YouTube Results" }
+                    desc  { "Select one of the following options to play them in your current music channel." }
+                    color { Color(141, 20, 0) }
 
                     setUser(context.user)
 
@@ -78,13 +79,20 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                                     return@addOption
                                 }
 
-                                manager.loadAndPlay(context, result.info.uri)
+                                manager.loadAndPlay(
+                                        context,
+                                        result.info.uri,
+                                        TrackContext(
+                                                context.member.user.idLong,
+                                                context.channel.idLong
+                                        )
+                                )
                             } else {
                                 context.send().error("You're not in a voice channel anymore!").queue()
                             }
                         }
                     }
-                }.build().display(context.channel)
+                }.display(context.channel)
             }
         }
     }

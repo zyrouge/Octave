@@ -29,9 +29,6 @@ import xyz.gnarbot.gnar.utils.ResponseBuilder
 import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 
-// TEMPORARY TRIAL USING GUILD INSTANCE. Hey, guild shouldn't be invalidated midway through playing right?
-// Should prevent NPE when a guild kicks the bot along with other headaches.
-// In case of disconnect where JDA possibly might invalidate its cache, it's handled by the BotListener.java
 class MusicManager(val guild: Guild) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
@@ -43,7 +40,7 @@ class MusicManager(val guild: Guild) {
             it.registerSourceManager(BeamAudioSourceManager())
         }
 
-        fun search(query: String, maxResults: Int, callback: (List<AudioTrack>) -> Unit) {
+        fun search(query: String, maxResults: Int, callback: (results: List<AudioTrack>) -> Unit) {
             playerManager.loadItem(query, object : AudioLoadResultHandler {
                 override fun trackLoaded(track: AudioTrack) {
                     callback(listOf(track))
@@ -102,7 +99,7 @@ class MusicManager(val guild: Guild) {
     /**
      * @return If the user is listening to DiscordFM
      */
-    var discordFMTrack : String? = null
+    var discordFMTrack : DiscordFMTrackContext? = null
 
     fun destroy() {
         player.destroy()
@@ -194,20 +191,10 @@ class MusicManager(val guild: Guild) {
         Bot.getPlayers().destroy(guild)
     }
 
-    fun loadAndPlay(context: Context, trackUrl: String, footnote: String? = null) {
+    fun loadAndPlay(context: Context, trackUrl: String, trackContext: TrackContext, footnote: String? = null) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
-                    if (!context.member.voiceState.inVoiceChannel()) {
-                        context.send().error("You left the channel before the track is loaded.").queue()
-
-                        // Track is not supposed to load and the queue is empty
-                        // destroy player
-                        if (scheduler.queue.isEmpty()) {
-                            Bot.getPlayers().destroy(guild)
-                        }
-                        return
-                    }
                     if (!openAudioConnection(context.member.voiceState.channel, context)) {
                         return
                     }
@@ -225,11 +212,7 @@ class MusicManager(val guild: Guild) {
                     }
                 }
 
-                if(discordFMTrack != null) {
-                    track.userData = DiscordFMTrackContext(discordFMTrack!!, context.user.idLong, context.channel.idLong)
-                } else {
-                    track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
-                }
+                track.userData = trackContext
 
                 scheduler.queue(track)
 
@@ -271,7 +254,7 @@ class MusicManager(val guild: Guild) {
                         break
                     }
 
-                    track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
+                    track.userData = trackContext
 
                     scheduler.queue(track)
                     added++

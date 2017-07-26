@@ -9,7 +9,6 @@ import org.json.JSONTokener
 import xyz.gnarbot.gnar.utils.HttpUtils
 import xyz.gnarbot.gnar.utils.get
 import java.io.File
-import java.io.IOException
 
 class Credentials(file: File) {
     val loader: ConfigurationLoader<CommentedConfigurationNode> = HoconConfigurationLoader.builder()
@@ -21,19 +20,16 @@ class Credentials(file: File) {
 
     val shards = kotlin.run {
         val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
-                .header("Authorization", "Bot " + token)
+                .header("Authorization", "Bot $token")
                 .header("Content-Type", "application/json")
                 .build()
 
-        try {
-            HttpUtils.CLIENT.newCall(request).execute().use { response ->
-                val jso = JSONObject(JSONTokener(response.body()!!.byteStream()))
+        HttpUtils.CLIENT.newCall(request).execute().use { response ->
+            response.body()?.let {
+                val jso = JSONObject(JSONTokener(it.byteStream()))
                 response.close()
                 jso.getInt("shards")
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            1
+            } ?: error("Invalid shards response from Discord")
         }
     }
 
