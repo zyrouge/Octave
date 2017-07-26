@@ -5,8 +5,9 @@ import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.requests.RestAction
 import java.awt.Color
 
+fun TextChannel.respond() = ResponseBuilder(this)
+
 class ResponseBuilder(private val channel: TextChannel) {
-    constructor(message: Message) : this(message.textChannel)
 
     /**
      * Quick-reply to a message.

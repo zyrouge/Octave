@@ -1,35 +1,24 @@
 package xyz.gnarbot.gnar.music
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
-import com.sedmelluq.discord.lavaplayer.track.*
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.CommandRegistry
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.DiscordFMLibraries
+import xyz.gnarbot.gnar.utils.ResponseBuilder
 import xyz.gnarbot.gnar.utils.TrackContext
+import xyz.gnarbot.gnar.utils.respond
+import java.util.*
 
-import java.util.Collections
-import java.util.LinkedList
-import java.util.Queue
-
-class TrackScheduler
-/**
- * @param player The audio player this scheduler uses
- */
-(private val musicManager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
-
-    val queue: Queue<AudioTrack>
+class TrackScheduler(private val musicManager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
+    val queue: Queue<AudioTrack> = LinkedList<AudioTrack>()
+    var repeatOption = RepeatOption.NONE
     var lastTrack: AudioTrack? = null
         private set
-    var repeatOption = RepeatOption.NONE
-
-    init {
-        this.queue = LinkedList<AudioTrack>()
-    }
 
     /**
      * Add the next track to queue or play right away if nothing is in the queue.
@@ -46,62 +35,114 @@ class TrackScheduler
      * Start the next track, stopping the current one if it is playing.
      */
     fun nextTrack() {
-
         if (queue.isEmpty()) {
-
-            if (musicManager.discordFMTrack !== "") {
-
+            musicManager.discordFMTrack?.let {
+                loadDiscordFmTrack(it)
+                return
             }
 
             Bot.getPlayers().destroy(musicManager.guild)
             return
         }
 
-        player.startTrack(queue.poll(), false)
+        val track = queue.poll()
+        player.startTrack(track, false)
+
+        if (Bot.getOptions().ofGuild(musicManager.guild).isAnnounce) {
+            announceNext(track)
+        }
     }
 
-    override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
+    override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         this.lastTrack = track
 
-        if (endReason!!.mayStartNext) {
-            when (repeatOption) {
-                RepeatOption.SONG -> {
-                    val newTrack = lastTrack!!.makeClone()
-                    newTrack.userData = lastTrack!!.userData
-                    player!!.startTrack(newTrack, false)
-                }
-                RepeatOption.QUEUE -> {
-                    run {
-                        val newTrack = lastTrack!!.makeClone()
-                        newTrack.userData = lastTrack!!.userData
-                        queue.offer(newTrack)
-                    }
-                    nextTrack()
-                }
-                RepeatOption.NONE -> nextTrack()
-            }
-        } else {
+        if (!endReason.mayStartNext) {
             Bot.getPlayers().destroy(musicManager.guild)
+            return
+        }
+
+        when (repeatOption) {
+            RepeatOption.SONG -> {
+                val newTrack = track.makeClone().also { it.userData = track.userData }
+                player.startTrack(newTrack, false)
+            }
+            RepeatOption.QUEUE -> {
+                val newTrack = track.makeClone().also { it.userData = track.userData }
+                queue.offer(newTrack)
+                nextTrack()
+            }
+            RepeatOption.NONE -> nextTrack()
         }
     }
 
     override fun onTrackStuck(player: AudioPlayer?, track: AudioTrack?, thresholdMs: Long) {
         musicManager.guild.getTextChannelById(track!!.getUserData(TrackContext::class.java).requestedChannel)
-                .sendMessage("**ERROR:** The track " + track.info.title + " is stuck longer than "
-                        + thresholdMs + "ms threshold."
-                ).queue()
+                .respond()
+                .error("The track ${track.info.title} is stuck longer than ${thresholdMs}ms threshold.")
+                .queue()
     }
 
     override fun onTrackException(player: AudioPlayer?, track: AudioTrack?, exception: FriendlyException?) {
         musicManager.guild.getTextChannelById(track!!.getUserData(TrackContext::class.java).requestedChannel)
-                .sendMessage(
-                        "**ERROR:** The track " + track.info.title + " encountered an exception.\n"
-                                + "Severity: " + exception!!.severity + "\n"
-                                + "Details: " + exception.message
+                .respond()
+                .error(
+                        "The track ${track.info.title} encountered an exception.\n" +
+                        "Severity: ${exception!!.severity}\n" +
+                        "Details: ${exception.message}"
                 ).queue()
     }
 
-    fun shuffle() {
-        Collections.shuffle(queue as List<*>)
+    fun announceNext(track: AudioTrack) {
+        musicManager.currentRequestChannel?.let {
+            ResponseBuilder(it).embed("Music Playback") {
+                desc {
+                    buildString {
+                        append("Now playing __**[")
+                        append(track.info.title)
+                        append("](")
+                        append(track.info.uri)
+                        append(")**__")
+
+                        track.getUserData(TrackContext::class.java)
+                                ?.requester
+                                ?.let(musicManager.guild::getMemberById)
+                                ?.let {
+                                    append(" requested by ")
+                                    append(it.asMention)
+                                }
+
+                        append(".")
+                    }
+                }
+            }.action().queue()
+        }
     }
+
+    fun loadDiscordFmTrack(discordFM: String) {
+        DiscordFMLibraries.getRandomSong(discordFM)?.let {
+            MusicManager.playerManager.loadItemOrdered(this, it, object : AudioLoadResultHandler {
+                override fun trackLoaded(track: AudioTrack) {
+                    queue.offer(track)
+                    nextTrack()
+                }
+
+                override fun playlistLoaded(playlist: AudioPlaylist) {
+                    trackLoaded(playlist.tracks.first())
+                }
+
+                override fun noMatches() {
+                    // Already confirmed that the list is empty.
+                    Bot.getPlayers().destroy(musicManager.guild)
+                }
+
+                override fun loadFailed(exception: FriendlyException) {
+                    // Already confirmed that the list is empty.
+                    Bot.getPlayers().destroy(musicManager.guild)
+                }
+            })
+        }
+        return
+    }
+
+    fun shuffle() = Collections.shuffle(queue as List<*>)
 }

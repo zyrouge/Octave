@@ -7,11 +7,11 @@ import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class DiscordFMLibraries {
 
@@ -41,16 +41,16 @@ public class DiscordFMLibraries {
         }
     }
 
+    @Nullable
     public static String getRandomSong(String library) {
-        JSONObject j = libraries.get(library).getJSONObject(new Random().nextInt(libraries.get(library).length()));
+        JSONObject j = libraries.get(library).getJSONObject((int) (Math.random() * libraries.get(library).length()));
+
         if (j.has("url")) {
             return j.getString("url");
+        } else if(j.getString("service").equals("YouTubeVideo")) {
+            return "https://youtube.com/watch?v=" + j.getString("identifier");
         }
 
-        if(j.getString("service").equals("YouTubeVideo")) return "https://youtube.com/watch?v=" + j.getString("identifier");
-
-        System.out.println(j.toString());
-        return "Error, a problem occurred while loading from DiscordFM.";
+        return null;
     }
-
 }

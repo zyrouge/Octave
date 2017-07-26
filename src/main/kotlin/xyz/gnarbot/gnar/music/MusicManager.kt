@@ -87,6 +87,11 @@ class MusicManager(val guild: Guild) {
      */
     var lastVoteTime: Long = 0L
 
+    /**
+     * @return Whether there is a vote to skip the song or not.
+     */
+    var isVotingToSkip = false
+
     val currentRequestChannel: TextChannel?
         get() {
             return (player.playingTrack ?: scheduler.lastTrack)
@@ -96,16 +101,9 @@ class MusicManager(val guild: Guild) {
         }
 
     /**
-     * @return Whether there is a vote to skip the song or not.
-     */
-    var isVotingToSkip = false
-
-    /**
      * @return If the user is listening to DiscordFM
-     * @type Null="no", ""=No, anything else=yes
      */
-    var discordFMTrack : String = ""
-
+    var discordFMTrack : String? = null
 
     fun destroy() {
         player.destroy()
@@ -286,7 +284,7 @@ class MusicManager(val guild: Guild) {
                         }
                     }
 
-                    footer { /*Alex*/footnote }
+                    footer { footnote }
                 }.action().queue()
             }
 
