@@ -30,10 +30,10 @@ class QueueCommand : CommandExecutor() {
             title { "Music Queue" }
             color { context.guild.selfMember.color }
 
-            if (queue.isEmpty()) {
-                addEntry { "**Empty queue.** Add some music with `_play url|YT search`." }
-            } else for (track in queue) {
-                addEntry {
+            empty { "**Empty queue.** Add some music with `_play url|YT search`." }
+
+            for (track in queue) {
+                entry {
                     buildString {
                         track.getUserData(TrackContext::class.java)?.requester?.let {
                             context.guild.getMemberById(it)?.let {

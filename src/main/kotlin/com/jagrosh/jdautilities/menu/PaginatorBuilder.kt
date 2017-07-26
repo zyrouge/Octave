@@ -9,13 +9,17 @@ class PaginatorBuilder(waiter: EventWaiter) : MenuBuilder<PaginatorBuilder>(wait
 
     private var itemsPerPage = 10
 
-    inline fun addEntry(lazy: () -> String): PaginatorBuilder {
+    inline fun entry(lazy: () -> String): PaginatorBuilder {
         return addEntry(lazy())
     }
 
     fun addEntry(item: String): PaginatorBuilder {
         this.items.add(item)
         return this
+    }
+
+    inline fun empty(lazy: () -> String): PaginatorBuilder {
+        return setEmptyMessage(lazy())
     }
 
     fun setEmptyMessage(emptyMessage: String?): PaginatorBuilder {

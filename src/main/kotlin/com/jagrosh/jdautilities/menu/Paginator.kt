@@ -67,12 +67,22 @@ class Paginator(waiter: EventWaiter,
     }
 
     fun paginate(channel: TextChannel, page: Int) {
+        if (list.isEmpty()) {
+            channel.sendMessage(renderEmptyPage()).queue()
+            return
+        }
+
         val pageNum = page.coerceIn(1, list.size)
         val msg = renderPage(page)
         initialize(channel.sendMessage(msg), pageNum)
     }
 
     fun paginate(message: Message, page: Int) {
+        if (list.isEmpty()) {
+            message.editMessage(renderEmptyPage()).queue()
+            return
+        }
+
         val pageNum = page.coerceIn(1, list.size)
         val msg = renderPage(page)
         initialize(message.editMessage(msg), pageNum)
@@ -132,17 +142,13 @@ class Paginator(waiter: EventWaiter,
         return MessageBuilder().setEmbed(embed(title) {
             setColor(color)
 
-            if (list.isEmpty()) {
-                emptyMessage?.let(this::setDescription)
-            } else {
-                val items = list[pageNum - 1]
-                desc {
-                    buildString {
-                        description?.let { append(it).ln().ln() }
-                        items.forEachIndexed { index, s ->
-                            append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
-                            append(s).ln()
-                        }
+            val items = list[pageNum - 1]
+            desc {
+                buildString {
+                    description?.let { append(it).ln().ln() }
+                    items.forEachIndexed { index, s ->
+                        append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
+                        append(s).ln()
                     }
                 }
             }
@@ -155,5 +161,15 @@ class Paginator(waiter: EventWaiter,
         }.build()).build()
     }
 
+    private fun renderEmptyPage(): Message {
+        return MessageBuilder().setEmbed(embed(title) {
+            setColor(color)
 
+            emptyMessage?.let(this::setDescription)
+
+            super.fields.forEach {
+                addField(it)
+            }
+        }.build()).build()
+    }
 }
