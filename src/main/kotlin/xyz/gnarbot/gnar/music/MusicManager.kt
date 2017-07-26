@@ -100,6 +100,12 @@ class MusicManager(val guild: Guild) {
      */
     var isVotingToSkip = false
 
+    /**
+     * @return If the user is listening to DiscordFM
+     * @type Null="no", ""=No, anything else=yes
+     */
+    var discordFMTrack : String = ""
+
     fun destroy() {
         player.destroy()
         closeAudioConnection()
@@ -279,7 +285,7 @@ class MusicManager(val guild: Guild) {
                         }
                     }
 
-                    footer { footnote }
+                    footer { /*Alex*/footnote }
                 }.action().queue()
             }
 

@@ -30,6 +30,7 @@ class StopCommand : CommandExecutor() {
         }
 
         Bot.getPlayers().destroy(context.guild.idLong)
+        manager.discordFMTrack = ""
 
         context.send().embed("Stop Playback") {
             desc { "Playback has been completely stopped and the queue has been cleared." }
