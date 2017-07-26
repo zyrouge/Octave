@@ -29,19 +29,17 @@ class DiscordFMCommand : CommandExecutor() {
 
         for(s : String in DiscordFMLibraries.libraryTypes) {
             if(s.contains(args[0])) {
-                MusicManager.search("ytsearch: hello kitty", 1) { results ->
+                Bot.getPlayers().get(context.guild)
 
-                    val manager = try {
-                        Bot.getPlayers().get(context.guild)
-                    } catch (e: MusicLimitException) {
-                        return@search
-                    }
-
-                    manager.discordFMTrack = s
-                    DiscordFMLibraries.getRandomSong(s)?.let {
-                        manager.loadAndPlay(context, it)
-                    }
+                val manager = try {
+                    Bot.getPlayers().get(context.guild)
+                } catch (e: MusicLimitException) {
+                    e.sendToContext(context)
+                    return
                 }
+
+                manager.discordFMTrack = s
+                manager.loadAndPlay(context, DiscordFMLibraries.getRandomSong(s), "Powered by Discord.FM")
             }
         }
     }

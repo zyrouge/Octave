@@ -225,7 +225,11 @@ class MusicManager(val guild: Guild) {
                     }
                 }
 
-                track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
+                if(discordFMTrack != null) {
+                    track.userData = DiscordFMTrackContext(discordFMTrack!!, context.user.idLong, context.channel.idLong)
+                } else {
+                    track.userData = TrackContext(context.member.user.idLong, context.channel.idLong)
+                }
 
                 scheduler.queue(track)
 

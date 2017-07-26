@@ -53,7 +53,6 @@ public class DiscordFMLibraries {
         }
     }
 
-    @Nullable
     public static String getRandomSong(String library) {
         try {
             JSONObject j = libraries.get(library).getJSONObject((int) (Math.random() * libraries.get(library).length()));
@@ -64,7 +63,7 @@ public class DiscordFMLibraries {
                 return "https://youtube.com/watch?v=" + j.getString("identifier");
             }
 
-            return null;
+            return "You can't get here.";
         } catch (NullPointerException e) {
             e.printStackTrace();
             return "ullPointerException, please report this to the devs.";
