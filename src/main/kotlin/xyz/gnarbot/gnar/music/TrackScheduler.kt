@@ -46,6 +46,7 @@ class TrackScheduler
      * Start the next track, stopping the current one if it is playing.
      */
     fun nextTrack() {
+
         if (queue.isEmpty()) {
 
             if (musicManager.discordFMTrack !== "") {

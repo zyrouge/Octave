@@ -106,6 +106,7 @@ class MusicManager(val guild: Guild) {
      */
     var discordFMTrack : String = ""
 
+
     fun destroy() {
         player.destroy()
         closeAudioConnection()

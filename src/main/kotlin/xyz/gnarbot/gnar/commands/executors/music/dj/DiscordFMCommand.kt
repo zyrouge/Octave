@@ -18,6 +18,7 @@ import xyz.gnarbot.gnar.utils.DiscordFMLibraries
         category = Category.MUSIC
 )
 class DiscordFMCommand : CommandExecutor() {
+
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
 
