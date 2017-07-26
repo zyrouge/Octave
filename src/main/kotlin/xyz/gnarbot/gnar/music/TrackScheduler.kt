@@ -9,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.DiscordFMLibraries
-import xyz.gnarbot.gnar.utils.ResponseBuilder
 import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.respond
 import java.util.*
@@ -56,22 +55,19 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
     override fun onTrackEnd(player: AudioPlayer, track: AudioTrack, endReason: AudioTrackEndReason) {
         this.lastTrack = track
 
-        if (!endReason.mayStartNext) {
-            Bot.getPlayers().destroy(musicManager.guild)
-            return
-        }
-
-        when (repeatOption) {
-            RepeatOption.SONG -> {
-                val newTrack = track.makeClone().also { it.userData = track.userData }
-                player.startTrack(newTrack, false)
+        if (endReason.mayStartNext) {
+            when (repeatOption) {
+                RepeatOption.SONG -> {
+                    val newTrack = track.makeClone().also { it.userData = track.userData }
+                    player.startTrack(newTrack, false)
+                }
+                RepeatOption.QUEUE -> {
+                    val newTrack = track.makeClone().also { it.userData = track.userData }
+                    queue.offer(newTrack)
+                    nextTrack()
+                }
+                RepeatOption.NONE -> nextTrack()
             }
-            RepeatOption.QUEUE -> {
-                val newTrack = track.makeClone().also { it.userData = track.userData }
-                queue.offer(newTrack)
-                nextTrack()
-            }
-            RepeatOption.NONE -> nextTrack()
         }
     }
 
@@ -94,22 +90,16 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
 
     fun announceNext(track: AudioTrack) {
         musicManager.currentRequestChannel?.let {
-            ResponseBuilder(it).embed("Music Playback") {
+            it.respond().embed("Music Playback") {
                 desc {
                     buildString {
-                        append("Now playing __**[")
-                        append(track.info.title)
-                        append("](")
-                        append(track.info.uri)
-                        append(")**__")
+                        append("Now playing __**[").append(track.info.title)
+                        append("](").append(track.info.uri).append(")**__")
 
-                        track.getUserData(TrackContext::class.java)
-                                ?.requester
-                                ?.let(musicManager.guild::getMemberById)
-                                ?.let {
-                                    append(" requested by ")
-                                    append(it.asMention)
-                                }
+                        track.getUserData(TrackContext::class.java)?.requester?.let(musicManager.guild::getMemberById)?.let {
+                            append(" requested by ")
+                            append(it.asMention)
+                        }
 
                         append(".")
                     }

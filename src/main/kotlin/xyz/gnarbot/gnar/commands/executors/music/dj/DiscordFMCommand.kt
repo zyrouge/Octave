@@ -1,12 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
-import org.jetbrains.annotations.NotNull
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.executors.music.PLAY_MESSAGE
-import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.DiscordFMLibraries
 
@@ -18,7 +16,6 @@ import xyz.gnarbot.gnar.utils.DiscordFMLibraries
         category = Category.MUSIC
 )
 class DiscordFMCommand : CommandExecutor() {
-
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
 
@@ -36,7 +33,9 @@ class DiscordFMCommand : CommandExecutor() {
             if(s.contains(args[0])) {
                 manager.discordFMTrack = args[0]
 
-                manager.loadAndPlay(context, DiscordFMLibraries.getRandomSong(args[0]), "")
+                DiscordFMLibraries.getRandomSong(args[0])?.let {
+                    manager.loadAndPlay(context, it)
+                }
             }
         }
     }
