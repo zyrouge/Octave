@@ -26,7 +26,6 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ResponseBuilder
-import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 

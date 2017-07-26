@@ -9,7 +9,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.DiscordFMLibraries
-import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.respond
 import java.util.*
 

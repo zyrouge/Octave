@@ -4,8 +4,8 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.inlineCode
 
