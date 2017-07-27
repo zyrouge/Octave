@@ -66,7 +66,7 @@ class RemoveCommand : CommandExecutor() {
 
         context.send().embed("Remove Track") {
             desc {
-                "Removed __[${track.info.title}](${track.info.embedUri})__ from the queue."
+                "Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue."
             }
         }.action().queue()
     }

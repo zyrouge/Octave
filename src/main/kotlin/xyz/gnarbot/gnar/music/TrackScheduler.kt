@@ -6,7 +6,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.executors.music.embedUri
+import xyz.gnarbot.gnar.commands.executors.music.embedTitle
+
 import xyz.gnarbot.gnar.utils.respond
 import java.util.*
 
@@ -71,7 +72,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
     override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
         musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
                 .respond()
-                .error("The track ${track.info.title} is stuck longer than ${thresholdMs}ms threshold.")
+                .error("The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold.")
                 .queue()
     }
 
@@ -79,7 +80,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
         musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
                 .respond()
                 .error(
-                        "The track ${track.info.title} encountered an exception.\n" +
+                        "The track ${track.info.embedTitle} encountered an exception.\n" +
                         "Severity: ${exception.severity}\n" +
                         "Details: ${exception.message}"
                 ).queue()
@@ -90,8 +91,8 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
             it.respond().embed("Music Playback") {
                 desc {
                     buildString {
-                        append("Now playing __**[").append(track.info.title)
-                        append("](").append(track.info.embedUri).append(")**__")
+                        append("Now playing __**[").append(track.info.embedTitle)
+                        append("](").append(track.info.uri).append(")**__")
 
                         track.getUserData(TrackContext::class.java)?.requester?.let(musicManager.guild::getMemberById)?.let {
                             append(" requested by ")

@@ -37,7 +37,7 @@ class RestartCommand : CommandExecutor() {
 
         if (track != null) {
             context.send().embed("Restart Song") {
-                desc { "Restarting track: `${track.info.title}`." }
+                desc { "Restarting track: `${track.info.embedTitle}`." }
             }.action().queue()
 
             manager.player.playTrack(track.makeClone())

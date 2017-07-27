@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 import com.jagrosh.jdautilities.selector
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.executors.music.embedUri
+import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
@@ -47,8 +47,8 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                         buildString {
                             for (result in results) {
 
-                                val title = result.info.title
-                                val url = result.info.embedUri
+                                val title = result.info.embedTitle
+                                val url = result.info.uri
                                 val length = Utils.getTimestamp(result.duration)
                                 val author = result.info.author
 
@@ -70,7 +70,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                     setUser(context.user)
 
                     for (result in results) {
-                        addOption("`${Utils.getTimestamp(result.info.length)}` **[${result.info.title}](${result.info.embedUri})**") {
+                        addOption("`${Utils.getTimestamp(result.info.length)}` **[${result.info.embedTitle}](${result.info.uri})**") {
                             if (context.member.voiceState.inVoiceChannel()) {
                                 val manager = try {
                                     Bot.getPlayers().get(context.guild)
