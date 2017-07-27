@@ -52,7 +52,7 @@ object CommandDispatcher {
     }
 
     fun splitCommand(context: Context): Boolean {
-        val content = context.message.rawContent?.let {
+        val content = context.message.rawContent.let {
             when {
                 it.startsWith(context.guildOptions.prefix) -> it.substring(context.guildOptions.prefix.length)
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)

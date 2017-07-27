@@ -15,15 +15,19 @@ import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
 import xyz.gnarbot.gnar.music.MusicManager;
-import xyz.gnarbot.gnar.utils.DiscordLogBack;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public class BotListener extends ListenerAdapter {
-
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        Bot.LOG.info("[✅] Joined " + event.getGuild().getName());
+        // checks if the bot joined from 1 minute ago to now, prevents massive discord spam
+        long oneMinuteAgo = OffsetDateTime.now().minus(1, ChronoUnit.MINUTES).toEpochSecond();
+        if (event.getGuild().getSelfMember().getJoinDate().toEpochSecond() > oneMinuteAgo) {
+            Bot.LOG.info("✅ Joined `" + event.getGuild().getName() + "`");
+        }
     }
 
     @Override
@@ -74,8 +78,8 @@ public class BotListener extends ListenerAdapter {
     public void onGuildLeave(GuildLeaveEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
             Bot.getPlayers().destroy(event.getGuild());
+            Bot.LOG.info("❌ Left `" + event.getGuild().getName() + "`");
         }
-        Bot.LOG.info("[❌] Left " + event.getGuild().getName());
     }
 
     @Override
