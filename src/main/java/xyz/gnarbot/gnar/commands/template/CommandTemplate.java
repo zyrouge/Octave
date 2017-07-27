@@ -1,23 +1,21 @@
 package xyz.gnarbot.gnar.commands.template;
 
-import org.apache.commons.lang3.StringUtils;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.EmbedMaker;
 
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public abstract class CommandTemplate extends CommandExecutor {
-    private final List<Entry> entries = new ArrayList<>();
+public abstract class CommandTemplate extends CommandExecutor implements Template {
+    private final Map<String, Template> cursors;
 
     public CommandTemplate() {
+        cursors = new LinkedHashMap<>();
+
         Method[] methods = getClass().getDeclaredMethods();
         Arrays.sort(methods, Comparator.comparingInt(a -> {
             Executor an = a.getAnnotation(Executor.class);
@@ -32,110 +30,38 @@ public abstract class CommandTemplate extends CommandExecutor {
                 throw new RuntimeException("?");
             }
 
-            Parser[] parsers = new Parser[method.getParameterCount()];
-            parsers[0] = Parser.of(method.getName());
-            Parameter[] params = method.getParameters();
-            for (int i = 1; i < parsers.length; i++) {
-                parsers[i] = Parser.ofClass(params[i].getType());
+            String[] parts = method.getName().split("_");
+            Template current = this;
+            for (int i = 0; i < parts.length - 1; i++) {
+                String part = parts[i];
+
+                Template next = current.getCursors().get(part);
+                if (next == null) {
+                    next = new StringTemplate();
+                    current.getCursors().put(part, next);
+                }
+
+                current = next;
             }
 
-            addMethod(new Entry(parsers, method.getAnnotation(Executor.class).description(), method));
+            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Executor.class), method));
         }
     }
 
     @Override
+    public Map<String, Template> getCursors() {
+        return cursors;
+    }
+
+    @Override
     public void execute(Context context, String label, String[] args) {
-        if (args.length == 0) {
-            noMatches(context, args);
-            return;
-        }
-
-        main: for (Entry entry : entries) {
-            Parser[] types = entry.parsers;
-            if (args.length < types.length) continue;
-
-            Object[] arguments = new Object[types.length];
-            arguments[0] = context;
-
-            if (types[0].parse(context, args[0]) == null) {
-                continue;
-            }
-
-            for (int i = 1; i < types.length; i++) {
-                Parser type = types[i];
-
-                arguments[i] = i == types.length - 1
-                        ? type.parse(context, StringUtils.join(Arrays.copyOfRange(args, i, args.length), " "))
-                        : type.parse(context, args[i]);
-
-                if (arguments[i] == null) {
-                    continue main;
-                }
-            }
-            try {
-                entry.method.invoke(this, arguments);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-            return;
-        }
-
-        noMatches(context, args);
+        execute(context, args);
     }
 
-    protected void noMatches(Context context, String[] args) {
-        noMatches(context, args, null);
-    }
-
-    protected void noMatches(Context context, String[] args, String info) {
-        StringBuilder builder = new StringBuilder();
-
-        for (Entry entry : entries) {
-            builder.append("• `");
-            for (int i = 0; i < entry.parsers.length; i++) {
-                builder.append(entry.parsers[i].getName());
-                if (i < entry.parsers.length - 1) {
-                    builder.append(' ');
-                }
-            }
-            builder.append("`");
-            if (entry.description != null) {
-                builder.append("\n").append(entry.description);
-            }
-            builder.append("\n\n");
-        }
-
-        EmbedMaker eb = new EmbedMaker();
-
-        Color color = context.getGuild().getSelfMember().getColor();
-        if (color == null) color = Color.WHITE;
-        eb.setColor(color);
-
-        eb.setTitle(getInfo().aliases()[0]);
-        if (args.length != 0) {
-            eb.setTitle("Invalid arguments.");
-            eb.setColor(Color.RED);
-        }
-        eb.appendDescription(getInfo().description());
-        if (info != null) eb.appendDescription("\n" + info);
-        eb.addField("Arguments", builder.toString(), false);
-
-        context.getChannel().sendMessage(eb.build()).queue();
-    }
-
-    private void addMethod(Entry entry) {
-        entries.add(entry);
-    }
-
-    private class Entry {
-        private final Parser[] parsers;
-        private final String description;
-        private final Method method;
-
-        private Entry(Parser[] parsers, String description, Method method) {
-            this.parsers = parsers;
-            this.description = description;
-            this.method = method;
-        }
+    @Override
+    public void helpMessage(Context context, String[] args, String title, String description) {
+        Template.super.helpMessage(context, args,
+                title == null ? Bot.CONFIG.getPrefix() + getInfo().aliases()[0] + " Command" : title,
+                getInfo().description() + (description == null ? "" : description));
     }
 }

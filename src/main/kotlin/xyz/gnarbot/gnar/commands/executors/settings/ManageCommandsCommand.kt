@@ -26,7 +26,7 @@ import xyz.gnarbot.gnar.utils.ln
 )
 class ManageCommandsCommand : CommandTemplate() {
     @Executor(0, description = "Add a user to the command's allowed users list.")
-    fun allowUser(context: Context, cmd: CommandExecutor, member: Member) {
+    fun allow_user(context: Context, cmd: CommandExecutor, member: Member) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -50,7 +50,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(1, description = "Add a role to the command's allowed roles list.")
-    fun allowRole(context: Context, cmd: CommandExecutor, role: Role) {
+    fun allow_role(context: Context, cmd: CommandExecutor, role: Role) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -74,7 +74,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(2, description = "Add a channel to the command's allowed channels list.")
-    fun allowChannel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+    fun allow_channel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -98,7 +98,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(3, description = "Add a channel to the entire category's commands' allowed channels list.")
-    fun allowChannel(context: Context, category: Category, channel: TextChannel) {
+    fun allow_category(context: Context, category: Category, channel: TextChannel) {
         val cmds = Bot.getCommandRegistry().entries
 
         val filtered = cmds.filter {
@@ -153,7 +153,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(4, description ="Remove a user from the command's allowed users list.")
-    fun disallowUser(context: Context, cmd: CommandExecutor, member: Member) {
+    fun disallow_user(context: Context, cmd: CommandExecutor, member: Member) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -182,7 +182,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(5, description = "Remove a role from the command's allowed roles list.")
-    fun disallowRole(context: Context, cmd: CommandExecutor, role: Role) {
+    fun disallow_role(context: Context, cmd: CommandExecutor, role: Role) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -211,7 +211,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(6, description = "Remove a channel from the command's allowed channels list.")
-    fun disallowChannel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+    fun disallow_channel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -240,7 +240,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(7, description = "Remove a channel from the the entire category's commands' allowed channels list.")
-    fun disallowChannel(context: Context, category: Category, channel: TextChannel) {
+    fun disallow_category(context: Context, category: Category, channel: TextChannel) {
         val cmds = Bot.getCommandRegistry().entries
 
         val filtered = cmds.filter {
@@ -348,7 +348,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(9, description = "Clear all options for a command.")
-    fun clear(context: Context, cmd: CommandExecutor) {
+    fun clear_command(context: Context, cmd: CommandExecutor) {
         val info = cmd.info
 
         if (info == null) {
@@ -377,7 +377,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(10, description = "Clear all command options.")
-    fun clear(context: Context) {
+    fun clear_all(context: Context) {
         if (context.guildOptions.commandOptions.isEmpty()) {
             context.send().error("This guild doesn't have any commands options.").queue()
             return
@@ -393,15 +393,6 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun noMatches(context: Context?, args: Array<out String>?) {
-        noMatches(context, args, buildString {
-            append("If you allow entities (user, role, channel) to use the command, ")
-            append("everything else will not not be able to use the command unless you include ")
-            append("those also. If you do not explicitly allow anyone to use the command, it ")
-            append("will be usable to everyone.")
-        })
-    }
-
     private fun isNotValid(context: Context, info: Command): Boolean {
         if (!info.toggleable) {
             context.send().error("`$info` can not be toggled.").queue()
@@ -409,5 +400,14 @@ class ManageCommandsCommand : CommandTemplate() {
         }
 
         return false
+    }
+
+    override fun helpMessage(context: Context, args: Array<out String>) {
+        helpMessage(context, args, null, buildString {
+            append("If you allow entities (user, role, channel) to use the command, ")
+            append("everything else will not not be able to use the command unless you include ")
+            append("those also. If you do not explicitly allow anyone to use the command, it ")
+            append("will be usable to everyone.")
+        })
     }
 }

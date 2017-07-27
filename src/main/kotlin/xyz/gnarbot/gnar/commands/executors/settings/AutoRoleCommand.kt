@@ -67,8 +67,8 @@ class AutoRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun noMatches(context: Context, args: Array<String>) {
-        noMatches(context, args, buildString {
+    override fun helpMessage(context: Context, args: Array<String>) {
+        helpMessage(context, args, null, buildString {
             if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
                 append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
                 return

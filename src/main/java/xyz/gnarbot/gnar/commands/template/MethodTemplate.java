@@ -1,22 +1,23 @@
-package xyz.gnarbot.gnar.commands.template.rewrite;
+package xyz.gnarbot.gnar.commands.template;
 
-import xyz.gnarbot.gnar.commands.template.Executor;
-import xyz.gnarbot.gnar.commands.template.Parser;
+import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.EmbedMaker;
 
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Collections;
 import java.util.Map;
 
-public class MethodCursor implements Cursor {
-    private final CommandCursor command;
+public class MethodTemplate implements Template {
+    private final CommandTemplate command;
     private final Executor annotation;
     private final Method method;
     private final Parser[] parsers;
 
-    public MethodCursor(CommandCursor command, Executor annotation, Method method) {
+    public MethodTemplate(CommandTemplate command, Executor annotation, Method method) {
         this.command = command;
         this.annotation = annotation;
         this.method = method;
@@ -52,7 +53,20 @@ public class MethodCursor implements Cursor {
     @Override
     public void execute(Context context, String[] args) {
         if (args.length < method.getParameterCount() - 1) {
-            context.send().error("Insufficient arguments, required: `" + requirements() + "`.").queue();
+            EmbedMaker eb = new EmbedMaker();
+
+            eb.setTitle("Insufficient Arguments");
+            eb.setDescription("Insufficient arguments, required: `" + requirements() + "`.");
+
+            StringBuilder builder = new StringBuilder(parsers.length * 16);
+            for (Parser parser : parsers) {
+                builder.append("\n`").append(parser.getName()).append("` • ").append(parser.getDescription()).append('.');
+            }
+
+            eb.field("Required Arguments", false, builder.toString());
+            eb.setColor(Color.RED);
+
+            context.getChannel().sendMessage(eb.build()).queue();
             return;
         }
 
@@ -60,10 +74,20 @@ public class MethodCursor implements Cursor {
         arguments[0] = context;
 
         for (int i = 0; i < method.getParameterCount() - 1; i++) {
-            Object obj = parsers[i].parse(context, args[i]);
-            if (obj == null) {
-                context.send().error("Didn't match").queue();
+            String str;
+
+            if (i == method.getParameterCount() - 2) {
+                str = StringUtils.join(args, ' ');
+            } else {
+                str = args[i];
             }
+
+            Object obj = parsers[i].parse(context, str);
+
+            if (obj == null) {
+                context.send().error("`" + str + "` did not match `" + parsers[i].getName() + "`.").queue();
+            }
+
             arguments[i + 1] = obj;
         }
 
@@ -75,12 +99,12 @@ public class MethodCursor implements Cursor {
     }
 
     @Override
-    public void add(String key, Cursor cursor) {
+    public void add(String key, Template template) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<String, Cursor> getCursors() {
+    public Map<String, Template> getCursors() {
         return Collections.emptyMap();
     }
 }

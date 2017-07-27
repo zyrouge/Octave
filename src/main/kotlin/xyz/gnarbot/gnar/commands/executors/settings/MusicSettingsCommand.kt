@@ -20,7 +20,7 @@ import xyz.gnarbot.gnar.utils.ln
 )
 class MusicSettingsCommand : CommandTemplate() {
     @Executor(0, description = "Toggle music announcement.")
-    fun announcements(context: Context) {
+    fun toggle_announcements(context: Context) {
         if (context.guildOptions.isAnnounce) {
             context.guildOptions.isAnnounce = false
             context.guildOptions.save()
@@ -43,7 +43,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(1, description = "Add voice channels that Gnar can play music in.")
-    fun addMusicChannel(context: Context, channel: VoiceChannel) {
+    fun music_channel_add(context: Context, channel: VoiceChannel) {
         if (channel.id in context.guildOptions.musicChannels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
             return
@@ -65,7 +65,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(2, description = "Remove voice channels that Gnar can play music in.")
-    fun removeMusicChannel(context: Context, channel: VoiceChannel) {
+    fun music_channel_remove(context: Context, channel: VoiceChannel) {
         if (channel.id !in context.guildOptions.musicChannels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
             return
@@ -82,7 +82,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(3, description = "Set the DJ-role.")
-    fun setDJRole(context: Context, role: Role) {
+    fun dj_set(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
             context.send().error("You can't set the public role as the DJ role!").queue()
             return
@@ -109,7 +109,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(4, description = "Unset the DJ-role.")
-    fun unsetDJRole(context: Context) {
+    fun dj_unset(context: Context) {
         if (context.guildOptions.djRole == null) {
             context.send().error("This guild doesn't have an DJ-role.").queue()
             return

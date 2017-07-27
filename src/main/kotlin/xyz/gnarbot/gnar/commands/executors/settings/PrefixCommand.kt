@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
         id = 56,
         aliases = arrayOf("prefix"),
         usage = "(set|reset) [string]",
-        description = "Set the prefix of the bot. Default prefix will still be valid however.",
+        description = "Set the bot prefix for the server.",
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
@@ -58,8 +58,9 @@ class PrefixCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun noMatches(context: Context, args: Array<String>) {
-        noMatches(context, args, buildString {
+    override fun helpMessage(context: Context, args: Array<String>) {
+        helpMessage(context, args, null, buildString {
+            append("Default prefix will still be valid.\n")
             val prefix = context.guildOptions.prefix
             append("Current prefix: `").append(prefix).append('`')
         })

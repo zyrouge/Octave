@@ -11,20 +11,19 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Parser<T> {
-    public static final Parser<String> STRING = new Parser<String>("(string)") {
+    public static final Parser<String> STRING = new Parser<String>("(string)", "Plain text") {
         @Override
         public String parse(Context c, String s) {
             return s;
         }
     };
-    public static final Parser<Integer> INTEGER = new Parser<Integer>("(integer)") {
+    public static final Parser<Integer> INTEGER = new Parser<Integer>("(integer)", "Integer number") {
         private final Pattern pattern = Pattern.compile("\\d+");
 
         @Override
@@ -33,7 +32,7 @@ public abstract class Parser<T> {
             return matcher.find() ? Integer.valueOf(s) : null;
         }
     };
-    public static final Parser<Member> MEMBER = new Parser<Member>("(@user)") {
+    public static final Parser<Member> MEMBER = new Parser<Member>("(@user)", "User mention or name") {
         private final Pattern pattern = Pattern.compile("<@!?(\\d+)>");
 
         @Override
@@ -47,7 +46,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<TextChannel> TEXT_CHANNEL = new Parser<TextChannel>("(#channel)") {
+    public static final Parser<TextChannel> TEXT_CHANNEL = new Parser<TextChannel>("(#channel)", "Channel mention or name") {
         private final Pattern pattern = Pattern.compile("<#(\\d+)>");
 
         @Override
@@ -61,14 +60,14 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<VoiceChannel>("(voice channel)") {
+    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<VoiceChannel>("(voice channel)", "Voice channel name") {
         @Override
         public VoiceChannel parse(Context c, String s) {
             List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
             return list.isEmpty() ? null : list.get(0);
         }
     };
-    public static final Parser<Role> ROLE = new Parser<Role>("(@role)") {
+    public static final Parser<Role> ROLE = new Parser<Role>("(@role)", "Role mention or name") {
         private final Pattern pattern = Pattern.compile("<@&(\\d+)>");
 
         @Override
@@ -82,7 +81,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(_command)") {
+    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(_command)", "Command label") {
         @Override
         public CommandExecutor parse(Context c, String s) {
             if (s.startsWith("_")) {
@@ -92,7 +91,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<Category> CATEGORY = new Parser<Category>("([category])") {
+    public static final Parser<Category> CATEGORY = new Parser<Category>("([category])", "Command category enclosed in brackets") {
         private final Pattern pattern = Pattern.compile("\\[(\\w+)]");
 
         @Override
@@ -108,7 +107,7 @@ public abstract class Parser<T> {
             return null;
         }
     };
-    public static final Parser<Duration> DURATION = new Parser<Duration>("(time hh:mm:ss)") {
+    public static final Parser<Duration> DURATION = new Parser<Duration>("(time hh:mm:ss)", "Timestamp") {
         private final Pattern pattern = Pattern.compile("^(\\d+)(?::(\\d+))?(?::(\\d+))?$");
 
         @Override
@@ -153,32 +152,19 @@ public abstract class Parser<T> {
     };
 
     private final String name;
+    private final String description;
 
-    private Parser(String name) {
+    private Parser(String name, String description) {
         this.name = name;
-    }
-
-    public static Parser<String> of(String keyword) {
-        return new Parser<String>(keyword) {
-            @Override
-            public String parse(Context c, String s) {
-                return s.equals(keyword) ? s : null;
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return obj instanceof Parser && keyword.equals(((Parser) obj).name);
-            }
-
-            @Override
-            public int hashCode() {
-                return Arrays.hashCode(new String[] {"Parser_s=", keyword});
-            }
-        };
+        this.description = description;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String toString() {

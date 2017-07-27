@@ -4,8 +4,8 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.template.CommandTemplate;
 import xyz.gnarbot.gnar.commands.template.Executor;
-import xyz.gnarbot.gnar.commands.template.rewrite.CommandCursor;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(
@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.Context;
         category = Category.NONE,
         permissions = Permission.ADMINISTRATOR
 )
-public class TestCommand extends CommandCursor {
+public class TestCommand extends CommandTemplate {
     @Executor(value = 0, description = "kode is a meme")
     public void test(Context context) {
         System.out.println("meme");
