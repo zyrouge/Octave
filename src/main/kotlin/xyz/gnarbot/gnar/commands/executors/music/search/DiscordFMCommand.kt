@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
+import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -49,12 +50,24 @@ class DiscordFMCommand : CommandExecutor() {
 
         val query = args.joinToString(" ").toLowerCase()
 
-        val library = DiscordFM.LIBRARIES.firstOrNull { it.contains(query) }
+        var library = DiscordFM.LIBRARIES.firstOrNull { it.contains(query) }
 
-        if (library == null) {
+        if (library.isNullOrBlank()) { //Time to guess what you meant
+            var distance = 500
+            DiscordFM.LIBRARIES.forEach{
+                if(StringUtils.getLevenshteinDistance(it, query)<distance) {
+                    distance = StringUtils.getLevenshteinDistance(it, query)
+                    library = it
+                }
+            }
+        }
+
+        if(library.isNullOrBlank()) {
             context.send().error("Library $query doesn't exist. Available stations: `${DiscordFM.LIBRARIES.contentToString()}`.").queue()
             return
         }
+
+        System.out.println(library)
 
         val manager = try {
             Bot.getPlayers().get(context.guild)
@@ -63,12 +76,12 @@ class DiscordFMCommand : CommandExecutor() {
             return
         }
 
-        DiscordFMTrackContext(query, context.user.idLong, context.channel.idLong).let {
+        DiscordFMTrackContext(library!!, context.user.idLong, context.channel.idLong).let {
             manager.discordFMTrack = it
             manager.loadAndPlay(context,
                     DiscordFM.getRandomSong(library),
                     it,
-                    "Now streaming random tracks from the ${library.capitalize()} Discord.FM station!"
+                    "Now streaming random tracks from the ${library} Discord.FM station!"
             )
         }
     }

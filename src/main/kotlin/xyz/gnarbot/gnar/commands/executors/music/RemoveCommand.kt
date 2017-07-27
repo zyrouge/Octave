@@ -15,8 +15,7 @@ import java.util.*
         description = "Remove a song from the queue.",
         usage = "(first|last|#)",
         category = Category.MUSIC,
-        scope = Scope.VOICE,
-        donor = true
+        scope = Scope.VOICE
 )
 class RemoveCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
