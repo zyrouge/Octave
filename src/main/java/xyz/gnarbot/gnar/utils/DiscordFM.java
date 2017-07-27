@@ -53,11 +53,10 @@ public class DiscordFM {
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     ResponseBody body = response.body();
                     if (body != null) {
-                        List<String> strings = Arrays.stream(body.string().split("\n"))
+                        cache.put(lib, Arrays.stream(body.string().split("\n"))
                                 .parallel()
                                 .filter(s -> s.startsWith("https://")) // make sure hte line starts with a valid link
-                                .collect(Collectors.toList());
-                        cache.put(lib, strings);
+                                .collect(Collectors.toList()));
                     }
                 }
             });

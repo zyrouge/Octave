@@ -70,7 +70,7 @@ class DiscordFMCommand : CommandExecutor() {
         // classic -> classical
         var library = DiscordFM.LIBRARIES.firstOrNull { it.contains(query) }
 
-        if (library.isNullOrBlank()) {
+        if (library == null) {
             var maxDistance = 10
             DiscordFM.LIBRARIES.forEach {
                 val distance = StringUtils.getLevenshteinDistance(it, query)
