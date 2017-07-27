@@ -5,6 +5,7 @@ import gnu.trove.iterator.TLongObjectIterator;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.*;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -14,10 +15,17 @@ import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
 import xyz.gnarbot.gnar.music.MusicManager;
+import xyz.gnarbot.gnar.utils.DiscordLogBack;
 
 import java.util.concurrent.TimeUnit;
 
 public class BotListener extends ListenerAdapter {
+
+    @Override
+    public void onGuildJoin(GuildJoinEvent event) {
+        Bot.LOG.info("[✅] Joined " + event.getGuild().getName());
+    }
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
@@ -67,6 +75,7 @@ public class BotListener extends ListenerAdapter {
         if (Bot.STATE == LoadState.COMPLETE) {
             Bot.getPlayers().destroy(event.getGuild());
         }
+        Bot.LOG.info("[❌] Left " + event.getGuild().getName());
     }
 
     @Override

@@ -67,8 +67,6 @@ class DiscordFMCommand : CommandExecutor() {
             return
         }
 
-        System.out.println(library)
-
         val manager = try {
             Bot.getPlayers().get(context.guild)
         } catch (e: MusicLimitException) {
