@@ -9,7 +9,6 @@ import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent
 import xyz.gnarbot.gnar.utils.embed
-import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
@@ -53,9 +52,9 @@ class Selector(waiter: EventWaiter,
             color { channel.guild.selfMember.color }
             description {
                 buildString {
-                    append(description).ln().ln()
+                    append(description).append('\n').append('\n')
                     options.forEachIndexed { index, (name) ->
-                        append("${'\u0030' + index}\u20E3 $name").ln()
+                        append("${'\u0030' + index}\u20E3 $name\n")
                     }
                 }
             }

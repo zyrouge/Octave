@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.core.requests.RestAction
 import xyz.gnarbot.gnar.utils.embed
-import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
@@ -145,10 +144,10 @@ class Paginator(waiter: EventWaiter,
             val items = list[pageNum - 1]
             desc {
                 buildString {
-                    description?.let { append(it).ln().ln() }
+                    description?.let { append(it).append('\n').append('\n') }
                     items.forEachIndexed { index, s ->
                         append('`').append(index + 1 + (pageNum - 1) * list[0].size).append("` ")
-                        append(s).ln()
+                        append(s).append('\n')
                     }
                 }
             }

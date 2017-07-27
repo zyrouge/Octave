@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.executors.music.embedUri
 import xyz.gnarbot.gnar.utils.respond
 import java.util.*
 
@@ -32,7 +33,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
     fun nextTrack() {
         if (queue.isEmpty()) {
             musicManager.discordFMTrack?.let {
-                it.loadRandomTrack(musicManager)
+                it.nextDiscordFMTrack(musicManager)
                 return
             }
 
@@ -90,7 +91,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
                 desc {
                     buildString {
                         append("Now playing __**[").append(track.info.title)
-                        append("](").append(track.info.uri).append(")**__")
+                        append("](").append(track.info.embedUri).append(")**__")
 
                         track.getUserData(TrackContext::class.java)?.requester?.let(musicManager.guild::getMemberById)?.let {
                             append(" requested by ")

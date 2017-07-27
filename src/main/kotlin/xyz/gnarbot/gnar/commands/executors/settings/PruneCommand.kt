@@ -1,12 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 import java.time.OffsetDateTime
 
 @Command(
@@ -21,14 +17,7 @@ import java.time.OffsetDateTime
 class PruneCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().embed("Prune Messages") {
-                desc { info.description }
-                field("Options") {
-                    buildString {
-                        append("`(amount)` • Delete that amount of messages (up to 100).").ln()
-                    }
-                }
-            }.action().queue()
+            CommandDispatcher.sendHelp(context, info)
             return
         }
 

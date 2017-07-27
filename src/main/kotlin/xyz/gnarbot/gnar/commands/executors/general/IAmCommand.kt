@@ -5,7 +5,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 45,
@@ -64,7 +63,7 @@ class IAmCommand : CommandTemplate() {
                         context.guildOptions.selfRoles.map {
                             context.guild.getRoleById(it)
                         }.filterNotNull().forEach {
-                            append("• ").append(it.asMention).ln()
+                            append("• ").append(it.asMention).append('\n')
                         }
                     }
                 }

@@ -24,9 +24,9 @@ import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.executors.music.embedUri
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.ResponseBuilder
-import xyz.gnarbot.gnar.utils.ln
 import java.util.concurrent.TimeUnit
 
 class MusicManager(val guild: Guild) {
@@ -217,7 +217,7 @@ class MusicManager(val guild: Guild) {
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    desc { "Added __**[${track.info.title}](${track.info.uri})**__ to queue." }
+                    desc { "Added __**[${track.info.title}](${track.info.embedUri})**__ to queue." }
                     footer { footnote }
                 }.action().queue()
             }
@@ -263,7 +263,7 @@ class MusicManager(val guild: Guild) {
                 context.send().embed("Music Queue") {
                     desc {
                         buildString {
-                            append("Added `$added` tracks to queue from playlist `${playlist.name}`.").ln()
+                            append("Added `$added` tracks to queue from playlist `${playlist.name}`.\n")
                             if (ignored > 0) {
                                 append("Ignored `$ignored` songs as the queue can not exceed `${Bot.CONFIG.queueLimit}` songs.")
                             }

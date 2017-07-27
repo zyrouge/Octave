@@ -10,7 +10,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 53,
@@ -116,7 +115,7 @@ class IgnoreCommand : CommandTemplate() {
                         it.map(context.guild::getMemberById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }
@@ -130,7 +129,7 @@ class IgnoreCommand : CommandTemplate() {
                         it.map(context.guild::getTextChannelById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }
@@ -144,7 +143,7 @@ class IgnoreCommand : CommandTemplate() {
                         it.map(context.guild::getRoleById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }

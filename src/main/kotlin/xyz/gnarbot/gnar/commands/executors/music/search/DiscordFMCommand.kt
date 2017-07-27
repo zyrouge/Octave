@@ -23,7 +23,23 @@ import xyz.gnarbot.gnar.utils.DiscordFM
 class DiscordFMCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().error("No station was supplied. Available stations: `${DiscordFM.LIBRARIES.contentToString()}`.").queue()
+            context.send().embed("Discord FM") {
+                desc {
+                    buildString {
+                        append("Stream random songs from DiscordFM stations!\n")
+                        append("Select and stream a station using `_dfm (station name)`.\n")
+                        append("Stop streaming songs from a station with `_dfm stop`,")
+                    }
+                }
+
+                field("Available Stations") {
+                    buildString {
+                        DiscordFM.LIBRARIES.forEach {
+                            append("• `").append(it.capitalize()).append("`\n")
+                        }
+                    }
+                }
+            }
             return
         }
 
@@ -37,32 +53,35 @@ class DiscordFMCommand : CommandExecutor() {
 
             if (manager.discordFMTrack == null) {
                 context.send().error("I'm not streaming random songs from a Discord.FM station.")
-            } else {
-                val station = manager.discordFMTrack!!.station.capitalize()
-                manager.discordFMTrack = null
-
-                context.send().embed("Discord.FM") {
-                    desc { "No longer streaming random songs from the `$station` station." }
-                }.action().queue()
+                return
             }
-            return
+
+            val station = manager.discordFMTrack!!.station.capitalize()
+            manager.discordFMTrack = null
+
+            context.send().embed("Discord.FM") {
+                desc { "No longer streaming random songs from the `$station` station." }
+            }.action().queue()
         }
 
         val query = args.joinToString(" ").toLowerCase()
 
+        // quick check for incomplete query
+        // classic -> classical
         var library = DiscordFM.LIBRARIES.firstOrNull { it.contains(query) }
 
-        if (library.isNullOrBlank()) { //Time to guess what you meant
-            var distance = 500
-            DiscordFM.LIBRARIES.forEach{
-                if(StringUtils.getLevenshteinDistance(it, query)<distance) {
-                    distance = StringUtils.getLevenshteinDistance(it, query)
+        if (library.isNullOrBlank()) {
+            var maxDistance = 10
+            DiscordFM.LIBRARIES.forEach {
+                val distance = StringUtils.getLevenshteinDistance(it, query)
+                if (distance < maxDistance) {
+                    maxDistance = distance
                     library = it
                 }
             }
         }
 
-        if(library.isNullOrBlank()) {
+        if (library == null) {
             context.send().error("Library $query doesn't exist. Available stations: `${DiscordFM.LIBRARIES.contentToString()}`.").queue()
             return
         }
@@ -79,7 +98,7 @@ class DiscordFMCommand : CommandExecutor() {
             manager.loadAndPlay(context,
                     DiscordFM.getRandomSong(library),
                     it,
-                    "Now streaming random tracks from the ${library} Discord.FM station!"
+                    "Now streaming random tracks from the `$library` Discord.FM station!"
             )
         }
     }

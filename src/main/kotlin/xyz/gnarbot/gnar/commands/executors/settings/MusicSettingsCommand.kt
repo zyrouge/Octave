@@ -9,7 +9,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 55,
@@ -131,7 +130,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.send().embed("Music Settings") {
             field("Channel") {
                 buildString {
-                    append("If this is not empty, Gnar will only play music in these voice channels.").ln().ln()
+                    append("If this is not empty, Gnar will only play music in these voice channels.\n\n")
                     context.guildOptions.musicChannels.let {
                         if (it.isEmpty()) {
                             append("None.")
@@ -140,13 +139,13 @@ class MusicSettingsCommand : CommandTemplate() {
                         it.map(context.guild::getVoiceChannelById)
                                 .filterNotNull()
                                 .map(Channel::getName)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }
             field("DJ Role") {
                 buildString {
-                    append("If this role is set, anyone with this role will bypass music permission requirements.").ln().ln()
+                    append("If this role is set, anyone with this role will bypass music permission requirements.\n\n")
                     append(context.guildOptions.djRole?.let { context.guild.getRoleById(it) }?.asMention ?: "None")
                 }
             }

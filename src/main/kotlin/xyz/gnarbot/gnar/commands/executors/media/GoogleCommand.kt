@@ -7,9 +7,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.b
-import xyz.gnarbot.gnar.utils.link
-import xyz.gnarbot.gnar.utils.ln
 import java.io.IOException
 
 @Command(
@@ -64,7 +61,7 @@ class GoogleCommand : CommandExecutor() {
                             val st = block.select(".st")
                             if (!st.isEmpty()) desc = st[0].text()
 
-                            append(b(title link url1)).ln().append(desc).ln()
+                            append("**[$title]($url1)**\n").append('\n').append(desc).append('\n')
 
                             count++
                         }

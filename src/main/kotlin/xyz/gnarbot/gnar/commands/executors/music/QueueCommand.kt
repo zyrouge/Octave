@@ -44,7 +44,7 @@ class QueueCommand : CommandExecutor() {
 
                         append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
                         append(track.info.title)
-                        append("](").append(track.info.uri).append(")__")
+                        append("](").append(track.info.embedUri).append(")__")
                     }
                 }
 
@@ -56,7 +56,7 @@ class QueueCommand : CommandExecutor() {
                 if (track == null) {
                     "Nothing"
                 } else {
-                    "**[${track.info.title}](${track.info.uri})**"
+                    "**[${track.info.title}](${track.info.embedUri})**"
                 }
             }
 

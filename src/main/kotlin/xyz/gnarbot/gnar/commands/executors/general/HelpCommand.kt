@@ -7,7 +7,6 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.template.Parser
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 44,
@@ -35,7 +34,7 @@ class HelpCommand : CommandExecutor() {
                                 append('`')
                                 append(it.info.aliases.first())
                                 append("` • ")
-                                append(it.info.description).ln()
+                                append(it.info.description).append('\n')
                             }
                         }
                     }
@@ -70,8 +69,8 @@ class HelpCommand : CommandExecutor() {
         context.send().embed("Guides") {
             desc {
                 buildString {
-                    append("The prefix of the bot on this server is `").append(context.guildOptions.prefix).append("`.").ln()
-                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**").ln()
+                    append("The prefix of the bot on this server is `").append(context.guildOptions.prefix).append("`.\n")
+                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
                 }
             }
 

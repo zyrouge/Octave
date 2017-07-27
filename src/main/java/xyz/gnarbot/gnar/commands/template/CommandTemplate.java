@@ -26,8 +26,8 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
         }));
         for (Method method : methods) {
             if (!method.isAnnotationPresent(Executor.class)) continue;
-            if (method.getParameters()[0].getType() != Context.class) {
-                throw new RuntimeException("?");
+            if (method.getParameterCount() == 0 || method.getParameters()[0].getType() != Context.class) {
+                throw new RuntimeException("First argument of " + method + " must be Context");
             }
 
             String[] parts = method.getName().split("_");

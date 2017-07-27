@@ -5,7 +5,6 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 import java.lang.management.ManagementFactory
 
 @Command(
@@ -60,16 +59,16 @@ class BotInfoCommand : CommandExecutor() {
 
             field("General", true) {
                 buildString {
-                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**").ln()
-                    append("Commands: **$commandSize**").ln()
-                    append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**").ln()
+                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
+                    append("Commands: **$commandSize**\n")
+                    append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**\n")
                 }
             }
             field("Credits", true) {
                 buildString {
-                    append("The Serious: **[Avarel](https://github.com/Avarel)**").ln()
-                    append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**").ln()
-                    append("Contributor: **[Gatt](https://github.com/RealGatt)**").ln()
+                    append("The Serious: **[Avarel](https://github.com/Avarel)**\n")
+                    append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**\n")
+                    append("Contributor: **[Gatt](https://github.com/RealGatt)**\n")
                 }
             }
         }.action().queue()

@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.general
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 43,
@@ -15,9 +14,9 @@ class DonateCommand : CommandExecutor() {
         context.send().embed("Donations") {
             desc {
                 buildString {
-                    append("Want to donate to support Gnar?").ln()
-                    append("**[PayPal](https://gnarbot.xyz/donate)**").ln()
-                    append("**[Patreon](https://www.patreon.com/gnarbot)**").ln()
+                    append("Want to donate to support Gnar?\n")
+                    append("**[PayPal](https://gnarbot.xyz/donate)**\n")
+                    append("**[Patreon](https://www.patreon.com/gnarbot)**\n")
                 }
             }
         }.action().queue()

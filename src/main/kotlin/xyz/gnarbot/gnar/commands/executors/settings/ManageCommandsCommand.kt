@@ -13,7 +13,6 @@ import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Executor
 import xyz.gnarbot.gnar.guilds.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
 
 @Command(
         id = 54,
@@ -310,7 +309,7 @@ class ManageCommandsCommand : CommandTemplate() {
                         it.map(context.guild::getMemberById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }
@@ -325,7 +324,7 @@ class ManageCommandsCommand : CommandTemplate() {
                         it.map(context.guild::getRoleById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }
@@ -340,7 +339,7 @@ class ManageCommandsCommand : CommandTemplate() {
                         it.map(context.guild::getTextChannelById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
-                                .forEach { append("• ").append(it).ln() }
+                                .forEach { append("• ").append(it).append('\n') }
                     }
                 }
             }

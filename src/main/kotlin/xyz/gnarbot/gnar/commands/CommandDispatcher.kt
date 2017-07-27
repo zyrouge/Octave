@@ -12,7 +12,6 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.guilds.GuildOptions
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.ln
 import java.awt.Color
 
 object CommandDispatcher {
@@ -134,9 +133,11 @@ object CommandDispatcher {
                 color { Color.ORANGE }
                 desc {
                     buildString {
-                        append("🌟 This command is for donators' servers only.").ln()
-                        append("In order to enjoy donator perks, please consider pledging to __**[our Patreon.](https://www.patreon.com/gnarbot)**__").ln()
-                        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ and ask one of the owners.")
+                        append("🌟 This command is for donators' servers only.\n")
+                        append("In order to enjoy donator perks, please consider pledging to ")
+                        append("__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n")
+                        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ ")
+                        append("and ask one of the owners.")
                     }
                 }
             }.action().queue()

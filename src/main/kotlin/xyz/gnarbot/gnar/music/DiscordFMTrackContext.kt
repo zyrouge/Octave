@@ -12,7 +12,7 @@ class DiscordFMTrackContext(
         requester: Long,
         requestedChannel: Long
 ) : TrackContext(requester, requestedChannel) {
-    fun loadRandomTrack(musicManager: MusicManager) {
+    fun nextDiscordFMTrack(musicManager: MusicManager) {
         val randomSong = DiscordFM.getRandomSong(station) ?: return
 
         MusicManager.playerManager.loadItemOrdered(this, randomSong, object : AudioLoadResultHandler {
