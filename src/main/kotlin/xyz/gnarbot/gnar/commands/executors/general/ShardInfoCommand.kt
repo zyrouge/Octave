@@ -6,42 +6,36 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ln
+import java.util.*
 
 @Command(
         id = 48,
         aliases = arrayOf("shards", "shard", "shardinfo"),
         description = "Get shard information.",
+        admin = true,
         category = Category.NONE
 )
 class ShardInfoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        var page = if (args.isNotEmpty()) {
-            args[0].toIntOrNull() ?: 1
-        } else {
-            1
-        }
+        context.send().text("```prolog\n ID |    STATUS |    PING | GUILDS |  USERS | REQUESTS\n```").queue()
 
-        context.send().embed("Shard Information") {
-            val pages = Lists.partition(Bot.getShards().toList(), 12)
+        Lists.partition(Bot.getShards().toList(), 20).forEach {
+            val joiner = StringJoiner("\n", "```prolog\n", "```")
 
-            if (page >= pages.size) page = pages.size
-            else if (page <= 0) page = 1
-
-            val shards = pages[page - 1]
-
-            shards.forEach {
-                field("Shard ${it.id}", true) {
-                    buildString {
-                        append("Status: ").append(it.jda.status).ln()
-                        append("Guilds: ").append(it.jda.guilds.size).ln()
-                        append("Users: ").append(it.jda.users.size).ln()
-                        append("Requests: ").append(it.requests).ln()
-                    }
-                }
+            it.forEach {
+                joiner.add(
+                        "%3d | %9s | %7s | %6d | %6d | %8d".format(
+                                it.id,
+                                it.jda.status,
+                                "${it.jda.ping}ms",
+                                it.jda.guilds.size,
+                                it.jda.users.size,
+                                it.requests
+                        )
+                )
             }
 
-            setFooter("Page [$page/${pages.size}]", null)
-        }.action().queue()
+            context.send().text(joiner.toString()).queue()
+        }
     }
 }

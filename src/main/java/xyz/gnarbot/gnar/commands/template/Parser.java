@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -81,7 +82,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(command)") {
+    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(_command)") {
         @Override
         public CommandExecutor parse(Context c, String s) {
             if (s.startsWith("_")) {
@@ -162,6 +163,16 @@ public abstract class Parser<T> {
             @Override
             public String parse(Context c, String s) {
                 return s.equals(keyword) ? s : null;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return obj instanceof Parser && keyword.equals(((Parser) obj).name);
+            }
+
+            @Override
+            public int hashCode() {
+                return Arrays.hashCode(new String[] {"Parser_s=", keyword});
             }
         };
     }

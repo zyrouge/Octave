@@ -55,7 +55,6 @@ class RepeatCommand : CommandExecutor() {
                     RepeatOption.QUEUE -> "\uD83D\uDD01"
                     RepeatOption.SONG -> "\uD83D\uDD02"
                     RepeatOption.NONE -> "\u274C"
-                    else -> "\u2753"
                 } + " Music player was set to __**${manager.scheduler.repeatOption}**__."
             }
         }.action().queue()
