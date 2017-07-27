@@ -8,6 +8,7 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -77,7 +78,7 @@ public class MethodTemplate implements Template {
             String str;
 
             if (i == method.getParameterCount() - 2) {
-                str = StringUtils.join(args, ' ');
+                str = StringUtils.join(Arrays.copyOfRange(args, i, args.length), ' ');
             } else {
                 str = args[i];
             }
@@ -85,7 +86,8 @@ public class MethodTemplate implements Template {
             Object obj = parsers[i].parse(context, str);
 
             if (obj == null) {
-                context.send().error("`" + str + "` did not match `" + parsers[i].getName() + "`.").queue();
+                context.send().error("`" + str + "` does not match `" + parsers[i].getName() + "`.").queue();
+                return;
             }
 
             arguments[i + 1] = obj;

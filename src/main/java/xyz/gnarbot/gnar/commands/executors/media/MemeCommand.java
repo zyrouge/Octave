@@ -23,7 +23,7 @@ import java.util.TreeMap;
 
 @Command(
         id = 28,
-        aliases = "meme",
+        aliases = {"meme", "memes"},
         usage = "(meme name) | (top text) | (bottom text)",
         description = "Create the dankest memes ever.",
         category = Category.MEDIA

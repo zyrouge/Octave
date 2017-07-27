@@ -101,6 +101,7 @@ public class CommandRegistry {
         //Media Commands
         register(new AnimeSearchCommand());
         register(new MangaSearchCommand());
+        register(new MemeCommand());
         register(new TrumpCommand());
         register(new CatsCommand());
         register(new ExplosmCommand());
