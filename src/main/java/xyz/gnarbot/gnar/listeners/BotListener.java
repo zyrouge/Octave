@@ -17,15 +17,17 @@ import xyz.gnarbot.gnar.guilds.GuildOptions;
 import xyz.gnarbot.gnar.music.MusicManager;
 
 import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        // checks if the bot joined from 1 minute ago to now, prevents massive discord spam
-        long oneMinuteAgo = OffsetDateTime.now().minus(1, ChronoUnit.MINUTES).toEpochSecond();
-        if (event.getGuild().getSelfMember().getJoinDate().toEpochSecond() > oneMinuteAgo) {
+        if (Bot.STATE == LoadState.COMPLETE) {
+            // checks if the bot joined from 1 minute ago to now, prevents massive discord spam
+            if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
+                return;
+            }
+
             Bot.LOG.info("✅ Joined `" + event.getGuild().getName() + "`");
         }
     }

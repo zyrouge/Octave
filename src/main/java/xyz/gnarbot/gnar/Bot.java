@@ -4,9 +4,6 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
@@ -16,10 +13,12 @@ import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listener.VoiceListener;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
-import xyz.gnarbot.gnar.utils.*;
+import xyz.gnarbot.gnar.utils.DiscordFM;
+import xyz.gnarbot.gnar.utils.DiscordLogBack;
+import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
+import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -52,7 +51,7 @@ public final class Bot {
 
     public static LoadState STATE = LoadState.LOADING;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         SimpleLogToSLF4JAdapter.install();
         DiscordLogBack.enable();
 
@@ -76,6 +75,7 @@ public final class Bot {
             Shard shard = new Shard(i);
             shards.add(shard);
             shard.build();
+            Thread.sleep(5000);
         }
 
         STATE = LoadState.COMPLETE;

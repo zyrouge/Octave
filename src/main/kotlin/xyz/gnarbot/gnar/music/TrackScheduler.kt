@@ -74,6 +74,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
                 .respond()
                 .error("The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold.")
                 .queue()
+        nextTrack()
     }
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
@@ -84,6 +85,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
                         "Severity: ${exception.severity}\n" +
                         "Details: ${exception.message}"
                 ).queue()
+        nextTrack()
     }
 
     fun announceNext(track: AudioTrack) {

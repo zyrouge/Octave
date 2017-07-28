@@ -39,7 +39,7 @@ class DiscordFMCommand : CommandExecutor() {
                         }
                     }
                 }
-            }
+            }.action().queue()
             return
         }
 
@@ -52,7 +52,7 @@ class DiscordFMCommand : CommandExecutor() {
             }
 
             if (manager.discordFMTrack == null) {
-                context.send().error("I'm not streaming random songs from a Discord.FM station.")
+                context.send().error("I'm not streaming random songs from a Discord.FM station.").queue()
                 return
             }
 

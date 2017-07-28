@@ -59,7 +59,7 @@ class VoiceListener : ListenerAdapter() {
                     return
                 }
 
-                if (event.channelJoined.id == event.guild.afkChannel.id) {
+                if (event.channelJoined?.id == event.guild.afkChannel?.id) {
                     Bot.getPlayers().destroy(event.guild.idLong)
                     return
                 }

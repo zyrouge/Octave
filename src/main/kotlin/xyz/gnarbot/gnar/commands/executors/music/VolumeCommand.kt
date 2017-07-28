@@ -57,8 +57,12 @@ class VolumeCommand : CommandExecutor() {
             return
         }
 
-        val amount = args[0].toDoubleOrNull()?.toInt()?.coerceIn(0, 150)
-                ?: return context.send().error("Volume must be an integer.").queue()
+        val amount = try {
+            args[0].toInt().coerceIn(0, 150)
+        } catch (e: NumberFormatException) {
+            context.send().error("Volume must be an integer.").queue()
+            return
+        }
 
         val old = manager.player.volume
 
