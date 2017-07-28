@@ -47,6 +47,7 @@ public class DiscordFM {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     call.cancel();
+                    e.printStackTrace();
                 }
 
                 @Override
