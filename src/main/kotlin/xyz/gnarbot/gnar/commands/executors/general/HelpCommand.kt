@@ -58,6 +58,7 @@ class HelpCommand : CommandExecutor() {
 
                     field("Description") { cmd.info.description }
                 }.action().queue()
+                return
             }
 
             context.send().error("There is no command or category named `$target`. :cry:").queue()

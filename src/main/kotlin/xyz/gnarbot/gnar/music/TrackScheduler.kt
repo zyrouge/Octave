@@ -70,22 +70,21 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
     }
 
     override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
-        musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
-                .respond()
-                .error("The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold.")
-                .queue()
-        nextTrack()
+        track.getUserData(TrackContext::class.java).requestedChannel.let {
+            musicManager.guild.getTextChannelById(it)
+        }.respond().error(
+                "The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold."
+        ).queue()
     }
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
-        musicManager.guild.getTextChannelById(track.getUserData(TrackContext::class.java).requestedChannel)
-                .respond()
-                .error(
-                        "The track ${track.info.embedTitle} encountered an exception.\n" +
-                        "Severity: ${exception.severity}\n" +
-                        "Details: ${exception.message}"
-                ).queue()
-        nextTrack()
+        track.getUserData(TrackContext::class.java).requestedChannel.let {
+            musicManager.guild.getTextChannelById(it)
+        }.respond().error(
+                "The track ${track.info.embedTitle} encountered an exception.\n" +
+                "Severity: ${exception.severity}\n" +
+                "Details: ${exception.message}"
+        ).queue()
     }
 
     fun announceNext(track: AudioTrack) {
