@@ -16,27 +16,30 @@ import java.util.Set;
 
 @JsonIgnoreProperties({"disabledCommands", "requestChannel"})
 public final class GuildOptions implements ManagedObject {
-    private final String id;
-    private String prefix;
+    private final String id; // PORT
+
+
+    String prefix; // PORT
+    boolean autoDelete = false; // PORT
 
     @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
-    private Map<Integer, CommandOptions> commandOptions;
+    Map<Integer, CommandOptions> commandOptions; // PORT
 
-    private Set<String> ignoredChannels;
-    private Set<String> ignoredUsers;
-    private Set<String> ignoredRoles;
+    Set<String> ignoredChannels; // PORTED
+    Set<String> ignoredUsers; // PORTED
+    Set<String> ignoredRoles; // PORTED
 
-    private String autoRole;
-    private Set<String> selfRoles;
+    String autoRole;
+    Set<String> selfRoles;
 
-    private String djRole;
-    private Set<String> musicChannels;
-    private int musicVolume = 100;
-    private boolean announce = true;
+    String djRole; // PORTED
+    Set<String> musicChannels; // PORTED
+    int musicVolume = 100; // PORTED
+    boolean announce = true; // PORTED
 
-    private boolean autoDelete = false;
 
-    private long premiumUntil;
+
+    private long premiumUntil; // PORTED
 
     @ConstructorProperties("id")
     public GuildOptions(String id) {

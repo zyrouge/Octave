@@ -5,11 +5,13 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.db.Key;
+import xyz.gnarbot.gnar.db.Redeemer;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.awt.*;
 import java.time.Instant;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Command(
         id = 21,
@@ -30,23 +32,23 @@ public class RedeemCommand extends CommandExecutor {
         Key key = Bot.DATABASE.getPremiumKey(id);
 
         if (key != null) {
-//            if (System.currentTimeMillis() > key.getExpiresBy()) {
-//                context.send().error("That code has expired.").queue();
-//                key.delete();
-//                return;
-//            }
             switch (key.getType()) {
                 case PREMIUM:
+                    key.setRedeemer(new Redeemer(Redeemer.Type.GUILD, context.getGuild().getId()));
+                    key.save();
+
                     context.getGuildOptions().addPremium(key.getDuration());
                     context.getGuildOptions().save();
-                    Bot.DATABASE.deleteKey(id);
+
                     context.send().embed("Premium Code")
                             .setColor(Color.ORANGE)
                             .setDescription("Redeemed key `" + key + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getGuildOptions().getPremiumUntil())) + "`.")
-                            .field("Donator Perks", true, () ->
-                                    " • `volume` Change the volume of the music player!\n"
-                                            + " • `seek` Change the music player's position marker!\n")
+                            .field("Donator Perks", true,  new StringJoiner("\n")
+                                    .add("• `volume` Change the volume of the music player!")
+                                    .add("• First access to new features.")
+                                    .add("• Use the music bot during maximum music capacity.")
+                            )
                             .action().queue();
                     break;
                 default:

@@ -18,7 +18,7 @@ class Credentials(file: File) {
 
     val token: String = config["token"].string.takeIf { !it.isNullOrBlank() } ?: error("Bot token can't be null or blank.")
 
-    val shards = kotlin.run {
+    val shards = config["shards"].int.takeIf { it != 0 } ?: let {
         val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
                 .header("Authorization", "Bot $token")
                 .header("Content-Type", "application/json")

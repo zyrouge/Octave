@@ -1,28 +1,40 @@
 package xyz.gnarbot.gnar.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import xyz.gnarbot.gnar.Bot;
 
 import java.beans.ConstructorProperties;
 
 public class Key implements ManagedObject {
+    public enum Type {
+        PREMIUM
+    }
+
     private final String id;
     private final long duration;
-    private final long expiresBy;
-    private final KeyType type;
+    private final Type type;
+    private Redeemer redeemer;
 
-    @ConstructorProperties({"id", "type", "duration", "expiresBy"})
-    public Key(String id, KeyType type, long duration, long expiresBy) {
+    @JsonIgnoreProperties("expiresBy")
+    @ConstructorProperties({"id", "type", "duration"})
+    public Key(String id, Type type, long duration) {
+        this(id, type, duration, null);
+    }
+
+    @JsonIgnoreProperties("expiresBy")
+    @ConstructorProperties({"id", "type", "duration", "redeemer"})
+    public Key(String id, Type type, long duration, Redeemer redeemer) {
         this.id = id;
         this.type = type;
         this.duration = duration;
-        this.expiresBy = expiresBy;
+        this.redeemer = redeemer;
     }
 
     public String getId() {
         return id;
     }
 
-    public KeyType getType() {
+    public Type getType() {
         return type;
     }
 
@@ -30,13 +42,17 @@ public class Key implements ManagedObject {
         return duration;
     }
 
-    public long getExpiresBy() {
-        return expiresBy;
+    public void setRedeemer(Redeemer redeemer) {
+        this.redeemer = redeemer;
+    }
+
+    public Redeemer getRedeemer() {
+        return redeemer;
     }
 
     @Override
     public String toString() {
-        return id;
+        return type + "(" + id + ", " + duration + ")";
     }
 
     @Override

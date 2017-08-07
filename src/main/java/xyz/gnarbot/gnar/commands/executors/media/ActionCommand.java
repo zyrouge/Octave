@@ -1,11 +1,18 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.apache.http.client.utils.URIBuilder;
+import org.json.JSONObject;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.Utils;
+import xyz.gnarbot.gnar.utils.HttpUtils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 @Command(
@@ -38,6 +45,31 @@ public class ActionCommand extends CommandExecutor {
             return;
         }
 
-        context.send().embed().setImage(Utils.getRamMoeImage(action)).action().queue();
+        context.send().embed().setImage(getRamMoeImage(action)).action().queue();
+    }
+
+    private static String getRamMoeImage(String type) {
+        String url;
+        try {
+            url = new URIBuilder("https://rra.ram.moe/i/r").addParameter("type", type).toString();
+        } catch (URISyntaxException e) {
+            return null;
+        }
+
+        Request request = new Request.Builder()
+                .url(url)
+                .header("Accept", "application/json")
+                .build();
+
+        try (Response r = HttpUtils.CLIENT.newCall(request).execute()) {
+            ResponseBody body = r.body();
+            if (body == null) {
+                return null;
+            }
+
+            return "https://rra.ram.moe" + new JSONObject(body.string()).getString("path");
+        } catch (IOException e) {
+            return null;
+        }
     }
 }
