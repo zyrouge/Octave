@@ -14,10 +14,10 @@ public class PingCommand extends CommandExecutor {
     public void execute(Context context, String label, String[] args) {
         long time = System.currentTimeMillis();
 
-        context.send().text("Checking ping...").queue(msg -> {
+        context.getChannel().sendTyping().queue(ignored -> {
             long ping = System.currentTimeMillis() - time;
-            msg.editMessage("**Response Time**: " + ping + " ms\n"
-                    + "**Discord API**: " + context.getJDA().getPing() + " ms").queue();
+            context.getChannel().sendMessage("**Response Time**: " + ping + " ms\n"
+                    + "**Websocket**: " + context.getJDA().getPing() + " ms").queue();
         });
     }
 }
