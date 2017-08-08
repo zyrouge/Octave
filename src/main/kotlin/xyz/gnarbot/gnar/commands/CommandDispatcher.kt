@@ -165,10 +165,10 @@ object CommandDispatcher {
         }
 
         if (cmd.info.permissions.isNotEmpty()) {
-            val djRole = context.guildOptions.djRole?.let { context.guild.getRoleById(it) }
-            val isDJ = djRole !in member.roles
+            val djRole = context.guildOptions.djRole?.let(context.guild::getRoleById)
+            val isDJ = djRole in member.roles
 
-            if (cmd.info.scope != Scope.VOICE || !isDJ) {
+            if (!(cmd.info.scope == Scope.VOICE && isDJ)) {
                 if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
                     val requirements = cmd.info.permissions.map(Permission::getName)
                     context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {

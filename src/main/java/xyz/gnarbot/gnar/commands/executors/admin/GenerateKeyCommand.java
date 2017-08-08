@@ -5,11 +5,9 @@ import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.db.Key;
-import xyz.gnarbot.gnar.db.KeyType;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -44,9 +42,9 @@ public class GenerateKeyCommand extends CommandExecutor {
             num = 50;
         }
 
-        KeyType type;
+        Key.Type type;
         try {
-            type = KeyType.valueOf(args[1]);
+            type = Key.Type.valueOf(args[1]);
         } catch (IllegalArgumentException e) {
             context.send().error("That's not a valid key type.").queue();
             return;
@@ -59,11 +57,9 @@ public class GenerateKeyCommand extends CommandExecutor {
             return;
         }
 
-        long expiresBy = System.currentTimeMillis() + Duration.ofDays(365).toMillis();
-
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < num; i++) {
-            Key key = new Key(UUID.randomUUID().toString(), type, duration, expiresBy);
+            Key key = new Key(UUID.randomUUID().toString(), type, duration);
             builder.append(key.getId()).append('\n');
             key.save();
         }
