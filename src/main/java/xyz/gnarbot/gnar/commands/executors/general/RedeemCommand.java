@@ -29,7 +29,7 @@ public class RedeemCommand extends CommandExecutor {
 
         String id = args[0];
 
-        Key key = Bot.DATABASE.getPremiumKey(id);
+        Key key = Bot.db().getPremiumKey(id);
 
         if (key != null) {
             switch (key.getType()) {
@@ -37,13 +37,13 @@ public class RedeemCommand extends CommandExecutor {
                     key.setRedeemer(new Redeemer(Redeemer.Type.GUILD, context.getGuild().getId()));
                     key.save();
 
-                    context.getGuildOptions().addPremium(key.getDuration());
-                    context.getGuildOptions().save();
+                    context.getData().addPremiumKey(key.getId(), key.getDuration());
+                    context.getData().save();
 
                     context.send().embed("Premium Code")
                             .setColor(Color.ORANGE)
                             .setDescription("Redeemed key `" + key + "`. **Thank you for supporting the bot's development!**\n")
-                            .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getGuildOptions().getPremiumUntil())) + "`.")
+                            .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getData().getPremiumUntil())) + "`.")
                             .field("Donator Perks", true,  new StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")

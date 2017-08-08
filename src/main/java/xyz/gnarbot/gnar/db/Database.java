@@ -4,6 +4,7 @@ import com.rethinkdb.gen.exc.ReqlDriverError;
 import com.rethinkdb.net.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.guilds.GuildOptions;
 
 import javax.annotation.Nullable;
@@ -61,16 +62,36 @@ public class Database {
 //    }
 
     @Nullable
+    public GuildData getGuildData(String id) {
+        return isOpen() ? r.table("guilds_v2").get(id).run(conn, GuildData.class) : null;
+    }
+
+    public void saveGuildData(GuildData guildData) {
+        if (isOpen()) r.table("guilds_v2").insert(guildData)
+                .optArg("conflict", "replace")
+                .runNoReply(conn);
+    }
+
+    public void deleteGuildData(String id) {
+        if (isOpen()) r.table("guilds_v2").get(id)
+                .delete()
+                .runNoReply(conn);
+    }
+
+    @Nullable
+    @Deprecated
     public GuildOptions getGuildOptions(String id) {
         return isOpen() ? r.table("guilds").get(id).run(conn, GuildOptions.class) : null;
     }
 
+    @Deprecated
     public void saveGuildOptions(GuildOptions guildData) {
         if (isOpen()) r.table("guilds").insert(guildData)
                 .optArg("conflict", "replace")
                 .runNoReply(conn);
     }
 
+    @Deprecated
     public void deleteGuildOptions(String id) {
         if (isOpen()) r.table("guilds").get(id)
                 .delete()

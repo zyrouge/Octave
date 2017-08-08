@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.utils.Context
 class IAmCommand : CommandTemplate() {
     @Executor(0, description = "Assign yourself a self-role.")
     fun a(context: Context, role: Role) {
-        if (role.id !in context.guildOptions.selfRoles) {
+        if (role.id !in context.data.roles.selfRoles) {
             return context.send().error("${role.asMention} is not a self-assignable role.").queue()
         }
 
@@ -35,7 +35,7 @@ class IAmCommand : CommandTemplate() {
 
     @Executor(1, description = "Remove a self-role from yourself.")
     fun not(context: Context, role: Role) {
-        if (role.id !in context.guildOptions.selfRoles) {
+        if (role.id !in context.data.roles.selfRoles) {
             return context.send().error("${role.asMention} is not a self-assignable role.").queue()
         }
 
@@ -56,11 +56,11 @@ class IAmCommand : CommandTemplate() {
     fun list(context: Context) {
         context.send().embed("Self-Roles") {
             desc {
-                if (context.guildOptions.selfRoles.isEmpty()) {
+                if (context.data.roles.selfRoles.isEmpty()) {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
-                        context.guildOptions.selfRoles.map {
+                        context.data.roles.selfRoles.map {
                             context.guild.getRoleById(it)
                         }.filterNotNull().forEach {
                             append("• ").append(it.asMention).append('\n')

@@ -45,7 +45,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
         val track = queue.poll()
         player.startTrack(track, false)
 
-        if (Bot.getOptions().ofGuild(musicManager.guild).isAnnounce) {
+        if (Bot.getOptions().ofGuild(musicManager.guild).music.announce) {
             announceNext(track)
         }
     }

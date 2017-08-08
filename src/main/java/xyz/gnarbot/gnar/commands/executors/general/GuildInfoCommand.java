@@ -26,8 +26,8 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("Voice Channels", true, guild.getVoiceChannels().size())
                 .field("Members", true, guild.getMembers().size())
                 .field("Default Channel", true, guild.getPublicChannel().getAsMention())
-                .field("Premium", true, context.getGuildOptions().isPremium()
-                        ? "Premium status expires in `" + Utils.getTime(context.getGuildOptions().remainingPremium()) + "`."
+                .field("Premium", true, context.getData().isPremium()
+                        ? "Premium status expires in `" + Utils.getTime(context.getData().remainingPremium()) + "`."
                         : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/gnarbot)**__ to find out more.")
                 .action().queue();
     }

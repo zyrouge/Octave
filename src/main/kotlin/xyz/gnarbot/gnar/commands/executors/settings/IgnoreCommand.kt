@@ -27,7 +27,7 @@ class IgnoreCommand : CommandTemplate() {
             return
         }
 
-        context.guildOptions.ignoredUsers.let {
+        context.data.ignored.users.let {
             if (it.contains(member.user.id)) {
                 it.remove(member.user.id)
 
@@ -46,12 +46,12 @@ class IgnoreCommand : CommandTemplate() {
                 }.action().queue()
             }
         }
-        context.guildOptions.save()
+        context.data.save()
     }
 
     @Executor(1, description = "Ignore/unignore a channel.")
     fun channel(context: Context, channel: TextChannel) {
-        context.guildOptions.ignoredChannels.let {
+        context.data.ignored.channels.let {
             if (it.contains(channel.id)) {
                 it.remove(channel.id)
 
@@ -70,7 +70,7 @@ class IgnoreCommand : CommandTemplate() {
                 }.action().queue()
             }
         }
-        context.guildOptions.save()
+        context.data.save()
     }
 
     @Executor(2, description = "Ignore/unignore a role.")
@@ -80,7 +80,7 @@ class IgnoreCommand : CommandTemplate() {
             return
         }
 
-        context.guildOptions.ignoredRoles.let {
+        context.data.ignored.roles.let {
             if (it.contains(role.id)) {
                 it.remove(role.id)
 
@@ -99,7 +99,7 @@ class IgnoreCommand : CommandTemplate() {
                 }.action().queue()
             }
         }
-        context.guildOptions.save()
+        context.data.save()
     }
 
     @Executor(3, description = "List ignored entities.")
@@ -107,7 +107,7 @@ class IgnoreCommand : CommandTemplate() {
         context.send().embed("Ignored Entities") {
             field("Users") {
                 buildString {
-                    context.guildOptions.ignoredUsers.let {
+                    context.data.ignored.users.let {
                         if (it.isEmpty()) {
                             append("None of the users are ignored.")
                         }
@@ -121,7 +121,7 @@ class IgnoreCommand : CommandTemplate() {
             }
             field("Channel") {
                 buildString {
-                    context.guildOptions.ignoredChannels.let {
+                    context.data.ignored.channels.let {
                         if (it.isEmpty()) {
                             append("None of the channels are ignored.")
                         }
@@ -135,7 +135,7 @@ class IgnoreCommand : CommandTemplate() {
             }
             field("Roles") {
                 buildString {
-                    context.guildOptions.ignoredRoles.let {
+                    context.data.ignored.roles.let {
                         if (it.isEmpty()) {
                             append("None of the roles are ignored.")
                         }

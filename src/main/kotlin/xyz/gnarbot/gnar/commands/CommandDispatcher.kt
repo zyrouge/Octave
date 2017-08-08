@@ -9,23 +9,22 @@ import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.guilds.GuildOptions
+import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
 
 object CommandDispatcher {
     //private val cooldownMap = TLongLongHashMap()
-
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
-        val guildOptions: GuildOptions = Bot.getOptions().ofGuild(event.guild)
+        val guildOptions: GuildData = Bot.getOptions().ofGuild(event.guild)
 
         val content = event.message.rawContent
-        if (!content.startsWith(guildOptions.prefix)
-                && !content.startsWith(Bot.CONFIG.prefix)
-                && !content.startsWith(namePrefix, true)) {
+        if (!content.startsWith(Bot.CONFIG.prefix)
+                && !content.startsWith(namePrefix, true)
+                && !content.startsWith(guildOptions.command.prefix)) {
             return
         }
 
@@ -53,9 +52,9 @@ object CommandDispatcher {
     fun splitCommand(context: Context): Boolean {
         val content = context.message.rawContent.let {
             when {
-                it.startsWith(context.guildOptions.prefix) -> it.substring(context.guildOptions.prefix.length)
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
+                it.startsWith(context.data.command.prefix) -> it.substring(context.data.command.prefix.length)
                 else -> return false
             }
         }
@@ -99,7 +98,7 @@ object CommandDispatcher {
 
         // Command settings check.
         if (!context.member.hasPermission(Permission.ADMINISTRATOR)) {
-            context.guildOptions.commandOptions[cmd.info.id]?.let {
+            context.data.command.options[cmd.info.id]?.let {
                 if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
                     context.send().error("You are not one of the users allowed to use this command.").queue()
                     return false
@@ -128,7 +127,7 @@ object CommandDispatcher {
         }
 
         // Donator check
-        if (cmd.info.donor && !context.guildOptions.isPremium) {
+        if (cmd.info.donor && !context.data.isPremium) {
             context.send().embed("Donators Only") {
                 color { Color.ORANGE }
                 desc {
@@ -151,10 +150,10 @@ object CommandDispatcher {
             } else if (member.voiceState.channel == context.guild.afkChannel) {
                 context.send().error("Music can't be played in the AFK channel.").queue()
                 return false
-            } else if (context.guildOptions.musicChannels.isNotEmpty()
-                    && member.voiceState.channel.id !in context.guildOptions.musicChannels) {
+            } else if (context.data.music.channels.isNotEmpty()
+                    && member.voiceState.channel.id !in context.data.music.channels) {
 
-                val channels = context.guildOptions.musicChannels
+                val channels = context.data.music.channels
                         .map { context.guild.getVoiceChannelById(it) }
                         .filterNotNull()
                         .map(Channel::getName)
@@ -165,7 +164,7 @@ object CommandDispatcher {
         }
 
         if (cmd.info.permissions.isNotEmpty()) {
-            val djRole = context.guildOptions.djRole?.let(context.guild::getRoleById)
+            val djRole = context.data.music.djRole?.let(context.guild::getRoleById)
             val isDJ = djRole in member.roles
 
             if (!(cmd.info.scope == Scope.VOICE && isDJ)) {
@@ -198,9 +197,9 @@ object CommandDispatcher {
     // Do not ignore if user have administrator role
     // Do not ignore if user is bot administrator
     private fun isIgnored(context: Context, member: Member): Boolean {
-        return (context.guildOptions.ignoredUsers.contains(member.user.id)
-                || context.guildOptions.ignoredChannels.contains(context.channel.id)
-                || context.guildOptions.ignoredRoles.any { id -> member.roles.any { it.id == id } })
+        return (context.data.ignored.users.contains(member.user.id)
+                || context.data.ignored.channels.contains(context.channel.id)
+                || context.data.ignored.roles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins
     }

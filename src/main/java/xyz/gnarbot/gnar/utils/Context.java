@@ -5,13 +5,13 @@ import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
-import xyz.gnarbot.gnar.guilds.GuildOptions;
+import xyz.gnarbot.gnar.guilds.GuildData;
 
 public final class Context {
     private final Message message;
     private final TextChannel channel;
     private final Guild guild;
-    private final GuildOptions guildOptions;
+    private final GuildData guildOptions;
     private final JDA jda;
     private final Shard shard;
     private final Member member;
@@ -21,7 +21,7 @@ public final class Context {
         this(event, Bot.getOptions().ofGuild(event.getGuild()));
     }
 
-    public Context(GuildMessageReceivedEvent event, GuildOptions guildOptions) {
+    public Context(GuildMessageReceivedEvent event, GuildData guildOptions) {
         this.message = event.getMessage();
         this.channel = event.getChannel();
         this.guild = event.getGuild();
@@ -44,7 +44,7 @@ public final class Context {
         return this.guild;
     }
 
-    public final GuildOptions getGuildOptions() {
+    public final GuildData getData() {
         return this.guildOptions;
     }
 

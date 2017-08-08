@@ -29,14 +29,14 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (member.user.id in it.allowedUsers) {
                 context.send().error("${member.asMention} is already in the allowed users list for `${info.aliases.first()}`.").queue()
                 return
             }
 
             it.allowedUsers.add(member.user.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -53,14 +53,14 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (role.id in it.allowedRoles) {
                 context.send().error("${role.asMention} is already in the allowed roles list for `${info.aliases.first()}`.").queue()
                 return
             }
 
             it.allowedRoles.add(role.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -77,14 +77,14 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (channel.id in it.allowedChannels) {
                 context.send().error("${channel.asMention} is already in the allowed channels list for `${info.aliases.first()}`.").queue()
                 return
             }
 
             it.allowedChannels.add(channel.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -114,7 +114,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     if (!info.toggleable) {
                         untogglable += info
                     } else {
-                        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+                        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
                             if (channel.id in it.allowedChannels) {
                                 alreadyAllowed.add(info)
                             } else {
@@ -125,7 +125,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
                 }
 
-        context.guildOptions.save()
+        context.data.save()
 
         context.send().embed("Command Management") {
             if (success.isNotEmpty()) {
@@ -156,7 +156,7 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedUsers.isEmpty()) {
                 context.send().error("The allowed members list is empty, all members are able to use the command for `${info.aliases.first()}`.").queue()
                 return
@@ -168,7 +168,7 @@ class ManageCommandsCommand : CommandTemplate() {
             }
 
             it.allowedUsers.remove(member.user.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -185,7 +185,7 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedRoles.isEmpty()) {
                 context.send().error("The allowed roles list is empty, all roles are able to use the command.").queue()
                 return
@@ -197,7 +197,7 @@ class ManageCommandsCommand : CommandTemplate() {
             }
 
             it.allowedRoles.remove(role.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -214,7 +214,7 @@ class ManageCommandsCommand : CommandTemplate() {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
-        context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
             if (it.allowedChannels.isEmpty()) {
                 context.send().error("The allowed channels list is empty, all channels are able to use the command.").queue()
                 return
@@ -226,7 +226,7 @@ class ManageCommandsCommand : CommandTemplate() {
             }
 
             it.allowedChannels.remove(channel.id)
-            context.guildOptions.save()
+            context.data.save()
 
             context.send().embed("Command Management") {
                 desc {
@@ -252,7 +252,7 @@ class ManageCommandsCommand : CommandTemplate() {
 
         filtered.map(CommandExecutor::getInfo)
                 .forEach { info ->
-                    context.guildOptions.commandOptions.getOrPut(info.id, ::CommandOptions).let {
+                    context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
                         if (channel.id !in it.allowedChannels) {
                             notAllowed.add(info)
                         } else {
@@ -262,7 +262,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
                 }
 
-        context.guildOptions.save()
+        context.data.save()
 
         context.send().embed("Command Management") {
             if (success.isNotEmpty()) {
@@ -288,7 +288,7 @@ class ManageCommandsCommand : CommandTemplate() {
             return
         }
 
-        val options = context.guildOptions.commandOptions[info.id]
+        val options = context.data.command.options[info.id]
         if (options == null) {
             context.send().embed("Command Management") {
                 desc {
@@ -355,7 +355,7 @@ class ManageCommandsCommand : CommandTemplate() {
             return
         }
 
-        val options = context.guildOptions.commandOptions[info.id]
+        val options = context.data.command.options[info.id]
         if (options == null) {
             context.send().embed("Command Management") {
                 desc {
@@ -365,8 +365,8 @@ class ManageCommandsCommand : CommandTemplate() {
             return
         }
 
-        context.guildOptions.commandOptions.remove(info.id)
-        context.guildOptions.save()
+        context.data.command.options.remove(info.id)
+        context.data.save()
 
         context.send().embed("Command Management") {
             desc {
@@ -377,13 +377,13 @@ class ManageCommandsCommand : CommandTemplate() {
 
     @Executor(10, description = "Clear all command options.")
     fun clear_all(context: Context) {
-        if (context.guildOptions.commandOptions.isEmpty()) {
+        if (context.data.command.options.isEmpty()) {
             context.send().error("This guild doesn't have any commands options.").queue()
             return
         }
 
-        context.guildOptions.commandOptions.clear()
-        context.guildOptions.save()
+        context.data.command.options.clear()
+        context.data.save()
 
         context.send().embed("Command Management") {
             desc {

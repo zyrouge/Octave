@@ -69,7 +69,7 @@ class MusicManager(val guild: Guild) {
 
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
-        it.volume = Bot.getOptions().ofGuild(guild).musicVolume
+        it.volume = Bot.getOptions().ofGuild(guild).music.volume
     }
 
     /**  @return Track scheduler for the player.*/

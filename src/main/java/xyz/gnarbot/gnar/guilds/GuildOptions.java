@@ -18,7 +18,6 @@ import java.util.Set;
 public final class GuildOptions implements ManagedObject {
     private final String id; // PORT
 
-
     String prefix; // PORT
     boolean autoDelete = false; // PORT
 
@@ -181,11 +180,12 @@ public final class GuildOptions implements ManagedObject {
 
 
     public void save() {
-        Bot.DATABASE.saveGuildOptions(this);
+        // no more writes for guild options
+        //Bot.db().saveGuildOptions(this);
     }
 
     public void delete() {
-        Bot.DATABASE.deleteGuildOptions(this.id);
+        Bot.db().deleteGuildOptions(this.id);
     }
 
     @NotNull

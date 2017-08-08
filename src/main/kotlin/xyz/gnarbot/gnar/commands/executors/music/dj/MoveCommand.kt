@@ -48,8 +48,8 @@ class MoveCommand : CommandExecutor() {
             return
         }
 
-        if (context.guildOptions.musicChannels.isNotEmpty()) {
-            if (targetChannel.id !in context.guildOptions.musicChannels) {
+        if (context.data.music.channels.isNotEmpty()) {
+            if (targetChannel.id !in context.data.music.channels) {
                 context.send().error(
                         "Can not join `${targetChannel.name}`, it isn't one of the designated music channels."
                 ).queue()

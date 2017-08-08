@@ -68,8 +68,8 @@ class VolumeCommand : CommandExecutor() {
 
         manager.player.volume = amount
 
-        context.guildOptions.musicVolume = amount
-        context.guildOptions.save()
+        context.data.music.volume = amount
+        context.data.save()
 
         context.send().embed("Music Volume") {
             desc {

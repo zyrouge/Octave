@@ -66,8 +66,8 @@ class VoiceListener : ListenerAdapter() {
 
                 Bot.getPlayers().getExisting(event.guild.idLong)?.let {
                     val options = Bot.getOptions().ofGuild(event.guild)
-                    if (options.musicChannels.isNotEmpty()) {
-                        if (event.channelJoined.id !in options.musicChannels) {
+                    if (options.music.channels.isNotEmpty()) {
+                        if (event.channelJoined.id !in options.music.channels) {
                             it.currentRequestChannel?.let { requestChannel ->
                                 ResponseBuilder(requestChannel).error(
                                     "Can not join `${event.channelJoined.name}`, it isn't one of the designated music channels."

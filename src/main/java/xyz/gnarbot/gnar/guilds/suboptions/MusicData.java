@@ -10,16 +10,16 @@ import java.util.Set;
 public class MusicData {
     private String djRole;
     private Set<String> musicChannels;
-    private int musicVolume = 100;
+    private int volume = 100;
     private boolean announce = true;
 
     public MusicData() {}
 
     @JsonIgnore
-    public MusicData(String djRole, Set<String> musicChannels, int musicVolume, boolean announce) {
+    public MusicData(String djRole, Set<String> musicChannels, int volume, boolean announce) {
         this.djRole = djRole;
         this.musicChannels = musicChannels;
-        this.musicVolume = musicVolume;
+        this.volume = volume;
         this.announce = announce;
     }
 
@@ -33,24 +33,24 @@ public class MusicData {
     }
 
     @NotNull
-    public final Set<String> getMusicChannels() {
+    public final Set<String> getChannels() {
         if (musicChannels == null) musicChannels = new HashSet<>();
         return musicChannels;
     }
 
-    public void setMusicVolume(int musicVolume) {
-        this.musicVolume = musicVolume;
+    public void setVolume(int musicVolume) {
+        this.volume = musicVolume;
     }
 
-    public int getMusicVolume() {
-        return musicVolume;
+    public int getVolume() {
+        return volume;
     }
 
     public void setAnnounce(boolean announce) {
         this.announce = announce;
     }
 
-    public boolean isAnnounce() {
+    public boolean getAnnounce() {
         return announce;
     }
 }

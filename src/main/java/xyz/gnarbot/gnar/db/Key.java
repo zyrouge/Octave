@@ -57,11 +57,11 @@ public class Key implements ManagedObject {
 
     @Override
     public void save() {
-        Bot.DATABASE.savePremiumKey(this);
+        Bot.db().savePremiumKey(this);
     }
 
     @Override
     public void delete() {
-        Bot.DATABASE.deleteKey(id);
+        Bot.db().deleteKey(id);
     }
 }

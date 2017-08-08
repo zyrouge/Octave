@@ -17,16 +17,16 @@ import xyz.gnarbot.gnar.utils.Context;
 public class AutoDeleteCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        if (context.getGuildOptions().isAutoDelete()) {
-            context.getGuildOptions().setAutoDelete(false);
-            context.getGuildOptions().save();
+        if (context.getData().getCommand().isAutoDelete()) {
+            context.getData().getCommand().setAutoDelete(false);
+            context.getData().save();
 
             context.send().embed("Auto-Delete")
                     .setDescription("The bot will no longer automatically delete messages after 10 seconds.")
                     .action().queue();
         } else {
-            context.getGuildOptions().setAutoDelete(true);
-            context.getGuildOptions().save();
+            context.getData().getCommand().setAutoDelete(true);
+            context.getData().save();
 
             context.send().embed("Auto-Delete")
                     .setDescription("The bot will delete messages after 10 seconds.")

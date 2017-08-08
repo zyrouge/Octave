@@ -2,6 +2,8 @@ package xyz.gnarbot.gnar.guilds;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.db.ManagedObject;
 import xyz.gnarbot.gnar.guilds.suboptions.CommandData;
 import xyz.gnarbot.gnar.guilds.suboptions.IgnoredData;
 import xyz.gnarbot.gnar.guilds.suboptions.MusicData;
@@ -11,7 +13,7 @@ import java.beans.ConstructorProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GuildData {
+public class GuildData implements ManagedObject {
     private final String id;
 
     private CommandData commandData;
@@ -82,6 +84,11 @@ public class GuildData {
         return premiumUntil;
     }
 
+    @JsonIgnore
+    public final long remainingPremium() {
+        return this.isPremium() ? getPremiumUntil() - System.currentTimeMillis() : 0L;
+    }
+
     public boolean isPremium() {
         return System.currentTimeMillis() < getPremiumUntil();
     }
@@ -90,22 +97,32 @@ public class GuildData {
         return id;
     }
 
-    public CommandData getCommandData() {
+    public CommandData getCommand() {
         if (commandData == null) commandData = new CommandData();
         return commandData;
     }
 
-    public IgnoredData getIgnoredData() {
+    public IgnoredData getIgnored() {
         if (ignoredData == null) ignoredData = new IgnoredData();
         return ignoredData;
     }
 
-    public MusicData getMusicData() {
+    public MusicData getMusic() {
         if (musicData == null) musicData = new MusicData();
         return musicData;
     }
 
-    public RoleData getRoleData() {
+    public RoleData getRoles() {
         return roleData;
+    }
+
+    @Override
+    public void save() {
+        Bot.db().saveGuildData(this);
+    }
+
+    @Override
+    public void delete() {
+        Bot.db().deleteGuildData(id);
     }
 }

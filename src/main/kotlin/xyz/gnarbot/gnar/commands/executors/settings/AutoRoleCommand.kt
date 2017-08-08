@@ -34,14 +34,14 @@ class AutoRoleCommand : CommandTemplate() {
             return
         }
 
-        if (role.id == context.guildOptions.autoRole) {
+        if (role.id == context.data.roles.autoRole) {
             context.send().error("${role.asMention} is already set as the auto-role.").queue()
             return
         }
 
 
-        context.guildOptions.autoRole = role.id
-        context.guildOptions.save()
+        context.data.roles.autoRole = role.id
+        context.data.save()
 
         context.send().embed("Auto-Role") {
             desc {
@@ -52,13 +52,13 @@ class AutoRoleCommand : CommandTemplate() {
 
     @Executor(1, description = "Unset the auto-role.")
     fun unset(context: Context) {
-        if (context.guildOptions.autoRole == null) {
+        if (context.data.roles.autoRole == null) {
             context.send().error("This guild doesn't have an auto-role.").queue()
             return
         }
 
-        context.guildOptions.autoRole = null
-        context.guildOptions.save()
+        context.data.roles.autoRole = null
+        context.data.save()
 
         context.send().embed("Auto-Role") {
             desc {
@@ -74,7 +74,7 @@ class AutoRoleCommand : CommandTemplate() {
                 return
             }
 
-            val role = context.guildOptions.autoRole
+            val role = context.data.roles.autoRole
             append("Current auto-role: ")
             if (role == null) {
                 append("__None__")

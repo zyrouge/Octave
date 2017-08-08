@@ -26,34 +26,34 @@ class PrefixCommand : CommandTemplate() {
             return
         }
 
-        if (context.guildOptions.prefix == prefix) {
+        if (context.data.command.prefix == prefix) {
             context.send().error("The prefix is already set to `$prefix`.").queue()
             return
         }
 
-        context.guildOptions.prefix = prefix
-        context.guildOptions.save()
+        context.data.command.prefix = prefix
+        context.data.save()
 
         context.send().embed("Server Prefix") {
             desc {
-                "The prefix has been set to `${context.guildOptions.prefix}`."
+                "The prefix has been set to `${context.data.command.prefix}`."
             }
         }.action().queue()
     }
 
     @Executor(1, description = "Reset to the default prefix.")
     fun reset(context: Context) {
-        if (context.guildOptions.prefix == Bot.CONFIG.prefix) {
+        if (context.data.command.prefix == Bot.CONFIG.prefix) {
             context.send().error("The prefix is already set to the default.").queue()
             return
         }
 
-        context.guildOptions.prefix = Bot.CONFIG.prefix
-        context.guildOptions.save()
+        context.data.command.prefix = Bot.CONFIG.prefix
+        context.data.save()
 
         context.send().embed("Server Prefix") {
             desc {
-                "The prefix has been reset to `${context.guildOptions.prefix}`."
+                "The prefix has been reset to `${context.data.command.prefix}`."
             }
         }.action().queue()
     }
@@ -61,7 +61,7 @@ class PrefixCommand : CommandTemplate() {
     override fun helpMessage(context: Context, args: Array<String>) {
         helpMessage(context, args, null, buildString {
             append("Default prefix will still be valid.\n")
-            val prefix = context.guildOptions.prefix
+            val prefix = context.data.command.prefix
             append("Current prefix: `").append(prefix).append('`')
         })
     }

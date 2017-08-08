@@ -35,7 +35,6 @@ public final class Bot {
 
     public static final Credentials KEYS = new Credentials(new File("credentials.conf"));
     public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
-    public static final Database DATABASE = new Database("bot");
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
 
@@ -43,6 +42,7 @@ public final class Bot {
     protected static final VoiceListener voiceListener = new VoiceListener();
     protected static final EventWaiter waiter = new EventWaiter();
 
+    private static final Database database = new Database("bot");
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
     private static final PlayerRegistry playerRegistry = new PlayerRegistry();
@@ -89,6 +89,10 @@ public final class Bot {
 
     public static MyAnimeListAPI getMALAPI() {
         return malAPI;
+    }
+
+    public static Database db() {
+        return database;
     }
 
     public static CommandRegistry getCommandRegistry() {

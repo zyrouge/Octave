@@ -47,7 +47,7 @@ class HelpCommand : CommandExecutor() {
             if (cmd != null) {
                 context.send().embed("Command Information") {
                     field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
-                    field("Usage") { "${context.guildOptions.prefix}${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
+                    field("Usage") { "_${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                     if (cmd.info.donor) {
                         field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
                     }
@@ -70,7 +70,7 @@ class HelpCommand : CommandExecutor() {
         context.send().embed("Guides") {
             desc {
                 buildString {
-                    append("The prefix of the bot on this server is `").append(context.guildOptions.prefix).append("`.\n")
+                    append("The prefix of the bot on this server is `").append(context.data.command.prefix).append("`.\n")
                     append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
                 }
             }

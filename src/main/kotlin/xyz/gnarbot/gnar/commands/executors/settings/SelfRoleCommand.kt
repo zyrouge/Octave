@@ -35,13 +35,13 @@ class SelfRoleCommand : CommandTemplate() {
             return
         }
 
-        if (role.id in context.guildOptions.selfRoles) {
+        if (role.id in context.data.roles.selfRoles) {
             context.send().error("${role.asMention} is already added as a self-assignable role.").queue()
             return
         }
 
-        context.guildOptions.selfRoles.add(role.id)
-        context.guildOptions.save()
+        context.data.roles.selfRoles.add(role.id)
+        context.data.save()
 
         context.send().embed("Self-Roles") {
             desc {
@@ -52,13 +52,13 @@ class SelfRoleCommand : CommandTemplate() {
 
     @Executor(1, description = "Remove a self-role.")
     fun remove(context: Context, role: Role) {
-        if (role.id !in context.guildOptions.selfRoles) {
+        if (role.id !in context.data.roles.selfRoles) {
             context.send().error("${role.asMention} is not a self-assignable role.").queue()
             return
         }
 
-        context.guildOptions.selfRoles.remove(role.id)
-        context.guildOptions.save()
+        context.data.roles.selfRoles.remove(role.id)
+        context.data.save()
 
         context.send().embed("Self-Roles") {
             desc {
@@ -69,13 +69,13 @@ class SelfRoleCommand : CommandTemplate() {
 
     @Executor(2, description = "Clear all self-assignable roles.")
     fun clear(context: Context) {
-        if (context.guildOptions.selfRoles.isEmpty()) {
+        if (context.data.roles.selfRoles.isEmpty()) {
             context.send().error("This guild doesn't have any self-assignable roles.").queue()
             return
         }
 
-        context.guildOptions.selfRoles.clear()
-        context.guildOptions.save()
+        context.data.roles.selfRoles.clear()
+        context.data.save()
 
         context.send().embed("Self-Roles") {
             desc {
@@ -88,7 +88,7 @@ class SelfRoleCommand : CommandTemplate() {
     fun list(context: Context) {
         context.send().embed("Self-Roles") {
             desc {
-                if (context.guildOptions.selfRoles.isEmpty()) {
+                if (context.data.roles.selfRoles.isEmpty()) {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
@@ -97,7 +97,7 @@ class SelfRoleCommand : CommandTemplate() {
                             return
                         }
 
-                        context.guildOptions.selfRoles.map(context.guild::getRoleById)
+                        context.data.roles.selfRoles.map(context.guild::getRoleById)
                                 .filterNotNull()
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }

@@ -20,9 +20,9 @@ import xyz.gnarbot.gnar.utils.Context
 class MusicSettingsCommand : CommandTemplate() {
     @Executor(0, description = "Toggle music announcement.")
     fun toggle_announcements(context: Context) {
-        if (context.guildOptions.isAnnounce) {
-            context.guildOptions.isAnnounce = false
-            context.guildOptions.save()
+        if (context.data.music.announce) {
+            context.data.music.announce = false
+            context.data.save()
 
             context.send().embed("Music Settings") {
                 desc {
@@ -30,8 +30,8 @@ class MusicSettingsCommand : CommandTemplate() {
                 }
             }.action().queue()
         } else {
-            context.guildOptions.isAnnounce = true
-            context.guildOptions.save()
+            context.data.music.announce = true
+            context.data.save()
 
             context.send().embed("Music Settings") {
                 desc {
@@ -43,7 +43,7 @@ class MusicSettingsCommand : CommandTemplate() {
 
     @Executor(1, description = "Add voice channels that Gnar can play music in.")
     fun music_channel_add(context: Context, channel: VoiceChannel) {
-        if (channel.id in context.guildOptions.musicChannels) {
+        if (channel.id in context.data.music.channels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
             return
         }
@@ -53,8 +53,8 @@ class MusicSettingsCommand : CommandTemplate() {
             return
         }
 
-        context.guildOptions.musicChannels.add(channel.id)
-        context.guildOptions.save()
+        context.data.music.channels.add(channel.id)
+        context.data.save()
 
         context.send().embed("Music Settings") {
             desc {
@@ -65,13 +65,13 @@ class MusicSettingsCommand : CommandTemplate() {
 
     @Executor(2, description = "Remove voice channels that Gnar can play music in.")
     fun music_channel_remove(context: Context, channel: VoiceChannel) {
-        if (channel.id !in context.guildOptions.musicChannels) {
+        if (channel.id !in context.data.music.channels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
             return
         }
 
-        context.guildOptions.musicChannels.remove(channel.id)
-        context.guildOptions.save()
+        context.data.music.channels.remove(channel.id)
+        context.data.save()
 
         context.send().embed("Music Settings") {
             desc {
@@ -92,13 +92,13 @@ class MusicSettingsCommand : CommandTemplate() {
             return
         }
 
-        if (role.id == context.guildOptions.djRole) {
+        if (role.id == context.data.music.djRole) {
             context.send().error("${role.asMention} is already set as the DJ-role.").queue()
             return
         }
 
-        context.guildOptions.djRole = role.id
-        context.guildOptions.save()
+        context.data.music.djRole = role.id
+        context.data.save()
 
         context.send().embed("Music Settings") {
             desc {
@@ -109,13 +109,13 @@ class MusicSettingsCommand : CommandTemplate() {
 
     @Executor(4, description = "Unset the DJ-role.")
     fun dj_unset(context: Context) {
-        if (context.guildOptions.djRole == null) {
+        if (context.data.music.djRole == null) {
             context.send().error("This guild doesn't have an DJ-role.").queue()
             return
         }
 
-        context.guildOptions.djRole = null
-        context.guildOptions.save()
+        context.data.music.djRole = null
+        context.data.save()
 
         context.send().embed("Music Settings") {
             desc {
@@ -131,7 +131,7 @@ class MusicSettingsCommand : CommandTemplate() {
             field("Channel") {
                 buildString {
                     append("If this is not empty, Gnar will only play music in these voice channels.\n\n")
-                    context.guildOptions.musicChannels.let {
+                    context.data.music.channels.let {
                         if (it.isEmpty()) {
                             append("None.")
                         }
@@ -146,7 +146,7 @@ class MusicSettingsCommand : CommandTemplate() {
             field("DJ Role") {
                 buildString {
                     append("If this role is set, anyone with this role will bypass music permission requirements.\n\n")
-                    append(context.guildOptions.djRole?.let { context.guild.getRoleById(it) }?.asMention ?: "None")
+                    append(context.data.music.djRole?.let { context.guild.getRoleById(it) }?.asMention ?: "None")
                 }
             }
         }.action().queue()

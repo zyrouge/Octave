@@ -39,7 +39,7 @@ public class CommandData {
         this.autoDelete = autoDelete;
     }
 
-    public Map<Integer, CommandOptions> getCommandOptions() {
+    public Map<Integer, CommandOptions> getOptions() {
         if (commandOptions == null) {
             commandOptions = new HashMap<>();
         }

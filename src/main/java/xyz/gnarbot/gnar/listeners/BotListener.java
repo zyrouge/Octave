@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
-import xyz.gnarbot.gnar.guilds.GuildOptions;
+import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.music.MusicManager;
 
 import java.time.OffsetDateTime;
@@ -37,7 +37,7 @@ public class BotListener extends ListenerAdapter {
         if (Bot.STATE == LoadState.COMPLETE) {
             if (event.getAuthor().isBot()) {
                 if (event.getAuthor() == event.getJDA().getSelfUser()) {
-                    if (Bot.getOptions().ofGuild(event.getGuild()).isAutoDelete()) {
+                    if (Bot.getOptions().ofGuild(event.getGuild()).getCommand().isAutoDelete()) {
                         event.getMessage().delete().queueAfter(10, TimeUnit.SECONDS);
                     }
                 }
@@ -51,22 +51,22 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            GuildOptions options = Bot.getOptions().ofGuild(event.getGuild());
+            GuildData options = Bot.getOptions().ofGuild(event.getGuild());
 
             // Autorole
-            if (options.getAutoRole() != null) {
-                Role role = event.getGuild().getRoleById(options.getAutoRole());
+            if (options.getRoles().getAutoRole() != null) {
+                Role role = event.getGuild().getRoleById(options.getRoles().getAutoRole());
 
                 // If role is null then unset
                 if (role == null) {
-                    options.setAutoRole(null);
+                    options.getRoles().setAutoRole(null);
                     return;
                 }
 
                 // If bot cant interact with role then unset
                 if (!event.getGuild().getSelfMember().canInteract(role)
                         || !event.getGuild().getSelfMember().hasPermission(Permission.MANAGE_ROLES)) {
-                    options.setAutoRole(null);
+                    options.getRoles().setAutoRole(null);
                     return;
                 }
 
