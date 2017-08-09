@@ -7,7 +7,7 @@ import java.time.OffsetDateTime
 
 @Command(
         id = 57,
-        aliases = arrayOf("prune", "delmessages", "delmsgs"),
+        aliases = arrayOf("prune", "purge", "delmessages", "delmsgs"),
         usage = "(2-100)",
         description = "Delete up to 100 messages.",
         category = Category.SETTINGS,

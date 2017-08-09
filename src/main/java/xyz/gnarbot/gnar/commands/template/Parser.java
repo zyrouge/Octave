@@ -91,20 +91,14 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<Category> CATEGORY = new Parser<Category>("([category])", "Command category enclosed in brackets") {
-        private final Pattern pattern = Pattern.compile("\\[(\\w+)]");
-
+    public static final Parser<Category> CATEGORY = new Parser<Category>("(category)", "Command category enclosed in brackets") {
         @Override
         public Category parse(Context c, String s) {
-            Matcher matcher = pattern.matcher(s);
-            if (matcher.find()) {
-                try {
-                    return Category.valueOf(matcher.group(1).toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    return null;
-                }
+            try {
+                return Category.valueOf(s.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return null;
             }
-            return null;
         }
     };
     public static final Parser<Duration> DURATION = new Parser<Duration>("(time hh:mm:ss)", "Timestamp") {

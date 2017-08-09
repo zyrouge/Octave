@@ -5,29 +5,24 @@ import xyz.gnarbot.gnar.Bot;
 
 import java.beans.ConstructorProperties;
 
-public class Key implements ManagedObject {
+@JsonIgnoreProperties("expiresBy")
+public class PremiumKey implements ManagedObject {
     public enum Type {
-        PREMIUM
+        PREMIUM, // GUILD
+        USER
     }
 
     private final String id;
     private final long duration;
     private final Type type;
+
     private Redeemer redeemer;
 
-    @JsonIgnoreProperties("expiresBy")
     @ConstructorProperties({"id", "type", "duration"})
-    public Key(String id, Type type, long duration) {
-        this(id, type, duration, null);
-    }
-
-    @JsonIgnoreProperties("expiresBy")
-    @ConstructorProperties({"id", "type", "duration", "redeemer"})
-    public Key(String id, Type type, long duration, Redeemer redeemer) {
+    public PremiumKey(String id, Type type, long duration) {
         this.id = id;
         this.type = type;
         this.duration = duration;
-        this.redeemer = redeemer;
     }
 
     public String getId() {
@@ -57,6 +52,7 @@ public class Key implements ManagedObject {
 
     @Override
     public void save() {
+        System.out.println("saving key");
         Bot.db().savePremiumKey(this);
     }
 

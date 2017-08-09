@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.db.Key;
+import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -29,12 +29,18 @@ public class RedeemCommand extends CommandExecutor {
 
         String id = args[0];
 
-        Key key = Bot.db().getPremiumKey(id);
+        PremiumKey key = Bot.db().getPremiumKey(id);
 
         if (key != null) {
+            if (key.getRedeemer() != null) {
+                context.send().error("That code has already been redeemed.").queue();
+                return;
+            }
+
             switch (key.getType()) {
                 case PREMIUM:
                     key.setRedeemer(new Redeemer(Redeemer.Type.GUILD, context.getGuild().getId()));
+                    System.out.println(key.getRedeemer());
                     key.save();
 
                     context.getData().addPremiumKey(key.getId(), key.getDuration());

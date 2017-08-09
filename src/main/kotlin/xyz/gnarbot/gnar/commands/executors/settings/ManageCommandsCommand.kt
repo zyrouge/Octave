@@ -25,7 +25,7 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class ManageCommandsCommand : CommandTemplate() {
     @Executor(0, description = "Add a user to the command's allowed users list.")
-    fun allow_user(context: Context, cmd: CommandExecutor, member: Member) {
+    fun allow_user_specific(context: Context, cmd: CommandExecutor, member: Member) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -49,7 +49,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(1, description = "Add a role to the command's allowed roles list.")
-    fun allow_role(context: Context, cmd: CommandExecutor, role: Role) {
+    fun allow_role_specific(context: Context, cmd: CommandExecutor, role: Role) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -73,7 +73,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     @Executor(2, description = "Add a channel to the command's allowed channels list.")
-    fun allow_channel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+    fun allow_channel_specific(context: Context, cmd: CommandExecutor, channel: TextChannel) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -96,8 +96,8 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(3, description = "Add a channel to the entire category's commands' allowed channels list.")
-    fun allow_category(context: Context, category: Category, channel: TextChannel) {
+    @Executor(3, description = "Add a user to the entire category's commands' user channels list.")
+    fun allow_user_category(context: Context, category: Category, member: Member) {
         val cmds = Bot.getCommandRegistry().entries
 
         val filtered = cmds.filter {
@@ -109,21 +109,128 @@ class ManageCommandsCommand : CommandTemplate() {
         val untogglable = mutableListOf<Command>()
         val alreadyAllowed = mutableListOf<Command>()
 
-        filtered.map(CommandExecutor::getInfo)
-                .forEach { info ->
-                    if (!info.toggleable) {
-                        untogglable += info
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            if (!info.toggleable) {
+                untogglable += info
+            } else {
+                context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                    if (member.user.id in it.allowedUsers) {
+                        alreadyAllowed.add(info)
                     } else {
-                        context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
-                            if (channel.id in it.allowedChannels) {
-                                alreadyAllowed.add(info)
-                            } else {
-                                it.allowedChannels.add(channel.id)
-                                success.add(info)
-                            }
-                        }
+                        it.allowedUsers.add(member.user.id)
+                        success.add(info)
                     }
                 }
+            }
+        }
+
+        context.data.save()
+
+        context.send().embed("Command Management") {
+            if (success.isNotEmpty()) {
+                field("Success") {
+                    val successTxt = success.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "Added ${member.asMention} to the allowed users list for $successTxt."
+                }
+            }
+
+            if (alreadyAllowed.isNotEmpty()) {
+                field("Failed") {
+                    val alreadyTxt = alreadyAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "${member.asMention} is already in the allowed users list for $alreadyTxt."
+                }
+            }
+
+            if (untogglable.isNotEmpty()) {
+                field("Can't Toggle") {
+                    val untogglableTxt = untogglable.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "$untogglableTxt can not be disabled."
+                }
+            }
+        }.action().queue()
+    }
+
+    @Executor(4, description = "Add a role to the entire category's commands' allowed roles list.")
+    fun allow_role_category(context: Context, category: Category, role: Role) {
+        val cmds = Bot.getCommandRegistry().entries
+
+        val filtered = cmds.filter {
+            it.info.category == category
+        }
+        if (filtered.isEmpty()) return
+
+        val success = mutableListOf<Command>()
+        val untogglable = mutableListOf<Command>()
+        val alreadyAllowed = mutableListOf<Command>()
+
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            if (!info.toggleable) {
+                untogglable += info
+            } else {
+                context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                    if (role.id in it.allowedRoles) {
+                        alreadyAllowed.add(info)
+                    } else {
+                        it.allowedChannels.add(role.id)
+                        success.add(info)
+                    }
+                }
+            }
+        }
+
+        context.data.save()
+
+        context.send().embed("Command Management") {
+            if (success.isNotEmpty()) {
+                field("Success") {
+                    val successTxt = success.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "Added ${role.asMention} to the allowed roles list for $successTxt."
+                }
+            }
+
+            if (alreadyAllowed.isNotEmpty()) {
+                field("Failed") {
+                    val alreadyTxt = alreadyAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "${role.asMention} is already in the allowed roles list for $alreadyTxt."
+                }
+            }
+
+            if (untogglable.isNotEmpty()) {
+                field("Can't Toggle") {
+                    val untogglableTxt = untogglable.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "$untogglableTxt can not be disabled."
+                }
+            }
+        }.action().queue()
+    }
+
+    @Executor(5, description = "Add a channel to the entire category's commands' allowed channels list.")
+    fun allow_channel_category(context: Context, category: Category, channel: TextChannel) {
+        val cmds = Bot.getCommandRegistry().entries
+
+        val filtered = cmds.filter {
+            it.info.category == category
+        }
+        if (filtered.isEmpty()) return
+
+        val success = mutableListOf<Command>()
+        val untogglable = mutableListOf<Command>()
+        val alreadyAllowed = mutableListOf<Command>()
+
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            if (!info.toggleable) {
+                untogglable += info
+            } else {
+                context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                    if (channel.id in it.allowedChannels) {
+                        alreadyAllowed.add(info)
+                    } else {
+                        it.allowedChannels.add(channel.id)
+                        success.add(info)
+                    }
+                }
+            }
+        }
 
         context.data.save()
 
@@ -151,8 +258,8 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(4, description ="Remove a user from the command's allowed users list.")
-    fun disallow_user(context: Context, cmd: CommandExecutor, member: Member) {
+    @Executor(6, description ="Remove a user from the command's allowed users list.")
+    fun disallow_user_specific(context: Context, cmd: CommandExecutor, member: Member) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -180,8 +287,8 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(5, description = "Remove a role from the command's allowed roles list.")
-    fun disallow_role(context: Context, cmd: CommandExecutor, role: Role) {
+    @Executor(7, description = "Remove a role from the command's allowed roles list.")
+    fun disallow_role_specific(context: Context, cmd: CommandExecutor, role: Role) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -209,8 +316,8 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(6, description = "Remove a channel from the command's allowed channels list.")
-    fun disallow_channel(context: Context, cmd: CommandExecutor, channel: TextChannel) {
+    @Executor(8, description = "Remove a channel from the command's allowed channels list.")
+    fun disallow_channel_specific(context: Context, cmd: CommandExecutor, channel: TextChannel) {
         val info = cmd.info
         if (isNotValid(context, info)) return
 
@@ -238,8 +345,8 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(7, description = "Remove a channel from the the entire category's commands' allowed channels list.")
-    fun disallow_category(context: Context, category: Category, channel: TextChannel) {
+    @Executor(9, description = "Remove a user from the the entire category's commands' allowed users list.")
+    fun disallow_user_category(context: Context, category: Category, member: Member) {
         val cmds = Bot.getCommandRegistry().entries
 
         val filtered = cmds.filter {
@@ -250,17 +357,100 @@ class ManageCommandsCommand : CommandTemplate() {
         val success = mutableListOf<Command>()
         val notAllowed = mutableListOf<Command>()
 
-        filtered.map(CommandExecutor::getInfo)
-                .forEach { info ->
-                    context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
-                        if (channel.id !in it.allowedChannels) {
-                            notAllowed.add(info)
-                        } else {
-                            it.allowedChannels.remove(channel.id)
-                            success.add(info)
-                        }
-                    }
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                if (member.user.id !in it.allowedUsers) {
+                    notAllowed.add(info)
+                } else {
+                    it.allowedUsers.remove(member.user.id)
+                    success.add(info)
                 }
+            }
+        }
+
+        context.data.save()
+
+        context.send().embed("Command Management") {
+            if (success.isNotEmpty()) {
+                field("Success") {
+                    val successTxt = success.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "Removed ${member.asMention} from the allowed users list for $successTxt."
+                }
+            }
+
+            if (notAllowed.isNotEmpty()) {
+                field("Failed") {
+                    val notAllowedTxt = notAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "${member.asMention} is not in the allowed users list for $notAllowedTxt."
+                }
+            }
+        }.action().queue()
+    }
+
+    @Executor(10, description = "Remove a role from the the entire category's commands' allowed roles list.")
+    fun disallow_role_category(context: Context, category: Category, role: Role) {
+        val cmds = Bot.getCommandRegistry().entries
+
+        val filtered = cmds.filter {
+            it.info.category == category
+        }
+        if (filtered.isEmpty()) return
+
+        val success = mutableListOf<Command>()
+        val notAllowed = mutableListOf<Command>()
+
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                if (role.id !in it.allowedRoles) {
+                    notAllowed.add(info)
+                } else {
+                    it.allowedRoles.remove(role.id)
+                    success.add(info)
+                }
+            }
+        }
+
+        context.data.save()
+
+        context.send().embed("Command Management") {
+            if (success.isNotEmpty()) {
+                field("Success") {
+                    val successTxt = success.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "Removed ${role.asMention} from the allowed roles list for $successTxt."
+                }
+            }
+
+            if (notAllowed.isNotEmpty()) {
+                field("Failed") {
+                    val notAllowedTxt = notAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "${role.asMention} is not in the allowed roles list for $notAllowedTxt."
+                }
+            }
+        }.action().queue()
+    }
+
+    @Executor(11, description = "Remove a channel from the the entire category's commands' allowed channels list.")
+    fun disallow_channel_category(context: Context, category: Category, channel: TextChannel) {
+        val cmds = Bot.getCommandRegistry().entries
+
+        val filtered = cmds.filter {
+            it.info.category == category
+        }
+        if (filtered.isEmpty()) return
+
+        val success = mutableListOf<Command>()
+        val notAllowed = mutableListOf<Command>()
+
+        filtered.map(CommandExecutor::getInfo).forEach { info ->
+            context.data.command.options.getOrPut(info.id, ::CommandOptions).let {
+                if (channel.id !in it.allowedChannels) {
+                    notAllowed.add(info)
+                } else {
+                    it.allowedChannels.remove(channel.id)
+                    success.add(info)
+                }
+            }
+        }
 
         context.data.save()
 
@@ -272,14 +462,16 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
             }
 
-            field("Failed") {
-                val notAllowedTxt = notAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
-                "${channel.asMention} is not in the allowed channels list for $notAllowedTxt."
+            if (notAllowed.isNotEmpty()) {
+                field("Failed") {
+                    val notAllowedTxt = notAllowed.joinToString("`, `", "`", "`") { it.aliases.first() }
+                    "${channel.asMention} is not in the allowed channels list for $notAllowedTxt."
+                }
             }
         }.action().queue()
     }
 
-    @Executor(8, description = "Show the options of the command.")
+    @Executor(12, description = "Show the options of the command.")
     fun options(context: Context, cmd: CommandExecutor) {
         val info = cmd.info
 
@@ -346,7 +538,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(9, description = "Clear all options for a command.")
+    @Executor(13, description = "Clear all options for a command.")
     fun clear_command(context: Context, cmd: CommandExecutor) {
         val info = cmd.info
 
@@ -375,7 +567,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(10, description = "Clear all command options.")
+    @Executor(14, description = "Clear all command options.")
     fun clear_all(context: Context) {
         if (context.data.command.options.isEmpty()) {
             context.send().error("This guild doesn't have any commands options.").queue()

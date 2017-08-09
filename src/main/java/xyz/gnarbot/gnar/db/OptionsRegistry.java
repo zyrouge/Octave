@@ -14,11 +14,15 @@ public class OptionsRegistry {
 
             if (options != null) {
                 data = new GuildData(options);
+                System.out.println("converted");
                 data.save();
-                options.delete();
+                //options.delete();
             } else {
                 data = new GuildData(guild.getId());
+                System.out.println("completly new");
             }
+        } else {
+            System.out.println("gottem");
         }
         return data;
     }

@@ -12,7 +12,7 @@ public class CommandData {
     private boolean autoDelete = false;
 
     @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
-    private Map<Integer, CommandOptions> commandOptions;
+    private Map<Integer, CommandOptions> options;
 
     public CommandData() {}
 
@@ -20,7 +20,7 @@ public class CommandData {
     public CommandData(String prefix, boolean autoDelete, Map<Integer, CommandOptions> commandOptions) {
         this.prefix = prefix;
         this.autoDelete = autoDelete;
-        this.commandOptions = commandOptions;
+        this.options = commandOptions;
     }
 
     public String getPrefix() {
@@ -40,9 +40,9 @@ public class CommandData {
     }
 
     public Map<Integer, CommandOptions> getOptions() {
-        if (commandOptions == null) {
-            commandOptions = new HashMap<>();
+        if (options == null) {
+            options = new HashMap<>();
         }
-        return commandOptions;
+        return options;
     }
 }

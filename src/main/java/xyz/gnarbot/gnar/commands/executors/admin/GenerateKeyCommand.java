@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.db.Key;
+import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
@@ -42,9 +42,9 @@ public class GenerateKeyCommand extends CommandExecutor {
             num = 50;
         }
 
-        Key.Type type;
+        PremiumKey.Type type;
         try {
-            type = Key.Type.valueOf(args[1]);
+            type = PremiumKey.Type.valueOf(args[1]);
         } catch (IllegalArgumentException e) {
             context.send().error("That's not a valid key type.").queue();
             return;
@@ -59,7 +59,7 @@ public class GenerateKeyCommand extends CommandExecutor {
 
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < num; i++) {
-            Key key = new Key(UUID.randomUUID().toString(), type, duration);
+            PremiumKey key = new PremiumKey(UUID.randomUUID().toString(), type, duration);
             builder.append(key.getId()).append('\n');
             key.save();
         }

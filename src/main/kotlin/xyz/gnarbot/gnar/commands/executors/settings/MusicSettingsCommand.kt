@@ -42,7 +42,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(1, description = "Add voice channels that Gnar can play music in.")
-    fun music_channel_add(context: Context, channel: VoiceChannel) {
+    fun channel_add(context: Context, channel: VoiceChannel) {
         if (channel.id in context.data.music.channels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
             return
@@ -64,7 +64,7 @@ class MusicSettingsCommand : CommandTemplate() {
     }
 
     @Executor(2, description = "Remove voice channels that Gnar can play music in.")
-    fun music_channel_remove(context: Context, channel: VoiceChannel) {
+    fun channel_remove(context: Context, channel: VoiceChannel) {
         if (channel.id !in context.data.music.channels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
             return

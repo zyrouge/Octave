@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.StringJoiner;
 
 @Command(
         id = 22,
@@ -46,9 +47,9 @@ public class WhoIsCommand extends CommandExecutor {
             return;
         }
 
-        StringBuilder roleStr = new StringBuilder();
+        StringJoiner roleStr = new StringJoiner(", ");
         for (Role role : member.getRoles()) {
-            roleStr.append(role.getName()).append(' ');
+            roleStr.add(role.getName());
         }
 
         context.send().embed("Who is " + member.getEffectiveName() + "?")

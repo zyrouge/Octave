@@ -23,7 +23,6 @@ public class BotListener extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         if (Bot.STATE == LoadState.COMPLETE) {
-            // checks if the bot joined from 1 minute ago to now, prevents massive discord spam
             if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
                 return;
             }

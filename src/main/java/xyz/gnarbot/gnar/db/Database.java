@@ -48,19 +48,6 @@ public class Database {
         conn.close();
     }
 
-//    public void save() {
-//        LOG.info("Saving to database.");
-//        TLongObjectIterator<GuildData> iter = Bot.getGuildDataMap().iterator();
-//        while (iter.hasNext()) {
-//            iter.advance();
-//            GuildData gd = iter.value();
-//            gd.save();
-//            if (gd.getMusicManager().getPlayer().getPlayingTrack() == null) {
-//                iter.remove();
-//            }
-//        }
-//    }
-
     @Nullable
     public GuildData getGuildData(String id) {
         return isOpen() ? r.table("guilds_v2").get(id).run(conn, GuildData.class) : null;
@@ -99,12 +86,13 @@ public class Database {
     }
 
     @Nullable
-    public Key getPremiumKey(String id) {
-        return isOpen() ? r.table("keys").get(id).run(conn, Key.class) : null;
+    public PremiumKey getPremiumKey(String id) {
+        return isOpen() ? r.table("keys").get(id).run(conn, PremiumKey.class) : null;
     }
 
-    public void savePremiumKey(Key key) {
+    public void savePremiumKey(PremiumKey key) {
         if (isOpen()) r.table("keys").insert(key)
+                .optArg("conflict", "replace")
                 .runNoReply(conn);
     }
 
