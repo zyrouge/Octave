@@ -118,7 +118,7 @@ public class CommandRegistry {
         register(new GroovyCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
-        register(new GenerateKeyCommand());
+        register(new PremiumKeyCommand());
         register(new EmoteListCommand());
         register(new SudoCommand());
 

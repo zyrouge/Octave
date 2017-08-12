@@ -15,7 +15,6 @@ public class PremiumKey implements ManagedObject {
     private final String id;
     private final long duration;
     private final Type type;
-
     private Redeemer redeemer;
 
     @ConstructorProperties({"id", "type", "duration"})
@@ -52,7 +51,6 @@ public class PremiumKey implements ManagedObject {
 
     @Override
     public void save() {
-        System.out.println("saving key");
         Bot.db().savePremiumKey(this);
     }
 

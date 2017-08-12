@@ -18,6 +18,7 @@ public class MethodTemplate implements Template {
     private final Method method;
     private final Parser[] parsers;
 
+    @SuppressWarnings("unchecked")
     public MethodTemplate(CommandTemplate command, Executor annotation, Method method) {
         this.command = command;
         this.annotation = annotation;
@@ -46,7 +47,7 @@ public class MethodTemplate implements Template {
     public String requirements() {
         StringBuilder builder = new StringBuilder();
         for (Parser parser : parsers) {
-            builder.append(' ').append(parser.getName());
+            builder.append(" (").append(parser.getName()).append(")");
         }
         return builder.toString();
     }
@@ -61,7 +62,7 @@ public class MethodTemplate implements Template {
 
             StringBuilder builder = new StringBuilder(parsers.length * 16);
             for (Parser parser : parsers) {
-                builder.append("\n`").append(parser.getName()).append("` • ").append(parser.getDescription()).append('.');
+                builder.append("\n`(").append(parser.getName()).append(")` • ").append(parser.getDescription()).append('.');
             }
 
             eb.field("Required Arguments", false, builder.toString());
@@ -86,7 +87,7 @@ public class MethodTemplate implements Template {
             Object obj = parsers[i].parse(context, str);
 
             if (obj == null) {
-                context.send().error("`" + str + "` does not match `" + parsers[i].getName() + "`.").queue();
+                context.send().error("`" + str + "` does not match `(" + parsers[i].getName() + ")`.").queue();
                 return;
             }
 

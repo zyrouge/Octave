@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.waiter.EventWaiter;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
@@ -115,6 +116,10 @@ public final class Bot {
         return shards;
     }
 
+
+    public static Guild getGuildById(long id) {
+        return getShard((int) ((id >> 22) % shards.size())).getJda().getGuildById(id);
+    }
 
     public static Shard getShard(int id) {
         return shards.get(id);

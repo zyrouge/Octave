@@ -10,20 +10,23 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Parser<T> {
-    public static final Parser<String> STRING = new Parser<String>("(string)", "Plain text") {
+    public static final Parser<String> STRING = new Parser<String>("string", "Plain text") {
         @Override
         public String parse(Context c, String s) {
             return s;
         }
     };
-    public static final Parser<Integer> INTEGER = new Parser<Integer>("(integer)", "Integer number") {
+    public static final Parser<Integer> INTEGER = new Parser<Integer>("integer", "Integer number") {
         private final Pattern pattern = Pattern.compile("\\d+");
 
         @Override
@@ -32,7 +35,7 @@ public abstract class Parser<T> {
             return matcher.find() ? Integer.valueOf(s) : null;
         }
     };
-    public static final Parser<Member> MEMBER = new Parser<Member>("(@user)", "User mention or name") {
+    public static final Parser<Member> MEMBER = new Parser<Member>("@user", "User mention or name") {
         private final Pattern pattern = Pattern.compile("<@!?(\\d+)>");
 
         @Override
@@ -46,7 +49,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<TextChannel> TEXT_CHANNEL = new Parser<TextChannel>("(#channel)", "Channel mention or name") {
+    public static final Parser<TextChannel> TEXT_CHANNEL = new Parser<TextChannel>("#channel", "Channel mention or name") {
         private final Pattern pattern = Pattern.compile("<#(\\d+)>");
 
         @Override
@@ -60,14 +63,14 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<VoiceChannel>("(voice channel)", "Voice channel name") {
+    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<VoiceChannel>("voice channel", "Voice channel name") {
         @Override
         public VoiceChannel parse(Context c, String s) {
             List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
             return list.isEmpty() ? null : list.get(0);
         }
     };
-    public static final Parser<Role> ROLE = new Parser<Role>("(@role)", "Role mention or name") {
+    public static final Parser<Role> ROLE = new Parser<Role>("@role", "Role mention or name") {
         private final Pattern pattern = Pattern.compile("<@&(\\d+)>");
 
         @Override
@@ -81,7 +84,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("(_command)", "Command label") {
+    public static final Parser<CommandExecutor> COMMAND = new Parser<CommandExecutor>("_command", "Command label") {
         @Override
         public CommandExecutor parse(Context c, String s) {
             if (s.startsWith("_")) {
@@ -91,7 +94,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<Category> CATEGORY = new Parser<Category>("(category)", "Command category enclosed in brackets") {
+    public static final Parser<Category> CATEGORY = new Parser<Category>("category", "Command category enclosed in brackets") {
         @Override
         public Category parse(Context c, String s) {
             try {
@@ -101,7 +104,7 @@ public abstract class Parser<T> {
             }
         }
     };
-    public static final Parser<Duration> DURATION = new Parser<Duration>("(time hh:mm:ss)", "Timestamp") {
+    public static final Parser<Duration> DURATION = new Parser<Duration>("time hh:mm:ss", "Timestamp") {
         private final Pattern pattern = Pattern.compile("^(\\d+)(?::(\\d+))?(?::(\\d+))?$");
 
         @Override
@@ -184,6 +187,51 @@ public abstract class Parser<T> {
 
     @SuppressWarnings("unchecked")
     public static <T> Parser<T> ofClass(Class<T> cls) {
+        if (cls.isArray()) {
+            return ofArray((Class) cls);
+        } else if (cls.isEnum()) {
+            return ofEnum((Class) cls);
+        }
+
         return (Parser<T>) parserMap.get(cls);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Parser<T[]> ofArray(Class<T[]> cls) {
+        Parser subparser = ofClass(cls.getComponentType());
+
+        if (subparser == null) return null;
+
+        return new Parser<T[]>(subparser.getName() + "...", subparser.getDescription()) {
+            @Override
+            public T[] parse(Context c, String s) {
+                String[] strings = s.split(",\\s*|\n");
+                T[] args = (T[]) Array.newInstance(cls.getComponentType(), strings.length);
+
+                for (int i = 0; i < strings.length; i++) {
+                    T obj = (T) subparser.parse(c, strings[i]);
+                    if (obj == null) return null;
+                    args[i] = obj;
+                }
+
+                System.out.println(Arrays.toString(args));
+                return args;
+            }
+        };
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T>> Parser<T> ofEnum(Class<T> cls) {
+        StringJoiner sj = new StringJoiner(", ");
+        for (T item: cls.getEnumConstants()) {
+            sj.add(item.name());
+        }
+
+        return new Parser<T>(sj.toString(), sj.toString()) {
+            @Override
+            public T parse(Context c, String s) {
+                return Enum.valueOf(cls, s.toUpperCase());
+            }
+        };
     }
 }

@@ -74,8 +74,6 @@ public class GuildData implements ManagedObject {
             premiumKeys = new HashMap<>();
             premiumKeys.put("init", opt.getPremiumUntil());
         }
-
-        System.out.println(ignoredData +" " + musicData + " " + commandData);
     }
 
     public String getId() {
