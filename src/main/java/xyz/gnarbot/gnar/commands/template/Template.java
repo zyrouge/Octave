@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.StringJoiner;
 
 public interface Template {
     Map<String, Template> getCursors();
@@ -18,7 +19,13 @@ public interface Template {
     }
 
     default String description() {
-        return getCursors().keySet().toString();
+        StringJoiner sj = new StringJoiner(", ");
+
+        for (String cursor : getCursors().keySet()) {
+            sj.add(cursor);
+        }
+
+        return sj.toString();
     }
 
     default void execute(Context context, String[] args) {

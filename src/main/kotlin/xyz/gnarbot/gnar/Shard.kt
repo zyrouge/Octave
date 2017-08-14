@@ -6,13 +6,14 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.exceptions.RateLimitedException
+import net.dv8tion.jda.core.hooks.EventListener
 import xyz.gnarbot.gnar.utils.CountUpdater
 import java.util.concurrent.TimeUnit
 import javax.security.auth.login.LoginException
 
 //val guildCountListener = GuildCountListener()
 
-class Shard(val id: Int) {
+class Shard(val id: Int, vararg val listeners: EventListener) {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
 
@@ -23,7 +24,7 @@ class Shard(val id: Int) {
         setMaxReconnectDelay(32)
         setAudioEnabled(true)
         setAudioSendFactory(NativeAudioSendFactory())
-        addEventListener(Bot.waiter, Bot.botListener, Bot.voiceListener)
+        addEventListener(*listeners)
         setEnableShutdownHook(true)
         setGame(Game.of("Loading..."))
     }
@@ -53,7 +54,7 @@ class Shard(val id: Int) {
     fun revive() {
         Bot.LOG.info("Reviving shard $id.")
 
-        jda.removeEventListener(Bot.waiter, Bot.botListener, Bot.voiceListener)
+        jda.removeEventListener(*listeners)
         jda.shutdown()
 
         build()

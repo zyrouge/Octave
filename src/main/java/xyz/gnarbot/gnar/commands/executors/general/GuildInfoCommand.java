@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Role;
 import xyz.gnarbot.gnar.commands.Command;
@@ -20,8 +21,13 @@ public class GuildInfoCommand extends CommandExecutor {
         Guild guild = context.getGuild();
 
         StringJoiner roleStr = new StringJoiner(", ");
-        for (Role role : context.getGuild().getRoles()) {
+        for (Role role : guild.getRoles()) {
             roleStr.add(role.getName());
+        }
+
+        StringBuilder emoteStr = new StringBuilder();
+        for (Emote emote : guild.getEmotes()) {
+            emoteStr.append(emote.getAsMention()).append(' ');
         }
 
         context.send().embed("Guild Information")
@@ -33,11 +39,11 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("Text Channels", true, guild.getTextChannels().size())
                 .field("Voice Channels", true, guild.getVoiceChannels().size())
                 .field("Members", true, guild.getMembers().size())
-                .field("Default Channel", true, guild.getPublicChannel().getAsMention())
+                .field("Emotes", true, emoteStr)
                 .field("Roles", true, roleStr)
                 .field("Premium", true, context.getData().isPremium()
                         ? "Premium status expires in `" + Utils.getTime(context.getData().remainingPremium()) + "`."
-                        : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/gnarbot)**__ to find out more.")
-                .action().queue();
+                        : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/gnarbot)**__ to find out more."
+                ).action().queue();
     }
 }

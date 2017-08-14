@@ -27,15 +27,13 @@ public class QuoteCommand extends CommandExecutor {
         }
 
         for (String id : args) {
-            if (!id.contains("#")) {
-                final TextChannel _targetChannel = targetChannel;
-                context.getMessage().getChannel().getMessageById(id).queue(msg ->
-                        _targetChannel.sendMessage(new EmbedBuilder()
-                                .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
-                                .setDescription(msg.getContent())
-                                .build()
-                        ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
-            }
+            final TextChannel _targetChannel = targetChannel;
+            context.getMessage().getChannel().getMessageById(id).queue(msg ->
+                    _targetChannel.sendMessage(new EmbedBuilder()
+                            .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
+                            .setDescription(msg.getContent())
+                            .build()
+                    ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
         }
 
         context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!").queue();

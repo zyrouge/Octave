@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.utils.Context;
 /**
  * Abstract class that is extended when creating a command.
  */
-public abstract class CommandExecutor {
+public abstract class CommandExecutor implements TCommandExecutor<Context> {
     private final Command commandInfo = this.getClass().getAnnotation(Command.class);
 
     /**
@@ -16,12 +16,4 @@ public abstract class CommandExecutor {
     public Command getInfo() {
         return commandInfo;
     }
-
-    /**
-     * Abstract method to be executed when the command is called.
-     *  @param context Context argument.
-     * @param label
-     * @param args Arguments passed into the execution.
-     */
-    public abstract void execute(Context context, String label, String[] args);
 }

@@ -39,16 +39,16 @@ public final class Bot {
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
 
-    protected static final BotListener botListener = new BotListener();
-    protected static final VoiceListener voiceListener = new VoiceListener();
-    protected static final EventWaiter waiter = new EventWaiter();
+    private static final BotListener botListener = new BotListener();
+    private static final VoiceListener voiceListener = new VoiceListener();
+    private static final EventWaiter waiter = new EventWaiter();
 
     private static final Database database = new Database("bot");
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
     private static final PlayerRegistry playerRegistry = new PlayerRegistry();
 
-    private static final List<Shard> shards = new ArrayList<>();
+    private static final List<Shard> shards = new ArrayList<>(KEYS.getShards());
 
     public static LoadState STATE = LoadState.LOADING;
 
@@ -73,7 +73,7 @@ public final class Bot {
         DiscordFM.loadLibraries();
 
         for (int i = 0; i < KEYS.getShards(); i++) {
-            Shard shard = new Shard(i);
+            Shard shard = new Shard(i, waiter, botListener, voiceListener);
             shards.add(shard);
             shard.build();
             Thread.sleep(5000);
