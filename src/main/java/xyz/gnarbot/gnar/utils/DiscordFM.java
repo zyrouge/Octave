@@ -59,11 +59,13 @@ public class DiscordFM {
                                 .filter(s -> s.startsWith("https://")) // make sure hte line starts with a valid link
                                 .collect(Collectors.toList()));
                     }
+                    response.close();
                 }
             });
         }
     }
 
+    // todo stuff
     public static String getRandomSong(String library) {
         try {
             List<String> urls = cache.get(library);

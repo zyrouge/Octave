@@ -80,7 +80,7 @@ class NowPlayingCommand : CommandExecutor() {
                 val percent = track.position.toDouble() / track.duration
                 buildString {
                     append("[")
-                    for (i in 0..totalBlocks - 1) {
+                    for (i in 0 until totalBlocks) {
                         if ((percent * (totalBlocks - 1)).toInt() == i) {
                             append("\u25AC")
                             append("]()")

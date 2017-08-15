@@ -97,8 +97,7 @@ class SelfRoleCommand : CommandTemplate() {
                             return
                         }
 
-                        context.data.roles.selfRoles.map(context.guild::getRoleById)
-                                .filterNotNull()
+                        context.data.roles.selfRoles.mapNotNull(context.guild::getRoleById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }

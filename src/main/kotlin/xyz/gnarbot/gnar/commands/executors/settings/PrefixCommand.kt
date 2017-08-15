@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class PrefixCommand : CommandTemplate() {
-    val mention = Regex("<@!?(\\d+)>|<#(\\d+)>|<@&(\\d+)>")
+    private val mention = Regex("<@!?(\\d+)>|<#(\\d+)>|<@&(\\d+)>")
 
     @Executor(0, description = "Set the prefix.")
     fun set(context: Context, prefix: String) {
@@ -48,7 +48,7 @@ class PrefixCommand : CommandTemplate() {
             return
         }
 
-        context.data.command.prefix = Bot.CONFIG.prefix
+        context.data.command.prefix = null
         context.data.save()
 
         context.send().embed("Server Prefix") {

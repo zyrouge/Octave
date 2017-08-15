@@ -498,8 +498,7 @@ class ManageCommandsCommand : CommandTemplate() {
                             append("The allowed users list is empty. All users are allowed to use this command.")
                         }
 
-                        it.map(context.guild::getMemberById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getMemberById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }
@@ -513,8 +512,7 @@ class ManageCommandsCommand : CommandTemplate() {
                             append("The allowed roles list is empty. All roles are allowed to use this command.")
                         }
 
-                        it.map(context.guild::getRoleById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getRoleById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }
@@ -528,10 +526,10 @@ class ManageCommandsCommand : CommandTemplate() {
                             append("The allowed channels list is empty. All channels are allowed to use this command.")
                         }
 
-                        it.map(context.guild::getTextChannelById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getTextChannelById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
+
                     }
                 }
             }

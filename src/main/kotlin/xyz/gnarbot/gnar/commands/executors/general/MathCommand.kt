@@ -51,12 +51,10 @@ class MathCommand : CommandExecutor() {
                 }
             }
 
-            "\\begin{align}${if (eqTex == resultsTex) {
-                resultsTex
-            } else if (simpleEqTex == null) {
-                "$eqTex\\\\$resultsTex"
-            } else {
-                "$eqTex\\\\$simpleEqTex\\\\$resultsTex"
+            "\\begin{align}${when {
+                eqTex == resultsTex -> resultsTex
+                simpleEqTex == null -> "$eqTex\\\\$resultsTex"
+                else -> "$eqTex\\\\$simpleEqTex\\\\$resultsTex"
             }}\\end{align}"
         } else {
             val expr = Parser(Lexer(str)).parse()
@@ -85,7 +83,7 @@ class MathCommand : CommandExecutor() {
         ).queue()
     }
 
-    fun writeTexToFile(tex: String, file: File) {
+    private fun writeTexToFile(tex: String, file: File) {
         val formula = TeXFormula(tex)
         val ti = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 30f)
         val b = BufferedImage(ti.iconWidth, ti.iconHeight, BufferedImage.TYPE_4BYTE_ABGR)

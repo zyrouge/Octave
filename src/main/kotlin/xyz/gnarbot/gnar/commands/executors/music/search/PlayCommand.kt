@@ -19,7 +19,7 @@ import xyz.gnarbot.gnar.utils.Context
         category = Category.MUSIC
 )
 class PlayCommand : CommandExecutor() {
-    val footnote = "You can search and pick results using _youtube or _soundcloud while in a channel."
+    private val footnote = "You can search and pick results using _youtube or _soundcloud while in a channel."
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         val botChannel = context.guild.selfMember.voiceState.channel
@@ -38,17 +38,21 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            if (manager.player.isPaused) {
-                manager.player.isPaused = false
-                context.send().embed("Play Music") {
-                    desc { "Music is now playing." }
-                }.action().queue()
-            } else if (manager.player.playingTrack != null) {
-                context.send().error("Music is already playing.").queue()
-            } else if (manager.scheduler.queue.isEmpty()) {
-                context.send().embed("Empty Queue") {
-                    desc { "There is no music queued right now. Add some songs with `play -song|url`." }
-                }.action().queue()
+            when {
+                manager.player.isPaused -> {
+                    manager.player.isPaused = false
+                    context.send().embed("Play Music") {
+                        desc { "Music is now playing." }
+                    }.action().queue()
+                }
+                manager.player.playingTrack != null -> {
+                    context.send().error("Music is already playing.").queue()
+                }
+                manager.scheduler.queue.isEmpty() -> {
+                    context.send().embed("Empty Queue") {
+                        desc { "There is no music queued right now. Add some songs with `play -song|url`." }
+                    }.action().queue()
+                }
             }
             return
         }

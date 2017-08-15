@@ -112,8 +112,7 @@ class IgnoreCommand : CommandTemplate() {
                             append("None of the users are ignored.")
                         }
 
-                        it.map(context.guild::getMemberById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getMemberById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }
@@ -126,8 +125,7 @@ class IgnoreCommand : CommandTemplate() {
                             append("None of the channels are ignored.")
                         }
 
-                        it.map(context.guild::getTextChannelById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getTextChannelById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }
@@ -140,8 +138,7 @@ class IgnoreCommand : CommandTemplate() {
                             append("None of the roles are ignored.")
                         }
 
-                        it.map(context.guild::getRoleById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getRoleById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
                     }

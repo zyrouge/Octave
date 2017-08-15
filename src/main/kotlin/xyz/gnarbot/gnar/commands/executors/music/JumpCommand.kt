@@ -61,7 +61,7 @@ class JumpCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    fun check(context: Context): Boolean {
+    private fun check(context: Context): Boolean {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()

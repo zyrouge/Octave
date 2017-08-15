@@ -140,6 +140,7 @@ public class GuildData implements ManagedObject {
 
     @JsonIgnore
     public RoleData getRoles() {
+        if (roleData == null) roleData = new RoleData();
         return roleData;
     }
 

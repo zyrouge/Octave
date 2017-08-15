@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import xyz.gnarbot.gnar.guilds.CommandOptions;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class CommandData {
         this.options = commandOptions;
     }
 
+    @Nullable
     public String getPrefix() {
         return prefix;
     }

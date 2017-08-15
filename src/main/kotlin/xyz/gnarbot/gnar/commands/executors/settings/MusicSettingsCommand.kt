@@ -136,8 +136,7 @@ class MusicSettingsCommand : CommandTemplate() {
                             append("None.")
                         }
 
-                        it.map(context.guild::getVoiceChannelById)
-                                .filterNotNull()
+                        it.mapNotNull(context.guild::getVoiceChannelById)
                                 .map(Channel::getName)
                                 .forEach { append("• ").append(it).append('\n') }
                     }

@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.utils;
 
-import net.dv8tion.jda.core.entities.Message;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,11 +19,8 @@ public class Utils {
     private static final Pattern TIME_PATTERN =
             Pattern.compile("(-?\\d+)\\s*((?:d(?:ay(?:s)?)?)|(?:h(?:our(?:s)?)?)|(?:m(?:in(?:ute(?:s)?)?)?)|(?:s(?:ec(?:ond(?:s)?)?)?))?");
 
-    private static final Pattern TIMESTAMP_PATTERN = Pattern.compile("^(\\d+)(?::(\\d+))?(?::(\\d+))?$");
-
     // https://regex101.com/r/VXEl27/1/
-    private static final Pattern ARGUMENT_PATTERN =
-            Pattern.compile("`{3}(?:\\w+\\n)?([\\s\\S]*?)`{3}|`([^`]+)`|(\\S+)");
+    private static final Pattern ARGUMENT_PATTERN = Pattern.compile("`{3}(?:\\w+\\n)?([\\s\\S]*?)`{3}|`([^`]+)`|(\\S+)");
 
     public static String getTime(long ms) {
         long s = ms / 1000;
@@ -41,6 +36,7 @@ public class Utils {
         long ms = 0;
 
         Matcher matcher = TIME_PATTERN.matcher(s);
+
         while (matcher.find()) {
             String numStr = matcher.group(1);
             String unitStr = matcher.group(2);
@@ -78,10 +74,6 @@ public class Utils {
         return ms;
     }
 
-    public static Consumer<Message> deleteMessage(final int seconds) {
-        return msg -> msg.delete().queueAfter(seconds, TimeUnit.SECONDS);
-    }
-
     public static String[] stringSplit(String s) {
         List<String> parts = new ArrayList<>();
 
@@ -99,45 +91,6 @@ public class Utils {
         return parts.toArray(new String[parts.size()]);
     }
 
-    public static long parseTimestamp(String str) throws NumberFormatException {
-        long seconds = 0;
-        long minutes = 0;
-        long hours = 0;
-
-        Matcher m = TIMESTAMP_PATTERN.matcher(str);
-
-        if (!m.find()) {
-            throw new IllegalArgumentException(str + " is not a valid timestamp");
-        }
-
-        int capturedGroups = 0;
-        if (m.group(1) != null) capturedGroups++;
-        if (m.group(2) != null) capturedGroups++;
-        if (m.group(3) != null) capturedGroups++;
-
-        switch (capturedGroups) {
-            case 0:
-                throw new IllegalArgumentException(str + " is not a valid timestamp");
-            case 1:
-                seconds = Integer.parseInt(m.group(1));
-                break;
-            case 2:
-                minutes = Integer.parseInt(m.group(1));
-                seconds = Integer.parseInt(m.group(2));
-                break;
-            case 3:
-                hours = Integer.parseInt(m.group(1));
-                minutes = Integer.parseInt(m.group(2));
-                seconds = Integer.parseInt(m.group(3));
-                break;
-        }
-
-        minutes = minutes + hours * 60;
-        seconds = seconds + minutes * 60;
-
-        return seconds * 1000;
-    }
-
     public static String getTimestamp(long milliseconds) {
         long seconds = milliseconds / 1000 % 60;
         long minutes = milliseconds / (1000 * 60) % 60;
@@ -150,6 +103,7 @@ public class Utils {
         }
     }
 
+    // todo not return error strings
     public static String hasteBin(String content) {
         Request request = new Request.Builder().url("https://hastebin.com/documents")
                 .header("User-Agent", "Gnar")

@@ -56,7 +56,7 @@ class PollCommand : CommandExecutor() {
             }
             footer { "Results will be final in ${parts[1]}." }
         }.action().queue {
-            for (index in 0..options.size - 1) {
+            for (index in 0 until options.size) {
                 it.addReaction("${'\u0030' + index}\u20E3").queue()
             }
 
@@ -74,7 +74,7 @@ class PollCommand : CommandExecutor() {
                         buildString {
                             it.reactions.forEach { reaction ->
                                 val value = reaction.emote.name[0] - '\u0030'
-                                if (value !in 0..options.size - 1) return@forEach
+                                if (value !in 0 until options.size) return@forEach
 
                                 options[value].let {
                                     appendln("${reaction.emote.name} **$it** — __${reaction.count - 1} Votes__")

@@ -39,7 +39,7 @@ class VolumeCommand : CommandExecutor() {
                     val percent = manager.player.volume.toDouble() / 100
                     buildString {
                         append("[")
-                        for (i in 0..totalBlocks - 1) {
+                        for (i in 0 until totalBlocks) {
                             if ((percent * (totalBlocks - 1)).toInt() == i) {
                                 append("\u25AC")
                                 append("]()")
@@ -76,7 +76,7 @@ class VolumeCommand : CommandExecutor() {
                 val percent = amount.toDouble() / 100
                 buildString {
                     append("[")
-                    for (i in 0..totalBlocks - 1) {
+                    for (i in 0 until totalBlocks) {
                         if ((percent * (totalBlocks - 1)).toInt() == i) {
                             append("\u25AC")
                             append("]()")

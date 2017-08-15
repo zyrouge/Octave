@@ -20,7 +20,7 @@ class JavascriptCommand : CommandExecutor() {
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         val script = args.joinToString(" ")
-        if (script.isNullOrEmpty()) {
+        if (script.isEmpty()) {
             context.send().error("Script can not be empty.").queue()
             return
         }

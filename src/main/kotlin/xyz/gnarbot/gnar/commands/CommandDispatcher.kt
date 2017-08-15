@@ -15,7 +15,6 @@ import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
 
 object CommandDispatcher {
-    //private val cooldownMap = TLongLongHashMap()
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
@@ -23,9 +22,9 @@ object CommandDispatcher {
 
         val content = event.message.rawContent
         if (!content.startsWith(Bot.CONFIG.prefix)
-                && !content.startsWith(namePrefix, true)
-                && !content.startsWith(guildOptions.command.prefix)) {
-            return
+                && !content.startsWith(namePrefix, true)) {
+            val prefix = guildOptions.command.prefix
+            if (prefix == null || !content.startsWith(prefix)) return
         }
 
         // Don't do anything if the bot can't even speak.
@@ -54,8 +53,11 @@ object CommandDispatcher {
             when {
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
-                it.startsWith(context.data.command.prefix) -> it.substring(context.data.command.prefix.length)
-                else -> return false
+                else -> {
+                    val prefix = context.data.command.prefix
+                    if (prefix == null || !it.startsWith(prefix)) return false
+                    it.substring(prefix.length)
+                }
             }
         }
 

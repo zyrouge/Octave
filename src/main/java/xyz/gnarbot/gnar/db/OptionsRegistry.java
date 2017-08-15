@@ -8,22 +8,20 @@ import xyz.gnarbot.gnar.guilds.GuildOptions;
 public class OptionsRegistry {
     public GuildData ofGuild(Guild guild) {
         GuildData data = Bot.db().getGuildData(guild.getId());
+
         if (data == null) {
             // noinspection deprecation it is safe here
             GuildOptions options = Bot.db().getGuildOptions(guild.getId());
 
             if (options != null) {
                 data = new GuildData(options);
-                System.out.println("converted");
+                Bot.LOG.info("Converted guild " + guild + " to new format successfully.");
                 data.save();
-                //options.delete();
             } else {
                 data = new GuildData(guild.getId());
-                System.out.println("completly new");
             }
-        } else {
-            System.out.println("gottem");
         }
+
         return data;
     }
 

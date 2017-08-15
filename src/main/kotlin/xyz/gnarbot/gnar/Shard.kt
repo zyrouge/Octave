@@ -13,7 +13,7 @@ import javax.security.auth.login.LoginException
 
 //val guildCountListener = GuildCountListener()
 
-class Shard(val id: Int, vararg val listeners: EventListener) {
+class Shard(val id: Int, private vararg val listeners: EventListener) {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
 
@@ -31,7 +31,7 @@ class Shard(val id: Int, vararg val listeners: EventListener) {
 
     lateinit var jda: JDA
 
-    val countUpdater = CountUpdater(this)
+    private val countUpdater = CountUpdater(this)
 
     init {
         Bot.EXECUTOR.scheduleAtFixedRate(countUpdater::update, 30, 30, TimeUnit.MINUTES)

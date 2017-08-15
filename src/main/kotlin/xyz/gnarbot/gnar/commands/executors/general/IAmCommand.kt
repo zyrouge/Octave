@@ -60,9 +60,9 @@ class IAmCommand : CommandTemplate() {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
-                        context.data.roles.selfRoles.map {
+                        context.data.roles.selfRoles.mapNotNull {
                             context.guild.getRoleById(it)
-                        }.filterNotNull().forEach {
+                        }.forEach {
                             append("• ").append(it.asMention).append('\n')
                         }
                     }
