@@ -24,7 +24,7 @@ class ThrowError : CommandExecutor() {
                                 append(" - ").append(it.info.description).append("\n\n")
                             }
                         }
-                )
+                ) ?: "Can not post to HasteBin."
         ).queue()
     }
 }

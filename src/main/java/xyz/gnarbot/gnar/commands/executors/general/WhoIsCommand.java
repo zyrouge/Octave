@@ -62,7 +62,7 @@ public class WhoIsCommand extends CommandExecutor {
                 .field("ID", true, member.getUser().getId())
                 .field("Status", true, StringUtils.capitalize(member.getOnlineStatus().getKey()))
 
-                .field("Account Created", true, member.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .field("Account Created", true, member.getUser().getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME))
                 .field("Join Date", true, member.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
 
                 .field("Nickname", true, member.getNickname() != null ? member.getNickname() : "No nickname.")

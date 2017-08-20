@@ -5,7 +5,6 @@ import com.rethinkdb.net.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.guilds.GuildData;
-import xyz.gnarbot.gnar.guilds.GuildOptions;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,19 +61,6 @@ public class Database {
     public void deleteGuildData(String id) {
         if (isOpen()) r.table("guilds_v2").get(id)
                 .delete()
-                .runNoReply(conn);
-    }
-
-    @Nullable
-    @Deprecated
-    public GuildOptions getGuildOptions(String id) {
-        return isOpen() ? r.table("guilds").get(id).run(conn, GuildOptions.class) : null;
-    }
-
-    @Deprecated
-    public void saveGuildOptions(GuildOptions guildData) {
-        if (isOpen()) r.table("guilds").insert(guildData)
-                .optArg("conflict", "replace")
                 .runNoReply(conn);
     }
 

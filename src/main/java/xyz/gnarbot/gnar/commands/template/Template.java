@@ -11,6 +11,7 @@ import java.util.StringJoiner;
 
 public interface Template {
     Map<String, Template> getCursors();
+
     default void add(String key, Template template) {
         if (getCursors().containsKey(key)) {
             throw new IllegalStateException("Trying to override " + key);
@@ -72,10 +73,7 @@ public interface Template {
         }
 
         EmbedMaker eb = new EmbedMaker();
-
-        Color color = context.getGuild().getSelfMember().getColor();
-        if (color == null) color = Color.WHITE;
-        eb.setColor(color);
+        eb.setColor(context.getGuild().getSelfMember().getColor());
 
         if (title == null && description == null) {
             eb.setTitle("Arguments");

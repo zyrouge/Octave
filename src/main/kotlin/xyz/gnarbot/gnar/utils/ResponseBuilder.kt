@@ -3,13 +3,13 @@ package xyz.gnarbot.gnar.utils
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.requests.RestAction
+import org.apache.commons.lang3.exception.ExceptionUtils
 import java.awt.Color
 import javax.annotation.CheckReturnValue
 
 fun TextChannel.respond() = ResponseBuilder(this)
 
 class ResponseBuilder(private val channel: TextChannel) {
-
     /**
      * Quick-reply to a message.
      *
@@ -53,8 +53,14 @@ class ResponseBuilder(private val channel: TextChannel) {
      *
      * @return The Message created by this function.
      */
-    fun exception(throwable: Throwable): RestAction<Message> {
-        return error("${throwable.javaClass.simpleName}: ${throwable.message ?: ""}")
+    fun exception(exception: Exception): RestAction<Message> {
+        return embed {
+            title { exception.toString() }
+            desc  {
+                Utils.hasteBin(ExceptionUtils.getStackTrace(exception)) ?: "Error while posting trace to HasteBin."
+            }
+            color { Color.RED }
+        }.action()
     }
 
     /**

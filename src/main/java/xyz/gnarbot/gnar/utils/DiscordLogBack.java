@@ -4,12 +4,10 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.Bot;
-
-import java.io.IOException;
 
 public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
     private static boolean enabled;
@@ -34,8 +32,17 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
 
         String content = patternLayout.doLayout(event);
 
-        if (content.length() > 1920) {
-            content = ":warning: Received a message but it was too long. " + Utils.hasteBin(content);
+        if (content.length() > 2000) {
+            StringBuilder sb = new StringBuilder(":warning: Received a message but it was too long. ");
+
+            String url = Utils.hasteBin(content);
+            if (url != null) {
+                sb.append(url);
+            } else {
+                sb.append("Error while posting to HasteBin.");
+            }
+
+            content = sb.toString();
         }
 
         Request request = new Request.Builder()
@@ -44,17 +51,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
                 .post(RequestBody.create(HttpUtils.JSON, new JSONObject().put("content", content).toString()))
                 .build();
 
-        HttpUtils.CLIENT.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                call.cancel();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                response.close();
-            }
-        });
+        HttpUtils.CLIENT.newCall(request).enqueue(HttpUtils.EMPTY_CALLBACK);
     }
 
     @Override

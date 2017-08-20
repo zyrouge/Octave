@@ -510,6 +510,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     options.allowedRoles.let {
                         if (it.isEmpty()) {
                             append("The allowed roles list is empty. All roles are allowed to use this command.")
+
                         }
 
                         it.mapNotNull(context.guild::getRoleById)
@@ -524,12 +525,12 @@ class ManageCommandsCommand : CommandTemplate() {
                     options.allowedChannels.let {
                         if (it.isEmpty()) {
                             append("The allowed channels list is empty. All channels are allowed to use this command.")
+
                         }
 
                         it.mapNotNull(context.guild::getTextChannelById)
                                 .map(IMentionable::getAsMention)
                                 .forEach { append("• ").append(it).append('\n') }
-
                     }
                 }
             }

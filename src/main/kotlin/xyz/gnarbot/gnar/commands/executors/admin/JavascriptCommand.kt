@@ -14,9 +14,7 @@ import javax.script.*
         category = Category.NONE
 )
 class JavascriptCommand : CommandExecutor() {
-    companion object {
-        val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("javascript")
-    }
+    private val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("javascript")
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         val script = args.joinToString(" ")
@@ -41,5 +39,4 @@ class JavascriptCommand : CommandExecutor() {
             context.message.addReaction("\uD83D\uDC4C").queue()
         }
     }
-
 }

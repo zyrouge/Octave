@@ -35,7 +35,7 @@ class EmoteListCommand : CommandExecutor() {
             desc {
                 buildString {
                     emotePage.forEach {
-                        appendln("${it.asMention} `:${it.name}:`")
+                        append("${it.asMention} `:${it.name}:`\n")
                     }
                 }
             }

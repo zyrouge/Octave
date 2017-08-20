@@ -21,7 +21,7 @@ import java.util.function.Consumer
  * @author Avarel
  */
 class EventWaiter : EventListener {
-    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<*>>>()
+    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<in Event>>>()
 
     fun <T: Event> waitForEvent(cls: Class<in T>,
                                 predicate: (T) -> Boolean,
@@ -32,7 +32,7 @@ class EventWaiter : EventListener {
         val list = waiters.getOrPut(cls, ::mutableListOf)
 
         val waiter = Waiter(cls, predicate, action)
-        list.add(waiter)
+        list.add(waiter as Waiter<in Event>)
 
         if (timeout > 0) {
             requireNotNull(unit)
@@ -95,9 +95,8 @@ class EventWaiter : EventListener {
     inner class Waiter<in T: Event>(private val cls: Class<in T>,
                                     private val predicate: (T) -> Boolean,
                                     private val action: (T) -> Unit) {
-
         fun isValid(): Boolean {
-            return waiters[cls]?.contains(this) ?: false
+            return waiters[cls]?.contains(this) == true
         }
 
         fun attempt(event: T): Boolean {
@@ -110,7 +109,7 @@ class EventWaiter : EventListener {
         }
 
         fun cancel(): Boolean {
-            return waiters[cls]?.remove(this) ?: false
+            return waiters[cls]?.remove(this) == true
         }
     }
 }

@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,19 +92,19 @@ public class Utils {
         return parts.toArray(new String[parts.size()]);
     }
 
-    public static String getTimestamp(long milliseconds) {
-        long seconds = milliseconds / 1000 % 60;
-        long minutes = milliseconds / (1000 * 60) % 60;
-        long hours = milliseconds / (1000 * 60 * 60) % 24;
+    public static String getTimestamp(long ms) {
+        long s = ms / 1000;
+        long m = s / 60;
+        long h = m / 60;
 
-        if (hours > 0) {
-            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        if (h > 0) {
+            return String.format("%02d:%02d:%02d", h, m, s);
         } else {
-            return String.format("%02d:%02d", minutes, seconds);
+            return String.format("%02d:%02d", m, s);
         }
     }
 
-    // todo not return error strings
+    @Nullable
     public static String hasteBin(String content) {
         Request request = new Request.Builder().url("https://hastebin.com/documents")
                 .header("User-Agent", "Gnar")
@@ -113,7 +114,7 @@ public class Utils {
 
         try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
             ResponseBody body = response.body();
-            if (body == null) return "Response null while posting to HasteBin.";
+            if (body == null) return null;
 
             JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()));
 
@@ -122,7 +123,7 @@ public class Utils {
             return "https://hastebin.com/" + jso.get("key");
         } catch (IOException e) {
             e.printStackTrace();
-            return "Error posting to HasteBin.";
+            return null;
         }
     }
 }

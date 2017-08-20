@@ -42,40 +42,6 @@ public class GuildData implements ManagedObject {
         this.id = id;
     }
 
-    @JsonIgnore
-    public GuildData(GuildOptions opt) {
-        this(opt.getId());
-
-        if (opt.ignoredChannels != null && !opt.ignoredChannels.isEmpty()
-                || opt.ignoredUsers != null && !opt.ignoredUsers.isEmpty()
-                || opt.ignoredRoles != null && !opt.ignoredRoles.isEmpty()) {
-            ignoredData = new IgnoredData(opt.ignoredChannels, opt.ignoredUsers, opt.ignoredRoles);
-        }
-
-        if (opt.djRole != null
-                || opt.musicChannels != null && !opt.musicChannels.isEmpty()
-                || opt.musicVolume != 100
-                || !opt.announce) {
-            musicData = new MusicData(opt.djRole, opt.musicChannels, opt.musicVolume, opt.announce);
-        }
-
-        if (opt.prefix != null
-                || opt.autoDelete
-                || opt.commandOptions != null && !opt.commandOptions.isEmpty()) {
-            commandData = new CommandData(opt.prefix, opt.autoDelete, opt.commandOptions);
-        }
-
-        if (opt.autoRole != null
-                || opt.selfRoles != null && !opt.selfRoles.isEmpty()) {
-            roleData = new RoleData(opt.autoRole, opt.selfRoles);
-        }
-
-        if (opt.isPremium()) {
-            premiumKeys = new HashMap<>();
-            premiumKeys.put("init", opt.getPremiumUntil());
-        }
-    }
-
     public String getId() {
         return id;
     }

@@ -14,9 +14,7 @@ import javax.script.*
         category = Category.NONE
 )
 class GroovyCommand : CommandExecutor() {
-    companion object {
-        val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("groovy")
-    }
+    private val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("groovy")
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         val script = args.joinToString(" ")
