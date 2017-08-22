@@ -5,11 +5,9 @@ import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
-import net.dv8tion.jda.core.exceptions.RateLimitedException
 import net.dv8tion.jda.core.hooks.EventListener
 import xyz.gnarbot.gnar.utils.CountUpdater
 import java.util.concurrent.TimeUnit
-import javax.security.auth.login.LoginException
 
 //val guildCountListener = GuildCountListener()
 
@@ -37,18 +35,18 @@ class Shard(val id: Int, private vararg val listeners: EventListener) {
         Bot.EXECUTOR.scheduleAtFixedRate(countUpdater::update, 30, 30, TimeUnit.MINUTES)
     }
 
-    fun build() = try {
+    fun build() {
         Bot.LOG.info("Building shard $id.")
 
         this.jda = builder.buildBlocking().apply {
             selfUser.manager.setName(Bot.CONFIG.name).queue()
         }
-    } catch (e: LoginException) {
-        throw e
-    } catch (e: InterruptedException) {
-        throw e
-    } catch (e: RateLimitedException) {
-        throw e
+    }
+
+    fun buildAsync() {
+        Bot.LOG.info("Building shard $id.")
+
+        this.jda = builder.buildAsync()
     }
 
     fun revive() {

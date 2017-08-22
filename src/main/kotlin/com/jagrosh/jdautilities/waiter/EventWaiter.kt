@@ -21,8 +21,9 @@ import java.util.function.Consumer
  * @author Avarel
  */
 class EventWaiter : EventListener {
-    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<in Event>>>()
+    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<Event>>>()
 
+    @Suppress("UNCHECKED_CAST")
     fun <T: Event> waitForEvent(cls: Class<in T>,
                                 predicate: (T) -> Boolean,
                                 action: (T) -> Unit,
@@ -32,7 +33,7 @@ class EventWaiter : EventListener {
         val list = waiters.getOrPut(cls, ::mutableListOf)
 
         val waiter = Waiter(cls, predicate, action)
-        list.add(waiter as Waiter<in Event>)
+        list.add(waiter as Waiter<Event>)
 
         if (timeout > 0) {
             requireNotNull(unit)
@@ -54,8 +55,7 @@ class EventWaiter : EventListener {
 
         while (cls.superclass != null) {
             if (cls in waiters) {
-                val list = waiters[cls] as? MutableList<Waiter<Event>>
-                list?.removeIf { it.attempt(event) }
+                waiters[cls]?.removeIf { it.attempt(event) }
             }
 
             cls = cls.superclass

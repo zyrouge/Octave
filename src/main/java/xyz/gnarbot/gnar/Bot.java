@@ -75,7 +75,7 @@ public final class Bot {
         for (int i = 0; i < KEYS.getShards(); i++) {
             Shard shard = new Shard(i, waiter, botListener, voiceListener);
             shards.add(shard);
-            shard.build();
+            shard.buildAsync();
             Thread.sleep(5000);
         }
 
