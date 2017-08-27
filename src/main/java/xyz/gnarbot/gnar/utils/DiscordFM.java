@@ -21,7 +21,7 @@ public class DiscordFM {
             "purely-pop", "rock-n-roll", "coffee-house-jazz"
     };
 
-    private static Map<String, List<String>> cache = new HashMap<>();
+    private static Map<String, List<String>> cache = new HashMap<>(LIBRARIES.length);
 
     public static void loadLibraries() {
         for (String lib : LIBRARIES) {

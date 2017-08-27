@@ -4,19 +4,15 @@ import net.dv8tion.jda.core.utils.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class SimpleLogToSLF4JAdapter implements SimpleLog.LogListener {
-    private final Map<SimpleLog, Logger> loggers;
+    private final Map<SimpleLog, Logger> loggers = new HashMap<>();
 
     public static void install() {
         SimpleLog.addListener(new SimpleLogToSLF4JAdapter());
         SimpleLog.LEVEL = SimpleLog.Level.OFF;
-    }
-
-    private SimpleLogToSLF4JAdapter() {
-        loggers = new WeakHashMap<>();
     }
 
     @Override

@@ -33,7 +33,7 @@ class MoveCommand : CommandExecutor() {
         }
 
         val targetChannel = if (args.isEmpty()) {
-            context.member.voiceState.channel
+            context.voiceChannel
         } else {
             Parser.VOICE_CHANNEL.parse(context, args.joinToString(" "))
         }

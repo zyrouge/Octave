@@ -21,7 +21,7 @@ class HelpCommand : CommandExecutor() {
             val target = args[0]
 
             val category = try {
-                Category.valueOf(target)
+                Category.valueOf(target.toUpperCase())
             } catch (e: IllegalArgumentException) {
                 null
             }
@@ -74,7 +74,7 @@ class HelpCommand : CommandExecutor() {
         context.send().embed("Guides") {
             desc {
                 buildString {
-                    append("The prefix of the bot on this server is `").append(context.data.command.prefix).append("`.\n")
+                    append("The prefix of the bot on this server is `").append(context.data.command.prefix ?: Bot.CONFIG.prefix).append("`.\n")
                     append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
                 }
             }
@@ -82,9 +82,7 @@ class HelpCommand : CommandExecutor() {
             for (category in Category.values()) {
                 if (!category.show) continue
 
-                val filtered = cmds.filter {
-                    it.info.category == category
-                }
+                val filtered = cmds.filter { it.info.category == category }
                 if (filtered.isEmpty()) continue
 
                 field("${category.title} — ${filtered.size}\n") {

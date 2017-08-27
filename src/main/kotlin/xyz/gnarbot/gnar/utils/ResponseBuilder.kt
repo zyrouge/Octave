@@ -55,9 +55,19 @@ class ResponseBuilder(private val channel: TextChannel) {
      */
     fun exception(exception: Exception): RestAction<Message> {
         return embed {
-            title { exception.toString() }
+            title { "Exception" }
             desc  {
-                Utils.hasteBin(ExceptionUtils.getStackTrace(exception)) ?: "Error while posting trace to HasteBin."
+                buildString {
+                    append("```\n")
+                    append(exception.toString())
+                    append("```\n")
+                    val link = Utils.hasteBin(ExceptionUtils.getStackTrace(exception))
+                    if (link != null) {
+                        append("[Full stack trace.](").append(link).append(')')
+                    } else {
+                        append("HasteBin down.")
+                    }
+                }
             }
             color { Color.RED }
         }.action()

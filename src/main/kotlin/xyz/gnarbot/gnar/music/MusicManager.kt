@@ -23,6 +23,8 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.VoiceChannel
+import org.apache.http.client.config.CookieSpecs
+import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.utils.Context
@@ -32,7 +34,11 @@ import java.util.concurrent.TimeUnit
 class MusicManager(val guild: Guild) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
-            it.registerSourceManager(YoutubeAudioSourceManager())
+            it.registerSourceManager(YoutubeAudioSourceManager().apply {
+                configureRequests {
+                    RequestConfig.copy(it).setCookieSpec(CookieSpecs.IGNORE_COOKIES).build()
+                }
+            })
             it.registerSourceManager(SoundCloudAudioSourceManager())
             it.registerSourceManager(BandcampAudioSourceManager())
             it.registerSourceManager(VimeoAudioSourceManager())
@@ -171,7 +177,7 @@ class MusicManager(val guild: Guild) {
     fun isAlone(): Boolean {
         return guild.selfMember.voiceState.channel?.members?.let {
             it.size == 1 && it[0] == guild.selfMember
-        } ?: true
+        } != false
     }
 
     fun queueLeave() {
@@ -195,7 +201,7 @@ class MusicManager(val guild: Guild) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 if (!guild.selfMember.voiceState.inVoiceChannel()) {
-                    if (!openAudioConnection(context.member.voiceState.channel, context)) {
+                    if (!openAudioConnection(context.voiceChannel, context)) {
                         return
                     }
                 }
@@ -239,7 +245,7 @@ class MusicManager(val guild: Guild) {
                         }
                         return
                     }
-                    if (!openAudioConnection(context.member.voiceState.channel, context)) {
+                    if (!openAudioConnection(context.voiceChannel, context)) {
                         return
                     }
                 }

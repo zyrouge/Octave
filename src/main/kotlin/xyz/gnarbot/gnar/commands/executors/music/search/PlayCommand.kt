@@ -23,7 +23,7 @@ class PlayCommand : CommandExecutor() {
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         val botChannel = context.guild.selfMember.voiceState.channel
-        val userChannel = context.member.voiceState.channel
+        val userChannel = context.voiceChannel
 
         if (botChannel != null && botChannel != userChannel) {
             context.send().error("The bot is already playing music in another channel.").queue()
@@ -75,6 +75,11 @@ class PlayCommand : CommandExecutor() {
                     footnote
             )
         } else {
+            if (!Bot.CONFIG.searchEnabled) {
+                context.send().error("Search is currently disabled. Try direct links instead.").queue()
+                return
+            }
+
             val query = args.joinToString(" ").trim()
 
 //            if (query.startsWith("ytsearch:", ignoreCase = true)) {

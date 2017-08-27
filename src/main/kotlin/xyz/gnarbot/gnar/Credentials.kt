@@ -1,37 +1,37 @@
 package xyz.gnarbot.gnar
 
-import ninja.leaping.configurate.commented.CommentedConfigurationNode
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader
-import ninja.leaping.configurate.loader.ConfigurationLoader
-import okhttp3.Request
-import org.json.JSONObject
-import org.json.JSONTokener
-import xyz.gnarbot.gnar.utils.HttpUtils
 import xyz.gnarbot.gnar.utils.get
 import java.io.File
 
+//val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
+//        .header("Authorization", "Bot $token")
+//        .header("Content-Type", "application/json")
+//        .build()
+//
+//HttpUtils.CLIENT.newCall(request).execute().use { response ->
+//    response.body()?.let {
+//        val jso = JSONObject(JSONTokener(it.byteStream()))
+//        response.close()
+//        jso.getInt("shards")
+//    } ?: error("Invalid shards response from Discord")
+//}
+
 class Credentials(file: File) {
-    val loader: ConfigurationLoader<CommentedConfigurationNode> = HoconConfigurationLoader.builder()
-            .setPath(file.toPath()).build()
+    private val loader = HoconConfigurationLoader.builder().setFile(file).build()
 
-    val config: CommentedConfigurationNode = loader.load()
+    private val config = loader.load()
 
-    val token: String = config["token"].string.takeIf { !it.isNullOrBlank() } ?: error("Bot token can't be null or blank.")
+    val token = config["token"].string.takeIf { !it.isNullOrBlank() }
+                ?: error("Bot token can't be null or blank.")
 
-    val shards = config["shards"].int.takeIf { it != 0 } ?: let {
-        val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
-                .header("Authorization", "Bot $token")
-                .header("Content-Type", "application/json")
-                .build()
-
-        HttpUtils.CLIENT.newCall(request).execute().use { response ->
-            response.body()?.let {
-                val jso = JSONObject(JSONTokener(it.byteStream()))
-                response.close()
-                jso.getInt("shards")
-            } ?: error("Invalid shards response from Discord")
-        }
-    }
+    val botShards = config["sharding", "total"].int.takeIf { it > 0 }
+                ?: error("Shard count total needs to be > 0")
+    val shardStart = config["sharding", "start"].int.takeIf { it >= 0 }
+                ?: error("Shard start needs to be >= 0")
+    val shardEnd = config["sharding", "end"].int.takeIf { it in shardStart..botShards }
+                ?: error("Shard end needs to be <= sharding.total")
+    val totalShards = shardEnd - shardStart
 
     val consoleWebhook: String? = config["console webhook"].string
 

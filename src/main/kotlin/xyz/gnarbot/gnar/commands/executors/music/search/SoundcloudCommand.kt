@@ -21,6 +21,11 @@ import java.awt.Color
 )
 class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
+        if (!Bot.CONFIG.searchEnabled) {
+            context.send().error("Search is currently disabled. Try direct links instead.").queue()
+            return
+        }
+
         if (args.isEmpty()) {
             context.send().error("Input a query to search Soundcloud.").queue()
             return
@@ -35,7 +40,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             }
 
             val botChannel = context.guild.selfMember.voiceState.channel
-            val userChannel = context.member.voiceState.channel
+            val userChannel = context.voiceChannel
 
             if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {

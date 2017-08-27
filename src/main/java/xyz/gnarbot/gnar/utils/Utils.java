@@ -98,9 +98,9 @@ public class Utils {
         long h = m / 60;
 
         if (h > 0) {
-            return String.format("%02d:%02d:%02d", h, m, s);
+            return String.format("%02d:%02d:%02d", h, m % 60, s % 60);
         } else {
-            return String.format("%02d:%02d", m, s);
+            return String.format("%02d:%02d", m, s % 60);
         }
     }
 

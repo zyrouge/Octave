@@ -17,6 +17,8 @@ import java.awt.Color
 object CommandDispatcher {
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
+    private val permissionToSpeak = "The bot needs the `" + Permission.MESSAGE_EMBED_LINKS.getName() + "` permission in this channel to show messages."
+
     fun handleEvent(event: GuildMessageReceivedEvent) {
         val guildOptions: GuildData = Bot.getOptions().ofGuild(event.guild)
 
@@ -34,8 +36,7 @@ object CommandDispatcher {
 
         // Send a message if bot cant use embeds.
         if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
-            event.channel.sendMessage("The bot needs the `" + Permission.MESSAGE_EMBED_LINKS.getName() +
-                            "` permission in this channel to show messages.").queue()
+            event.channel.sendMessage(permissionToSpeak).queue()
             return
         }
 
@@ -48,7 +49,7 @@ object CommandDispatcher {
         }
     }
 
-    fun splitCommand(context: Context): Boolean {
+    private fun splitCommand(context: Context): Boolean {
         val content = context.message.rawContent.let {
             when {
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
@@ -83,7 +84,7 @@ object CommandDispatcher {
      *
      * @return If the call was successful.
      */
-    fun callCommand(context: Context, label: String, cmd: CommandExecutor, args: Array<String>) : Boolean {
+    private fun callCommand(context: Context, label: String, cmd: CommandExecutor, args: Array<String>) : Boolean {
         // Check if the person is to be ignored
         if (isIgnored(context, context.member)) {
             return false
@@ -156,8 +157,7 @@ object CommandDispatcher {
                     && member.voiceState.channel.id !in context.data.music.channels) {
 
                 val channels = context.data.music.channels
-                        .map { context.guild.getVoiceChannelById(it) }
-                        .filterNotNull()
+                        .mapNotNull(context.guild::getVoiceChannelById)
                         .map(Channel::getName)
 
                 context.send().error("Music can only be played in: `$channels`.").queue()

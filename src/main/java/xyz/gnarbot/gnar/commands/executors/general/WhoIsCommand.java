@@ -2,14 +2,13 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.template.Parser;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.StringJoiner;
 
 @Command(
@@ -26,20 +25,7 @@ public class WhoIsCommand extends CommandExecutor {
         if (args.length == 0) {
             member = context.getMember();
         } else {
-            List<User> mentioned = context.getMessage().getMentionedUsers();
-            if (!mentioned.isEmpty()) {
-                member = context.getGuild().getMember(mentioned.get(0));
-            } else {
-                List<Member> list = context.getGuild().getMembersByName(StringUtils.join(args, " "), false);
-                if (list.isEmpty()) {
-                    list = context.getGuild().getMembersByNickname(StringUtils.join(args, " "), false);
-                    if (list.isEmpty()) {
-                        context.send().error("You did not mention a valid user.").queue();
-                        return;
-                    }
-                }
-                member = list.get(0);
-            }
+            member = Parser.MEMBER.parse(context, args[0]);
         }
 
         if (member == null) {
@@ -62,8 +48,8 @@ public class WhoIsCommand extends CommandExecutor {
                 .field("ID", true, member.getUser().getId())
                 .field("Status", true, StringUtils.capitalize(member.getOnlineStatus().getKey()))
 
-                .field("Account Created", true, member.getUser().getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME))
-                .field("Join Date", true, member.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .field("Creation Time", true, member.getUser().getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME))
+                .field("Join Date", true, member.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME))
 
                 .field("Nickname", true, member.getNickname() != null ? member.getNickname() : "No nickname.")
                 .field("Game", true, member.getGame() != null ? member.getGame().getName() : "No game.")

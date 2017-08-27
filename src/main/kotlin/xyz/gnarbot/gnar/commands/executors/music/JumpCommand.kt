@@ -74,7 +74,7 @@ class JumpCommand : CommandTemplate() {
             return false
         }
 
-        if (context.member.voiceState.channel != botChannel) {
+        if (context.voiceChannel != botChannel) {
             context.send().error("You're not in the same channel as the bot.").queue()
             return false
         }

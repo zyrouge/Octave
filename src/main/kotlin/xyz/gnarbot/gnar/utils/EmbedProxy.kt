@@ -6,7 +6,7 @@ import java.awt.Color
 import java.time.temporal.TemporalAccessor
 
 @Suppress("NOTHING_TO_INLINE", "UNCHECKED_CAST")
-open class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
+abstract class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
     override fun clearFields(): T {
         super.clearFields()
         return this as T

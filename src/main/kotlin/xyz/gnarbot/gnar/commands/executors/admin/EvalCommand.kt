@@ -8,24 +8,41 @@ import javax.script.*
 
 @Command(
         id = 35,
-        aliases = arrayOf("gv"),
+        aliases = arrayOf("eval"),
         description = "Run Groovy scripts.",
         admin = true,
         category = Category.NONE
 )
-class GroovyCommand : CommandExecutor() {
-    private val scriptEngine: ScriptEngine = ScriptEngineManager().getEngineByName("groovy")
+class EvalCommand : CommandExecutor() {
+    private val scriptEngines: Map<String, ScriptEngine> = ScriptEngineManager().let {
+        mapOf(
+                "js" to it.getEngineByName("javascript"),
+                "gv" to it.getEngineByName("groovy")
+        )
+    }
 
     override fun execute(context: Context, label: String, args: Array<String>) {
-        val script = args.joinToString(" ")
-        if (script.isEmpty()) {
+        if (args.isEmpty()) {
+            context.send().error("Available engines: `${scriptEngines.keys}`").queue()
+            return
+        }
+
+        val scriptEngine = scriptEngines[args[0]]
+        if (scriptEngine == null) {
+            context.send().error("Not a valid engine: `${scriptEngines.keys}`.").queue()
+            return
+        }
+
+        if (args.size == 1) {
             context.send().error("Script can not be empty.").queue()
             return
         }
 
-        val scope = SimpleScriptContext()
+        val script = args.copyOfRange(1, args.size).joinToString(" ")
 
-        scope.getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
+        val scope = SimpleScriptContext().apply {
+            getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
+        }
 
         val result = try {
             scriptEngine.eval(script, scope)

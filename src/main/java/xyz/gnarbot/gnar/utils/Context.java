@@ -60,6 +60,10 @@ public final class Context {
         return this.member;
     }
 
+    public final VoiceChannel getVoiceChannel() {
+        return getMember().getVoiceState().getChannel();
+    }
+
     public final User getUser() {
         return this.user;
     }

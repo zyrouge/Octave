@@ -24,6 +24,11 @@ import java.awt.Color
 )
 class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
+        if (!Bot.CONFIG.searchEnabled) {
+            context.send().error("Search is currently disabled. Try direct links instead.").queue()
+            return
+        }
+
         if (args.isEmpty()) {
             context.send().error("Input a query to search YouTube.").queue()
             return

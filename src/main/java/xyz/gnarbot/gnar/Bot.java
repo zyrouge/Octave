@@ -43,12 +43,14 @@ public final class Bot {
     private static final VoiceListener voiceListener = new VoiceListener();
     private static final EventWaiter waiter = new EventWaiter();
 
+    //private static final AsyncEventManager eventManager = new AsyncEventManager();
+
     private static final Database database = new Database("bot");
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
     private static final PlayerRegistry playerRegistry = new PlayerRegistry();
 
-    private static final List<Shard> shards = new ArrayList<>(KEYS.getShards());
+    private static final List<Shard> shards = new ArrayList<>(KEYS.getBotShards());
 
     public static LoadState STATE = LoadState.LOADING;
 
@@ -65,15 +67,15 @@ public final class Bot {
         LOG.info("Initializing the Discord bot.");
 
         LOG.info("Name  :\t" + CONFIG.getName());
-        LOG.info("Shards:\t" + KEYS.getShards());
+        LOG.info("Shards:\t" + KEYS.getBotShards());
         LOG.info("Prefix:\t" + CONFIG.getPrefix());
         LOG.info("Admins:\t" + CONFIG.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
         DiscordFM.loadLibraries();
 
-        for (int i = 0; i < KEYS.getShards(); i++) {
-            Shard shard = new Shard(i, waiter, botListener, voiceListener);
+        for (int i = KEYS.getShardStart(); i < KEYS.getShardEnd(); i++) {
+            Shard shard = new Shard(i, null, waiter, botListener, voiceListener);
             shards.add(shard);
             shard.buildAsync();
             Thread.sleep(5000);
@@ -118,7 +120,7 @@ public final class Bot {
 
 
     public static Guild getGuildById(long id) {
-        return getShard((int) ((id >> 22) % shards.size())).getJda().getGuildById(id);
+        return getShard((int) ((id >> 22) % KEYS.getBotShards())).getJda().getGuildById(id);
     }
 
     public static Shard getShard(int id) {
@@ -128,6 +130,7 @@ public final class Bot {
     public static Shard getShard(JDA jda) {
         return shards.get(jda.getShardInfo() != null ? jda.getShardInfo().getShardId() : 0);
     }
+
 
     public static void restart() {
         LOG.info("Restarting the Discord bot shards.");

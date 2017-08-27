@@ -36,11 +36,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
             StringBuilder sb = new StringBuilder(":warning: Received a message but it was too long. ");
 
             String url = Utils.hasteBin(content);
-            if (url != null) {
-                sb.append(url);
-            } else {
-                sb.append("Error while posting to HasteBin.");
-            }
+            sb.append(url != null ? url : "Error while posting to HasteBin.");
 
             content = sb.toString();
         }

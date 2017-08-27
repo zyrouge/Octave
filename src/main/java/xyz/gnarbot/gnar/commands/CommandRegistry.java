@@ -114,8 +114,8 @@ public class CommandRegistry {
 //        register(new SaveCommand());
         register(new ShutdownCommand());
         register(new RestartShardsCommand());
-        register(new JavascriptCommand());
-        register(new GroovyCommand());
+        register(new EvalCommand());
+        register(new UpdateBotAvatarCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new PremiumKeyCommand());
@@ -140,6 +140,8 @@ public class CommandRegistry {
             register(new VolumeCommand());
             register(new JumpCommand());
             register(new DiscordFMCommand());
+        } else {
+            register(new DisabledPlayCommand());
         }
 
         register(new YoutubeCommand());

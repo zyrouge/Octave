@@ -20,7 +20,7 @@ class CountUpdater(val shard: Shard) {
         val json =  JSONObject()
                 .put("server_count", shard.jda.guilds.size)
                 .put("shard_id", shard.id)
-                .put("shard_count", Bot.KEYS.shards)
+                .put("shard_count", Bot.KEYS.botShards)
 
         val request = Request.Builder()
                 .url("https://discordbots.org/api/bots/201503408652419073/stats")
@@ -49,7 +49,7 @@ class CountUpdater(val shard: Shard) {
         val json =  JSONObject()
                 .put("server_count", shard.jda.guilds.size)
                 .put("shard_id", shard.id)
-                .put("shard_count", Bot.KEYS.shards)
+                .put("shard_count", Bot.KEYS.botShards)
 
         val request = Request.Builder()
                 .url("https://bots.discord.pw/api/bots/201503408652419073/stats")
@@ -79,7 +79,7 @@ class CountUpdater(val shard: Shard) {
         val json = JSONObject()
                 .put("key", Bot.KEYS.carbonitex)
                 .put("shardid", shard.id)
-                .put("shardcount", Bot.KEYS.shards)
+                .put("shardcount", Bot.KEYS.botShards)
                 .put("servercount", shard.jda.guilds.size)
 
         val request = Request.Builder()
