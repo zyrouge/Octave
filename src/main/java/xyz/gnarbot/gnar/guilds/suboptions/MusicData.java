@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.guilds.suboptions;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,16 +11,6 @@ public class MusicData {
     private Set<String> musicChannels;
     private int volume = 100;
     private boolean announce = true;
-
-    public MusicData() {}
-
-    @JsonIgnore
-    public MusicData(String djRole, Set<String> musicChannels, int volume, boolean announce) {
-        this.djRole = djRole;
-        this.musicChannels = musicChannels;
-        this.volume = volume;
-        this.announce = announce;
-    }
 
     @Nullable
     public final String getDjRole() {

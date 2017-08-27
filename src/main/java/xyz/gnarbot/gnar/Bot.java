@@ -35,7 +35,7 @@ public final class Bot {
     public static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
     public static final Credentials KEYS = new Credentials(new File("credentials.conf"));
-    public static final BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
+    public static BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
 
@@ -88,6 +88,10 @@ public final class Bot {
         }
 
         LOG.info("The bot is now fully connected to Discord.");
+    }
+
+    public static void reloadConfig() {
+        CONFIG = new BotConfiguration(new File("bot.conf"));
     }
 
     public static MyAnimeListAPI getMALAPI() {

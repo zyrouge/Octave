@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -41,7 +42,13 @@ class EvalCommand : CommandExecutor() {
         val script = args.copyOfRange(1, args.size).joinToString(" ")
 
         val scope = SimpleScriptContext().apply {
-            getBindings(ScriptContext.ENGINE_SCOPE).put("context", context)
+            getBindings(ScriptContext.ENGINE_SCOPE).apply {
+                put("context", context)
+
+                if (args[0] == "gv") {
+                    put("Bot", Bot::class.java)
+                }
+            }
         }
 
         val result = try {

@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerRegistry {
-    public static final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
+    private final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
     private final TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
 
@@ -84,7 +84,7 @@ public class PlayerRegistry {
                     iterator.remove();
                 }
             } catch (Exception e) {
-                LOG.warn("Exception occured while trying to clean up guild " + iterator.value().getGuild().getId(), e);
+                LOG.warn("Exception occured while trying to clean up a guild", e);
             }
         }
         LOG.info("Finished cleaning up players.");

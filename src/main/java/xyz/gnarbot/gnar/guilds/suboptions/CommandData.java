@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.guilds.suboptions;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import xyz.gnarbot.gnar.guilds.CommandOptions;
 
@@ -14,15 +13,6 @@ public class CommandData {
 
     @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
     private Map<Integer, CommandOptions> options;
-
-    public CommandData() {}
-
-    @JsonIgnore
-    public CommandData(String prefix, boolean autoDelete, Map<Integer, CommandOptions> commandOptions) {
-        this.prefix = prefix;
-        this.autoDelete = autoDelete;
-        this.options = commandOptions;
-    }
 
     @Nullable
     public String getPrefix() {
