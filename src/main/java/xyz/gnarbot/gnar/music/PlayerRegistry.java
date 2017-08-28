@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.music;
 
+import gnu.trove.TCollections;
 import gnu.trove.iterator.TLongObjectIterator;
 import gnu.trove.map.TLongObjectMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.utils.NonnullTLongObjectHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,7 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class PlayerRegistry {
     private final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
-    private final TLongObjectMap<MusicManager> registry = new TLongObjectHashMap<>();
+    private final TLongObjectMap<MusicManager> registry
+            = TCollections.synchronizedMap(new NonnullTLongObjectHashMap<>(new TLongObjectHashMap<>()));
 
     public PlayerRegistry() {
         Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
@@ -77,14 +80,17 @@ public class PlayerRegistry {
         while (iterator.hasNext()) {
             iterator.advance();
             try {
-                if (force
+                if (iterator.value() == null) {
+                    iterator.remove();
+                    LOG.warn("Null manager for id " + iterator.key());
+                } else if (force
                         || !iterator.value().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
                         || iterator.value().getPlayer().getPlayingTrack() == null) {
                     iterator.value().destroy();
                     iterator.remove();
                 }
             } catch (Exception e) {
-                LOG.warn("Exception occured while trying to clean up a guild", e);
+                LOG.warn("Exception occured while trying to clean up id " + iterator.key(), e);
             }
         }
         LOG.info("Finished cleaning up players.");

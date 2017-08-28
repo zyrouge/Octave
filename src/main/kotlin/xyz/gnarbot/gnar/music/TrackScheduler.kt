@@ -80,14 +80,10 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
         track.getUserData(TrackContext::class.java).requestedChannel.let {
             musicManager.guild.getTextChannelById(it)
-        }.respond().error(
-                "The track ${track.info.embedTitle} encountered an exception.\n" +
-                "Severity: ${exception.severity}\n" +
-                "Details: ${exception.message}"
-        ).queue()
+        }.respond().exception(exception).queue()
     }
 
-    fun announceNext(track: AudioTrack) {
+    private fun announceNext(track: AudioTrack) {
         musicManager.currentRequestChannel?.let {
             it.respond().embed("Music Playback") {
                 desc {
