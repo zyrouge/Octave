@@ -1,24 +1,21 @@
 package xyz.gnarbot.gnar.music;
 
-import gnu.trove.TCollections;
-import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.utils.NonnullTLongObjectHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerRegistry {
     private final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
-    private final TLongObjectMap<MusicManager> registry
-            = TCollections.synchronizedMap(new NonnullTLongObjectHashMap<>(new TLongObjectHashMap<>()));
+    private final Map<Long, MusicManager> registry = new ConcurrentHashMap<>(Bot.CONFIG.getMusicLimit());
 
     public PlayerRegistry() {
         Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
@@ -76,27 +73,28 @@ public class PlayerRegistry {
 
     public void clear(boolean force) {
         LOG.info("Cleaning up players (forceful: " + force + ")");
-        TLongObjectIterator<MusicManager> iterator = registry.iterator();
+        Iterator<Map.Entry<Long, MusicManager>> iterator = registry.entrySet().iterator();
         while (iterator.hasNext()) {
-            iterator.advance();
+            Map.Entry<Long, MusicManager> entry = iterator.next();
             try {
-                if (iterator.value() == null) {
+                if (entry.getValue() == null) {
                     iterator.remove();
-                    LOG.warn("Null manager for id " + iterator.key());
+                    LOG.warn("Null manager for id " + entry.getKey());
                 } else if (force
-                        || !iterator.value().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
-                        || iterator.value().getPlayer().getPlayingTrack() == null) {
-                    iterator.value().destroy();
+                        || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
+                        || entry.getValue().getPlayer().getPlayingTrack() == null) {
+                    entry.getValue().destroy();
                     iterator.remove();
                 }
             } catch (Exception e) {
-                LOG.warn("Exception occured while trying to clean up id " + iterator.key(), e);
+                LOG.warn("Exception occured while trying to clean up id " + entry.getKey(), e);
             }
         }
+
         LOG.info("Finished cleaning up players.");
     }
 
-    public TLongObjectMap<MusicManager> getRegistry() {
+    public Map<Long, MusicManager> getRegistry() {
         return registry;
     }
 

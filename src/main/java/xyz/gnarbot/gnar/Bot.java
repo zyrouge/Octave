@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
@@ -21,7 +22,9 @@ import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -125,6 +128,16 @@ public final class Bot {
 
     public static Guild getGuildById(long id) {
         return getShard((int) ((id >> 22) % KEYS.getBotShards())).getJda().getGuildById(id);
+    }
+
+    public static int getUserCount() {
+        Set<Long> set = new HashSet<>();
+        for (Shard shard : shards) {
+            for (User user : shard.getJda().getUsers()) {
+                set.add(user.getIdLong());
+            }
+        }
+        return set.size();
     }
 
     public static Shard getShard(int id) {

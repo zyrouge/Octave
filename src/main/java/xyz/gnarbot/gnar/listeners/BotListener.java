@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.listeners;
 
 
-import gnu.trove.iterator.TLongObjectIterator;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.events.*;
@@ -17,6 +16,8 @@ import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.music.MusicManager;
 
 import java.time.OffsetDateTime;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BotListener extends ListenerAdapter {
@@ -109,11 +110,14 @@ public class BotListener extends ListenerAdapter {
         }
 
         // Clean up all of the MusicManagers associated with that shard.
-        TLongObjectIterator<MusicManager> iterator = Bot.getPlayers().getRegistry().iterator();
+        Iterator<Map.Entry<Long, MusicManager>> iterator = Bot.getPlayers().getRegistry().entrySet().iterator();
         while (iterator.hasNext()) {
-            iterator.advance();
-            if (iterator.value().getGuild().getJDA() == event.getJDA()) {
-                iterator.value().destroy();
+            Map.Entry<Long, MusicManager> entry = iterator.next();
+            if (entry.getValue() == null) {
+                iterator.remove();
+                Bot.LOG.warn("Null manager for id " + entry.getKey());
+            } else if (entry.getValue().getGuild().getJDA() == event.getJDA()) {
+                entry.getValue().destroy();
                 iterator.remove();
             }
         }

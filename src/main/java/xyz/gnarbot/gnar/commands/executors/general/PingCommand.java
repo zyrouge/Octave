@@ -16,8 +16,7 @@ public class PingCommand extends CommandExecutor {
 
         context.getChannel().sendTyping().queue(ignored -> {
             long ping = System.currentTimeMillis() - time;
-            context.getChannel().sendMessage("**REST**: " + ping + " ms\n"
-                    + "**Websocket**: " + context.getJDA().getPing() + " ms").queue();
+            context.getChannel().sendMessageFormat("**REST**: %d ms\n**Websocket**: %d ms", ping, context.getJDA().getPing()).queue();
         });
     }
 }

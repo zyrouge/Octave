@@ -165,20 +165,39 @@ object CommandDispatcher {
             }
         }
 
-        if (cmd.info.permissions.isNotEmpty()) {
-            val djRole = context.data.music.djRole?.let(context.guild::getRoleById)
-            val isDJ = djRole in member.roles
 
-            if (!(cmd.info.scope == Scope.VOICE && isDJ)) {
-                if (!cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
-                    val requirements = cmd.info.permissions.map(Permission::getName)
-                    context.send().error("You lack the following permissions: `$requirements` in " + when (cmd.info.scope) {
-                        Scope.GUILD -> "the guild `${message.guild.name}`."
-                        Scope.TEXT -> "the text channel `${message.textChannel.name}`."
-                        Scope.VOICE -> "the voice channel `${member.voiceState.channel.name}`."
-                    }).queue()
-                    return false
-                }
+        if (cmd.info.permissions.isNotEmpty()) {
+            val bypass = member.roles.any { it.name == cmd.info.roleBypass }
+
+            if (!bypass && !cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+                context.send().error(buildString {
+                    append("This command requires `")
+                    append(cmd.info.permissions.map(Permission::getName))
+                    append("` in ")
+
+                    when (cmd.info.scope) {
+                        Scope.GUILD -> {
+                            append("the guild `")
+                            append(message.guild.name)
+                        }
+                        Scope.TEXT -> {
+                            append("the text channel `")
+                            append(message.textChannel.name)
+                        }
+                        Scope.VOICE -> {
+                            append("the voice channel `")
+                            append(member.voiceState.channel.name)
+                        }
+                    }
+
+                    if (cmd.info.roleBypass.isNotEmpty()) {
+                        append("` or a role named `")
+                        append(cmd.info.roleBypass)
+                    }
+
+                    append("`.")
+                }).queue()
+                return false
             }
         }
 

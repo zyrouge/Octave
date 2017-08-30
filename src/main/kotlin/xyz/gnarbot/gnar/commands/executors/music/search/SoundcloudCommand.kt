@@ -2,7 +2,9 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 
 import com.jagrosh.jdautilities.selector
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
@@ -16,8 +18,8 @@ import java.awt.Color
         aliases = arrayOf("soundcloud", "sc"),
         usage = "(query...)",
         description = "Search and see SoundCloud results.",
-        scope = xyz.gnarbot.gnar.commands.Scope.TEXT,
-        category = xyz.gnarbot.gnar.commands.Category.MUSIC
+        scope = Scope.TEXT,
+        category = Category.MUSIC
 )
 class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

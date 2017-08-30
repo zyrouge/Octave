@@ -46,7 +46,7 @@ class MusicManager(val guild: Guild) {
             it.registerSourceManager(BeamAudioSourceManager())
         }
 
-        fun search(query: String, maxResults: Int, callback: (results: List<AudioTrack>) -> Unit) {
+        fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
             playerManager.loadItem(query, object : AudioLoadResultHandler {
                 override fun trackLoaded(track: AudioTrack) {
                     callback(listOf(track))
@@ -57,7 +57,11 @@ class MusicManager(val guild: Guild) {
                         return
                     }
 
-                    callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
+                    if (maxResults == -1) {
+                        callback(playlist.tracks)
+                    } else {
+                        callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
+                    }
                 }
 
                 override fun noMatches() {
@@ -71,7 +75,8 @@ class MusicManager(val guild: Guild) {
         }
     }
 
-    var leaveTask: Job? = null
+    @Volatile
+    private var leaveTask: Job? = null
 
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {

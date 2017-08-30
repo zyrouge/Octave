@@ -12,7 +12,8 @@ import java.time.OffsetDateTime
         description = "Delete up to 100 messages.",
         category = Category.SETTINGS,
         scope = Scope.TEXT,
-        permissions = arrayOf(Permission.MESSAGE_MANAGE)
+        permissions = arrayOf(Permission.MESSAGE_MANAGE),
+        roleBypass = "Bot Commander"
 )
 class PruneCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

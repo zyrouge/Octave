@@ -1,9 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
@@ -15,22 +14,11 @@ import xyz.gnarbot.gnar.utils.inlineCode
         description = "Shows what's currently playing.",
         category = Category.MUSIC
 )
-class NowPlayingCommand : CommandExecutor() {
+class NowPlayingCommand : MusicCommandExecutor(false, true) {
     private val totalBlocks = 20
 
-    override fun execute(context: Context, label: String, args: Array<String>) {
-        val manager = Bot.getPlayers().getExisting(context.guild)
-        if (manager == null) {
-            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
-            return
-        }
-
+    override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val track = manager.player.playingTrack
-
-        if (track == null) {
-            context.send().error("The player is not currently playing anything.\n$PLAY_MESSAGE").queue()
-            return
-        }
 
         context.send().embed("Now Playing") {
             desc {

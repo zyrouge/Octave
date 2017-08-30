@@ -22,8 +22,6 @@ import java.time.Duration
 class JumpCommand : CommandTemplate() {
     @Executor(0, description = "Set the time marker of the player.")
     fun to(context: Context, duration: Duration) {
-        if (!check(context)) return
-
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 
         manager.player.playingTrack.position = duration.toMillis().coerceIn(0, manager.player.playingTrack.duration)
@@ -35,8 +33,6 @@ class JumpCommand : CommandTemplate() {
 
     @Executor(1, description = "Move the time marker forward.")
     fun forward(context: Context, duration: Duration) {
-        if (!check(context)) return
-
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 
         manager.player.playingTrack.position = (manager.player.playingTrack.position + duration.toMillis())
@@ -49,8 +45,6 @@ class JumpCommand : CommandTemplate() {
 
     @Executor(2, description = "Move the time marker backward.")
     fun backward(context: Context, duration: Duration) {
-        if (!check(context)) return
-
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 
         manager.player.playingTrack.position = (manager.player.playingTrack.position - duration.toMillis())
@@ -61,33 +55,34 @@ class JumpCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    private fun check(context: Context): Boolean {
+    override fun execute(context: Context, label: String, args: Array<out String>) {
         val manager = Bot.getPlayers().getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
-            return false
+            return
         }
 
         val botChannel = context.guild.selfMember.voiceState.channel
         if (botChannel == null) {
             context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
-            return false
+            return
         }
 
         if (context.voiceChannel != botChannel) {
             context.send().error("You're not in the same channel as the bot.").queue()
-            return false
+            return
         }
 
         if (manager.player.playingTrack == null) {
-            context.send().error("You are not playing any music.").queue()
-            return false
+            context.send().error("The player is not playing anything.").queue()
+            return
         }
 
         if (!manager.player.playingTrack.isSeekable) {
-            context.send().error("This track is not seekable.").queue()
-            return false
+            context.send().error("You can't change the time marker on this track.").queue()
+            return
         }
-        return true
+
+        super.execute(context, label, args)
     }
 }
