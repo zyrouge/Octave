@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
@@ -59,9 +60,13 @@ public final class Bot {
 
     public static void main(String[] args) throws InterruptedException {
         SimpleLogToSLF4JAdapter.install();
-        DiscordLogBack.enable();
 
-        // AJE settings
+        String token = KEYS.getWebhookToken();
+        if (token != null) {
+            DiscordLogBack.enable(new WebhookClientBuilder(KEYS.getWebhookID(), token).build());
+        }
+
+        // KAIPER settings
         GlobalVisitorSettings.SIZE_LIMIT = 100;
         GlobalVisitorSettings.RECURSION_DEPTH_LIMIT = 10;
         GlobalVisitorSettings.ITERATION_LIMIT = 100;

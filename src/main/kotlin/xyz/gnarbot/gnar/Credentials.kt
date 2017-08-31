@@ -33,7 +33,8 @@ class Credentials(file: File) {
                 ?: error("Shard end needs to be <= sharding.total")
     val totalShards = shardEnd - shardStart
 
-    val consoleWebhook: String? = config["console webhook"].string
+    val webhookID: Long = config["webhook", "id"].long
+    val webhookToken: String? = config["webhook", "token"].string
 
     val abal: String? = config["server counts", "abal"].string
     val carbonitex: String? = config["server counts", "carbonitex"].string

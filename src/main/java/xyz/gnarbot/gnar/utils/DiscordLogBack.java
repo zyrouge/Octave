@@ -4,29 +4,24 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import org.json.JSONObject;
-import xyz.gnarbot.gnar.Bot;
+import net.dv8tion.jda.webhook.WebhookClient;
 
 public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
-    private static boolean enabled;
+    private static WebhookClient client;
 
     private PatternLayout patternLayout;
 
     public static void disable() {
-        enabled = false;
+        client = null;
     }
 
-    public static void enable() {
-        enabled = true;
+    public static void enable(WebhookClient webhookClient) {
+        client = webhookClient;
     }
 
     @Override
     protected void append(ILoggingEvent event) {
-        if (!enabled) return;
-        String consoleWebhook = Bot.KEYS.getConsoleWebhook();
-        if (consoleWebhook == null) return;
+        if (client == null) return;
 
         if (!event.getLevel().isGreaterOrEqual(Level.INFO)) return;
 
@@ -41,13 +36,7 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
             content = sb.toString();
         }
 
-        Request request = new Request.Builder()
-                .url(consoleWebhook)
-                .header("Content-Type", "application/json")
-                .post(RequestBody.create(HttpUtils.JSON, new JSONObject().put("content", content).toString()))
-                .build();
-
-        HttpUtils.CLIENT.newCall(request).enqueue(HttpUtils.EMPTY_CALLBACK);
+        client.send(content);
     }
 
     @Override
