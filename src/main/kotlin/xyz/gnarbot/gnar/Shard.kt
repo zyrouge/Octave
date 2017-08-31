@@ -10,12 +10,13 @@ import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.hooks.EventListener
 import net.dv8tion.jda.core.hooks.IEventManager
+import net.dv8tion.jda.core.requests.SessionReconnectQueue
 import xyz.gnarbot.gnar.utils.CountUpdater
 import java.util.concurrent.TimeUnit
 
 //val guildCountListener = GuildCountListener()
 
-class Shard(val id: Int, private val eventManager: IEventManager?, private vararg val listeners: EventListener) {
+class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager?, private vararg val listeners: EventListener) {
     /** @return the amount of successful requests on this command handler. */
     @JvmField var requests = 0
 
@@ -25,6 +26,7 @@ class Shard(val id: Int, private val eventManager: IEventManager?, private varar
         setAutoReconnect(true)
         setMaxReconnectDelay(32)
         setAudioEnabled(true)
+        setReconnectQueue(srq)
         setAudioSendFactory(NativeAudioSendFactory())
         setEventManager(eventManager)
         addEventListener(*listeners)

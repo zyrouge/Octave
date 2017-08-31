@@ -30,7 +30,7 @@ public abstract class Parser<T> {
         public Integer parse(Context c, String s) {
             try {
                 return Integer.valueOf(s);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 return null;
             }
         }
@@ -40,7 +40,7 @@ public abstract class Parser<T> {
         public Double parse(Context c, String s) {
             try {
                 return Double.valueOf(s);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException ignored) {
                 return null;
             }
         }
@@ -211,7 +211,11 @@ public abstract class Parser<T> {
         return new Parser<T>(sj.toString(), sj.toString()) {
             @Override
             public T parse(Context c, String s) {
-                return Enum.valueOf(cls, s.toUpperCase());
+                try {
+                    return Enum.valueOf(cls, s.toUpperCase());
+                } catch (IllegalArgumentException ignored) {
+                    return null;
+                }
             }
         };
     }

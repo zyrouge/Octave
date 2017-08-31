@@ -20,7 +20,7 @@ class AsyncEventManager(private val executor: ExecutorService = AsyncEventManage
 
     private val listeners = CopyOnWriteArraySet<EventListener>()
 
-    override fun handle(event: Event?) {
+    override fun handle(event: Event) {
         executor.execute {
             listeners.forEach {
                 try {

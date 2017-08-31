@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.utils.DiscordLogBack;
 
 @Command(
         id = 2,
@@ -26,6 +27,7 @@ public class ShutdownCommand extends CommandExecutor {
         for (Shard s : Bot.getShards()) {
             s.getJda().shutdown();
         }
+        DiscordLogBack.disable();
 
         System.exit(21);
     }

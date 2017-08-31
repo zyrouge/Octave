@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.guilds;
+package xyz.gnarbot.gnar.guilds.suboptions;
 
 import java.util.HashSet;
 import java.util.Set;

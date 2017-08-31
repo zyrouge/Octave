@@ -101,23 +101,26 @@ object CommandDispatcher {
 
         // Command settings check.
         if (!context.member.hasPermission(Permission.ADMINISTRATOR)) {
-            context.data.command.options[cmd.info.id]?.let {
-                if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
-                    context.send().error("You are not one of the users allowed to use this command.").queue()
-                    return false
-                }
-                if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
-                    context.send().error("You don't have one of the roles allowed to use this command.").queue()
-                    return false
-                }
-                if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
-                    val channels = it.allowedChannels.map(context.guild::getTextChannelById)
-                            .filterNotNull()
-                            .map(IMentionable::getAsMention)
-                            .joinToString(", ")
+            if (cmd.info.toggleable) {
+                val commandOptions = context.data.command.options[cmd.info.id] ?: context.data.command.categoryOptions[cmd.info.category.ordinal]
 
-                    context.send().error("This command can only be used in $channels.").queue()
-                    return false
+                commandOptions?.let {
+                    if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
+                        context.send().error("You are not one of the users allowed to use this command.").queue()
+                        return false
+                    }
+                    if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
+                        context.send().error("You don't have one of the roles allowed to use this command.").queue()
+                        return false
+                    }
+                    if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
+                        val channels = it.allowedChannels
+                                .mapNotNull(context.guild::getTextChannelById)
+                                .joinToString(", ", transform = IMentionable::getAsMention)
+
+                        context.send().error("This command can only be used in $channels.").queue()
+                        return false
+                    }
                 }
             }
         }

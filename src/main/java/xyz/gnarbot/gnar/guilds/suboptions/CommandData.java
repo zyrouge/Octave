@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.guilds.suboptions;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import xyz.gnarbot.gnar.guilds.CommandOptions;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -13,6 +12,9 @@ public class CommandData {
 
     @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
     private Map<Integer, CommandOptions> options;
+
+    @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
+    private Map<Integer, CommandOptions> categoryOptions;
 
     @Nullable
     public String getPrefix() {
@@ -36,5 +38,12 @@ public class CommandData {
             options = new HashMap<>();
         }
         return options;
+    }
+
+    public Map<Integer, CommandOptions> getCategoryOptions() {
+        if (categoryOptions == null) {
+            categoryOptions = new HashMap<>();
+        }
+        return categoryOptions;
     }
 }

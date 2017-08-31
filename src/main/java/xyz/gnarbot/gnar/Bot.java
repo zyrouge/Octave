@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.SessionReconnectQueue;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,11 +44,7 @@ public final class Bot {
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
 
-    private static final BotListener botListener = new BotListener();
-    private static final VoiceListener voiceListener = new VoiceListener();
     private static final EventWaiter waiter = new EventWaiter();
-
-    //private static final AsyncEventManager eventManager = new AsyncEventManager();
 
     private static final Database database = new Database("bot");
     private static final CommandRegistry commandRegistry = new CommandRegistry();
@@ -60,6 +57,7 @@ public final class Bot {
 
     public static void main(String[] args) throws InterruptedException {
         SimpleLogToSLF4JAdapter.install();
+        DiscordFM.loadLibraries();
 
         String token = KEYS.getWebhookToken();
         if (token != null) {
@@ -80,10 +78,13 @@ public final class Bot {
         LOG.info("Admins:\t" + CONFIG.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
-        DiscordFM.loadLibraries();
+        SessionReconnectQueue srq = new SessionReconnectQueue();
+        BotListener botListener = new BotListener();
+        VoiceListener voiceListener = new VoiceListener();
+
 
         for (int i = KEYS.getShardStart(); i < KEYS.getShardEnd(); i++) {
-            Shard shard = new Shard(i, null, waiter, botListener, voiceListener);
+            Shard shard = new Shard(i, srq, null, waiter, botListener, voiceListener);
             shards.add(shard);
             shard.buildAsync();
             Thread.sleep(5000);
