@@ -7,6 +7,10 @@ import xyz.gnarbot.gnar.Shard
 import java.io.IOException
 
 class CountUpdater(val shard: Shard) {
+    companion object {
+        val CLIENT: OkHttpClient = OkHttpClient.Builder().build()
+    }
+
     fun update() {
         Bot.LOG.info("Sending shard updates for shard ${shard.id}")
         updateCarbonitex()
@@ -31,7 +35,7 @@ class CountUpdater(val shard: Shard) {
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build()
 
-        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+        CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Bot.LOG.error("DiscordBots update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
@@ -60,7 +64,7 @@ class CountUpdater(val shard: Shard) {
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build()
 
-        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+        CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Bot.LOG.error("Abal update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
@@ -91,7 +95,7 @@ class CountUpdater(val shard: Shard) {
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
                 .build()
 
-        HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
+        CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Bot.LOG.error("Carbonitex update failed for shard ${shard.id}: ${e.message}")
                 call.cancel()
