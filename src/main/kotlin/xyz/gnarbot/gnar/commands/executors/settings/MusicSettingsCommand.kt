@@ -19,19 +19,17 @@ import xyz.gnarbot.gnar.utils.Context
 class MusicSettingsCommand : CommandTemplate() {
     @Executor(0, description = "Toggle music announcement.")
     fun toggle_announcements(context: Context) {
-        if (context.data.music.announce) {
-            context.data.music.announce = false
-            context.data.save()
+        val value = context.data.music.announce
+        context.data.music.announce = !value
+        context.data.save()
 
+        if (value) {
             context.send().embed("Music Settings") {
                 desc {
                     "Announcements for music disabled."
                 }
             }.action().queue()
         } else {
-            context.data.music.announce = true
-            context.data.save()
-
             context.send().embed("Music Settings") {
                 desc {
                     "Announcements for music enabled."

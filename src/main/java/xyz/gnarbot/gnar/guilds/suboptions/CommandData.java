@@ -9,6 +9,7 @@ import java.util.Map;
 public class CommandData {
     private String prefix;
     private boolean autoDelete = false;
+    private boolean adminBypass = false;
 
     @JsonSerialize(keyAs = Integer.class, contentAs = CommandOptions.class)
     private Map<Integer, CommandOptions> options;
@@ -31,6 +32,14 @@ public class CommandData {
 
     public void setAutoDelete(boolean autoDelete) {
         this.autoDelete = autoDelete;
+    }
+
+    public boolean isAdminBypass() {
+        return adminBypass;
+    }
+
+    public void setAdminBypass(boolean adminBypass) {
+        this.adminBypass = adminBypass;
     }
 
     public Map<Integer, CommandOptions> getOptions() {

@@ -100,15 +100,17 @@ object CommandDispatcher {
         }
 
         // Command settings check.
-        if (!context.member.hasPermission(Permission.ADMINISTRATOR)) {
-            if (cmd.info.toggleable) {
-                val commandOptions = context.data.command.options[cmd.info.id] ?: context.data.command.categoryOptions[cmd.info.category.ordinal]
+        if (cmd.info.toggleable) {
+            val commandOptions = context.data.command.let { it.options[cmd.info.id] ?: it.categoryOptions[cmd.info.category.ordinal] }
 
-                commandOptions?.let {
-                    if (it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
-                        context.send().error("You are not one of the users allowed to use this command.").queue()
-                        return false
-                    }
+            commandOptions?.let {
+                if (!member.hasPermission(Permission.ADMINISTRATOR)
+                        && it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
+                    context.send().error("You are not one of the users allowed to use this command.").queue()
+                    return false
+                }
+
+                if (!(member.hasPermission(Permission.ADMINISTRATOR) && context.data.command.isAdminBypass)) {
                     if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
                         context.send().error("You don't have one of the roles allowed to use this command.").queue()
                         return false
@@ -116,7 +118,8 @@ object CommandDispatcher {
                     if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
                         val channels = it.allowedChannels
                                 .mapNotNull(context.guild::getTextChannelById)
-                                .joinToString(", ", transform = IMentionable::getAsMention)
+                                .map(IMentionable::getAsMention)
+                                .joinToString(", ")
 
                         context.send().error("This command can only be used in $channels.").queue()
                         return false

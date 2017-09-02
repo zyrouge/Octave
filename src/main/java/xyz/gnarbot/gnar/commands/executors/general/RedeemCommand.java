@@ -10,7 +10,9 @@ import xyz.gnarbot.gnar.utils.Context;
 
 import java.awt.*;
 import java.time.Instant;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 @Command(
@@ -46,10 +48,12 @@ public class RedeemCommand extends CommandExecutor {
                     context.getData().addPremiumKey(key.getId(), key.getDuration());
                     context.getData().save();
 
+                    OffsetDateTime expiresBy = OffsetDateTime.ofInstant(Instant.ofEpochMilli(context.getData().getPremiumUntil()), ZoneId.systemDefault());
+
                     context.send().embed("Premium Code")
                             .setColor(Color.ORANGE)
                             .setDescription("Redeemed key `" + key.getId() + "`. **Thank you for supporting the bot's development!**\n")
-                            .appendDescription("Your **Premium** status will be valid until `" + Date.from(Instant.ofEpochMilli(context.getData().getPremiumUntil())) + "`.")
+                            .appendDescription("Your **Premium** status will be valid until `" + expiresBy.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
                             .field("Donator Perks", true,  new StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")
