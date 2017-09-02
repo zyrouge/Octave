@@ -28,7 +28,7 @@ class QueueCommand : CommandExecutor() {
 
         Bot.getWaiter().paginator {
             title { "Music Queue" }
-            color { context.guild.selfMember.color }
+            color { context.selfMember.color }
 
             empty { "**Empty queue.** Add some music with `_play url|YT search`." }
 

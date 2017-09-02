@@ -84,7 +84,7 @@ class MusicSettingsCommand : CommandTemplate() {
 //            return
 //        }
 //
-//        if (!context.guild.selfMember.canInteract(role)) {
+//        if (!context.selfMember.canInteract(role)) {
 //            context.send().error("That role is higher than my role! Fix by changing the role hierarchy.").queue()
 //            return
 //        }

@@ -19,7 +19,7 @@ import xyz.gnarbot.gnar.utils.Context
 class AutoRoleCommand : CommandTemplate() {
     @Executor(0, description = "Set the auto-role.")
     fun set(context: Context, role: Role) {
-        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+        if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
             context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
             return
         }
@@ -29,7 +29,7 @@ class AutoRoleCommand : CommandTemplate() {
             return
         }
 
-        if (!context.guild.selfMember.canInteract(role)) {
+        if (!context.selfMember.canInteract(role)) {
             context.send().error("That role is higher than my role! Fix by changing the role hierarchy.").queue()
             return
         }
@@ -69,7 +69,7 @@ class AutoRoleCommand : CommandTemplate() {
 
     override fun helpMessage(context: Context, args: Array<String>) {
         helpMessage(context, args, null, buildString {
-            if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+            if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
                 append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
                 return
             }

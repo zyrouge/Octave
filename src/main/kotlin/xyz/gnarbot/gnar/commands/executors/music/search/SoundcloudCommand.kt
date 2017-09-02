@@ -41,7 +41,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 return@search
             }
 
-            val botChannel = context.guild.selfMember.voiceState.channel
+            val botChannel = context.selfMember.voiceState.channel
             val userChannel = context.voiceChannel
 
             if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {

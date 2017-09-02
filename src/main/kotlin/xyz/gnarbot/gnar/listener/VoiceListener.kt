@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.LoadState
-import xyz.gnarbot.gnar.utils.ResponseBuilder
+import xyz.gnarbot.gnar.utils.response.ResponseBuilder
 
 class VoiceListener : ListenerAdapter() {
     override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) {
@@ -35,7 +35,6 @@ class VoiceListener : ListenerAdapter() {
             // If the bot left the channel, destroy player.
             if (event.member.user == event.jda.selfUser) {
                 Bot.getPlayers().destroy(event.guild.idLong)
-                // else it should be handled by GuildVoiceMoveEvent
                 return
             }
 

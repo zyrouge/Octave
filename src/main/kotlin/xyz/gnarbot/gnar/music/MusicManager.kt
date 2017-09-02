@@ -28,7 +28,7 @@ import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.utils.Context
-import xyz.gnarbot.gnar.utils.ResponseBuilder
+import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.TimeUnit
 
 class MusicManager(val guild: Guild) {
@@ -153,9 +153,7 @@ class MusicManager(val guild: Guild) {
             }
 
             if (!guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT)) {
-                currentRequestChannel?.let { requestChannel ->
-                    ResponseBuilder(requestChannel).error("I don't have permission to join `${channel.name}`.").queue()
-                }
+                currentRequestChannel?.respond()?.error("I don't have permission to join `${channel.name}`.")?.queue()
                 closeAudioConnection()
                 return
             }
@@ -164,11 +162,9 @@ class MusicManager(val guild: Guild) {
             it.audioManager.openAudioConnection(channel)
             player.isPaused = false
 
-            currentRequestChannel?.let { requestChannel ->
-                ResponseBuilder(requestChannel).embed("Music Playback") {
-                    desc { "Moving to channel `${channel.name}`." }
-                }.action().queue()
-            }
+            currentRequestChannel?.respond()?.embed("Music Playback") {
+                desc { "Moving to channel `${channel.name}`." }
+            }?.action()?.queue()
         }
     }
 

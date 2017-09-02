@@ -30,7 +30,7 @@ object CommandDispatcher {
         }
 
         // Don't do anything if the bot can't even speak.
-        if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_WRITE)) {
+        if (!event.channel.canTalk()) {
             return
         }
 

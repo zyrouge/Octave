@@ -64,13 +64,6 @@ public class Database {
                 .runNoReply(conn);
     }
 
-    @Deprecated
-    public void deleteGuildOptions(String id) {
-        if (isOpen()) r.table("guilds").get(id)
-                .delete()
-                .runNoReply(conn);
-    }
-
     @Nullable
     public PremiumKey getPremiumKey(String id) {
         return isOpen() ? r.table("keys").get(id).run(conn, PremiumKey.class) : null;

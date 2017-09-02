@@ -22,7 +22,7 @@ class VolumeCommand : MusicCommandExecutor(false, false) {
         if (args.isEmpty()) {
             context.send().embed("Music Volume") {
                 desc {
-                    val percent = manager.player.volume.toDouble() / 100
+                    val percent = (manager.player.volume.toDouble() / 100.0).coerceIn(0.0, 1.0)
                     buildString {
                         append("[")
                         for (i in 0 until totalBlocks) {
@@ -59,7 +59,7 @@ class VolumeCommand : MusicCommandExecutor(false, false) {
 
         context.send().embed("Music Volume") {
             desc {
-                val percent = amount.toDouble() / 100
+                val percent = (amount.toDouble() / 100).coerceIn(0.0, 1.0)
                 buildString {
                     append("[")
                     for (i in 0 until totalBlocks) {

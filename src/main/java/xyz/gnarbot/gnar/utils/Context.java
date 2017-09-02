@@ -6,6 +6,8 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.utils.response.GuildResponseBuilder;
+import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
 public final class Context {
     private final Message message;
@@ -60,6 +62,10 @@ public final class Context {
         return this.member;
     }
 
+    public final Member getSelfMember() {
+        return this.guild.getSelfMember();
+    }
+
     public final VoiceChannel getVoiceChannel() {
         return getMember().getVoiceState().getChannel();
     }
@@ -69,6 +75,6 @@ public final class Context {
     }
 
     public final ResponseBuilder send() {
-        return new ResponseBuilder(channel);
+        return new GuildResponseBuilder(channel);
     }
 }

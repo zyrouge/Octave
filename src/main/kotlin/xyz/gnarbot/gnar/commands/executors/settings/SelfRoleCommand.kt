@@ -20,7 +20,7 @@ import xyz.gnarbot.gnar.utils.Context
 class SelfRoleCommand : CommandTemplate() {
     @Executor(0, description = "Add a self-role.")
     fun add(context: Context, role: Role) {
-        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+        if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
             context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
             return
         }
@@ -30,7 +30,7 @@ class SelfRoleCommand : CommandTemplate() {
             return
         }
 
-        if (!context.guild.selfMember.canInteract(role)) {
+        if (!context.selfMember.canInteract(role)) {
             context.send().error("That role is higher than my role! Fix by changing the role hierarchy.").queue()
             return
         }
@@ -92,7 +92,7 @@ class SelfRoleCommand : CommandTemplate() {
                     "This guild doesn't have any self-assignable roles."
                 } else {
                     buildString {
-                        if (!context.guild.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
+                        if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
                             append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
                             return
                         }

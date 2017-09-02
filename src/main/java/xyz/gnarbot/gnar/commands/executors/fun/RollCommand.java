@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
-import xyz.gnarbot.gnar.utils.ResponseBuilder;
+import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
 import java.util.Arrays;
 import java.util.StringJoiner;

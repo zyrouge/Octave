@@ -1,22 +1,22 @@
-package xyz.gnarbot.gnar.utils
+package xyz.gnarbot.gnar.utils.response
 
 import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.entities.TextChannel
+import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.requests.RestAction
 import org.apache.commons.lang3.exception.ExceptionUtils
+import xyz.gnarbot.gnar.utils.EmbedProxy
+import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
 import javax.annotation.CheckReturnValue
 
-fun TextChannel.respond() = ResponseBuilder(this)
-
-class ResponseBuilder(private val channel: TextChannel) {
+open class ResponseBuilder(private val channel: MessageChannel) {
     /**
      * Quick-reply to a message.
      *
      * @param text The text to send.
      * @return The Message created by this function.
      */
-    fun text(text: String): RestAction<Message> {
+    open fun text(text: String): RestAction<Message> {
         return channel.sendMessage(text)
     }
 
@@ -26,11 +26,10 @@ class ResponseBuilder(private val channel: TextChannel) {
      * @param msg The text to send.
      * @return The Message created by this function.
      */
-    fun info(msg: String): RestAction<Message> {
+    open fun info(msg: String): RestAction<Message> {
         return embed {
             title { "Info" }
             desc  { msg }
-            color { channel.guild.selfMember.color }
         }.action()
     }
 
@@ -40,7 +39,7 @@ class ResponseBuilder(private val channel: TextChannel) {
      * @param msg The text to send.
      * @return The Message created by this function.
      */
-    fun error(msg: String): RestAction<Message> {
+    open fun error(msg: String): RestAction<Message> {
         return embed {
             title { "Error" }
             desc  { msg }
@@ -53,7 +52,7 @@ class ResponseBuilder(private val channel: TextChannel) {
      *
      * @return The Message created by this function.
      */
-    fun exception(exception: Exception): RestAction<Message> {
+    open fun exception(exception: Exception): RestAction<Message> {
         return embed {
             title { "Exception" }
             desc  {
@@ -75,19 +74,21 @@ class ResponseBuilder(private val channel: TextChannel) {
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
+     */
+    open fun embed(): ResponseEmbedBuilder = embed(null)
+
+    /**
+     * Creates an EmbedBuilder to be used to creates an embed to send.
      *
      * @param title Title of the embed.
      */
-    @JvmOverloads
-    fun embed(title: String? = null): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
+    open fun embed(title: String?): ResponseEmbedBuilder = ResponseEmbedBuilder().apply {
         title { title }
-        color { channel.guild.selfMember.color }
     }
 
     /**
      * Creates an EmbedBuilder to be used to creates an embed to send.
-     * <br> This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
+     * This builder can use [ResponseEmbedBuilder.action] to quickly send the built embed.
      *
      * @param title Title of the embed.
      */
@@ -95,7 +96,6 @@ class ResponseBuilder(private val channel: TextChannel) {
         return embed(title).apply(value)
     }
 
-    @Suppress("NOTHING_TO_INLINE")
     inner class ResponseEmbedBuilder : EmbedProxy<ResponseEmbedBuilder>() {
         @CheckReturnValue
         fun action(): RestAction<Message> {
@@ -103,4 +103,3 @@ class ResponseBuilder(private val channel: TextChannel) {
         }
     }
 }
-
