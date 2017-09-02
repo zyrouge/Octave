@@ -17,6 +17,11 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class RepeatCommand : MusicCommandExecutor(true, false) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
+        if (args.isEmpty()) {
+            context.send().error("Valid options are `${RepeatOption.values().joinToString()}`").queue()
+            return
+        }
+
         val option = try {
             RepeatOption.valueOf(args[0].toUpperCase())
         } catch (e: IllegalArgumentException) {

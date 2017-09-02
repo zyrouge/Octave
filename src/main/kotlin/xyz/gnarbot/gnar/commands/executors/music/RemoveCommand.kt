@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 import java.util.*
+import java.util.regex.Pattern
 
 @Command(
         id = 79,
@@ -17,6 +18,8 @@ import java.util.*
         scope = Scope.VOICE
 )
 class RemoveCommand : MusicCommandExecutor(true, false) {
+    private val pattern = Pattern.compile("(\\d+)?\\s*?\\.\\.\\s*(\\d+)?")
+
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val queue = manager.scheduler.queue as LinkedList<AudioTrack>
 
@@ -38,10 +41,45 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
                 return
             }
             else -> {
-                val num = args[0].toIntOrNull()
+                val arg = args.joinToString(" ")
+
+                val matcher = pattern.matcher(arg)
+                if (matcher.find()) {
+                    val start = matcher.group(1).let {
+                        if (it == null) 1
+                        else try {
+                            it.toInt().coerceAtLeast(1)
+                        } catch (e: NumberFormatException) {
+                            context.send().error("Invalid start of range.")
+                            return
+                        }
+                    }
+
+                    val end = matcher.group(2).let {
+                        if (it == null) queue.size
+                        else try {
+                            it.toInt().coerceAtMost(queue.size)
+                        } catch (e: NumberFormatException) {
+                            context.send().error("Invalid end of range.")
+                            return
+                        }
+                    }
+
+                    for (i in start..end) {
+                        queue.removeAt(i - 1)
+                    }
+
+                    context.send().embed("Remove Track") {
+                        desc { "Removed track number `$start..$end` from the queue." }
+                    }.action().queue()
+
+                    return
+                }
+
+                val num = arg.toIntOrNull()
 
                 if (num == null || num !in 1..queue.size) {
-                    context.send().error("That is not a valid track number. Try `1..${queue.size}`, `first`, or `last`.").queue()
+                    context.send().error("That is not a valid track number. Try `1`, `1..${queue.size}`, `first`, or `last`.").queue()
                     return
                 }
 
@@ -50,9 +88,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
         }
 
         context.send().embed("Remove Track") {
-            desc {
-                "Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue."
-            }
+            desc { "Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue." }
         }.action().queue()
     }
 }
