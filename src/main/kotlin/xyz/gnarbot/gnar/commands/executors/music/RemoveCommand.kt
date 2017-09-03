@@ -13,7 +13,7 @@ import java.util.regex.Pattern
         id = 79,
         aliases = arrayOf("remove"),
         description = "Remove a song from the queue.",
-        usage = "(first|last|all|#)",
+        usage = "(first|last|all|start..end|#)",
         category = Category.MUSIC,
         scope = Scope.VOICE
 )
@@ -50,7 +50,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
                         else try {
                             it.toInt().coerceAtLeast(1)
                         } catch (e: NumberFormatException) {
-                            context.send().error("Invalid start of range.")
+                            context.send().error("Invalid start of range.").queue()
                             return
                         }
                     }
@@ -60,7 +60,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
                         else try {
                             it.toInt().coerceAtMost(queue.size)
                         } catch (e: NumberFormatException) {
-                            context.send().error("Invalid end of range.")
+                            context.send().error("Invalid end of range.").queue()
                             return
                         }
                     }
