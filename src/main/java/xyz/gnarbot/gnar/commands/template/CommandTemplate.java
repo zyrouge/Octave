@@ -5,16 +5,16 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class CommandTemplate extends CommandExecutor implements Template {
     private final Map<String, Template> cursors;
 
+    private final Map<Class, Parser> parserOverrides;
+
     public CommandTemplate() {
         cursors = new LinkedHashMap<>();
+        parserOverrides = new HashMap<>();
 
         Method[] methods = getClass().getDeclaredMethods();
         Arrays.sort(methods, Comparator.comparingInt(a -> {
@@ -44,8 +44,12 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
                 current = next;
             }
 
-            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Executor.class), method));
+            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Executor.class), method, parserOverrides));
         }
+    }
+
+    protected void registerOverride(Class<?> cls, Parser<?> parser) {
+        parserOverrides.put(cls, parser);
     }
 
     @Override

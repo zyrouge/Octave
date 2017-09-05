@@ -4,7 +4,6 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Channel
-import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
@@ -13,6 +12,7 @@ import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
+import java.util.*
 
 object CommandDispatcher {
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
@@ -100,30 +100,31 @@ object CommandDispatcher {
         }
 
         // Command settings check.
-        if (cmd.info.toggleable) {
-            val commandOptions = context.data.command.let { it.options[cmd.info.id] ?: it.categoryOptions[cmd.info.category.ordinal] }
+        if (cmd.info.toggleable && member.hasPermission(Permission.ADMINISTRATOR)) {
+            var type: String? = null
+            val options = context.data.command.let {
+                val commandOptions = it.options[cmd.info.id]
+                if (commandOptions != null) {
+                    type = "command"
+                    commandOptions
+                } else {
+                    type = "category"
+                    it.categoryOptions[cmd.info.category.ordinal]
+                }
+            }
 
-            commandOptions?.let {
-                if (!member.hasPermission(Permission.ADMINISTRATOR)
-                        && it.allowedUsers.isNotEmpty() && context.user.id !in it.allowedUsers) {
-                    context.send().error("You are not one of the users allowed to use this command.").queue()
+            options?.let {
+                if (context.user.id in it.disabledUsers) {
+                    context.send().error("You are not allowed to use this $type.").queue()
                     return false
                 }
-
-                if (!(member.hasPermission(Permission.ADMINISTRATOR) && context.data.command.isAdminBypass)) {
-                    if (it.allowedRoles.isNotEmpty() && !it.allowedRoles.any { id -> context.member.roles.any { it.id == id } }) {
-                        context.send().error("You don't have one of the roles allowed to use this command.").queue()
-                        return false
-                    }
-                    if (it.allowedChannels.isNotEmpty() && context.channel.id !in it.allowedChannels) {
-                        val channels = it.allowedChannels
-                                .mapNotNull(context.guild::getTextChannelById)
-                                .map(IMentionable::getAsMention)
-                                .joinToString(", ")
-
-                        context.send().error("This command can only be used in $channels.").queue()
-                        return false
-                    }
+                if (!Collections.disjoint(it.disabledRoles, context.member.roles)) {
+                    context.send().error("Your role is not allowed to use this $type.").queue()
+                    return false
+                }
+                if (context.channel.id in it.disabledChannels) {
+                    context.send().error("You can not use this command in this $type.").queue()
+                    return false
                 }
             }
         }

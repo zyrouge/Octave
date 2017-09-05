@@ -1,7 +1,10 @@
 package xyz.gnarbot.gnar.tests
 
+import java.util.*
+
 fun main(args: Array<String>) {
-    val set = setOf(1, 2, 3, 4, null)
-    val dank: Int? = null
-    println(dank in set)
+    val set = emptySet<Nothing>()
+    val set2 = emptySet<Nothing>()
+    println(Collections.disjoint(set, set2))
+
 }

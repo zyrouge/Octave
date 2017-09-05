@@ -1,31 +1,34 @@
 package xyz.gnarbot.gnar.guilds.suboptions;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.HashSet;
 import java.util.Set;
 
+@JsonIgnoreProperties({"allowedChannels", "allowedUsers", "allowedRoles"})
 public class CommandOptions {
-    private Set<String> allowedChannels;
-    private Set<String> allowedUsers;
-    private Set<String> allowedRoles;
+    private Set<String> disabledChannels;
+    private Set<String> disabledUsers;
+    private Set<String> disabledRoles;
 
-    public Set<String> getAllowedChannels() {
-        if (allowedChannels == null) {
-            allowedChannels = new HashSet<>();
+    public Set<String> getDisabledChannels() {
+        if (disabledChannels == null) {
+            disabledChannels = new HashSet<>();
         }
-        return allowedChannels;
+        return disabledChannels;
     }
 
-    public Set<String> getAllowedUsers() {
-        if (allowedUsers == null) {
-            allowedUsers = new HashSet<>();
+    public Set<String> getDisabledUsers() {
+        if (disabledUsers == null) {
+            disabledUsers = new HashSet<>();
         }
-        return allowedUsers;
+        return disabledUsers;
     }
 
-    public Set<String> getAllowedRoles() {
-        if (allowedRoles == null) {
-            allowedRoles = new HashSet<>();
+    public Set<String> getDisabledRoles() {
+        if (disabledRoles == null) {
+            disabledRoles = new HashSet<>();
         }
-        return allowedRoles;
+        return disabledRoles;
     }
 }

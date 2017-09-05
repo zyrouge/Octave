@@ -131,7 +131,7 @@ public abstract class Parser<T> {
     private final String name;
     private final String description;
 
-    private Parser(String name, String description) {
+    protected Parser(String name, String description) {
         this.name = name;
         this.description = description;
     }

@@ -19,7 +19,7 @@ public class MethodTemplate implements Template {
     private final Parser[] parsers;
 
     @SuppressWarnings("unchecked")
-    public MethodTemplate(CommandTemplate command, Executor annotation, Method method) {
+    public MethodTemplate(CommandTemplate command, Executor annotation, Method method, Map<Class, Parser> parserOverrides) {
         this.command = command;
         this.annotation = annotation;
         this.method = method;
@@ -29,7 +29,11 @@ public class MethodTemplate implements Template {
 
         for (int i = 0; i < parsers.length; i++) {
             Class<?> type = params[i + 1].getType();
-            Parser<?> parser = Parser.ofClass(type);
+
+            Parser<?> parser = parserOverrides.get(type);
+            if (parser == null) {
+                parser = Parser.ofClass(type);
+            }
 
             if (parser == null) {
                 throw new IllegalArgumentException("No parsers available for type " + type);

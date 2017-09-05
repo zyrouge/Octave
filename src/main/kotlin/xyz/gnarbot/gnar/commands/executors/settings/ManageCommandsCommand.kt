@@ -2,141 +2,72 @@ package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.IMentionable
-import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.entities.Role
-import net.dv8tion.jda.core.entities.TextChannel
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Parser
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 54,
         aliases = arrayOf("commands", "cmd", "command", "cmds"),
-        usage = "(allow|disallow) (user|role|channel) (specific|category) [command] (...)",
+        usage = "(enable|diable) (specific|category) [command] (user|role|channel) (...)",
         description = "Manage usage of commands.",
         toggleable = false,
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ManageCommandsCommand : CommandTemplate() {
-    @Executor(-1, description = "Toggle admin bypass to roles and channels management.")
-    fun toggle_admin_bypass(context: Context) {
-        val value = context.data.command.isAdminBypass
-        context.data.command.isAdminBypass = !value
-        context.data.save()
-
-        if (value) {
-            context.send().embed("Command Management") {
-                desc {
-                    "Administrators will no longer bypass command management for roles and channels."
-                }
-            }.action().queue()
-        } else {
-            context.send().embed("Command Management") {
-                desc {
-                    "Administrators will now bypass command management for roles and channels."
-                }
-            }.action().queue()
-        }
+    init {
+        registerOverride(String::class.java, object : Parser<String>("(@user, @role, @channel, all)", "Name or mention of a user, role, or channel.") {
+            override fun parse(c: Context?, s: String?) = s
+        })
     }
 
-    @Executor(0, description = "Add a user to the command's allowed users list.")
-    fun allow_user_specific(context: Context, cmd: CommandExecutor, member: Member) {
+    @Executor(0, description = "Enable a command for a user/role/channel.")
+    fun enable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
         options(context, cmd) {
-            allowTo(context, member.user.id, member.asMention, context.data.command.options,
-                    ManageScope.USER, cmd.info.id, cmd.info.aliases[0])
+            if (entity == "*") {
+                allowAll(context, it, scope)
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                allowTo(context, item, itemDisplay, it, scope, cmd.info.aliases[0])
+            }
         }
     }
 
-    @Executor(1, description = "Add a role to the command's allowed roles list.")
-    fun allow_role_specific(context: Context, cmd: CommandExecutor, role: Role) {
+    @Executor(3, description = "Enable a category for a user/role/channel.")
+    fun enable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
+        options(context, category) {
+            if (entity == "*") {
+                allowAll(context, it, scope)
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                allowTo(context, item, itemDisplay, it, scope, category.title)
+            }
+        }
+    }
+
+    @Executor(6, description ="Disable a command for a user/role/channel.")
+    fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
         options(context, cmd) {
-            allowTo(context, role.id, role.asMention, context.data.command.options,
-                    ManageScope.ROLE, cmd.info.id, cmd.info.aliases[0])
+            if (entity == "*") {
+                disallowAll(context, it, scope)
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                disallowTo(context, item, itemDisplay, it, scope, cmd.info.aliases[0])
+            }
         }
     }
 
-    @Executor(2, description = "Add a channel to the command's allowed channels list.")
-    fun allow_channel_specific(context: Context, cmd: CommandExecutor, channel: TextChannel) {
-        options(context, cmd) {
-            allowTo(context, channel.id, channel.asMention, context.data.command.options,
-                    ManageScope.CHANNEL, cmd.info.id, cmd.info.aliases[0])
-        }
-    }
-
-    @Executor(3, description = "Add a user to the entire category's commands' user channels list.")
-    fun allow_user_category(context: Context, category: Category, member: Member) {
+    @Executor(9, description = "Disable a category for a user/role/channel.")
+    fun disable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
         options(context, category) {
-            allowTo(context, member.user.id, member.asMention, context.data.command.categoryOptions,
-                    ManageScope.USER, category.ordinal, category.title)
-        }
-    }
-
-    @Executor(4, description = "Add a role to the entire category's commands' allowed roles list.")
-    fun allow_role_category(context: Context, category: Category, role: Role) {
-        options(context, category) {
-            allowTo(context, role.id, role.asMention, context.data.command.categoryOptions,
-                    ManageScope.ROLE, category.ordinal, category.title)
-        }
-    }
-
-    @Executor(5, description = "Add a channel to the entire category's commands' allowed channels list.")
-    fun allow_channel_category(context: Context, category: Category, channel: TextChannel) {
-        options(context, category) {
-            allowTo(context, channel.id, channel.asMention, context.data.command.categoryOptions,
-                    ManageScope.CHANNEL, category.ordinal, category.title)
-        }
-    }
-
-    @Executor(6, description ="Remove a user from the command's allowed users list.")
-    fun disallow_user_specific(context: Context, cmd: CommandExecutor, member: Member) {
-        options(context, cmd) {
-            disallowTo(context, member.user.id, member.asMention, context.data.command.options,
-                    ManageScope.USER, cmd.info.id, cmd.info.aliases[0])
-        }
-    }
-
-    @Executor(7, description = "Remove a role from the command's allowed roles list.")
-    fun disallow_role_specific(context: Context, cmd: CommandExecutor, role: Role) {
-        options(context, cmd) {
-            disallowTo(context, role.id, role.asMention, context.data.command.options,
-                    ManageScope.ROLE, cmd.info.id, cmd.info.aliases[0])
-        }
-    }
-
-    @Executor(8, description = "Remove a channel from the command's allowed channels list.")
-    fun disallow_channel_specific(context: Context, cmd: CommandExecutor, channel: TextChannel) {
-        options(context, cmd) {
-            disallowTo(context, channel.id, channel.asMention, context.data.command.options,
-                    ManageScope.CHANNEL, cmd.info.id, cmd.info.aliases[0])
-        }
-    }
-
-    @Executor(9, description = "Remove a user from the the entire category's commands' allowed users list.")
-    fun disallow_user_category(context: Context, category: Category, member: Member) {
-        options(context, category) {
-            disallowTo(context, member.user.id, member.asMention, context.data.command.categoryOptions,
-                    ManageScope.USER, category.ordinal, category.title)
-        }
-    }
-
-    @Executor(10, description = "Remove a role from the the entire category's commands' allowed roles list.")
-    fun disallow_role_category(context: Context, category: Category, role: Role) {
-        options(context, category) {
-            disallowTo(context, role.id, role.asMention, context.data.command.categoryOptions,
-                    ManageScope.ROLE, category.ordinal, category.title)
-        }
-    }
-
-    @Executor(11, description = "Remove a channel from the the entire category's commands' allowed channels list.")
-    fun disallow_channel_category(context: Context, category: Category, channel: TextChannel) {
-        options(context, category) {
-            disallowTo(context, channel.id, channel.asMention, context.data.command.categoryOptions,
-                    ManageScope.CHANNEL, category.ordinal, category.title)
+            if (entity == "*") {
+                disallowAll(context, it, scope)
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                disallowTo(context, item, itemDisplay, it, scope, category.title)
+            }
         }
     }
 
@@ -166,50 +97,77 @@ class ManageCommandsCommand : CommandTemplate() {
         sendOptionsFor(context, options, "category")
     }
 
-    private fun allowTo(context: Context, item: String, itemDisplay: String,
-                        map: Map<Int, CommandOptions>, scope: ManageScope,
-                        key: Int, keyDisplay: String) {
-        if (!scope.transform(map, key).add(item)) {
-            context.send().error(scope.alreadyAdded(itemDisplay, keyDisplay)).queue()
-            return
-        }
-
-        context.data.save()
-        context.send().embed("Command Management") {
-            desc { scope.allowSuccess(itemDisplay, keyDisplay) }
-        }.action().queue()
-    }
-
-    private fun disallowTo(context: Context, item: String, itemDisplay: String,
-                           map: Map<Int, CommandOptions>, scope: ManageScope,
-                           key: Int, keyDisplay: String) {
-        val set = scope.transform(map, key)
+    private fun allowAll(context: Context, options: CommandOptions, scope: ManageScope) {
+        val set = scope.transform(options)
 
         if (set.isEmpty()) {
-            context.send().error(scope.empty()).queue()
+            context.send().error("The command is not disabled for any `${scope.name.toLowerCase()}`.").queue()
             return
         }
 
-        if (!set.remove(item)) {
-            context.send().error(scope.notIn(itemDisplay, keyDisplay)).queue()
+        set.clear()
+        context.data.save()
+
+        context.send().embed("Command Management") {
+            desc { "Enabled the command for every ${scope.name.toLowerCase()}." }
+        }.action().queue()
+    }
+
+    private fun allowTo(context: Context, id: String, target: String,
+                        options: CommandOptions, scope: ManageScope, cmd: String) {
+        val set = scope.transform(options)
+
+        if (!set.remove(id)) {
+            context.send().error("`$cmd` is not disabled for $target.").queue()
             return
         }
 
         context.data.save()
         context.send().embed("Command Management") {
-            desc { scope.disallowSuccess(itemDisplay, keyDisplay) }
+            desc { "`$cmd` is now allowed for $target." }
         }.action().queue()
     }
 
-    private fun sendOptionsFor(context: Context, options: CommandOptions, title: String) {
+    private fun disallowAll(context: Context, options: CommandOptions, scope: ManageScope) {
+        val set = scope.transform(options)
+
+        val all = scope.all(context)
+
+        if (!set.addAll(all)) {
+            context.send().error("The command is already disabled for every `${scope.name.toLowerCase()}`.").queue()
+            return
+        }
+        context.data.save()
+
         context.send().embed("Command Management") {
-            field("Allowed Users") {
+            desc { "Disabled the command for every ${scope.name.toLowerCase()}." }
+        }.action().queue()
+    }
+
+    private fun disallowTo(context: Context, id: String, target: String,
+                           options: CommandOptions, scope: ManageScope, cmd: String) {
+        val set = scope.transform(options)
+
+        if (!set.add(id)) {
+            context.send().error("`$cmd` is already disabled for $target.").queue()
+            return
+        }
+
+        context.data.save()
+        context.send().embed("Command Management") {
+            desc { "`$cmd` is now disabled for $target." }
+        }.action().queue()
+    }
+
+    private fun sendOptionsFor(context: Context, options: CommandOptions, optionType: String) {
+        context.send().embed("Command Management") {
+            field("Disabled Users") {
                 buildString {
-                    options.allowedUsers.let {
+                    options.disabledUsers.let {
                         if (it.isEmpty()) {
-                            append("The allowed users list is empty. All users are allowed to use this ")
-                            append(title)
-                            append('.')
+                            append("This ")
+                            append(optionType)
+                            append(" not disabled for any users.")
                         } else {
                             it.mapNotNull(context.guild::getMemberById)
                                     .map(IMentionable::getAsMention)
@@ -219,13 +177,13 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
             }
 
-            field("Allowed Roles") {
+            field("Disabled Roles") {
                 buildString {
-                    options.allowedRoles.let {
+                    options.disabledRoles.let {
                         if (it.isEmpty()) {
-                            append("The allowed roles list is empty. All roles are allowed to use this ")
-                            append(title)
-                            append('.')
+                            append("This ")
+                            append(optionType)
+                            append(" not disabled for any roles.")
                         } else {
                             it.mapNotNull(context.guild::getRoleById)
                                     .map(IMentionable::getAsMention)
@@ -237,11 +195,11 @@ class ManageCommandsCommand : CommandTemplate() {
 
             field("Allowed Channels") {
                 buildString {
-                    options.allowedChannels.let {
+                    options.disabledChannels.let {
                         if (it.isEmpty()) {
-                            append("The allowed channels list is empty. All channels are allowed to use this ")
-                            append(title)
-                            append('.')
+                            append("This ")
+                            append(optionType)
+                            append(" not disabled for any channels.")
                         } else {
                             it.mapNotNull(context.guild::getTextChannelById)
                                     .map(IMentionable::getAsMention)
@@ -255,38 +213,29 @@ class ManageCommandsCommand : CommandTemplate() {
 
     @Executor(14, description = "Clear all options for a command.")
     fun clear_command(context: Context, cmd: CommandExecutor) {
-        val options = context.data.command.options[cmd.info.id]
-        if (options == null) {
-            context.send().embed("Command Management") {
-                desc { "There's no options configured for this command." }
-            }.action().queue()
-            return
-        }
-
-        context.data.command.options.remove(cmd.info.id)
-        context.data.save()
-
-        context.send().embed("Command Management") {
-            desc { "Cleared the command options for ${cmd.info.aliases.first()}." }
-        }.action().queue()
+        clear(context, context.data.command.options, cmd.info.id, "category", cmd.info.aliases[0])
     }
 
     @Executor(15, description = "Clear all options for a command.")
     fun clear_category(context: Context, category: Category) {
-        val options = context.data.command.categoryOptions[category.ordinal]
+        clear(context, context.data.command.categoryOptions, category.ordinal, "category", category.title)
+    }
+
+    private fun clear(context: Context, map: MutableMap<Int, CommandOptions>, key: Int, type: String, item: String) {
+        val options = map[key]
         if (options == null) {
             context.send().embed("Command Management") {
-                desc { "There's no options configured for this category." }
+                desc { "There's no options configured for this $type." }
             }.action().queue()
             return
         }
 
-        context.data.command.categoryOptions.remove(category.ordinal)
+        map.remove(key)
         context.data.save()
 
         context.send().embed("Command Management") {
             desc {
-                "Cleared the category options for ${category.title}."
+                "Cleared the $type options for $item."
             }
         }.action().queue()
     }
@@ -306,28 +255,54 @@ class ManageCommandsCommand : CommandTemplate() {
             desc { "Cleared all command and category options." }
         }.action().queue()
     }
-    
-    private inline fun options(context: Context, cmd: CommandExecutor, block: (CommandOptions) -> Unit) {
-        val info = cmd.info
 
-        if (!info.toggleable) {
-            context.send().error("`$info` can not be toggled.").queue()
-            return
+    private fun entity(context: Context, scope: ManageScope, entity: String): Pair<String, String>? {
+        return when(scope) {
+            ManageScope.USER -> {
+                val member = Parser.MEMBER.parse(context, entity)
+
+                if (member == null) {
+                    context.send().error("Not a valid user name or mention.").queue()
+                    return null
+                }
+
+                member.user.id to member.user.asMention
+            }
+            ManageScope.ROLE -> {
+                val role = Parser.ROLE.parse(context, entity)
+
+                if (role == null) {
+                    context.send().error("Not a valid role name or mention").queue()
+                    return null
+                }
+
+                role.id to role.asMention
+            }
+            ManageScope.CHANNEL -> {
+                val channel = Parser.TEXT_CHANNEL.parse(context, entity)
+
+                if (channel == null) {
+                    context.send().error("Not a valid text channel name or mention.").queue()
+                    return null
+                }
+
+                channel.id to channel.asMention
+            }
         }
-        
-        block(context.data.command.options.getOrPut(info.id, ::CommandOptions))
+    }
+
+    private inline fun options(context: Context, cmd: CommandExecutor, block: (CommandOptions) -> Unit) {
+        cmd.info.let {
+            if (!it.toggleable) {
+                context.send().error("`${it.aliases[0]}` can not be toggled.").queue()
+                return
+            }
+
+            block(context.data.command.options.getOrPut(it.id, ::CommandOptions))
+        }
     }
 
     private inline fun options(context: Context, category: Category, block: (CommandOptions) -> Unit) {
         block(context.data.command.categoryOptions.getOrPut(category.ordinal, ::CommandOptions))
-    }
-
-    override fun helpMessage(context: Context, args: Array<out String>) {
-        helpMessage(context, args, null, buildString {
-            append("If you allow entities (user, role, channel) to use the command, ")
-            append("everything else will not not be able to use the command unless you include ")
-            append("those also. If you do not explicitly allow anyone to use the command, it ")
-            append("will be usable to everyone.")
-        })
     }
 }
