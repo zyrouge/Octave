@@ -6,28 +6,28 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.commands.template.Parser
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
+private val override: Map<Class<*>, Parser<*>> = mapOf(
+        String::class.java to object : Parser<String>("@user, @role, @channel, *", "Name or mention of a user, role, or channel") {
+            override fun parse(c: Context?, s: String?) = s
+        }
+)
+
 @Command(
         id = 54,
         aliases = arrayOf("commands", "cmd", "command", "cmds"),
-        usage = "(enable|diable) (specific|category) [command] (user|role|channel) (...)",
+        usage = "(enable|diable) (command|category) [command] (user|role|channel) (...)",
         description = "Manage usage of commands.",
         toggleable = false,
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
-class ManageCommandsCommand : CommandTemplate() {
-    init {
-        registerOverride(String::class.java, object : Parser<String>("(@user, @role, @channel, all)", "Name or mention of a user, role, or channel.") {
-            override fun parse(c: Context?, s: String?) = s
-        })
-    }
-
-    @Executor(0, description = "Enable a command for a user/role/channel.")
+class ManageCommandsCommand : CommandTemplate(override) {
+    @Description(value = "Enable a command for a user/role/channel.")
     fun enable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
         options(context, cmd) {
             if (entity == "*") {
@@ -38,7 +38,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(3, description = "Enable a category for a user/role/channel.")
+    @Description(value = "Enable a category for a user/role/channel.")
     fun enable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
         options(context, category) {
             if (entity == "*") {
@@ -49,7 +49,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(6, description ="Disable a command for a user/role/channel.")
+    @Description(value ="Disable a command for a user/role/channel.")
     fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
         options(context, cmd) {
             if (entity == "*") {
@@ -60,7 +60,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(9, description = "Disable a category for a user/role/channel.")
+    @Description(value = "Disable a category for a user/role/channel.")
     fun disable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
         options(context, category) {
             if (entity == "*") {
@@ -71,7 +71,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(12, description = "Show the options of the command.")
+    @Description(value = "Show the options of the command.")
     fun options_specific(context: Context, cmd: CommandExecutor) {
         val options = context.data.command.options[cmd.info.id]
         if (options == null) {
@@ -84,7 +84,7 @@ class ManageCommandsCommand : CommandTemplate() {
         sendOptionsFor(context, options, "command")
     }
 
-    @Executor(13, description = "Show the options of the command.")
+    @Description(value = "Show the options of the command.")
     fun options_category(context: Context, category: Category) {
         val options = context.data.command.categoryOptions[category.ordinal]
         if (options == null) {
@@ -101,7 +101,7 @@ class ManageCommandsCommand : CommandTemplate() {
         val set = scope.transform(options)
 
         if (set.isEmpty()) {
-            context.send().error("The command is not disabled for any `${scope.name.toLowerCase()}`.").queue()
+            context.send().error("The command is not disabled for any ${scope.name.toLowerCase()}.").queue()
             return
         }
 
@@ -134,7 +134,7 @@ class ManageCommandsCommand : CommandTemplate() {
         val all = scope.all(context)
 
         if (!set.addAll(all)) {
-            context.send().error("The command is already disabled for every `${scope.name.toLowerCase()}`.").queue()
+            context.send().error("The command is already disabled for every ${scope.name.toLowerCase()}.").queue()
             return
         }
         context.data.save()
@@ -193,7 +193,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
             }
 
-            field("Allowed Channels") {
+            field("Disabled Channels") {
                 buildString {
                     options.disabledChannels.let {
                         if (it.isEmpty()) {
@@ -211,12 +211,12 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(14, description = "Clear all options for a command.")
-    fun clear_command(context: Context, cmd: CommandExecutor) {
+    @Description("Clear all options for a command.")
+    fun clear_specific(context: Context, cmd: CommandExecutor) {
         clear(context, context.data.command.options, cmd.info.id, "category", cmd.info.aliases[0])
     }
 
-    @Executor(15, description = "Clear all options for a command.")
+    @Description("Clear all options for a command.")
     fun clear_category(context: Context, category: Category) {
         clear(context, context.data.command.categoryOptions, category.ordinal, "category", category.title)
     }
@@ -240,7 +240,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(16, description = "Clear all command options.")
+    @Description("Clear all command options.")
     fun clear_all(context: Context) {
         if (context.data.command.options.isEmpty() && context.data.command.categoryOptions.isEmpty()) {
             context.send().error("This guild doesn't have any commands options.").queue()

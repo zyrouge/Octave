@@ -154,11 +154,11 @@ public final class Bot {
         return shards.get(jda.getShardInfo() != null ? jda.getShardInfo().getShardId() : 0);
     }
 
-
-    public static void restart() {
+    public static void restart() throws InterruptedException {
         LOG.info("Restarting the Discord bot shards.");
         for (Shard shard : shards) {
             shard.revive();
+            Thread.sleep(5000);
         }
         LOG.info("Discord bot shards have now restarted.");
     }

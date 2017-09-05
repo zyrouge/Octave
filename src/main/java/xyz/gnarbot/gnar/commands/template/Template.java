@@ -92,6 +92,6 @@ public interface Template {
             eb.setColor(Color.RED);
         }
 
-        context.getChannel().sendMessage(eb.build()).queue();
+        context.getTextChannel().sendMessage(eb.build()).queue();
     }
 }

@@ -1,9 +1,11 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.entities.ISnowflake
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
+@Description("The scope of the command", display = "user, role, channel")
 enum class ManageScope {
     USER {
         override fun all(context: Context): List<String> {

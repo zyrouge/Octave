@@ -7,13 +7,16 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.DiscordFM
 
-val errorTolerance = 3
-
 class DiscordFMTrackContext(
         val station: String,
         requester: Long,
         requestedChannel: Long
 ) : TrackContext(requester, requestedChannel) {
+    companion object {
+        @JvmStatic
+        val errorTolerance = 3
+    }
+
     fun nextDiscordFMTrack(musicManager: MusicManager, errorDepth: Int = 0) {
         val randomSong = DiscordFM.getRandomSong(station) ?: return nextDiscordFMTrack(musicManager, errorDepth + 1)
 

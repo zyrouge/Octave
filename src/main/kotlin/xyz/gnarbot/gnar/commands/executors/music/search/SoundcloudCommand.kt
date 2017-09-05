@@ -91,7 +91,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                                         result.info.uri,
                                         TrackContext(
                                                 context.member.user.idLong,
-                                                context.channel.idLong
+                                                context.textChannel.idLong
                                         )
                                 )
                             } else {
@@ -99,7 +99,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                             }
                         }
                     }
-                }.display(context.channel)
+                }.display(context.textChannel)
             }
         }
     }

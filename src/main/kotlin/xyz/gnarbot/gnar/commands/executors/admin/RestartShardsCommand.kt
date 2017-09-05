@@ -1,5 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
+import kotlinx.coroutines.experimental.CommonPool
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
@@ -28,7 +31,12 @@ class RestartShardsCommand : CommandExecutor() {
                     desc { "Bot is now restarting." }
                 }.action().queue()
 
-                Bot.restart()
+                launch(CommonPool) {
+                    for (shard in Bot.getShards()) {
+                        shard.revive()
+                        delay(5000)
+                    }
+                }
             }
             "dead" -> {
                 val deadShards = Bot.getShards().filter { it.jda.status != JDA.Status.CONNECTED }

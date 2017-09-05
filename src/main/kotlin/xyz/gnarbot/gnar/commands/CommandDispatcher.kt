@@ -8,43 +8,48 @@ import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.guilds.GuildData
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 import java.awt.Color
 import java.util.*
 
 object CommandDispatcher {
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
-    private val permissionToSpeak = "The bot needs the `" + Permission.MESSAGE_EMBED_LINKS.getName() + "` permission in this channel to show messages."
+    private val permissionToSpeak = "The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}` permission in this channel to show messages."
+    private val donatorMessage =  buildString {
+        append("🌟 This command is for donators' servers only.\n")
+        append("In order to enjoy donator perks, please consider pledging to ")
+        append("__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n")
+        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ ")
+        append("and ask one of the owners.")
+    }
 
     fun handleEvent(event: GuildMessageReceivedEvent) {
-        val guildOptions: GuildData = Bot.getOptions().ofGuild(event.guild)
+        Context(event).let {
+            val content = event.message.rawContent
+            if (!content.startsWith(Bot.CONFIG.prefix)
+                    && !content.startsWith(namePrefix, true)) {
+                val prefix = it.data.command.prefix
+                if (prefix == null || !content.startsWith(prefix)) return
+            }
 
-        val content = event.message.rawContent
-        if (!content.startsWith(Bot.CONFIG.prefix)
-                && !content.startsWith(namePrefix, true)) {
-            val prefix = guildOptions.command.prefix
-            if (prefix == null || !content.startsWith(prefix)) return
-        }
+            // Don't do anything if the bot can't even speak.
+            if (!event.channel.canTalk()) {
+                return
+            }
 
-        // Don't do anything if the bot can't even speak.
-        if (!event.channel.canTalk()) {
-            return
-        }
+            // Send a message if bot cant use embeds.
+            if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
+                event.channel.sendMessage(permissionToSpeak).queue()
+                return
+            }
 
-        // Send a message if bot cant use embeds.
-        if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
-            event.channel.sendMessage(permissionToSpeak).queue()
-            return
-        }
-
-        launch(CommonPool) {
-            val context = Context(event, guildOptions)
-
-            if (splitCommand(context)) {
-                context.shard.requests++
+            launch(CommonPool) {
+                if (splitCommand(it)) {
+                    it.shard.requests++
+                }
             }
         }
     }
@@ -100,7 +105,7 @@ object CommandDispatcher {
         }
 
         // Command settings check.
-        if (cmd.info.toggleable && member.hasPermission(Permission.ADMINISTRATOR)) {
+        if (cmd.info.toggleable && !member.hasPermission(Permission.ADMINISTRATOR)) {
             var type: String? = null
             val options = context.data.command.let {
                 val commandOptions = it.options[cmd.info.id]
@@ -122,7 +127,7 @@ object CommandDispatcher {
                     context.send().error("Your role is not allowed to use this $type.").queue()
                     return false
                 }
-                if (context.channel.id in it.disabledChannels) {
+                if (context.textChannel.id in it.disabledChannels) {
                     context.send().error("You can not use this command in this $type.").queue()
                     return false
                 }
@@ -140,15 +145,7 @@ object CommandDispatcher {
         if (cmd.info.donor && !context.data.isPremium) {
             context.send().embed("Donators Only") {
                 color { Color.ORANGE }
-                desc {
-                    buildString {
-                        append("🌟 This command is for donators' servers only.\n")
-                        append("In order to enjoy donator perks, please consider pledging to ")
-                        append("__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n")
-                        append("Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ ")
-                        append("and ask one of the owners.")
-                    }
-                }
+                desc { donatorMessage }
             }.action().queue()
             return false
         }
@@ -172,34 +169,42 @@ object CommandDispatcher {
             }
         }
 
-
-        if (cmd.info.permissions.isNotEmpty()) {
-            val bypass = member.roles.any { it.name == cmd.info.roleBypass }
-
-            if (!bypass && !cmd.info.scope.checkPermission(context, *cmd.info.permissions)) {
+        if (!member.hasPermission(Permission.ADMINISTRATOR) && (cmd.info.permissions.isNotEmpty() || cmd.info.roleRequirement.isNotEmpty())) {
+            if (!(member.hasAnyRoleNamed(cmd.info.roleRequirement) && cmd.info.scope.checkPermission(context, *cmd.info.permissions))) {
                 context.send().error(buildString {
-                    append("This command requires `")
-                    append(cmd.info.permissions.map(Permission::getName))
-                    append("` in ")
+                    append("This command requires ")
 
-                    when (cmd.info.scope) {
-                        Scope.GUILD -> {
-                            append("the guild `")
-                            append(message.guild.name)
-                        }
-                        Scope.TEXT -> {
-                            append("the text channel `")
-                            append(message.textChannel.name)
-                        }
-                        Scope.VOICE -> {
-                            append("the voice channel `")
-                            append(member.voiceState.channel.name)
+                    val permissionNotEmpty = cmd.info.permissions.isNotEmpty()
+
+                    if (cmd.info.roleRequirement.isNotEmpty()) {
+                        append("a role named `")
+                        append(cmd.info.roleRequirement)
+                        append('`')
+
+                        if (permissionNotEmpty) {
+                            append(" and ")
                         }
                     }
 
-                    if (cmd.info.roleBypass.isNotEmpty()) {
-                        append("` or a role named `")
-                        append(cmd.info.roleBypass)
+                    if (permissionNotEmpty) {
+                        append("the permissions `")
+                        append(cmd.info.permissions.map(Permission::getName))
+                        append("` in ")
+
+                        when (cmd.info.scope) {
+                            Scope.GUILD -> {
+                                append("the guild `")
+                                append(message.guild.name)
+                            }
+                            Scope.TEXT -> {
+                                append("the text channel `")
+                                append(message.textChannel.name)
+                            }
+                            Scope.VOICE -> {
+                                append("the voice channel `")
+                                append(member.voiceState.channel.name)
+                            }
+                        }
                     }
 
                     append("`.")
@@ -226,7 +231,7 @@ object CommandDispatcher {
     // Do not ignore if user is bot administrator
     private fun isIgnored(context: Context, member: Member): Boolean {
         return (context.data.ignored.users.contains(member.user.id)
-                || context.data.ignored.channels.contains(context.channel.id)
+                || context.data.ignored.channels.contains(context.textChannel.id)
                 || context.data.ignored.roles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
                 && member.user.idLong !in Bot.CONFIG.admins

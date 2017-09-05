@@ -76,6 +76,6 @@ class QueueCommand : CommandExecutor() {
             field("Entries", true) { queue.size }
             field("Total Duration", true) { Utils.getTimestamp(queueLength) }
             field("Repeating", true) { manager.scheduler.repeatOption }
-        }.display(context.channel)
+        }.display(context.textChannel)
     }
 }

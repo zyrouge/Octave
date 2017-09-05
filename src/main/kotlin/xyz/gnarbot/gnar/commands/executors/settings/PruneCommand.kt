@@ -13,18 +13,24 @@ import java.time.OffsetDateTime
         category = Category.SETTINGS,
         scope = Scope.TEXT,
         permissions = arrayOf(Permission.MESSAGE_MANAGE),
-        roleBypass = "Bot Commander"
+        roleRequirement = "Bot Commander"
 )
 class PruneCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
+        if (!context.guild.selfMember.hasPermission(Permission.MESSAGE_MANAGE)) {
+            context.send().error("The bot can not prune messages without the `Manage Message` permission.").queue()
+            return
+        }
+
         if (args.isEmpty()) {
             CommandDispatcher.sendHelp(context, info)
             return
         }
 
-        val history = context.channel.history
+        val history = context.textChannel.history
 
-        val amount = args[0].toIntOrNull()?.coerceIn(0, 100) ?: kotlin.run {
+        val amount = args[0].toIntOrNull()?.coerceIn(0, 100)
+        if (amount == null) {
             context.send().error("Improper arguments supplies, must be a number between `2-100`.").queue()
             return
         }

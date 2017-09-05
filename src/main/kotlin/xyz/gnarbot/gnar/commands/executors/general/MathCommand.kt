@@ -76,7 +76,7 @@ class MathCommand : CommandExecutor() {
         val file: File = File("temp.png").also(File::deleteOnExit)
         writeTexToFile(finalTex, file)
 
-        context.channel.sendFile(file, file.name, MessageBuilder().setEmbed(
+        context.textChannel.sendFile(file, file.name, MessageBuilder().setEmbed(
                 context.send().embed {
                     image { "attachment://${file.name}" }
                 }.build()).build()

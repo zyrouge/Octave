@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music.dj
 
-import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -11,12 +10,11 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 61,
-        aliases = arrayOf("stop", "leave", "reset"),
+        aliases = arrayOf("stop", "leave"),
         description = "Stop and clear the music player.",
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        permissions = arrayOf(Permission.MANAGE_CHANNEL),
-        roleBypass = "DJ"
+        roleRequirement = "DJ"
 )
 class StopCommand : MusicCommandExecutor(false, false) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

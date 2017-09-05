@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import java.time.Duration
@@ -16,11 +16,10 @@ import java.time.Duration
         usage = "(to|forward|backward) (time)",
         description = "Set the time marker of the music playback.",
         category = Category.MUSIC,
-        scope = Scope.VOICE,
-        donor = true
+        scope = Scope.VOICE
 )
 class JumpCommand : CommandTemplate() {
-    @Executor(0, description = "Set the time marker of the player.")
+    @Description("Set the time marker of the player.")
     fun to(context: Context, duration: Duration) {
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 
@@ -31,7 +30,7 @@ class JumpCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(1, description = "Move the time marker forward.")
+    @Description("Move the time marker forward.")
     fun forward(context: Context, duration: Duration) {
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 
@@ -43,7 +42,7 @@ class JumpCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(2, description = "Move the time marker backward.")
+    @Description("Move the time marker backward.")
     fun backward(context: Context, duration: Duration) {
         val manager = Bot.getPlayers().getExisting(context.guild)!!
 

@@ -10,27 +10,29 @@ import java.util.*;
 public abstract class CommandTemplate extends CommandExecutor implements Template {
     private final Map<String, Template> cursors;
 
-    private final Map<Class, Parser> parserOverrides;
-
     public CommandTemplate() {
+        this(Collections.emptyMap());
+    }
+
+    public CommandTemplate(Map<Class, Parser> parserOverrides) {
         cursors = new LinkedHashMap<>();
-        parserOverrides = new HashMap<>();
 
         Method[] methods = getClass().getDeclaredMethods();
-        Arrays.sort(methods, Comparator.comparingInt(a -> {
-            Executor an = a.getAnnotation(Executor.class);
-            if (an == null) {
-                return 0;
-            }
-            return an.value();
-        }));
+        Arrays.sort(methods, Comparator.comparing(Method::getName));
         for (Method method : methods) {
-            if (!method.isAnnotationPresent(Executor.class)) continue;
+            Description ann = method.getAnnotation(Description.class);
+            if (ann == null) continue;
+
             if (method.getParameterCount() == 0 || method.getParameters()[0].getType() != Context.class) {
                 throw new RuntimeException("First argument of " + method + " must be Context");
             }
 
-            String[] parts = method.getName().split("_");
+            String name = ann.display();
+            if (name.isEmpty()) {
+                name = method.getName();
+            }
+
+            String[] parts = name.split("_");
             Template current = this;
             for (int i = 0; i < parts.length - 1; i++) {
                 String part = parts[i];
@@ -44,12 +46,8 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
                 current = next;
             }
 
-            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Executor.class), method, parserOverrides));
+            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Description.class), method, parserOverrides));
         }
-    }
-
-    protected void registerOverride(Class<?> cls, Parser<?> parser) {
-        parserOverrides.put(cls, parser);
     }
 
     @Override

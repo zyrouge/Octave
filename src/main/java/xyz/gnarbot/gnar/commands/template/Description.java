@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface Executor {
-    int value();
-    String description();
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface Description {
+    String display() default "";
+    String value();
 }

@@ -77,7 +77,7 @@ public class MangaSearchCommand extends CommandExecutor {
             } else {
                 context.send().error("Internal error.").queue();
             }
-            context.getChannel().sendMessage(eb.build()).queue();
+            context.getTextChannel().sendMessage(eb.build()).queue();
         } else {
             context.send().error("I could not find anything by that title.").queue();
         }

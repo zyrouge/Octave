@@ -47,5 +47,5 @@ public @interface Command {
     /** @return The Discord permissions the member requires. */
     Permission[] permissions() default {};
 
-    String roleBypass() default "";
+    String roleRequirement() default "";
 }

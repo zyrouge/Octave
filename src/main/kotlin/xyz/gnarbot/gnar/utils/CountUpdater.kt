@@ -8,6 +8,7 @@ import java.io.IOException
 
 class CountUpdater(val shard: Shard) {
     companion object {
+        @JvmStatic
         val CLIENT: OkHttpClient = OkHttpClient.Builder().build()
     }
 

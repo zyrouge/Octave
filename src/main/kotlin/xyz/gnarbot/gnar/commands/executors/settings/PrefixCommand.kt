@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -19,7 +19,7 @@ import xyz.gnarbot.gnar.utils.Context
 class PrefixCommand : CommandTemplate() {
     private val mention = Regex("<@!?(\\d+)>|<#(\\d+)>|<@&(\\d+)>")
 
-    @Executor(0, description = "Set the prefix.")
+    @Description("Set the prefix.")
     fun set(context: Context, prefix: String) {
         if (prefix matches mention) {
             context.send().error("The prefix can't be set to a mention.").queue()
@@ -41,7 +41,7 @@ class PrefixCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(1, description = "Reset to the default prefix.")
+    @Description("Reset to the default prefix.")
     fun reset(context: Context) {
         if (context.data.command.prefix == Bot.CONFIG.prefix) {
             context.send().error("The prefix is already set to the default.").queue()

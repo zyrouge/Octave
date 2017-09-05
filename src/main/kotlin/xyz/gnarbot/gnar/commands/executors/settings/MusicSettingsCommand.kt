@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -17,7 +17,7 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class MusicSettingsCommand : CommandTemplate() {
-    @Executor(0, description = "Toggle music announcement.")
+    @Description("Toggle music announcement.")
     fun toggle_announcements(context: Context) {
         val value = context.data.music.announce
         context.data.music.announce = !value
@@ -38,7 +38,7 @@ class MusicSettingsCommand : CommandTemplate() {
         }
     }
 
-    @Executor(1, description = "Add voice channels that Gnar can play music in.")
+    @Description("Add voice channels that Gnar can play music in.")
     fun voice_channel_add(context: Context, channel: VoiceChannel) {
         if (channel.id in context.data.music.channels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
@@ -60,7 +60,7 @@ class MusicSettingsCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(2, description = "Remove voice channels that Gnar can play music in.")
+    @Description("Remove voice channels that Gnar can play music in.")
     fun voice_channel_remove(context: Context, channel: VoiceChannel) {
         if (channel.id !in context.data.music.channels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
@@ -122,7 +122,7 @@ class MusicSettingsCommand : CommandTemplate() {
 //    }
 
 
-    @Executor(5, description = "List all settings, their description and their values.")
+    @Description("List all settings, their description and their values.")
     fun list(context: Context) {
         context.send().embed("Music Settings") {
             field("Announcements") {

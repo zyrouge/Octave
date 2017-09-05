@@ -119,4 +119,11 @@ public class GuildData implements ManagedObject {
     public void delete() {
         Bot.db().deleteGuildData(id);
     }
+
+    public void reset() {
+        commandData = null;
+        ignoredData = null;
+        musicData = null;
+        roleData = null;
+    }
 }

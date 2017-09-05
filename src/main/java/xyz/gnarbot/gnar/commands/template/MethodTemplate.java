@@ -14,12 +14,12 @@ import java.util.Map;
 
 public class MethodTemplate implements Template {
     private final CommandTemplate command;
-    private final Executor annotation;
+    private final Description annotation;
     private final Method method;
     private final Parser[] parsers;
 
     @SuppressWarnings("unchecked")
-    public MethodTemplate(CommandTemplate command, Executor annotation, Method method, Map<Class, Parser> parserOverrides) {
+    public MethodTemplate(CommandTemplate command, Description annotation, Method method, Map<Class, Parser> parserOverrides) {
         this.command = command;
         this.annotation = annotation;
         this.method = method;
@@ -45,7 +45,7 @@ public class MethodTemplate implements Template {
 
     @Override
     public String description() {
-        return annotation.description();
+        return annotation.value();
     }
 
     public String requirements() {
@@ -62,7 +62,7 @@ public class MethodTemplate implements Template {
             EmbedMaker eb = new EmbedMaker();
 
             eb.setTitle("Insufficient Arguments");
-            eb.setDescription("Insufficient arguments, required: `" + requirements() + "`.");
+            eb.setDescription("Insufficient number of arguments, required:\n`" + requirements() + "`.");
 
             StringBuilder builder = new StringBuilder(parsers.length * 16);
             for (Parser parser : parsers) {
@@ -72,7 +72,7 @@ public class MethodTemplate implements Template {
             eb.field("Required Arguments", false, builder.toString());
             eb.setColor(Color.RED);
 
-            context.getChannel().sendMessage(eb.build()).queue();
+            context.getTextChannel().sendMessage(eb.build()).queue();
             return;
         }
 

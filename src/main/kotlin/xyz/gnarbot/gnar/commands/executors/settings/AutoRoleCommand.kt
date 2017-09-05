@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -17,10 +17,10 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class AutoRoleCommand : CommandTemplate() {
-    @Executor(0, description = "Set the auto-role.")
+    @Description("Set the auto-role.")
     fun set(context: Context, role: Role) {
         if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
-            context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
+            context.send().error("The bot can not manage auto-roles without the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
             return
         }
 
@@ -50,8 +50,8 @@ class AutoRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(1, description = "Unset the auto-role.")
-    fun unset(context: Context) {
+    @Description("Unset the auto-role.")
+    fun reset(context: Context) {
         if (context.data.roles.autoRole == null) {
             context.send().error("This guild doesn't have an auto-role.").queue()
             return

@@ -69,16 +69,8 @@ class DiscordFMCommand : CommandExecutor() {
         // quick check for incomplete query
         // classic -> classical
         var library = DiscordFM.LIBRARIES.firstOrNull { it.contains(query) }
-
         if (library == null) {
-            var maxDistance = 10
-            DiscordFM.LIBRARIES.forEach {
-                val distance = StringUtils.getLevenshteinDistance(it, query)
-                if (distance < maxDistance) {
-                    maxDistance = distance
-                    library = it
-                }
-            }
+            library = DiscordFM.LIBRARIES.minBy { StringUtils.getLevenshteinDistance(it, query) }
         }
 
         if (library == null) {
@@ -93,7 +85,7 @@ class DiscordFMCommand : CommandExecutor() {
             return
         }
 
-        DiscordFMTrackContext(library!!, context.user.idLong, context.channel.idLong).let {
+        DiscordFMTrackContext(library, context.user.idLong, context.textChannel.idLong).let {
             manager.discordFMTrack = it
             manager.loadAndPlay(context,
                     DiscordFM.getRandomSong(library),

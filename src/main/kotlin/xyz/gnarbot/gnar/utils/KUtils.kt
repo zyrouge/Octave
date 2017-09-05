@@ -1,6 +1,7 @@
 @file:Suppress("NOTHING_TO_INLINE")
 package xyz.gnarbot.gnar.utils
 
+import net.dv8tion.jda.core.entities.Member
 import ninja.leaping.configurate.ConfigurationNode
 import java.time.Duration
 import java.util.concurrent.TimeUnit
@@ -9,6 +10,8 @@ import java.util.concurrent.TimeUnit
 inline operator fun ConfigurationNode.get(vararg nodes: Any) : ConfigurationNode {
     return this.getNode(*nodes)
 }
+
+fun Member.hasAnyRoleNamed(name: String) = roles.any { it.name == name }
 
 fun String.toDuration() : Duration {
     return Duration.ofNanos(parseDuration(this))

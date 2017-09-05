@@ -11,7 +11,6 @@ import xyz.gnarbot.gnar.utils.Context;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringJoiner;
@@ -195,7 +194,6 @@ public abstract class Parser<T> {
                     args[i] = obj;
                 }
 
-                System.out.println(Arrays.toString(args));
                 return args;
             }
         };
@@ -203,12 +201,20 @@ public abstract class Parser<T> {
 
     @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> Parser<T> ofEnum(Class<T> cls) {
-        StringJoiner sj = new StringJoiner(", ");
-        for (T item: cls.getEnumConstants()) {
-            sj.add(item.name());
+        Description ann = cls.getAnnotation(Description.class);
+
+        String name = ann != null ? ann.display() : null;
+        if (name == null) {
+            StringJoiner sj = new StringJoiner(", ");
+            for (T item: cls.getEnumConstants()) {
+                sj.add(item.name().toLowerCase());
+            }
+            name = sj.toString();
         }
 
-        return new Parser<T>(sj.toString(), sj.toString()) {
+        String desc = ann != null ? ann.value() : cls.getSimpleName();
+
+        return new Parser<T>(name, desc) {
             @Override
             public T parse(Context c, String s) {
                 try {

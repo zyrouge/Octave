@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -18,10 +18,10 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_ROLES)
 )
 class SelfRoleCommand : CommandTemplate() {
-    @Executor(0, description = "Add a self-role.")
+    @Description("Add a self-role.")
     fun add(context: Context, role: Role) {
         if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
-            context.send().error("The bot needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
+            context.send().error("The bot can not  needs the ${Permission.MANAGE_ROLES.getName()} permission.").queue()
             return
         }
 
@@ -50,7 +50,7 @@ class SelfRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(1, description = "Remove a self-role.")
+    @Description("Remove a self-role.")
     fun remove(context: Context, role: Role) {
         if (role.id !in context.data.roles.selfRoles) {
             context.send().error("${role.asMention} is not a self-assignable role.").queue()
@@ -67,7 +67,7 @@ class SelfRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(2, description = "Clear all self-assignable roles.")
+    @Description("Clear all self-assignable roles.")
     fun clear(context: Context) {
         if (context.data.roles.selfRoles.isEmpty()) {
             context.send().error("This guild doesn't have any self-assignable roles.").queue()
@@ -84,7 +84,7 @@ class SelfRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(3, description = "List self-assignable roles.")
+    @Description("List self-assignable roles.")
     fun list(context: Context) {
         context.send().embed("Self-Roles") {
             desc {

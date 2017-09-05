@@ -92,7 +92,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                                         result.info.uri,
                                         TrackContext(
                                                 context.member.user.idLong,
-                                                context.channel.idLong
+                                                context.textChannel.idLong
                                         )
                                 )
                             } else {
@@ -100,7 +100,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                             }
                         }
                     }
-                }.display(context.channel)
+                }.display(context.textChannel)
             }
         }
     }

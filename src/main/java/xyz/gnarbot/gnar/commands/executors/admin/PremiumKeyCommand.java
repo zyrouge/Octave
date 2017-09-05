@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.template.CommandTemplate;
-import xyz.gnarbot.gnar.commands.template.Executor;
+import xyz.gnarbot.gnar.commands.template.Description;
 import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
 import xyz.gnarbot.gnar.guilds.GuildData;
@@ -21,7 +21,7 @@ import java.util.UUID;
         category = Category.NONE
 )
 public class PremiumKeyCommand extends CommandTemplate {
-    @Executor(value = 1, description = "Generate a premium key.")
+    @Description("Generate a premium key.")
     public void gen(Context context, int number, PremiumKey.Type type, String durationTxt) {
         long duration = Utils.parseTime(durationTxt);
 
@@ -40,7 +40,7 @@ public class PremiumKeyCommand extends CommandTemplate {
         context.getUser().openPrivateChannel().queue(it -> it.sendMessage("```\n" + builder.toString() + "```").queue());
     }
 
-    @Executor(value = 2, description = "Revoke a premium key.")
+    @Description("Revoke a premium key.")
     public void revoke(Context context, String[] ids) {
         StringJoiner joiner = new StringJoiner("\n");
 

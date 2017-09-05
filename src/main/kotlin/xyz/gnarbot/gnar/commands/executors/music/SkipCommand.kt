@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 
 @Command(
         id = 73,
@@ -17,8 +17,8 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class SkipCommand : MusicCommandExecutor(true, false) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
-        if (manager.player.playingTrack.getUserData(TrackContext::class.java)?.requester != context.member.user.idLong
-                && !context.member.hasPermission(Permission.MANAGE_CHANNEL)) {
+        if (!(context.member.hasAnyRoleNamed("DJ")
+                || manager.player.playingTrack.getUserData(TrackContext::class.java)?.requester == context.user.idLong)) {
             context.send().error("You did not request this track.").queue()
             return
         }

@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
         description = "Assign yourself a self-role."
 )
 class IAmCommand : CommandTemplate() {
-    @Executor(0, description = "Assign yourself a self-role.")
+    @Description("Assign yourself a self-role.")
     fun a(context: Context, role: Role) {
         if (role.id !in context.data.roles.selfRoles) {
             return context.send().error("${role.asMention} is not a self-assignable role.").queue()
@@ -33,7 +33,7 @@ class IAmCommand : CommandTemplate() {
 
     }
 
-    @Executor(1, description = "Remove a self-role from yourself.")
+    @Description("Remove a self-role from yourself.")
     fun not(context: Context, role: Role) {
         if (role.id !in context.data.roles.selfRoles) {
             return context.send().error("${role.asMention} is not a self-assignable role.").queue()
@@ -52,7 +52,7 @@ class IAmCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    @Executor(2, description = "List self-assignable roles.")
+    @Description("List self-assignable roles.")
     fun list(context: Context) {
         context.send().embed("Self-Roles") {
             desc {

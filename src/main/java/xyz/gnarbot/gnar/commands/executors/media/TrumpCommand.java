@@ -100,7 +100,7 @@ public class TrumpCommand extends CommandExecutor {
 
             g2.dispose();
 
-            context.getChannel().sendFile(file, null).queue();
+            context.getTextChannel().sendFile(file, null).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

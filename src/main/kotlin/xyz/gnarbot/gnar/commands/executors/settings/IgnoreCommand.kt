@@ -8,7 +8,7 @@ import net.dv8tion.jda.core.entities.TextChannel
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Executor
+import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -20,7 +20,7 @@ import xyz.gnarbot.gnar.utils.Context
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class IgnoreCommand : CommandTemplate() {
-    @Executor(0, description = "Ignore/unignore users.")
+    @Description("Ignore/unignore users.")
     fun user(context: Context, member: Member) {
         if (!context.member.canInteract(member)) {
             context.send().error("You can not interact with this user.").queue()
@@ -49,7 +49,7 @@ class IgnoreCommand : CommandTemplate() {
         context.data.save()
     }
 
-    @Executor(1, description = "Ignore/unignore a channel.")
+    @Description("Ignore/unignore a channel.")
     fun channel(context: Context, channel: TextChannel) {
         context.data.ignored.channels.let {
             if (it.contains(channel.id)) {
@@ -73,7 +73,7 @@ class IgnoreCommand : CommandTemplate() {
         context.data.save()
     }
 
-    @Executor(2, description = "Ignore/unignore a role.")
+    @Description("Ignore/unignore a role.")
     fun role(context: Context, role: Role) {
         if (role == context.guild.publicRole) {
             context.send().error("You can't ignore the public role!").queue()
@@ -102,7 +102,7 @@ class IgnoreCommand : CommandTemplate() {
         context.data.save()
     }
 
-    @Executor(3, description = "List ignored entities.")
+    @Description("List ignored entities.")
     fun list(context: Context) {
         context.send().embed("Ignored Entities") {
             field("Users") {

@@ -70,7 +70,7 @@ class PlayCommand : CommandExecutor() {
                     args[0],
                     TrackContext(
                             context.member.user.idLong,
-                            context.channel.idLong
+                            context.textChannel.idLong
                     ),
                     footnote
             )
@@ -116,7 +116,7 @@ class PlayCommand : CommandExecutor() {
                         result.info.uri,
                         TrackContext(
                                 context.member.user.idLong,
-                                context.channel.idLong
+                                context.textChannel.idLong
                         ),
                         footnote
                 )

@@ -86,7 +86,7 @@ public class MemeCommand extends CommandExecutor {
                     .setDescription("Use one of these like so: `_meme (meme name) | (top text) | (bottom text)`")
                     .addAll(map.keySet())
                     .build()
-                    .display(context.getChannel());
+                    .display(context.getTextChannel());
             return;
         }
 
