@@ -11,6 +11,7 @@ import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
+import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
@@ -47,9 +48,11 @@ public final class Bot {
     private static final EventWaiter waiter = new EventWaiter();
 
     private static final Database database = new Database("bot");
-    private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
     private static final PlayerRegistry playerRegistry = new PlayerRegistry();
+
+    private static final CommandRegistry commandRegistry = new CommandRegistry();
+    private static final CommandDispatcher commandDispatcher = new CommandDispatcher();
 
     private static final List<Shard> shards = new ArrayList<>(KEYS.getBotShards());
 
@@ -113,6 +116,10 @@ public final class Bot {
 
     public static CommandRegistry getCommandRegistry() {
         return commandRegistry;
+    }
+
+    public static CommandDispatcher getCommandDispatcher() {
+        return commandDispatcher;
     }
 
     public static PlayerRegistry getPlayers() {

@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.commands.template.Parser;
+import xyz.gnarbot.gnar.commands.template.Parsers;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;
@@ -25,7 +25,7 @@ public class WhoIsCommand extends CommandExecutor {
         if (args.length == 0) {
             member = context.getMember();
         } else {
-            member = Parser.MEMBER.parse(context, args[0]);
+            member = Parsers.MEMBER.parse(context, args[0]);
         }
 
         if (member == null) {

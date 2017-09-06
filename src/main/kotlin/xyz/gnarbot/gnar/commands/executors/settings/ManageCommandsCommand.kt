@@ -8,14 +8,22 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.commands.template.Parser
+import xyz.gnarbot.gnar.commands.template.Parsers
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
-private val override: Map<Class<*>, Parser<*>> = mapOf(
-        String::class.java to object : Parser<String>("@user, @role, @channel, *", "Name or mention of a user, role, or channel") {
-            override fun parse(c: Context?, s: String?) = s
-        }
-)
+private val override: Map<Class<*>, Parser<*>> = Parsers.PARSER_MAP.let {
+    HashMap(it).apply {
+        put(
+                String::class.java,
+                Parser<String>(
+                        "@user, @role, @channel, *",
+                        "Name or mention of a user, role, or channel",
+                        { _, s -> s }
+                )
+        )
+    }
+}
 
 @Command(
         id = 54,
@@ -259,7 +267,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
     private fun entity(context: Context, scope: ManageScope, entity: String): Pair<String, String>? {
         return when(scope) {
             ManageScope.USER -> {
-                val member = Parser.MEMBER.parse(context, entity)
+                val member = Parsers.MEMBER.parse(context, entity)
 
                 if (member == null) {
                     context.send().error("Not a valid user name or mention.").queue()
@@ -269,7 +277,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                 member.user.id to member.user.asMention
             }
             ManageScope.ROLE -> {
-                val role = Parser.ROLE.parse(context, entity)
+                val role = Parsers.ROLE.parse(context, entity)
 
                 if (role == null) {
                     context.send().error("Not a valid role name or mention").queue()
@@ -279,7 +287,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                 role.id to role.asMention
             }
             ManageScope.CHANNEL -> {
-                val channel = Parser.TEXT_CHANNEL.parse(context, entity)
+                val channel = Parsers.TEXT_CHANNEL.parse(context, entity)
 
                 if (channel == null) {
                     context.send().error("Not a valid text channel name or mention.").queue()

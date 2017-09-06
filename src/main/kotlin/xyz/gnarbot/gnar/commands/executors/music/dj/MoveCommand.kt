@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.executors.music.MusicCommandExecutor
-import xyz.gnarbot.gnar.commands.template.Parser
+import xyz.gnarbot.gnar.commands.template.Parsers
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
@@ -21,7 +21,7 @@ class MoveCommand : MusicCommandExecutor(false, false) {
         val targetChannel = if (args.isEmpty()) {
             context.voiceChannel
         } else {
-            Parser.VOICE_CHANNEL.parse(context, args.joinToString(" "))
+            Parsers.VOICE_CHANNEL.parse(context, args.joinToString(" "))
         }
 
         if (targetChannel == null) {

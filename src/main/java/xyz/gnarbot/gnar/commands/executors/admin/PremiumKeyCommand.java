@@ -41,7 +41,9 @@ public class PremiumKeyCommand extends CommandTemplate {
     }
 
     @Description("Revoke a premium key.")
-    public void revoke(Context context, String[] ids) {
+    public void revoke(Context context, String idString) {
+        String[] ids = idString.split(",\\s*|\n");
+
         StringJoiner joiner = new StringJoiner("\n");
 
         for (String id : ids) {

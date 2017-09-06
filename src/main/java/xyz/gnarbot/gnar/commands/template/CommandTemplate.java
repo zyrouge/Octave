@@ -5,16 +5,19 @@ import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class CommandTemplate extends CommandExecutor implements Template {
     private final Map<String, Template> cursors;
 
     public CommandTemplate() {
-        this(Collections.emptyMap());
+        this(Parsers.PARSER_MAP);
     }
 
-    public CommandTemplate(Map<Class, Parser> parserOverrides) {
+    public CommandTemplate(Map<Class<?>, Parser<?>> parserMap) {
         cursors = new LinkedHashMap<>();
 
         Method[] methods = getClass().getDeclaredMethods();
@@ -46,7 +49,7 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
                 current = next;
             }
 
-            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Description.class), method, parserOverrides));
+            current.add(parts[parts.length - 1], new MethodTemplate(this, method.getAnnotation(Description.class), method, parserMap));
         }
     }
 

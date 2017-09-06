@@ -1,6 +1,10 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import xyz.gnarbot.gnar.commands.*
+import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.Category
+import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 
@@ -15,7 +19,7 @@ import xyz.gnarbot.gnar.utils.Context
 class VideoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            CommandDispatcher.sendHelp(context, info)
+            Bot.getCommandDispatcher().sendHelp(context, info)
             return
         }
 

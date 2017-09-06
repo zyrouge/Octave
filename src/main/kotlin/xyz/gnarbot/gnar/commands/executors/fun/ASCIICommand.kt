@@ -5,9 +5,9 @@ import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.code
@@ -22,7 +22,7 @@ import xyz.gnarbot.gnar.utils.code
 class ASCIICommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            CommandDispatcher.sendHelp(context, info)
+            Bot.getCommandDispatcher().sendHelp(context, info)
             return
         }
 

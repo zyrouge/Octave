@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.polls
 
 import net.dv8tion.jda.core.EmbedBuilder
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
@@ -22,7 +22,7 @@ class PollCommand : CommandExecutor() {
         val parts = args.joinToString(" ").split('|').map(String::trim)
 
         if (parts.size < 3) {
-            CommandDispatcher.sendHelp(context, info)
+            Bot.getCommandDispatcher().sendHelp(context, info)
             return
         }
 

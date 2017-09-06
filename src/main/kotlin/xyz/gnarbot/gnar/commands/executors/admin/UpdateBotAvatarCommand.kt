@@ -7,6 +7,7 @@ import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.net.URL
+import kotlin.io.use as doNotUse
 
 @Command(
         id = 36,
@@ -16,9 +17,7 @@ import java.net.URL
 )
 class UpdateBotAvatarCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        if (args.isEmpty()) {
-
-        } else {
+        if (!args.isEmpty()) {
             URL(args.joinToString(" ")).openStream().use {
                 Bot.getShards()[0].jda.selfUser.manager.setAvatar(Icon.from(it)).queue()
             }

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.HttpUtils;
@@ -32,7 +31,7 @@ public class YodaTalkCommand extends CommandExecutor {
         }
 
         if (args.length == 0) {
-            CommandDispatcher.INSTANCE.sendHelp(context, getInfo());
+            Bot.getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

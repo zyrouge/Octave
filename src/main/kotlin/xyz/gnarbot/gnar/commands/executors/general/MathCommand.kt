@@ -6,8 +6,8 @@ import org.scilab.forge.jlatexmath.TeXFormula
 import xyz.avarel.aljava.TexElement
 import xyz.avarel.aljava.lexer.Lexer
 import xyz.avarel.aljava.parser.Parser
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandDispatcher
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.awt.Color
@@ -24,7 +24,7 @@ import javax.imageio.ImageIO
 class MathCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            CommandDispatcher.sendHelp(context, info)
+            Bot.getCommandDispatcher().sendHelp(context, info)
             return
         }
 

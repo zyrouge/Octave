@@ -19,7 +19,7 @@ public class MethodTemplate implements Template {
     private final Parser[] parsers;
 
     @SuppressWarnings("unchecked")
-    public MethodTemplate(CommandTemplate command, Description annotation, Method method, Map<Class, Parser> parserOverrides) {
+    public MethodTemplate(CommandTemplate command, Description annotation, Method method, Map<Class<?>, Parser<?>> parsers) {
         this.command = command;
         this.annotation = annotation;
         this.method = method;
@@ -27,19 +27,19 @@ public class MethodTemplate implements Template {
         Parameter[] params = method.getParameters();
         this.parsers = new Parser[params.length - 1];
 
-        for (int i = 0; i < parsers.length; i++) {
+        for (int i = 0; i < this.parsers.length; i++) {
             Class<?> type = params[i + 1].getType();
 
-            Parser<?> parser = parserOverrides.get(type);
+            Parser<?> parser = parsers.get(type);
             if (parser == null) {
-                parser = Parser.ofClass(type);
+                if (type.isEnum()) {
+                    parser = Parsers.createEnumParser((Class) type);
+                } else {
+                    throw new IllegalArgumentException("No parsers available for type " + type);
+                }
             }
 
-            if (parser == null) {
-                throw new IllegalArgumentException("No parsers available for type " + type);
-            }
-
-            parsers[i] = parser;
+            this.parsers[i] = parser;
         }
     }
 

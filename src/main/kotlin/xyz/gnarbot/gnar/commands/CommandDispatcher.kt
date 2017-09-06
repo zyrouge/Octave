@@ -5,7 +5,6 @@ import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Channel
 import net.dv8tion.jda.core.entities.Member
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.utils.Context
@@ -14,7 +13,7 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 import java.awt.Color
 import java.util.*
 
-object CommandDispatcher {
+class CommandDispatcher{
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     private val permissionToSpeak = "The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}` permission in this channel to show messages."
@@ -26,30 +25,28 @@ object CommandDispatcher {
         append("and ask one of the owners.")
     }
 
-    fun handleEvent(event: GuildMessageReceivedEvent) {
-        Context(event).let {
-            val content = event.message.rawContent
-            if (!content.startsWith(Bot.CONFIG.prefix)
-                    && !content.startsWith(namePrefix, true)) {
-                val prefix = it.data.command.prefix
-                if (prefix == null || !content.startsWith(prefix)) return
-            }
+    fun handle(context: Context) {
+        val content = context.message.rawContent
+        if (!content.startsWith(Bot.CONFIG.prefix)
+                && !content.startsWith(namePrefix, true)) {
+            val prefix = context.data.command.prefix
+            if (prefix == null || !content.startsWith(prefix)) return
+        }
 
-            // Don't do anything if the bot can't even speak.
-            if (!event.channel.canTalk()) {
-                return
-            }
+        // Don't do anything if the bot can't even speak.
+        if (!context.textChannel.canTalk()) {
+            return
+        }
 
-            // Send a message if bot cant use embeds.
-            if (!event.guild.selfMember.hasPermission(event.channel, Permission.MESSAGE_EMBED_LINKS)) {
-                event.channel.sendMessage(permissionToSpeak).queue()
-                return
-            }
+        // Send a message if bot cant use embeds.
+        if (!context.selfMember.hasPermission(context.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
+            context.textChannel.sendMessage(permissionToSpeak).queue()
+            return
+        }
 
-            launch(CommonPool) {
-                if (splitCommand(it)) {
-                    it.shard.requests++
-                }
+        launch(CommonPool) {
+            if (splitCommand(context)) {
+                context.shard.requests++
             }
         }
     }
@@ -81,15 +78,16 @@ object CommandDispatcher {
 
         val args = tokens.copyOfRange(1, tokens.size)
 
-        return callCommand(context, label, cmd, args)
+        return callCommand(cmd, context, label, args)
     }
+
 
     /**
      * Call the command based on the message content.
      *
      * @return If the call was successful.
      */
-    private fun callCommand(context: Context, label: String, cmd: CommandExecutor, args: Array<String>) : Boolean {
+    private fun callCommand(cmd: CommandExecutor, context: Context, label: String, args: Array<String>): Boolean {
         // Check if the person is to be ignored
         if (isIgnored(context, context.member)) {
             return false
