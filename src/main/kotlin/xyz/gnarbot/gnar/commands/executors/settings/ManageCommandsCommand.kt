@@ -12,17 +12,14 @@ import xyz.gnarbot.gnar.commands.template.Parsers
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
-private val override: Map<Class<*>, Parser<*>> = Parsers.PARSER_MAP.let {
-    HashMap(it).apply {
-        put(
-                String::class.java,
-                Parser<String>(
-                        "@user, @role, @channel, *",
-                        "Name or mention of a user, role, or channel",
-                        { _, s -> s }
-                )
-        )
-    }
+private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).also {
+    it.put(String::class.java,
+            Parser<String>(
+                    "@user|@role|@channel|*",
+                    "Name or mention of a user, role, or channel",
+                    { _, s -> s }
+            )
+    )
 }
 
 @Command(
