@@ -1,9 +1,10 @@
 package xyz.gnarbot.gnar.tests
 
-import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 fun main(args: Array<String>) {
-    val set = emptySet<Nothing>()
-    val set2 = emptySet<Nothing>()
-    println(Collections.disjoint(set, set2))
+    Executors.newSingleThreadScheduledExecutor().schedule({
+        println("lol")
+    }, 5000, TimeUnit.SECONDS)
 }

@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.filters;
+package xyz.gnarbot.gnar.commands.dispatcher.predicates;
 
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.utils.Context;
@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.utils.Context;
 import java.awt.*;
 import java.util.function.BiPredicate;
 
-public class DonatorFilter implements BiPredicate<CommandExecutor, Context> {
+public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
     private static final String donatorMessage =
             "🌟 This command is for donators' servers only.\n" +
             "In order to enjoy donator perks, please consider pledging to " +

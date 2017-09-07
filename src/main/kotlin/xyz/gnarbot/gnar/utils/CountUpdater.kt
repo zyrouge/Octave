@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils
 
+import net.dv8tion.jda.core.JDA
 import okhttp3.*
 import org.json.JSONObject
 import xyz.gnarbot.gnar.Bot
@@ -13,6 +14,8 @@ class CountUpdater(val shard: Shard) {
     }
 
     fun update() {
+        if (shard.jda.status != JDA.Status.CONNECTED) return
+
         Bot.LOG.info("Sending shard updates for shard ${shard.id}")
         updateCarbonitex()
         updateAbal()

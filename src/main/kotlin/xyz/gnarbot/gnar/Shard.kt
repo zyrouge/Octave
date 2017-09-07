@@ -39,7 +39,7 @@ class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager
     private val countUpdater = CountUpdater(this)
 
     init {
-        Bot.EXECUTOR.scheduleAtFixedRate(countUpdater::update, 30, 30, TimeUnit.MINUTES)
+        Bot.EXECUTOR.scheduleAtFixedRate({ countUpdater.update() }, 30, 30, TimeUnit.MINUTES)
     }
 
     fun build() {

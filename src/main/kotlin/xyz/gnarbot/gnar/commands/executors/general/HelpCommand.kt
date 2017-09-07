@@ -69,7 +69,7 @@ class HelpCommand : CommandExecutor() {
             return
         }
 
-        val cmds = registry.entries
+        val commands = registry.entries
 
         context.send().embed("Guides") {
             desc {
@@ -82,7 +82,7 @@ class HelpCommand : CommandExecutor() {
             for (category in Category.values()) {
                 if (!category.show) continue
 
-                val filtered = cmds.filter { it.info.category == category }
+                val filtered = commands.filter { it.info.category == category }
                 if (filtered.isEmpty()) continue
 
                 field("${category.title} — ${filtered.size}\n") {
@@ -90,7 +90,7 @@ class HelpCommand : CommandExecutor() {
                 }
             }
 
-            footer { "For more information try _help (command) or _help [Category], ex: _help ttb or _help [Music]" }
+            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music" }
         }.action().queue()
     }
 }

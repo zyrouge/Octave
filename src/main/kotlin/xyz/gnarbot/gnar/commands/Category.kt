@@ -9,5 +9,7 @@ enum class Category(val title: String, val show: Boolean = true) {
     FUN("Fun"),
     MEDIA("Media"),
     GENERAL("General"),
-    NONE("", show = false),
+    NONE("", show = false);
+
+    override fun toString() = title
 }

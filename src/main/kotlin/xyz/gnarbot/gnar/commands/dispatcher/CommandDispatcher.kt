@@ -1,32 +1,41 @@
-package xyz.gnarbot.gnar.commands
+package xyz.gnarbot.gnar.commands.dispatcher
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.filters.*
+import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.CommandRegistry
+import xyz.gnarbot.gnar.commands.dispatcher.predicates.*
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
+import java.util.concurrent.ExecutorService
 
-class CommandDispatcher{
+class CommandDispatcher(private val commandRegistry: CommandRegistry, private val executor: ExecutorService) {
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
-    private val filters = listOf(IgnoredFilter(), AdministratorFilter(), SettingsFilter(), DonatorFilter(), PermissionFilter(), VoiceFilter())
+    private val predicates = listOf(
+            IgnoredPredicate(),
+            AdministratorPredicate(),
+            SettingsPredicate(),
+            DonatorPredicate(),
+            PermissionPredicate(),
+            VoiceStatePredicate()
+    )
 
     private val permissionToSpeak = "The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}` permission in this channel to show messages."
 
     fun handle(context: Context) {
+        // Don't do anything if the bot can't even speak.
+        if (!context.textChannel.canTalk()) {
+            return
+        }
+
         val content = context.message.rawContent
         if (!content.startsWith(Bot.CONFIG.prefix)
                 && !content.startsWith(namePrefix, true)) {
             val prefix = context.data.command.prefix
             if (prefix == null || !content.startsWith(prefix)) return
-        }
-
-        // Don't do anything if the bot can't even speak.
-        if (!context.textChannel.canTalk()) {
-            return
         }
 
         // Send a message if bot cant use embeds.
@@ -35,7 +44,7 @@ class CommandDispatcher{
             return
         }
 
-        launch(CommonPool) {
+        executor.submit {
             if (splitCommand(context)) {
                 context.shard.requests++
             }
@@ -59,13 +68,12 @@ class CommandDispatcher{
         val tokens = Utils.stringSplit(content)
 
         // Should not happen but as a guard.
-        if (tokens.isEmpty()) {
-            return false
-        }
+        if (tokens.isEmpty()) return false
 
         val label = tokens[0].toLowerCase().trim()
 
-        val cmd = Bot.getCommandRegistry().getCommand(label) ?: return false
+        // confirm that its a command
+        val cmd = commandRegistry.getCommand(label) ?: return false
 
         val args = tokens.copyOfRange(1, tokens.size)
 
@@ -79,10 +87,8 @@ class CommandDispatcher{
      * @return If the call was successful.
      */
     private fun callCommand(cmd: CommandExecutor, context: Context, label: String, args: Array<String>): Boolean {
-        for (filter in filters) {
-            if (!filter.test(cmd, context)) {
-                return false
-            }
+        if (predicates.any { !it.test(cmd, context) }) {
+            return false
         }
 
         try {
@@ -100,14 +106,4 @@ class CommandDispatcher{
     fun sendHelp(context: Context, info: Command) {
         Bot.getCommandRegistry().getCommand("help").execute(context, "help", arrayOf(info.aliases.first()))
     }
-
-//    // Checks for ratelimit
-//    private fun isRateLimited(user: User) = System.currentTimeMillis() < cooldownMap.get(user.idLong)
-//
-//    // Set ratelimit
-//    private fun rateLimit(user: User, ms: Long) {
-//        if (ms != 0L) {
-//            cooldownMap.put(user.idLong, System.currentTimeMillis() + ms)
-//        }
-//    }
 }

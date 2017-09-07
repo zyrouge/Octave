@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.filters
+package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -7,7 +7,7 @@ import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 import java.util.function.BiPredicate
 
-class PermissionFilter : BiPredicate<CommandExecutor, Context> {
+class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
         if (context.member.hasPermission(Permission.ADMINISTRATOR)
                 || !(cmd.info.permissions.isNotEmpty() || cmd.info.roleRequirement.isNotEmpty())) return true

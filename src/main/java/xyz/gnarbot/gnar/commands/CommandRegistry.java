@@ -169,8 +169,6 @@ public class CommandRegistry {
         }
     }
 
-
-
     /**
      * Register the CommandExecutor instance into the registry.
      * @param label Invoking key.

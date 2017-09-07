@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.entities.IMentionable
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -10,7 +9,9 @@ import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.commands.template.Parser
 import xyz.gnarbot.gnar.commands.template.Parsers
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
+import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
 import xyz.gnarbot.gnar.utils.Context
+import java.util.*
 
 private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).also {
     it.put(String::class.java,
@@ -32,11 +33,86 @@ private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).als
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
 class ManageCommandsCommand : CommandTemplate(override) {
+    @Description("Completely disable or enable a command.")
+    fun toggle_specific(context: Context, cmd: CommandExecutor) {
+        options(context, cmd) {
+            it.isEnabled = !it.isEnabled
+            context.data.save()
+
+            if (it.isEnabled) {
+                context.send().info("The command ${cmd.info.aliases[0]} is now enabled.").queue()
+            } else {
+                context.send().info("The command ${cmd.info.aliases[0]} is now disabled.").queue()
+            }
+        }
+    }
+
+    @Description("Completely disable or enable a category.")
+    fun toggle_category(context: Context, category: Category) {
+        options(context, category) {
+            it.isEnabled = !it.isEnabled
+            context.data.save()
+
+            if (it.isEnabled) {
+                context.send().info("The category ${category.title} is now enabled.").queue()
+            } else {
+                context.send().info("The category ${category.title} is now disabled.").queue()
+            }
+        }
+    }
+
     @Description(value = "Enable a command for a user/role/channel.")
     fun enable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
+        // parent exists
+        // NULL scope options for this command
+        //
+        // enable * ?
+        //      create or inherit options and create an empty list for scope
+        // enable entity ?
+        //      create or inherit options and subtract entity from parent scope
+        val options = context.data.command.options[cmd.info.id]
+        if (options == null || scope.rawTransform(options) == null) {
+            if (entity == "*") {
+                options(context, cmd.info.category) { categoryOptions ->
+                    if (scope.transform(categoryOptions).isEmpty()) {
+                        context.send().error("The command is not disabled for any ${scope.name.toLowerCase()}.").queue()
+                        return
+                    }
+
+                    (options ?: CommandOptions()).let {
+                        context.data.command.options.put(cmd.info.id, it)
+                        scope.transform(it)
+                    }
+                    context.data.save()
+
+                    context.send().embed("Command Management") {
+                        desc { "Enabled the command for every ${scope.name.toLowerCase()}." }
+                    }.action().queue()
+                    return
+                }
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                val all = HashSet<String>()
+                options(context, cmd.info.category) { categoryOptions ->
+                    all.addAll(scope.transform(categoryOptions))
+                }
+                all.remove(item)
+
+                (options ?: CommandOptions()).let {
+                    context.data.command.options.put(cmd.info.id, it)
+                    scope.transform(it).addAll(all)
+                }
+                context.data.save()
+
+                context.send().embed("Command Management") {
+                    desc { "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay." }
+                }.action().queue()
+                return
+            }
+        }
+
         options(context, cmd) {
             if (entity == "*") {
-                allowAll(context, it, scope)
+                allowAll(context, it, cmd.info.aliases[0], scope)
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 allowTo(context, item, itemDisplay, it, scope, cmd.info.aliases[0])
             }
@@ -47,7 +123,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
     fun enable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
         options(context, category) {
             if (entity == "*") {
-                allowAll(context, it, scope)
+                allowAll(context, it, category.title, scope)
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 allowTo(context, item, itemDisplay, it, scope, category.title)
             }
@@ -58,7 +134,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
     fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
         options(context, cmd) {
             if (entity == "*") {
-                disallowAll(context, it, scope)
+                disallowAll(context, it, cmd.info.aliases[0], scope)
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 disallowTo(context, item, itemDisplay, it, scope, cmd.info.aliases[0])
             }
@@ -69,7 +145,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
     fun disable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
         options(context, category) {
             if (entity == "*") {
-                disallowAll(context, it, scope)
+                disallowAll(context, it, category.title, scope)
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 disallowTo(context, item, itemDisplay, it, scope, category.title)
             }
@@ -78,15 +154,75 @@ class ManageCommandsCommand : CommandTemplate(override) {
 
     @Description(value = "Show the options of the command.")
     fun options_specific(context: Context, cmd: CommandExecutor) {
-        val options = context.data.command.options[cmd.info.id]
-        if (options == null) {
+        val options = context.data.command.let { CommandOptionsOverride(it.options[cmd.info.id], it.categoryOptions[cmd.info.category.ordinal]) }
+        if (options.child == null && options.parent == null) {
             context.send().embed("Command Management") {
                 desc { "This command is allowed to everybody with the appropriate permission." }
             }.action().queue()
             return
         }
 
-        sendOptionsFor(context, options, "command")
+        context.send().embed("Command Management") {
+            field("Toggle") {
+                if (!options.isEnabled) {
+                    if (options.inheritToggle()) {
+                        "Disabled by the category."
+                    } else {
+                        "Disabled."
+                    }
+                } else {
+                    "Enabled."
+                }
+            }
+
+            field("Disabled Users") {
+                options.disabledUsers.let {
+                    if (it.isEmpty()) {
+                        "This command is not disabled for any users."
+                    } else {
+                        buildString {
+                            if (options.inheritUsers()) {
+                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                            }
+
+                            it.mapNotNull(context.guild::getMemberById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+
+            field("Disabled Roles") {
+                options.disabledRoles.let {
+                    if (it.isEmpty()) {
+                        "This command is not disabled for any roles."
+                    } else {
+                        buildString {
+                            if (options.inheritRoles()) {
+                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                            }
+
+                            it.mapNotNull(context.guild::getRoleById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+
+            field("Disabled Channels") {
+                options.disabledChannels.let {
+                    if (it.isEmpty()) {
+                        "This command is not disabled for any channels."
+                    } else {
+                        buildString {
+                            if (options.inheritChannels()) {
+                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                            }
+
+                            it.mapNotNull(context.guild::getTextChannelById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+        }.action().queue()
     }
 
     @Description(value = "Show the options of the command.")
@@ -99,14 +235,58 @@ class ManageCommandsCommand : CommandTemplate(override) {
             return
         }
 
-        sendOptionsFor(context, options, "category")
+        context.send().embed("Command Management") {
+            field("Toggle") {
+                if (!options.isEnabled) {
+                    "Disabled."
+                } else {
+                    "Enabled."
+                }
+            }
+
+            field("Disabled Users") {
+                options.disabledUsers.let {
+                    if (it.isEmpty()) {
+                        "This category is not disabled for any users."
+                    } else {
+                        buildString {
+                            it.mapNotNull(context.guild::getMemberById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+
+            field("Disabled Roles") {
+                options.disabledRoles.let {
+                    if (it.isEmpty()) {
+                        "This category is not disabled for any roles."
+                    } else {
+                        buildString {
+                            it.mapNotNull(context.guild::getRoleById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+
+            field("Disabled Channels") {
+                options.disabledChannels.let {
+                    if (it.isEmpty()) {
+                        "This category is not disabled for any channels."
+                    } else {
+                        buildString {
+                            it.mapNotNull(context.guild::getTextChannelById).forEach { append("• ").append(it.asMention).append('\n') }
+                        }
+                    }
+                }
+            }
+        }.action().queue()
     }
 
-    private fun allowAll(context: Context, options: CommandOptions, scope: ManageScope) {
+    private fun allowAll(context: Context, options: CommandOptions, itemDisplay: String, scope: ManageScope) {
         val set = scope.transform(options)
 
         if (set.isEmpty()) {
-            context.send().error("The command is not disabled for any ${scope.name.toLowerCase()}.").queue()
+            context.send().error("$itemDisplay is not disabled for any ${scope.name.toLowerCase()}.").queue()
             return
         }
 
@@ -114,7 +294,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         context.data.save()
 
         context.send().embed("Command Management") {
-            desc { "Enabled the command for every ${scope.name.toLowerCase()}." }
+            desc { "Enabled $itemDisplay for every ${scope.name.toLowerCase()}." }
         }.action().queue()
     }
 
@@ -133,19 +313,19 @@ class ManageCommandsCommand : CommandTemplate(override) {
         }.action().queue()
     }
 
-    private fun disallowAll(context: Context, options: CommandOptions, scope: ManageScope) {
+    private fun disallowAll(context: Context, options: CommandOptions, itemDisplay: String, scope: ManageScope) {
         val set = scope.transform(options)
 
         val all = scope.all(context)
 
         if (!set.addAll(all)) {
-            context.send().error("The command is already disabled for every ${scope.name.toLowerCase()}.").queue()
+            context.send().error("$itemDisplay is already disabled for every ${scope.name.toLowerCase()}.").queue()
             return
         }
         context.data.save()
 
         context.send().embed("Command Management") {
-            desc { "Disabled the command for every ${scope.name.toLowerCase()}." }
+            desc { "Disabled $itemDisplay for every `${scope.name.toLowerCase()}`." }
         }.action().queue()
     }
 
@@ -161,58 +341,6 @@ class ManageCommandsCommand : CommandTemplate(override) {
         context.data.save()
         context.send().embed("Command Management") {
             desc { "`$cmd` is now disabled for $target." }
-        }.action().queue()
-    }
-
-    private fun sendOptionsFor(context: Context, options: CommandOptions, optionType: String) {
-        context.send().embed("Command Management") {
-            field("Disabled Users") {
-                buildString {
-                    options.disabledUsers.let {
-                        if (it.isEmpty()) {
-                            append("This ")
-                            append(optionType)
-                            append(" not disabled for any users.")
-                        } else {
-                            it.mapNotNull(context.guild::getMemberById)
-                                    .map(IMentionable::getAsMention)
-                                    .forEach { append("• ").append(it).append('\n') }
-                        }
-                    }
-                }
-            }
-
-            field("Disabled Roles") {
-                buildString {
-                    options.disabledRoles.let {
-                        if (it.isEmpty()) {
-                            append("This ")
-                            append(optionType)
-                            append(" not disabled for any roles.")
-                        } else {
-                            it.mapNotNull(context.guild::getRoleById)
-                                    .map(IMentionable::getAsMention)
-                                    .forEach { append("• ").append(it).append('\n') }
-                        }
-                    }
-                }
-            }
-
-            field("Disabled Channels") {
-                buildString {
-                    options.disabledChannels.let {
-                        if (it.isEmpty()) {
-                            append("This ")
-                            append(optionType)
-                            append(" not disabled for any channels.")
-                        } else {
-                            it.mapNotNull(context.guild::getTextChannelById)
-                                    .map(IMentionable::getAsMention)
-                                    .forEach { append("• ").append(it).append('\n') }
-                        }
-                    }
-                }
-            }
         }.action().queue()
     }
 

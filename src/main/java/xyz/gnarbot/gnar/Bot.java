@@ -11,8 +11,8 @@ import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
-import xyz.gnarbot.gnar.commands.CommandDispatcher;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
+import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listener.VoiceListener;
@@ -52,7 +52,7 @@ public final class Bot {
     private static final PlayerRegistry playerRegistry = new PlayerRegistry();
 
     private static final CommandRegistry commandRegistry = new CommandRegistry();
-    private static final CommandDispatcher commandDispatcher = new CommandDispatcher();
+    private static final CommandDispatcher commandDispatcher = new CommandDispatcher(commandRegistry, Executors.newWorkStealingPool());
 
     private static final List<Shard> shards = new ArrayList<>(KEYS.getBotShards());
 
