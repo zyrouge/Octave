@@ -56,6 +56,14 @@ public class CommandOptions {
         return disabledRoles;
     }
 
+    public CommandOptions copy() {
+        CommandOptions copy = new CommandOptions();
+        copy.enabled = this.enabled;
+        copy.disabledChannels = new HashSet<>(this.disabledChannels);
+        copy.disabledRoles = new HashSet<>(this.disabledRoles);
+        copy.disabledUsers = new HashSet<>(this.disabledUsers);
+        return copy;
+    }
 
     @JsonIgnore
     public Set<String> rawDisabledChannels() {

@@ -61,7 +61,7 @@ class GoogleCommand : CommandExecutor() {
                             val st = block.select(".st")
                             if (!st.isEmpty()) desc = st[0].text()
 
-                            append("**[$title]($url1)**\n").append('\n').append(desc).append('\n')
+                            append("**[$title]($url1)**\n").append(desc).append("\n\n")
 
                             count++
                         }

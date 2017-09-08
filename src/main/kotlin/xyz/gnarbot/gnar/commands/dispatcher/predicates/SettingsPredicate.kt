@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
+import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
@@ -18,6 +19,8 @@ class SettingsPredicate : BiPredicate<CommandExecutor, Context> {
             context.send().error("This ${type(options.inheritToggle())} is disabled.").queue()
             return false
         }
+
+        if (context.member.hasPermission(Permission.ADMINISTRATOR)) return true
 
         return when {
             options.disabledUsers.contains(context.user.id) -> {

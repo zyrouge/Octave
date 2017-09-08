@@ -11,13 +11,10 @@ import org.json.JSONTokener;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Utils {
     private static final Pattern TIME_PATTERN =
@@ -33,12 +30,6 @@ public class Utils {
         long d = h / 24;
 
         return d + "d " + h % 24 + "h " + m % 60 + "m " + s % 60 + "s";
-    }
-
-    public static <K, V extends Comparable<? super V>> Map<K, V> sortMap(Map<K, V> map) {
-        return map.entrySet().stream()
-                        .sorted(Map.Entry.<K, V>comparingByValue().reversed())
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
     }
 
     public static long parseTime(String s) {

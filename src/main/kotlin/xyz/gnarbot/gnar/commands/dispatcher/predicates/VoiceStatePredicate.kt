@@ -4,7 +4,6 @@ import net.dv8tion.jda.core.entities.Channel
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.utils.Context
-
 import java.util.function.BiPredicate
 
 class VoiceStatePredicate : BiPredicate<CommandExecutor, Context> {
@@ -27,6 +26,7 @@ class VoiceStatePredicate : BiPredicate<CommandExecutor, Context> {
             context.send().error("Music can only be played in: `$channels`.").queue()
             return false
         }
+
         return true
     }
 }

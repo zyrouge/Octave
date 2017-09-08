@@ -17,20 +17,21 @@ import java.util.*
 )
 class ShardInfoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        context.send().text("```prolog\n ID |    STATUS |    PING | GUILDS |  USERS | REQUESTS\n```").queue()
+        context.send().text("```prolog\n ID |    STATUS |    PING | GUILDS |  USERS | REQUESTS |  VC\n```").queue()
 
         Lists.partition(Bot.getShards().toList(), 20).forEach {
             val joiner = StringJoiner("\n", "```prolog\n", "```")
 
             it.forEach {
                 joiner.add(
-                        "%3d | %9s | %7s | %6d | %6d | %8d".format(
+                        "%3d | %.9s | %.7s | %6d | %6d | %8d | %3d".format(
                                 it.id,
                                 it.jda.status,
                                 "${it.jda.ping}ms",
                                 it.jda.guilds.size,
                                 it.jda.users.size,
-                                it.requests
+                                it.requests,
+                                Bot.getPlayers().registry.values.count { m -> m.guild.jda == it.jda }
                         )
                 )
             }

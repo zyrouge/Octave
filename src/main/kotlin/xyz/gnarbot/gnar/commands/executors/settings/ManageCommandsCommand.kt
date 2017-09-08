@@ -27,7 +27,7 @@ private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).als
         id = 54,
         aliases = arrayOf("commands", "cmd", "command", "cmds"),
         usage = "(enable|diable) (command|category) [command] (user|role|channel) (...)",
-        description = "Manage usage of commands.",
+        description = "Manage the usage of commands.",
         toggleable = false,
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
@@ -79,7 +79,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                         return
                     }
 
-                    (options ?: CommandOptions()).let {
+                    (options?.copy() ?: CommandOptions()).let {
                         context.data.command.options.put(cmd.info.id, it)
                         scope.transform(it)
                     }
@@ -92,12 +92,14 @@ class ManageCommandsCommand : CommandTemplate(override) {
                 }
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 val all = HashSet<String>()
-                options(context, cmd.info.category) { categoryOptions ->
-                    all.addAll(scope.transform(categoryOptions))
-                }
-                all.remove(item)
+                options(context, cmd.info.category) { all.addAll(scope.transform(it)) }
 
-                (options ?: CommandOptions()).let {
+                if (!all.remove(item)) {
+                    context.send().error("`${cmd.info.aliases[0]}` is not disabled for $itemDisplay.").queue()
+                    return
+                }
+
+                (options?.copy() ?: CommandOptions()).let {
                     context.data.command.options.put(cmd.info.id, it)
                     scope.transform(it).addAll(all)
                 }
@@ -225,7 +227,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         }.action().queue()
     }
 
-    @Description(value = "Show the options of the command.")
+    @Description(value = "Show the options of the category.")
     fun options_category(context: Context, category: Category) {
         val options = context.data.command.categoryOptions[category.ordinal]
         if (options == null) {
@@ -282,11 +284,11 @@ class ManageCommandsCommand : CommandTemplate(override) {
         }.action().queue()
     }
 
-    private fun allowAll(context: Context, options: CommandOptions, itemDisplay: String, scope: ManageScope) {
+    private fun allowAll(context: Context, options: CommandOptions, cmd: String, scope: ManageScope) {
         val set = scope.transform(options)
 
         if (set.isEmpty()) {
-            context.send().error("$itemDisplay is not disabled for any ${scope.name.toLowerCase()}.").queue()
+            context.send().error("`$cmd` is not disabled for any ${scope.name.toLowerCase()}.").queue()
             return
         }
 
@@ -294,7 +296,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         context.data.save()
 
         context.send().embed("Command Management") {
-            desc { "Enabled $itemDisplay for every ${scope.name.toLowerCase()}." }
+            desc { "Enabled `$cmd` for every ${scope.name.toLowerCase()}." }
         }.action().queue()
     }
 
@@ -313,19 +315,19 @@ class ManageCommandsCommand : CommandTemplate(override) {
         }.action().queue()
     }
 
-    private fun disallowAll(context: Context, options: CommandOptions, itemDisplay: String, scope: ManageScope) {
+    private fun disallowAll(context: Context, options: CommandOptions, cmd: String, scope: ManageScope) {
         val set = scope.transform(options)
 
         val all = scope.all(context)
 
         if (!set.addAll(all)) {
-            context.send().error("$itemDisplay is already disabled for every ${scope.name.toLowerCase()}.").queue()
+            context.send().error("`$cmd` is already disabled for every ${scope.name.toLowerCase()}.").queue()
             return
         }
         context.data.save()
 
         context.send().embed("Command Management") {
-            desc { "Disabled $itemDisplay for every `${scope.name.toLowerCase()}`." }
+            desc { "Disabled `$cmd` for every `${scope.name.toLowerCase()}`." }
         }.action().queue()
     }
 
@@ -349,7 +351,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         clear(context, context.data.command.options, cmd.info.id, "category", cmd.info.aliases[0])
     }
 
-    @Description("Clear all options for a command.")
+    @Description("Clear all options for a category.")
     fun clear_category(context: Context, category: Category) {
         clear(context, context.data.command.categoryOptions, category.ordinal, "category", category.title)
     }

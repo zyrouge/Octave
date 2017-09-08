@@ -15,15 +15,15 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
     private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
 
     private val predicates = listOf(
-            IgnoredPredicate(),
-            AdministratorPredicate(),
-            SettingsPredicate(),
-            DonatorPredicate(),
-            PermissionPredicate(),
-            VoiceStatePredicate()
+            IgnoredPredicate(), // is the user ignored
+            AdministratorPredicate(), // does the command require admin rights
+            SettingsPredicate(), // command settings
+            DonatorPredicate(), // ddoes the command require donator status
+            PermissionPredicate(), // does user have sufficient permissions
+            VoiceStatePredicate() // voice state checking
     )
 
-    private val permissionToSpeak = "The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}` permission in this channel to show messages."
+    private val permissionToEmbed = "The bot needs the `${Permission.MESSAGE_EMBED_LINKS.getName()}` permission in this channel to show messages."
 
     fun handle(context: Context) {
         // Don't do anything if the bot can't even speak.
@@ -31,41 +31,34 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
             return
         }
 
-        val content = context.message.rawContent
-        if (!content.startsWith(Bot.CONFIG.prefix)
-                && !content.startsWith(namePrefix, true)) {
-            val prefix = context.data.command.prefix
-            if (prefix == null || !content.startsWith(prefix)) return
-        }
-
-        // Send a message if bot cant use embeds.
-        if (!context.selfMember.hasPermission(context.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
-            context.textChannel.sendMessage(permissionToSpeak).queue()
-            return
-        }
-
-        executor.submit {
-            if (splitCommand(context)) {
-                context.shard.requests++
-            }
-        }
-    }
-
-    private fun splitCommand(context: Context): Boolean {
         val content = context.message.rawContent.let {
             when {
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {
                     val prefix = context.data.command.prefix
-                    if (prefix == null || !it.startsWith(prefix)) return false
+                    if (prefix == null || !it.startsWith(prefix)) return
                     it.substring(prefix.length)
                 }
             }
         }
 
+        // Send a message if bot cant use embeds.
+        if (!context.selfMember.hasPermission(context.textChannel, Permission.MESSAGE_EMBED_LINKS)) {
+            context.textChannel.sendMessage(permissionToEmbed).queue()
+            return
+        }
+
+        executor.submit {
+            if (splitCommand(context, content)) {
+                context.shard.requests++
+            }
+        }
+    }
+
+    private fun splitCommand(context: Context, strippedPrefix: String): Boolean {
         // Split the message. In house split for special syntax.
-        val tokens = Utils.stringSplit(content)
+        val tokens = Utils.stringSplit(strippedPrefix)
 
         // Should not happen but as a guard.
         if (tokens.isEmpty()) return false
