@@ -62,12 +62,12 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
 
     @Override
     public void execute(Context context, String label, String[] args) {
-        execute(context, args);
+        walk(context, args, 0);
     }
 
     @Override
-    public void helpMessage(Context context, String[] args, String title, String description) {
-        Template.super.helpMessage(context, args,
+    public void helpMessage(Context context, String[] args, int depth, String title, String description) {
+        Template.super.helpMessage(context, args, depth,
                 title == null ? Bot.CONFIG.getPrefix() + getInfo().aliases()[0] + " Command" : title,
                 getInfo().description() + (description == null ? "" : description));
     }

@@ -58,8 +58,8 @@ class PrefixCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun helpMessage(context: Context, args: Array<String>) {
-        helpMessage(context, args, null, buildString {
+    override fun helpMessage(context: Context, args: Array<String>, depth: Int) {
+        helpMessage(context, args, depth, null, buildString {
             append("Default prefix will still be valid.\n")
             val prefix = context.data.command.prefix
             append("Current prefix: `").append(prefix).append('`')

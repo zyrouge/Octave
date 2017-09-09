@@ -12,6 +12,8 @@ import java.util.StringJoiner;
 public interface Template {
     Map<String, Template> getCursors();
 
+    String[] positions = {"First", "Second", "Third", "Fourth", "Fifth"};
+
     default void add(String key, Template template) {
         if (getCursors().containsKey(key)) {
             throw new IllegalStateException("Trying to override " + key);
@@ -29,22 +31,22 @@ public interface Template {
         return sj.toString();
     }
 
-    default void execute(Context context, String[] args) {
+    default void walk(Context context, String[] args, int depth) {
         if (args.length != 0) {
             Template template = getCursors().get(args[0]);
             if (template != null) {
-                template.execute(context, Arrays.copyOfRange(args, 1, args.length));
+                template.walk(context, Arrays.copyOfRange(args, 1, args.length), depth + 1);
                 return;
             }
         }
-        helpMessage(context, args);
+        helpMessage(context, args, depth);
     }
 
-    default void helpMessage(Context context, String[] args) {
-        helpMessage(context, args, null, null);
+    default void helpMessage(Context context, String[] args, int depth) {
+        helpMessage(context, args, depth, null, null);
     }
 
-    default void helpMessage(Context context, String[] args, String title, String description) {
+    default void helpMessage(Context context, String[] args, int depth, String title, String description) {
         StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<String, Template> entry : getCursors().entrySet()) {
@@ -76,19 +78,19 @@ public interface Template {
         eb.setColor(context.getGuild().getSelfMember().getColor());
 
         if (title == null && description == null) {
-            eb.setTitle("Arguments");
+            eb.setTitle(positions[depth] + " Argument Candidates");
             eb.setDescription(builder);
         } else if (description == null) {
             eb.setTitle(title);
-            eb.field("Arguments", false, builder);
+            eb.field(positions[depth] + " Argument Candidates", false, builder);
         } else {
             eb.setTitle(title);
             eb.setDescription(description);
-            eb.field("Arguments", false, builder);
+            eb.field(positions[depth] + " Argument Candidates", false, builder);
         }
 
         if (args.length != 0) {
-            eb.setTitle("Invalid Argument");
+            eb.setTitle("Invalid " + positions[depth] + " Argument");
             eb.setColor(Color.RED);
         }
 

@@ -67,8 +67,8 @@ class AutoRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun helpMessage(context: Context, args: Array<String>) {
-        helpMessage(context, args, null, buildString {
+    override fun helpMessage(context: Context, args: Array<String>, depth: Int) {
+        helpMessage(context, args, depth, null, buildString {
             if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
                 append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
                 return

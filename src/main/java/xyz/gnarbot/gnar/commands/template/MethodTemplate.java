@@ -57,7 +57,7 @@ public class MethodTemplate implements Template {
     }
 
     @Override
-    public void execute(Context context, String[] args) {
+    public void walk(Context context, String[] args, int depth) {
         if (args.length < method.getParameterCount() - 1) {
             EmbedMaker eb = new EmbedMaker();
 

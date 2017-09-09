@@ -14,13 +14,7 @@ import xyz.gnarbot.gnar.utils.Context
 import java.util.*
 
 private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).also {
-    it.put(String::class.java,
-            Parser<String>(
-                    "@user|@role|@channel|*",
-                    "Name or mention of a user, role, or channel",
-                    { _, s -> s }
-            )
-    )
+    it[String::class.java] = Parser<String>("@user|@role|@channel|*", "Name or mention of a user, role, or channel") { _, s -> s }
 }
 
 @Command(
@@ -72,10 +66,13 @@ class ManageCommandsCommand : CommandTemplate(override) {
         //      create or inherit options and subtract entity from parent scope
         val options = context.data.command.options[cmd.info.id]
         if (options == null || scope.rawTransform(options) == null) {
+            val desyncString = "\u26A0De-synced from the category option `${cmd.info.category.title}`."
+
             if (entity == "*") {
                 options(context, cmd.info.category) { categoryOptions ->
-                    if (scope.transform(categoryOptions).isEmpty()) {
-                        context.send().error("The command is not disabled for any ${scope.name.toLowerCase()}.").queue()
+                    val list = scope.rawTransform(categoryOptions)
+                    if (list == null || list.isEmpty()) {
+                        context.send().error("`${cmd.info.aliases[0]}` is not disabled for any ${scope.name.toLowerCase()}.").queue()
                         return
                     }
 
@@ -86,7 +83,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
                     context.data.save()
 
                     context.send().embed("Command Management") {
-                        desc { "Enabled the command for every ${scope.name.toLowerCase()}." }
+                        desc {
+                            "Enabled `${cmd.info.aliases[0]}` for every ${scope.name.toLowerCase()}.\n$desyncString"
+                        }
                     }.action().queue()
                     return
                 }
@@ -106,7 +105,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
                 context.data.save()
 
                 context.send().embed("Command Management") {
-                    desc { "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay." }
+                    desc {
+                        "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay.\n$desyncString"
+                    }
                 }.action().queue()
                 return
             }
@@ -134,6 +135,57 @@ class ManageCommandsCommand : CommandTemplate(override) {
 
     @Description(value ="Disable a command for a user/role/channel.")
     fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
+        val options = context.data.command.options[cmd.info.id]
+        if (options == null || scope.rawTransform(options) == null) {
+            val desyncString = "\u26A0De-synced from the category option `${cmd.info.category.title}`."
+
+            if (entity == "*") {
+                options(context, cmd.info.category) { categoryOptions ->
+                    val set = HashSet(scope.rawTransform(categoryOptions) ?: Collections.emptySet())
+                    val all = scope.all(context)
+
+                    if (!set.addAll(all)) {
+                        context.send().error("`${cmd.info.aliases[0]}` is already disabled for every ${scope.name.toLowerCase()}.").queue()
+                        return
+                    }
+
+                    (options?.copy() ?: CommandOptions()).let {
+                        context.data.command.options.put(cmd.info.id, it)
+                        scope.transform(it).addAll(set)
+                    }
+                    context.data.save()
+
+                    context.send().embed("Command Management") {
+                        desc {
+                            "Disabled the command for every ${scope.name.toLowerCase()}.\n$desyncString"
+                        }
+                    }.action().queue()
+                    return
+                }
+            } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
+                val all = HashSet<String>()
+                options(context, cmd.info.category) { all.addAll(scope.transform(it)) }
+
+                if (!all.add(item)) {
+                    context.send().error("`${cmd.info.aliases[0]}` is already disabled for $itemDisplay.").queue()
+                    return
+                }
+
+                (options?.copy() ?: CommandOptions()).let {
+                    context.data.command.options.put(cmd.info.id, it)
+                    scope.transform(it).addAll(all)
+                }
+                context.data.save()
+
+                context.send().embed("Command Management") {
+                    desc {
+                        "`${cmd.info.aliases[0]}` is now disabled for $itemDisplay.\n$desyncString"
+                    }
+                }.action().queue()
+                return
+            }
+        }
+
         options(context, cmd) {
             if (entity == "*") {
                 disallowAll(context, it, cmd.info.aliases[0], scope)
@@ -157,12 +209,8 @@ class ManageCommandsCommand : CommandTemplate(override) {
     @Description(value = "Show the options of the command.")
     fun options_specific(context: Context, cmd: CommandExecutor) {
         val options = context.data.command.let { CommandOptionsOverride(it.options[cmd.info.id], it.categoryOptions[cmd.info.category.ordinal]) }
-        if (options.child == null && options.parent == null) {
-            context.send().embed("Command Management") {
-                desc { "This command is allowed to everybody with the appropriate permission." }
-            }.action().queue()
-            return
-        }
+
+        val inheritString = "\uD83D\uDD01 Synced with the options from the command category `${cmd.info.category.title}`.\n"
 
         context.send().embed("Command Management") {
             field("Toggle") {
@@ -183,10 +231,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                         "This command is not disabled for any users."
                     } else {
                         buildString {
-                            if (options.inheritUsers()) {
-                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
-                            }
-
+                            if (options.inheritUsers()) append(inheritString)
                             it.mapNotNull(context.guild::getMemberById).forEach { append("• ").append(it.asMention).append('\n') }
                         }
                     }
@@ -199,10 +244,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                         "This command is not disabled for any roles."
                     } else {
                         buildString {
-                            if (options.inheritRoles()) {
-                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
-                            }
-
+                            if (options.inheritRoles()) append(inheritString)
                             it.mapNotNull(context.guild::getRoleById).forEach { append("• ").append(it.asMention).append('\n') }
                         }
                     }
@@ -215,10 +257,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                         "This command is not disabled for any channels."
                     } else {
                         buildString {
-                            if (options.inheritChannels()) {
-                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
-                            }
-
+                            if (options.inheritChannels()) append(inheritString)
                             it.mapNotNull(context.guild::getTextChannelById).forEach { append("• ").append(it.asMention).append('\n') }
                         }
                     }
@@ -232,7 +271,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         val options = context.data.command.categoryOptions[category.ordinal]
         if (options == null) {
             context.send().embed("Command Management") {
-                desc { "This category is allowed to everybody with the appropriate permission." }
+                desc { "Category `${category.title}` is allowed to everybody with the appropriate permission." }
             }.action().queue()
             return
         }
