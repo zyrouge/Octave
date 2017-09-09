@@ -26,7 +26,7 @@ private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).als
 @Command(
         id = 54,
         aliases = arrayOf("commands", "cmd", "command", "cmds"),
-        usage = "(enable|diable) (command|category) [command] (user|role|channel) (...)",
+        usage = "(enable|disable|toggle) (specific|category) (_command|category) ...",
         description = "Manage the usage of commands.",
         toggleable = false,
         category = Category.SETTINGS,
@@ -184,7 +184,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                     } else {
                         buildString {
                             if (options.inheritUsers()) {
-                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
                             }
 
                             it.mapNotNull(context.guild::getMemberById).forEach { append("• ").append(it.asMention).append('\n') }
@@ -200,7 +200,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                     } else {
                         buildString {
                             if (options.inheritRoles()) {
-                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
                             }
 
                             it.mapNotNull(context.guild::getRoleById).forEach { append("• ").append(it.asMention).append('\n') }
@@ -216,7 +216,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                     } else {
                         buildString {
                             if (options.inheritChannels()) {
-                                append("\u26A0 Inheriting the options from the category `").append(cmd.info.category.title).append("`.\n")
+                                append("\u26A0 Synced with the options from the command category `").append(cmd.info.category.title).append("`.\n")
                             }
 
                             it.mapNotNull(context.guild::getTextChannelById).forEach { append("• ").append(it.asMention).append('\n') }
@@ -346,7 +346,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
         }.action().queue()
     }
 
-    @Description("Clear all options for a command.")
+    @Description("Clear all options for a command (will re-sync to category options).")
     fun clear_specific(context: Context, cmd: CommandExecutor) {
         clear(context, context.data.command.options, cmd.info.id, "category", cmd.info.aliases[0])
     }

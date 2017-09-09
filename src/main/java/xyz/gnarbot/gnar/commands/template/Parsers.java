@@ -72,13 +72,13 @@ public class Parsers {
             return list.isEmpty() ? null : list.get(0);
         }
     });
-    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<VoiceChannel>("voice channel", "Voice channel name", (c, s) -> {
+    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<>("voice channel", "Voice channel name", (c, s) -> {
         List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
         return list.isEmpty() ? null : list.get(0);
     });
 
     private static final Pattern rolePattern = Pattern.compile("<@&(\\d+)>");
-    public static final Parser<Role> ROLE = new Parser<Role>("@role", "Role mention or name", (c, s) -> {
+    public static final Parser<Role> ROLE = new Parser<>("@role", "Role mention or name", (c, s) -> {
         Matcher matcher = rolePattern.matcher(s);
         if (matcher.find()) {
             return c.getGuild().getRoleById(matcher.group(1));
@@ -112,9 +112,10 @@ public class Parsers {
     }
 
     public static <T extends Enum<T>> Parser<T> createEnumParser(Class<T> cls) {
+        Display ann0 = cls.getAnnotation(Display.class);
         Description ann = cls.getAnnotation(Description.class);
 
-        String name = ann != null ? ann.display() : null;
+        String name = ann0 != null ? ann0.value() : null;
         if (name == null) {
             StringJoiner sj = new StringJoiner(", ");
             for (T item: cls.getEnumConstants()) {

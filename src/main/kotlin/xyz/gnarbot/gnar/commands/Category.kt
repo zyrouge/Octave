@@ -1,8 +1,10 @@
 package xyz.gnarbot.gnar.commands
 
 import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.Display
 
-@Description("Settings|Music|Fun|Media|General", display = "category")
+@Display("category")
+@Description("Settings|Music|Fun|Media|General")
 enum class Category(val title: String, val show: Boolean = true) {
     SETTINGS("Settings"),
     MUSIC("Music"),

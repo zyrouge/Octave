@@ -23,16 +23,18 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
         Method[] methods = getClass().getDeclaredMethods();
         Arrays.sort(methods, Comparator.comparing(Method::getName));
         for (Method method : methods) {
-            Description ann = method.getAnnotation(Description.class);
-            if (ann == null) continue;
+            if (!method.isAnnotationPresent(Description.class)) continue;
 
             if (method.getParameterCount() == 0 || method.getParameters()[0].getType() != Context.class) {
                 throw new RuntimeException("First argument of " + method + " must be Context");
             }
 
-            String name = ann.display();
-            if (name.isEmpty()) {
+            Display ann = method.getAnnotation(Display.class);
+            String name;
+            if (ann == null) {
                 name = method.getName();
+            } else {
+                name = ann.value();
             }
 
             String[] parts = name.split("_");

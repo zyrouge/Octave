@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.template.Description
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
-@Description("The scope of the command", display = "user|role|channel")
+@Description("The scope of the command")
 enum class ManageScope {
     USER {
         override fun all(context: Context): Set<String> {
