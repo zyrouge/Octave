@@ -30,12 +30,7 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
             }
 
             Display ann = method.getAnnotation(Display.class);
-            String name;
-            if (ann == null) {
-                name = method.getName();
-            } else {
-                name = ann.value();
-            }
+            String name = ann == null ? method.getName() : ann.value();
 
             String[] parts = name.split("_");
             Template current = this;

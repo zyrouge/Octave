@@ -27,7 +27,7 @@ class SettingsPredicate : BiPredicate<CommandExecutor, Context> {
                 context.send().error("You are not allowed to use this ${type(options.inheritUsers())}.").queue()
                 false
             }
-            options.disabledRoles.containsAll(context.member.roles.map(Role::getId)) -> {
+            options.disabledRoles.isNotEmpty() && options.disabledRoles.containsAll(context.member.roles.map(Role::getId)) -> {
                 context.send().error("Your roles are not allowed to use this ${type(options.inheritRoles())}.").queue()
                 false
             }
