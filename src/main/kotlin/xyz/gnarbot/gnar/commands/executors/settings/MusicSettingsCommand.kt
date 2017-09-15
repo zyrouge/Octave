@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 55,
-        aliases = arrayOf("musicSettings", "musicConfig"),
+        aliases = arrayOf("musicsettings", "musicconfig"),
         description = "Change music settings.",
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
