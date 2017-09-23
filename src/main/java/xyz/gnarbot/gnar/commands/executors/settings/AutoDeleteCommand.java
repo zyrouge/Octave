@@ -29,7 +29,7 @@ public class AutoDeleteCommand extends CommandExecutor {
             context.getData().save();
 
             context.send().embed("Auto-Delete")
-                    .setDescription("The bot will delete messages after 10 seconds.")
+                    .setDescription("The bot will now delete messages after 10 seconds.")
                     .action().queue();
         }
     }
