@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerRegistry {
@@ -17,8 +18,16 @@ public class PlayerRegistry {
 
     private final Map<Long, MusicManager> registry = new ConcurrentHashMap<>(Bot.CONFIG.getMusicLimit());
 
-    public PlayerRegistry() {
-        Bot.EXECUTOR.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
+    private final ScheduledExecutorService executor;
+
+    public PlayerRegistry(ScheduledExecutorService executor) {
+        this.executor = executor;
+
+        executor.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
+    }
+
+    public ScheduledExecutorService getExecutor() {
+        return executor;
     }
 
     @Nonnull
@@ -30,7 +39,7 @@ public class PlayerRegistry {
                 throw new MusicLimitException();
             }
 
-            manager = new MusicManager(guild);
+            manager = new MusicManager(guild, this);
             registry.put(guild.getIdLong(), manager);
         }
 

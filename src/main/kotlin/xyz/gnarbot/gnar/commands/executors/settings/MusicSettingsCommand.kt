@@ -6,7 +6,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -25,15 +25,12 @@ class MusicSettingsCommand : CommandTemplate() {
 
         if (value) {
             context.send().embed("Music Settings") {
-                desc {
-                    "Announcements for music disabled."
-                }
+                desc { "Announcements for music disabled."
+               }
             }.action().queue()
         } else {
             context.send().embed("Music Settings") {
-                desc {
-                    "Announcements for music enabled."
-                }
+                desc { "Announcements for music enabled." }
             }.action().queue()
         }
     }
@@ -54,9 +51,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.data.save()
 
         context.send().embed("Music Settings") {
-            desc {
-                "`${channel.name}` is now a designated music channel."
-            }
+            desc { "`${channel.name}` is now a designated music channel." }
         }.action().queue()
     }
 
@@ -71,56 +66,9 @@ class MusicSettingsCommand : CommandTemplate() {
         context.data.save()
 
         context.send().embed("Music Settings") {
-            desc {
-                "${channel.name} is no longer a designated music channel."
-            }
+            desc { "${channel.name} is no longer a designated music channel." }
         }.action().queue()
     }
-
-//    @Executor(3, description = "Set the DJ-role.")
-//    fun dj_set(context: Context, role: Role) {
-//        if (role == context.guild.publicRole) {
-//            context.send().error("You can't set the public role as the DJ role!").queue()
-//            return
-//        }
-//
-//        if (!context.selfMember.canInteract(role)) {
-//            context.send().error("That role is higher than my role! Fix by changing the role hierarchy.").queue()
-//            return
-//        }
-//
-//        if (role.id == context.data.music.djRole) {
-//            context.send().error("${role.asMention} is already set as the DJ-role.").queue()
-//            return
-//        }
-//
-//        context.data.music.djRole = role.id
-//        context.data.save()
-//
-//        context.send().embed("Music Settings") {
-//            desc {
-//                "Users with the role ${role.asMention} can now bypass music permissions."
-//            }
-//        }.action().queue()
-//    }
-//
-//    @Executor(4, description = "Unset the DJ-role.")
-//    fun dj_unset(context: Context) {
-//        if (context.data.music.djRole == null) {
-//            context.send().error("This guild doesn't have an DJ-role.").queue()
-//            return
-//        }
-//
-//        context.data.music.djRole = null
-//        context.data.save()
-//
-//        context.send().embed("Music Settings") {
-//            desc {
-//                "Unset DJ role."
-//            }
-//        }.action().queue()
-//    }
-
 
     @Description("List all settings, their description and their values.")
     fun list(context: Context) {
@@ -137,9 +85,7 @@ class MusicSettingsCommand : CommandTemplate() {
                 buildString {
                     append("If this is not empty, Gnar will only play music in these voice channels.\n\n")
                     context.data.music.channels.let {
-                        if (it.isEmpty()) {
-                            append("None.")
-                        }
+                        if (it.isEmpty()) append("None.")
 
                         it.mapNotNull(context.guild::getVoiceChannelById)
                                 .map(Channel::getName)

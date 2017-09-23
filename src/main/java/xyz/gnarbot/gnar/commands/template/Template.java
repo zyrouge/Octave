@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public interface Template {
-    Map<String, Template> getCursors();
-
     String[] positions = {"First", "Second", "Third", "Fourth", "Fifth"};
+
+    Map<String, Template> getCursors();
 
     default void add(String key, Template template) {
         if (getCursors().containsKey(key)) {
@@ -39,14 +39,14 @@ public interface Template {
                 return;
             }
         }
-        helpMessage(context, args, depth);
+        onWalkFail(context, args, depth);
     }
 
-    default void helpMessage(Context context, String[] args, int depth) {
-        helpMessage(context, args, depth, null, null);
+    default void onWalkFail(Context context, String[] args, int depth) {
+        onWalkFail(context, args, depth, null, null);
     }
 
-    default void helpMessage(Context context, String[] args, int depth, String title, String description) {
+    default void onWalkFail(Context context, String[] args, int depth, String title, String description) {
         StringBuilder builder = new StringBuilder();
 
         for (Map.Entry<String, Template> entry : getCursors().entrySet()) {

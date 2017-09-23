@@ -21,7 +21,6 @@ import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
-import xyz.gnarbot.gnar.utils.SimpleLogToSLF4JAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +48,7 @@ public final class Bot {
 
     private static final Database database = new Database("bot");
     private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
-    private static final PlayerRegistry playerRegistry = new PlayerRegistry();
+    private static final PlayerRegistry playerRegistry = new PlayerRegistry(Executors.newSingleThreadScheduledExecutor());
 
     private static final CommandRegistry commandRegistry = new CommandRegistry();
     private static final CommandDispatcher commandDispatcher = new CommandDispatcher(commandRegistry, Executors.newWorkStealingPool());
@@ -59,7 +58,6 @@ public final class Bot {
     public static LoadState STATE = LoadState.LOADING;
 
     public static void main(String[] args) throws InterruptedException {
-        SimpleLogToSLF4JAdapter.install();
         DiscordFM.loadLibraries();
 
         String token = KEYS.getWebhookToken();
@@ -146,7 +144,7 @@ public final class Bot {
     public static int getUserCount() {
         Set<Long> set = new HashSet<>();
         for (Shard shard : shards) {
-            for (User user : shard.getJda().getUsers()) {
+            for (User user : shard.getJda().getUserCache()) {
                 set.add(user.getIdLong());
             }
         }

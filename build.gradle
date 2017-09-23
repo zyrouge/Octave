@@ -2,21 +2,21 @@ plugins {
     id 'java'
     id 'idea'
     id 'application'
-    id 'com.sedmelluq.jdaction' version '1.0.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.1.4-3'
+//    id 'com.sedmelluq.jdaction' version '1.0.1'
+    id 'org.jetbrains.kotlin.jvm' version '1.1.50'
     id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 group 'xyz.gnarbot'
-version '4.8'
+version '4.8.1'
 
 mainClassName = 'xyz.gnarbot.gnar.Bot'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.2'
 }
 
 repositories {
@@ -26,13 +26,13 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.4-3'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.1.50'
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.18'
 
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.3.0_263'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.3.1_276'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.43'
 
@@ -42,7 +42,7 @@ dependencies {
 
     // Database
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.0'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.1'
 
     // Custom language
     compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Interpreter', version: '1.1.0'

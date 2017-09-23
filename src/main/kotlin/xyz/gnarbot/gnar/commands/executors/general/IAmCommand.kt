@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.general
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(

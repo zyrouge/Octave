@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
 import java.awt.Color
 import java.awt.image.BufferedImage
-import java.io.File
+import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 @Command(
@@ -73,17 +73,16 @@ class MathCommand : CommandExecutor() {
             }}\\end{align}"
         }
 
-        val file: File = File("temp.png").also(File::deleteOnExit)
-        writeTexToFile(finalTex, file)
+        val img = texImageByteArray(finalTex)
 
-        context.textChannel.sendFile(file, file.name, MessageBuilder().setEmbed(
+        context.textChannel.sendFile(img, "attachment.jpg", MessageBuilder().setEmbed(
                 context.send().embed {
-                    image { "attachment://${file.name}" }
+                    image { "attachment://attachment.jpg" }
                 }.build()).build()
         ).queue()
     }
 
-    private fun writeTexToFile(tex: String, file: File) {
+    private fun texImageByteArray(tex: String): ByteArray {
         val formula = TeXFormula(tex)
         val ti = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 30f)
         val b = BufferedImage(ti.iconWidth, ti.iconHeight, BufferedImage.TYPE_4BYTE_ABGR)
@@ -94,6 +93,8 @@ class MathCommand : CommandExecutor() {
             ti.paintIcon(null, it, 0, 0)
         }
 
-        ImageIO.write(b, "png", file)
+        val baos = ByteArrayOutputStream()
+        ImageIO.write(b, "jpg", baos)
+        return baos.toByteArray()
     }
 }

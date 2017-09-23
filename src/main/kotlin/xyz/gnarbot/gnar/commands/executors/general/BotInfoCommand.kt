@@ -22,19 +22,19 @@ class BotInfoCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        var requests = 0
-        var textChannels = 0
-        var voiceChannels = 0
-        var guilds = 0
+        var requests = 0L
+        var textChannels = 0L
+        var voiceChannels = 0L
+        var guilds = 0L
 
-        var users = 0
+        var users = 0L
 
         for (shard in Bot.getShards()) {
-            guilds += shard.jda.guilds.size
+            guilds += shard.jda.guildCache.size()
             requests += shard.requests
-            users += shard.jda.users.size
-            textChannels += shard.jda.textChannels.size
-            voiceChannels += shard.jda.voiceChannels.size
+            users += shard.jda.userCache.size()
+            textChannels += shard.jda.textChannelCache.size()
+            voiceChannels += shard.jda.voiceChannelCache.size()
         }
 
         val commandSize = registry.entries.count { it.info.category.show }

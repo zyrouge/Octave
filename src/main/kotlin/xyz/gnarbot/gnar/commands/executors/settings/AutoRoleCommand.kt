@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -67,8 +67,8 @@ class AutoRoleCommand : CommandTemplate() {
         }.action().queue()
     }
 
-    override fun helpMessage(context: Context, args: Array<String>, depth: Int) {
-        helpMessage(context, args, depth, null, buildString {
+    override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {
+        onWalkFail(context, args, depth, null, buildString {
             if (!context.selfMember.hasPermission(Permission.MANAGE_ROLES)) {
                 append("**WARNING:** Bot lacks the ${Permission.MANAGE_ROLES.getName()} permission.")
                 return

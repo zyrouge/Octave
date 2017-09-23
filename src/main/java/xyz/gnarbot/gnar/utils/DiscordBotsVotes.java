@@ -35,7 +35,7 @@ public class DiscordBotsVotes {
                         voteIDs.add(jsa.getString(i));
                     }
                 } catch (IOException ignore) {}
-            }, 1, 10, TimeUnit.MINUTES);
+            }, 5, 10, TimeUnit.MINUTES);
         }
     }
 

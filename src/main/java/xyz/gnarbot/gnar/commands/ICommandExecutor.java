@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands;
 
-public interface TCommandExecutor<T> {
+public interface ICommandExecutor<T> {
     /**
      * Abstract method to be executed when the command is called.
      *

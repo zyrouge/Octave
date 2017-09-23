@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.template.CommandTemplate;
-import xyz.gnarbot.gnar.commands.template.Description;
+import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
 import xyz.gnarbot.gnar.guilds.GuildData;

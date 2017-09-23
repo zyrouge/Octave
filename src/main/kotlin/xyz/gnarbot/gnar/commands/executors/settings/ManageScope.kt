@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.entities.ISnowflake
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.utils.Context
 
@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 enum class ManageScope {
     USER {
         override fun all(context: Context): Set<String> {
-            return context.guild.members.mapTo(HashSet()) { it.user.id }
+            return context.guild.memberCache.mapTo(HashSet()) { it.user.id }
         }
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledUsers
@@ -20,7 +20,7 @@ enum class ManageScope {
     },
     ROLE {
         override fun all(context: Context): Set<String> {
-            return context.guild.roles.mapTo(HashSet(), ISnowflake::getId)
+            return context.guild.roleCache.mapTo(HashSet(), ISnowflake::getId)
         }
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledRoles
@@ -31,7 +31,7 @@ enum class ManageScope {
     },
     CHANNEL {
         override fun all(context: Context): Set<String> {
-            return context.guild.textChannels.mapTo(HashSet(), ISnowflake::getId)
+            return context.guild.textChannelCache.mapTo(HashSet(), ISnowflake::getId)
         }
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledChannels

@@ -5,17 +5,13 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
-import xyz.gnarbot.gnar.commands.template.Parser
-import xyz.gnarbot.gnar.commands.template.Parsers
+import xyz.gnarbot.gnar.commands.template.annotations.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Name
+import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
 import xyz.gnarbot.gnar.utils.Context
 import java.util.*
-
-private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).also {
-    it[String::class.java] = Parser<String>("@user|@role|@channel|*", "Name or mention of a user, role, or channel") { _, s -> s }
-}
 
 @Command(
         id = 54,
@@ -26,7 +22,7 @@ private val override: Map<Class<*>, Parser<*>> = HashMap(Parsers.PARSER_MAP).als
         category = Category.SETTINGS,
         permissions = arrayOf(Permission.MANAGE_SERVER)
 )
-class ManageCommandsCommand : CommandTemplate(override) {
+class ManageCommandsCommand : CommandTemplate() {
     @Description("Completely disable or enable a command.")
     fun toggle_specific(context: Context, cmd: CommandExecutor) {
         options(context, cmd) {
@@ -56,7 +52,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
     }
 
     @Description(value = "Enable a command for a user/role/channel.")
-    fun enable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
+    fun enable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope,
+                        @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
+    ) {
         // parent exists
         // NULL scope options for this command
         //
@@ -105,9 +103,7 @@ class ManageCommandsCommand : CommandTemplate(override) {
                 context.data.save()
 
                 context.send().embed("Command Management") {
-                    desc {
-                        "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay.\n$desyncString"
-                    }
+                    desc { "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay.\n$desyncString" }
                 }.action().queue()
                 return
             }
@@ -123,7 +119,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
     }
 
     @Description(value = "Enable a category for a user/role/channel.")
-    fun enable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
+    fun enable_category(context: Context, category: Category, scope: ManageScope,
+                        @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
+    ) {
         options(context, category) {
             if (entity == "*") {
                 allowAll(context, it, category.title, scope)
@@ -134,7 +132,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
     }
 
     @Description(value ="Disable a command for a user/role/channel.")
-    fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope, entity: String) {
+    fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope,
+                         @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
+    ) {
         val options = context.data.command.options[cmd.info.id]
         if (options == null || scope.rawTransform(options) == null) {
             val desyncString = "\u26A0De-synced from the category option `${cmd.info.category.title}`."
@@ -196,7 +196,9 @@ class ManageCommandsCommand : CommandTemplate(override) {
     }
 
     @Description(value = "Disable a category for a user/role/channel.")
-    fun disable_category(context: Context, category: Category, scope: ManageScope, entity: String) {
+    fun disable_category(context: Context, category: Category, scope: ManageScope,
+                         @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
+    ) {
         options(context, category) {
             if (entity == "*") {
                 disallowAll(context, it, category.title, scope)

@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.*
 
-class TrackScheduler(private val musicManager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
+class TrackScheduler(private val manager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
     val queue: Queue<AudioTrack> = LinkedList<AudioTrack>()
     var repeatOption = RepeatOption.NONE
     var lastTrack: AudioTrack? = null
@@ -33,19 +33,20 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
      */
     fun nextTrack() {
         if (queue.isEmpty()) {
-            musicManager.discordFMTrack?.let {
-                it.nextDiscordFMTrack(musicManager)
+            manager.discordFMTrack?.let {
+                it.nextDiscordFMTrack(manager)
                 return
             }
 
-            Bot.getPlayers().destroy(musicManager.guild)
+            manager.playerRegistry.executor.execute { manager.playerRegistry.destroy(manager.guild) }
             return
         }
 
         val track = queue.poll()
         player.startTrack(track, false)
 
-        if (Bot.getOptions().ofGuild(musicManager.guild).music.announce) {
+        // fixme DI point
+        if (Bot.getOptions().ofGuild(manager.guild).music.announce) {
             announceNext(track)
         }
     }
@@ -71,7 +72,7 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
 
     override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
         track.getUserData(TrackContext::class.java).requestedChannel.let {
-            musicManager.guild.getTextChannelById(it)
+            manager.guild.getTextChannelById(it)
         }.respond().error(
                 "The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold."
         ).queue()
@@ -79,19 +80,19 @@ class TrackScheduler(private val musicManager: MusicManager, private val player:
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
         track.getUserData(TrackContext::class.java).requestedChannel.let {
-            musicManager.guild.getTextChannelById(it)
+            manager.guild.getTextChannelById(it)
         }.respond().exception(exception).queue()
     }
 
     private fun announceNext(track: AudioTrack) {
-        musicManager.currentRequestChannel?.let {
+        manager.currentRequestChannel?.let {
             it.respond().embed("Music Playback") {
                 desc {
                     buildString {
                         append("Now playing __**[").append(track.info.embedTitle)
                         append("](").append(track.info.uri).append(")**__")
 
-                        track.getUserData(TrackContext::class.java)?.requester?.let(musicManager.guild::getMemberById)?.let {
+                        track.getUserData(TrackContext::class.java)?.requester?.let(manager.guild::getMemberById)?.let {
                             append(" requested by ")
                             append(it.asMention)
                         }

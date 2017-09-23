@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Member;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.template.CommandTemplate;
-import xyz.gnarbot.gnar.commands.template.Description;
+import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.utils.Context;
 
 @Command(

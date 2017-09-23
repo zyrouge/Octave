@@ -18,7 +18,8 @@ import xyz.gnarbot.gnar.commands.executors.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
-import xyz.gnarbot.gnar.commands.executors.settings.*;
+import xyz.gnarbot.gnar.commands.executors.settings.PruneCommand;
+import xyz.gnarbot.gnar.commands.executors.settings.SettingsDelegateCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 
 import java.util.LinkedHashMap;
@@ -73,15 +74,15 @@ public class CommandRegistry {
         //End Fun Commands
 
         //Mod Commands
-        register(new PrefixCommand());
-        register(new ManageCommandsCommand());
-        register(new IgnoreCommand());
-        register(new AutoDeleteCommand());
+//        register(new PrefixCommand());
+//        register(new ManageCommandsCommand());
+//        register(new IgnoreCommand());
+//        register(new AutoDeleteCommand());
         register(new PruneCommand());
-        register(new AutoRoleCommand());
-        register(new SelfRoleCommand());
-        register(new MusicSettingsCommand());
-        register(new ResetSettingsCommand());
+//        register(new AutoRoleCommand());
+//        register(new SelfRoleCommand());
+//        register(new MusicSettingsCommand());
+        register(new SettingsDelegateCommand());
         //End Mod Commands
 
         //Testing Commands

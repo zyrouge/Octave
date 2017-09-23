@@ -23,7 +23,7 @@ public class GuildInfoCommand extends CommandExecutor {
         Guild guild = context.getGuild();
 
         StringJoiner roleStr = new StringJoiner(", ");
-        for (Role role : guild.getRoles()) {
+        for (Role role : guild.getRoleCache()) {
             roleStr.add(role.getName());
         }
 
@@ -36,13 +36,13 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("Creation Time", true, guild.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME))
 
                 .field("Owner", true, guild.getOwner().getAsMention())
-                .field("Members", true, guild.getMembers().size())
+                .field("Members", true, guild.getMemberCache().size())
 
-                .field("Text Channels", true, guild.getTextChannels().size())
-                .field("Voice Channels", true, guild.getVoiceChannels().size())
+                .field("Text Channels", true, guild.getTextChannelCache().size())
+                .field("Voice Channels", true, guild.getVoiceChannelCache().size())
 
                 .field("Verification Level", true, guild.getVerificationLevel())
-                .field("Emotes", true, guild.getEmotes().size())
+                .field("Emotes", true, guild.getEmoteCache().size())
 
                 .field("Roles", true, StringUtils.truncate(roleStr.toString(), MessageEmbed.VALUE_MAX_LENGTH))
                 .field("Premium", true, context.getData().isPremium()

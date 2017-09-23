@@ -16,14 +16,10 @@ import xyz.gnarbot.gnar.utils.Context
 )
 class EmoteListCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        var page = if (args.isNotEmpty()) {
-            args[0].toIntOrNull() ?: 1
-        } else {
-            1
-        }
+        var page = args.firstOrNull()?.toIntOrNull() ?: 1
 
         context.send().embed("Emote List") {
-            val totalEmotes = Bot.getShards().flatMap { it.jda.emotes }
+            val totalEmotes = Bot.getShards().flatMap { it.jda.emoteCache }
 
             val pages = Lists.partition(totalEmotes, 30)
 

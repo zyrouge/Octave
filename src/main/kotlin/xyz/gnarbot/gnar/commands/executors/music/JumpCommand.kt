@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import java.time.Duration

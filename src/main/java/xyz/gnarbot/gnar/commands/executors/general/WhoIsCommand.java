@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.commands.template.Parsers;
+import xyz.gnarbot.gnar.commands.template.parser.Parsers;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;

@@ -14,7 +14,7 @@ import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.AttributedCharacterIterator;
@@ -91,15 +91,13 @@ public class TrumpCommand extends CommandExecutor {
                 drawPosX -= 1;
             }
 
-
-            File file = new File("trump.jpg");
-            file.deleteOnExit();
-
-            ImageIO.write(image, "jpg", file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "jpg", baos);
+            byte[] imageInByte = baos.toByteArray();
 
             g2.dispose();
 
-            context.getTextChannel().sendFile(file, null).queue();
+            context.getTextChannel().sendFile(imageInByte, "attachment.jpg", null).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

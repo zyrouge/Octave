@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 
 class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager?, private vararg val listeners: EventListener) {
     /** @return the amount of successful requests on this command handler. */
-    @JvmField var requests = 0
+    @JvmField var requests = 0L
 
     private val builder = JDABuilder(AccountType.BOT).apply {
         setToken(Bot.KEYS.token)

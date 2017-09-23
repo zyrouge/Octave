@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Scope
 import xyz.gnarbot.gnar.commands.executors.music.MusicCommandExecutor
-import xyz.gnarbot.gnar.commands.template.Parsers
+import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.Context
 

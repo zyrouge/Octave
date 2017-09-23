@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.template;
+package xyz.gnarbot.gnar.commands.template.parser;
 
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -6,6 +6,8 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.template.annotations.Description;
+import xyz.gnarbot.gnar.commands.template.annotations.Name;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -112,7 +114,7 @@ public class Parsers {
     }
 
     public static <T extends Enum<T>> Parser<T> createEnumParser(Class<T> cls) {
-        Display ann0 = cls.getAnnotation(Display.class);
+        Name ann0 = cls.getAnnotation(Name.class);
         Description ann = cls.getAnnotation(Description.class);
 
         String name = ann0 != null ? ann0.value() : null;

@@ -26,7 +26,7 @@ class CountUpdater(val shard: Shard) {
         if (Bot.KEYS.discordBots == null) return
 
         val json =  JSONObject()
-                .put("server_count", shard.jda.guilds.size)
+                .put("server_count", shard.jda.guildCache.size())
                 .put("shard_id", shard.id)
                 .put("shard_count", Bot.KEYS.botShards)
 
@@ -55,7 +55,7 @@ class CountUpdater(val shard: Shard) {
         if (Bot.KEYS.abal == null) return
 
         val json =  JSONObject()
-                .put("server_count", shard.jda.guilds.size)
+                .put("server_count", shard.jda.guildCache.size())
                 .put("shard_id", shard.id)
                 .put("shard_count", Bot.KEYS.botShards)
 
@@ -88,7 +88,7 @@ class CountUpdater(val shard: Shard) {
                 .put("key", Bot.KEYS.carbonitex)
                 .put("shardid", shard.id)
                 .put("shardcount", Bot.KEYS.botShards)
-                .put("servercount", shard.jda.guilds.size)
+                .put("servercount", shard.jda.guildCache.size())
 
         val request = Request.Builder()
                 .url("https://www.carbonitex.net/discord/data/botdata.php")

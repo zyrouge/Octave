@@ -3,20 +3,11 @@ package xyz.gnarbot.gnar.commands.executors.settings
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Role
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 
-@Command(
-        id = 59,
-        aliases = arrayOf("selfroles", "selfrole"),
-        usage = "(add|remove|clear) [@role]",
-        description = "Set self-roles that users can assign to themselves.",
-        category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_ROLES)
-)
+@Description("Set self-roles that users can assign to themselves.")
 class SelfRoleCommand : CommandTemplate() {
     @Description("Add a self-role.")
     fun add(context: Context, role: Role) {

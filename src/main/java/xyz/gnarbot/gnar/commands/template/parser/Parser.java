@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.template;
+package xyz.gnarbot.gnar.commands.template.parser;
 
 import xyz.gnarbot.gnar.utils.Context;
 
@@ -9,6 +9,10 @@ public class Parser<T> {
     private final String name;
     private final String description;
     private final BiFunction<Context, String, T> transformer;
+
+    public Parser(String name, String description, Parser<T> delegate) {
+        this(name, description, delegate.transformer);
+    }
 
     public Parser(String name, String description, BiFunction<Context, String, T> transformer) {
         this.name = name;

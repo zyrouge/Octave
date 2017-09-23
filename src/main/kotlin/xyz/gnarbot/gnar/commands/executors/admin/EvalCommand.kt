@@ -5,6 +5,7 @@ import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.utils.DiscordBotsVotes
 import javax.script.*
 
 @Command(
@@ -47,6 +48,7 @@ class EvalCommand : CommandExecutor() {
 
                 if (args[0] == "gv") {
                     put("Bot", Bot::class.java)
+                    put("DiscordBotsVotes", DiscordBotsVotes::class.java)
                 }
             }
         }

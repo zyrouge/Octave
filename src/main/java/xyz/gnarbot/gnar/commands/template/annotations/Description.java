@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.template;
+package xyz.gnarbot.gnar.commands.template.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

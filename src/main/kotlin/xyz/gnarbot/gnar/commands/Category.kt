@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands
 
-import xyz.gnarbot.gnar.commands.template.Description
-import xyz.gnarbot.gnar.commands.template.Display
+import xyz.gnarbot.gnar.commands.template.annotations.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Name
 
-@Display("category")
+@Name("category")
 @Description("Settings|Music|Fun|Media|General")
 enum class Category(val title: String, val show: Boolean = true) {
     SETTINGS("Settings"),

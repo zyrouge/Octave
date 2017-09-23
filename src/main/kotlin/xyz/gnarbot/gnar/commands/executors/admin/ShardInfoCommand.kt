@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.general
+package xyz.gnarbot.gnar.commands.executors.admin
 
 import com.google.common.collect.Lists
 import xyz.gnarbot.gnar.Bot
@@ -24,12 +24,12 @@ class ShardInfoCommand : CommandExecutor() {
 
             it.forEach {
                 joiner.add(
-                        "%3d | %.9s | %.7s | %6d | %6d | %8d | %3d".format(
+                        "%3d | %9.9s | %7.7s | %6d | %6d | %8d | %3d".format(
                                 it.id,
                                 it.jda.status,
                                 "${it.jda.ping}ms",
-                                it.jda.guilds.size,
-                                it.jda.users.size,
+                                it.jda.guildCache.size(),
+                                it.jda.userCache.size(),
                                 it.requests,
                                 Bot.getPlayers().registry.values.count { m -> m.guild.jda == it.jda }
                         )
@@ -39,4 +39,5 @@ class ShardInfoCommand : CommandExecutor() {
             context.send().text(joiner.toString()).queue()
         }
     }
+
 }

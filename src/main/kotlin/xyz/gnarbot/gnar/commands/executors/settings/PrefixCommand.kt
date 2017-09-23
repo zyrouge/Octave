@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
-import xyz.gnarbot.gnar.commands.template.Description
+import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.utils.Context
 
 @Command(
@@ -35,9 +35,7 @@ class PrefixCommand : CommandTemplate() {
         context.data.save()
 
         context.send().embed("Server Prefix") {
-            desc {
-                "The prefix has been set to `${context.data.command.prefix}`."
-            }
+            desc { "The prefix has been set to `${context.data.command.prefix}`." }
         }.action().queue()
     }
 
@@ -52,14 +50,12 @@ class PrefixCommand : CommandTemplate() {
         context.data.save()
 
         context.send().embed("Server Prefix") {
-            desc {
-                "The prefix has been reset to `${context.data.command.prefix}`."
-            }
+            desc { "The prefix has been reset to `${context.data.command.prefix}`." }
         }.action().queue()
     }
 
-    override fun helpMessage(context: Context, args: Array<String>, depth: Int) {
-        helpMessage(context, args, depth, null, buildString {
+    override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {
+        onWalkFail(context, args, depth, null, buildString {
             append("Default prefix will still be valid.\n")
             val prefix = context.data.command.prefix
             append("Current prefix: `").append(prefix).append('`')

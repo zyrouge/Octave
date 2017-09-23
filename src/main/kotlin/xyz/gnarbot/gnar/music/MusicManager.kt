@@ -15,10 +15,6 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.TextChannel
@@ -29,9 +25,10 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.response.respond
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-class MusicManager(val guild: Guild) {
+class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
             it.registerSourceManager(YoutubeAudioSourceManager().apply {
@@ -76,10 +73,11 @@ class MusicManager(val guild: Guild) {
     }
 
     @Volatile
-    private var leaveTask: Job? = null
+    private var leaveTask: Future<*>? = null
 
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
+        // fixme DI point
         it.volume = Bot.getOptions().ofGuild(guild).music.volume
     }
 
@@ -87,7 +85,7 @@ class MusicManager(val guild: Guild) {
     val scheduler: TrackScheduler = TrackScheduler(this, player).also(player::addListener)
 
     /** @return Wrapper around AudioPlayer to use it as an AudioSendHandler. */
-    val sendHandler: AudioPlayerSendHandler = AudioPlayerSendHandler(player)
+    private val sendHandler: AudioPlayerSendHandler = AudioPlayerSendHandler(player)
 
     /**
      * @return Voting cooldown.
@@ -121,17 +119,19 @@ class MusicManager(val guild: Guild) {
         when {
             !Bot.CONFIG.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
-                Bot.getPlayers().destroy(guild)
+                playerRegistry.destroy(guild)
                 return false
             }
             !guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
                 context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
-                Bot.getPlayers().destroy(guild)
+                playerRegistry.destroy(guild)
                 return false
             }
-            channel.userLimit != 0 && channel.members.size >= channel.userLimit -> {
+            channel.userLimit != 0
+                    && guild.selfMember.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
+                    && channel.members.size >= channel.userLimit -> {
                 context.send().error("The bot can't join due to the user limit.").queue()
-                Bot.getPlayers().destroy(guild)
+                playerRegistry.destroy(guild)
                 return false
             }
             else -> {
@@ -154,7 +154,7 @@ class MusicManager(val guild: Guild) {
 
             if (!guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT)) {
                 currentRequestChannel?.respond()?.error("I don't have permission to join `${channel.name}`.")?.queue()
-                closeAudioConnection()
+                playerRegistry.destroy(guild)
                 return
             }
 
@@ -182,21 +182,20 @@ class MusicManager(val guild: Guild) {
     }
 
     fun queueLeave() {
-        leaveTask?.cancel()
+        leaveTask?.cancel(false)
         leaveTask = createLeaveTask()
         player.isPaused = true
     }
 
     fun cancelLeave() {
-        leaveTask?.cancel()
+        leaveTask?.cancel(false)
         leaveTask = null
         player.isPaused = false
     }
 
-    private fun createLeaveTask() = launch(CommonPool) {
-        delay(30, TimeUnit.SECONDS)
-        Bot.getPlayers().destroy(guild)
-    }
+    private fun createLeaveTask() = playerRegistry.executor.schedule({
+        playerRegistry.destroy(guild)
+    }, 30, TimeUnit.SECONDS)
 
     fun loadAndPlay(context: Context, trackUrl: String, trackContext: TrackContext, footnote: String? = null) {
         playerManager.loadItemOrdered(this, trackUrl, object : AudioLoadResultHandler {
@@ -242,7 +241,7 @@ class MusicManager(val guild: Guild) {
                         // Track is not supposed to load and the queue is empty
                         // destroy player
                         if (scheduler.queue.isEmpty()) {
-                            Bot.getPlayers().destroy(guild)
+                            playerRegistry.destroy(guild)
                         }
                         return
                     }
@@ -285,7 +284,7 @@ class MusicManager(val guild: Guild) {
                 // No track found and queue is empty
                 // destroy player
                 if (scheduler.queue.isEmpty()) {
-                    Bot.getPlayers().destroy(guild)
+                    playerRegistry.destroy(guild)
                 }
                 context.send().error("Nothing found by `$trackUrl`.").queue()
             }
@@ -295,7 +294,7 @@ class MusicManager(val guild: Guild) {
                 // destroy player
 
                 if (scheduler.queue.isEmpty()) {
-                    Bot.getPlayers().destroy(guild)
+                    playerRegistry.destroy(guild)
                 }
                 context.send().exception(e).queue()
             }

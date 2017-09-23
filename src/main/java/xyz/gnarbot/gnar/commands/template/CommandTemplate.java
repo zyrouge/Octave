@@ -2,6 +2,10 @@ package xyz.gnarbot.gnar.commands.template;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.template.annotations.Description;
+import xyz.gnarbot.gnar.commands.template.annotations.Name;
+import xyz.gnarbot.gnar.commands.template.parser.Parser;
+import xyz.gnarbot.gnar.commands.template.parser.Parsers;
 import xyz.gnarbot.gnar.utils.Context;
 
 import java.lang.reflect.Method;
@@ -29,10 +33,11 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
                 throw new RuntimeException("First argument of " + method + " must be Context");
             }
 
-            Display ann = method.getAnnotation(Display.class);
+            Name ann = method.getAnnotation(Name.class);
             String name = ann == null ? method.getName() : ann.value();
 
             String[] parts = name.split("_");
+
             Template current = this;
             for (int i = 0; i < parts.length - 1; i++) {
                 String part = parts[i];
@@ -61,8 +66,8 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
     }
 
     @Override
-    public void helpMessage(Context context, String[] args, int depth, String title, String description) {
-        Template.super.helpMessage(context, args, depth,
+    public void onWalkFail(Context context, String[] args, int depth, String title, String description) {
+        Template.super.onWalkFail(context, args, depth,
                 title == null ? Bot.CONFIG.getPrefix() + getInfo().aliases()[0] + " Command" : title,
                 getInfo().description() + (description == null ? "" : description));
     }
