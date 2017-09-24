@@ -8,6 +8,8 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.SessionReconnectQueue;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
+import net.rithms.riot.api.ApiConfig;
+import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
@@ -43,6 +45,9 @@ public final class Bot {
     public static BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
 
     private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+
+    private static final ApiConfig config = new ApiConfig().setKey(Bot.KEYS.getRiotAPIKey());
+    public static final RiotApi riotAPI = new RiotApi(config);
 
     private static final EventWaiter waiter = new EventWaiter();
 
@@ -119,6 +124,8 @@ public final class Bot {
     public static CommandDispatcher getCommandDispatcher() {
         return commandDispatcher;
     }
+
+    public static RiotApi getRiotAPI() { return riotAPI; }
 
     public static PlayerRegistry getPlayers() {
         return playerRegistry;

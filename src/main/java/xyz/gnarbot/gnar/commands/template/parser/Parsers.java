@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class Parsers {
     public static final Parser<String> STRING = new Parser<>("string", "Plain text", (c, s) -> s);
+
     public static final Parser<Integer> INTEGER = new Parser<>("integer", "Integer number", (c, s) -> {
         try {
             return Integer.valueOf(s);
