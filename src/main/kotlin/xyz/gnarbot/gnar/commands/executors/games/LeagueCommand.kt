@@ -77,7 +77,10 @@ class LeagueCommand : CommandTemplate() {
 
             val games = game.matches
 
-            if(games == null) { context.send().error("API Exception: Games not found").queue(); }
+            if(games == null) {
+                context.send().error("API Exception: Games not found").queue()
+                return
+            }
 
             context.send().embed("$name's Last Game") {
                 thumbnail{ "http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map1.png" }
@@ -93,7 +96,6 @@ class LeagueCommand : CommandTemplate() {
                     }
                 }
             }.action().queue()
-
         } catch (e : Exception) {
             e.printStackTrace()
         }
