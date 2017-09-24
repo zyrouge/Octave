@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.commands.template.annotations.Description
 
 @Command(
         id = 84,
-        aliases = arrayOf("lol", "league", "summoner", "summonerinfo"),
+        aliases = arrayOf("lol", "league", "summoner", "summonerinfo", "si"),
         usage = "_summoner [Region] [Summoner Name]",
         description = "Show information on the given summoner. **NOTICE:** This is a work in progress."
 )
@@ -35,12 +35,8 @@ class LeagueCommand : CommandTemplate() {
                 }
             }.action().queue()
         } catch (e : NoSuchElementException) {
-            print(region)
-            print(name)
             e.printStackTrace()
         } catch (e : RiotApiException) {
-            print(region)
-            print(name)
             e.printStackTrace()
         }
     }
@@ -56,7 +52,7 @@ class LeagueCommand : CommandTemplate() {
             val championId = summonerMasteries[0].championId
 
             context.send().embed("$name's Mastery Info") {
-                thumbnail{ "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" + Bot.riotAPI.getDataChampion(region, championId).name + "_0.jpg" }
+                image{ "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/" + Bot.riotAPI.getDataChampion(region, championId).name + "_0.jpg" }
                 desc {
                     buildString {
                         append("**Champion Name:** " + Bot.riotAPI.getDataChampion(region, championId).name + "\n")
@@ -100,8 +96,6 @@ class LeagueCommand : CommandTemplate() {
 
         } catch (e : Exception) {
             e.printStackTrace()
-            print(name)
-            print(region)
         }
     }
 }
