@@ -94,7 +94,7 @@ class MathCommand : CommandExecutor() {
         }
 
         val baos = ByteArrayOutputStream()
-        ImageIO.write(b, "jpg", baos)
+        ImageIO.write(b, "png", baos)
         return baos.toByteArray()
     }
 }

@@ -49,5 +49,5 @@ class Credentials(file: File) {
 
     val discordFM: String? = config["discordfm"].string
 
-    val riotAPIKey: String = config["riot", "apiKey"].getString(null)
+    val riotAPIKey: String? = config["riot", "apiKey"].string
 }
