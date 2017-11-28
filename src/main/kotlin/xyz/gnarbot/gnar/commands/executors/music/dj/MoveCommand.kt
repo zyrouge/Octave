@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 77,
-        aliases = arrayOf("move"),
+        aliases = ["move"],
         description = "Move the bot to another channel.",
         category = Category.MUSIC,
         scope = Scope.VOICE,

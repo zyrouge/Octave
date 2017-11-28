@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 68,
-        aliases = arrayOf("pause"),
+        aliases = ["pause"],
         description = "Pause or resume the music player.",
         category = Category.MUSIC,
         scope = Scope.VOICE

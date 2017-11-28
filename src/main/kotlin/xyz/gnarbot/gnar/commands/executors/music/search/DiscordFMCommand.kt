@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.DiscordFM
 
 @Command(
         id = 82,
-        aliases = arrayOf("discordfm", "dfm"),
+        aliases = ["discordfm", "dfm"],
         usage = "(station name)|stop",
         description = "Stream random songs from DiscordFM stations!",
         scope = Scope.VOICE,

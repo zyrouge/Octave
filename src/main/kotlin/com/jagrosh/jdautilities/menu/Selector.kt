@@ -87,12 +87,12 @@ class Selector(waiter: EventWaiter,
         when(type) {
             Type.REACTIONS -> {
                 waiter.waitFor(MessageReactionAddEvent::class.java) {
-                    if (it.reaction.emote.name == cancel) {
+                    if (it.reaction.reactionEmote.name == cancel) {
                         finally(message)
                         return@waitFor
                     }
 
-                    val value = it.reaction.emote.name[0] - '\u0030'
+                    val value = it.reaction.reactionEmote.name[0] - '\u0030'
                     it.channel.getMessageById(it.messageIdLong).queue {
                         options[value].action(it)
                     }
@@ -106,11 +106,11 @@ class Selector(waiter: EventWaiter,
                             false
                         }
                         else -> {
-                            if (it.reaction.emote.name == cancel) {
+                            if (it.reaction.reactionEmote.name == cancel) {
                                 true
                             } else {
-                                val value = it.reaction.emote.name[0] - '\u0030'
-                                if (value in 0..options.size - 1) {
+                                val value = it.reaction.reactionEmote.name[0] - '\u0030'
+                                if (value in 0 until options.size) {
                                     true
                                 } else {
                                     it.reaction.removeReaction(it.user).queue()

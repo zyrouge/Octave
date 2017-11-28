@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 @Command(
         id = 47,
-        aliases = arrayOf("remindme", "remind"),
+        aliases = ["remindme", "remind"],
         usage = "(duration) (time unit) (msg)",
         description = "Send you a reminder after an amount of time."
 )

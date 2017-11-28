@@ -11,7 +11,7 @@ import kotlin.io.use as doNotUse
 
 @Command(
         id = 36,
-        aliases = arrayOf("botAvatar"),
+        aliases = ["botAvatar"],
         category = Category.NONE,
         admin = true
 )

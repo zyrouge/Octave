@@ -11,7 +11,7 @@ import java.io.IOException
 
 @Command(
         id = 50,
-        aliases = arrayOf("google"),
+        aliases = ["google"],
         usage = "(query...)",
         description = "Who needs browsers!?",
         category = Category.MEDIA

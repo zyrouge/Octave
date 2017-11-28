@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 71,
-        aliases = arrayOf("restart"),
+        aliases = ["restart"],
         description = "Restart the current song.",
         category = Category.MUSIC,
         scope = Scope.VOICE

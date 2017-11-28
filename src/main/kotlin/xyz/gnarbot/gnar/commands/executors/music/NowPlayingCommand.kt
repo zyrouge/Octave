@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.inlineCode
 
 @Command(
         id = 67,
-        aliases = arrayOf("nowplaying", "np"),
+        aliases = ["nowplaying", "np"],
         description = "Shows what's currently playing.",
         category = Category.MUSIC
 )

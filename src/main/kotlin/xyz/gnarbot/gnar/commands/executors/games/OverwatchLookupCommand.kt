@@ -17,7 +17,7 @@ import java.io.IOException
 
 @Command(
         id = 41,
-        aliases = arrayOf("overwatch", "ow"),
+        aliases = ["overwatch", "ow"],
         usage = "(BattleTag#0000) [region]",
         description = "Look up Overwatch information about a player.",
         category = Category.MEDIA

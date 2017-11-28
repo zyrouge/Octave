@@ -17,8 +17,8 @@ import javax.imageio.ImageIO
 
 @Command(
         id = 80,
+        aliases = ["math"],
         usage = "(x+y)^2` or `3x + 4 = 31",
-        aliases = arrayOf("math"),
         description = "Do mathematical stuff."
 )
 class MathCommand : CommandExecutor() {
@@ -75,9 +75,9 @@ class MathCommand : CommandExecutor() {
 
         val img = texImageByteArray(finalTex)
 
-        context.textChannel.sendFile(img, "attachment.jpg", MessageBuilder().setEmbed(
+        context.textChannel.sendFile(img, "attachment.png", MessageBuilder().setEmbed(
                 context.send().embed {
-                    image { "attachment://attachment.jpg" }
+                    image { "attachment://attachment.png" }
                 }.build()).build()
         ).queue()
     }

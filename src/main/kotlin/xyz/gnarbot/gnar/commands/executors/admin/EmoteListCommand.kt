@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 34,
-        aliases = arrayOf("emotes", "emotesList"),
+        aliases = ["emotes", "emotesList"],
         description = "Get all of the custom emotes the bot has access to",
         category = Category.NONE,
         admin = true

@@ -10,7 +10,7 @@ import javax.script.*
 
 @Command(
         id = 35,
-        aliases = arrayOf("eval"),
+        aliases = ["eval"],
         description = "Run Groovy scripts.",
         admin = true,
         category = Category.NONE

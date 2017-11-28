@@ -12,7 +12,7 @@ import java.awt.Color
 
 @Command(
         id = 46,
-        aliases = arrayOf("kaiper", "aje"),
+        aliases = ["kaiper", "aje"],
         usage = "(script)",
         description = "Kaiper lang user-eval.",
         cooldown = 3000

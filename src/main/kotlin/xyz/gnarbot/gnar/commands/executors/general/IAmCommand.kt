@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 45,
-        aliases = arrayOf("iam"),
+        aliases = ["iam"],
         usage = "(a|not) (@role)",
         description = "Assign yourself a self-role."
 )

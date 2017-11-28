@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 40,
-        aliases = arrayOf("dialog"),
+        aliases = ["dialog"],
         usage = "(words...)",
         description = "Make some of that Windows ASCII art!",
         category = Category.FUN

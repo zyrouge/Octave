@@ -9,7 +9,7 @@ import java.lang.management.ManagementFactory
 
 @Command(
         id = 42,
-        aliases = arrayOf("about", "info", "botinfo"),
+        aliases = ["about", "info", "botinfo"],
         description = "Show information about the bot."
 )
 class BotInfoCommand : CommandExecutor() {

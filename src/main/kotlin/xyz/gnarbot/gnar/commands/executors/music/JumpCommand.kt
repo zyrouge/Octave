@@ -12,7 +12,7 @@ import java.time.Duration
 
 @Command(
         id = 65,
-        aliases = arrayOf("jump", "seek"),
+        aliases = ["jump", "seek"],
         usage = "(to|forward|backward) (time)",
         description = "Set the time marker of the music playback.",
         category = Category.MUSIC,

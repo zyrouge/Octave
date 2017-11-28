@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 84,
-        aliases = arrayOf("lol", "league", "summoner", "summonerinfo", "si"),
+        aliases = ["lol", "league", "summoner", "summonerinfo", "si"],
         usage = "_summoner (summoner name) (region)",
         description = "Show information on the given summoner. **NOTICE:** This is a work in progress."
 )

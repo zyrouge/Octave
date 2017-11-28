@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 60,
-        aliases = arrayOf("forceskip"),
+        aliases = ["forceskip"],
         description = "Skip the current music track forcefully.",
         category = Category.MUSIC,
         scope = Scope.VOICE,

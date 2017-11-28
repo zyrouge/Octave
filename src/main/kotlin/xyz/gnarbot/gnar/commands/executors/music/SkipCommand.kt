@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 
 @Command(
         id = 73,
-        aliases = arrayOf("skip"),
+        aliases = ["skip"],
         description = "Skip the current music track if you're the requester.",
         category = Category.MUSIC,
         scope = Scope.VOICE

@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 33,
-        aliases = arrayOf("sudo"),
+        aliases = ["sudo"],
         description = "Power.",
         admin = true,
         category = Category.NONE

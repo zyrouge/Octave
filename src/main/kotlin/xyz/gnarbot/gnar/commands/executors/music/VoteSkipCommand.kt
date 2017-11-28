@@ -61,8 +61,8 @@ class VoteSkipCommand : MusicCommandExecutor(true, true) {
                 var stay = 0
 
                 it.reactions.forEach {
-                    if (it.emote.name == "👍") skip = it.count - 1
-                    if (it.emote.name == "👎") stay = it.count - 1
+                    if (it.reactionEmote.name == "👍") skip = it.count - 1
+                    if (it.reactionEmote.name == "👎") stay = it.count - 1
                 }
 
                 context.send().embed("Vote Skip") {

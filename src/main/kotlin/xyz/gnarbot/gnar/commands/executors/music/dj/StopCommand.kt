@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 61,
-        aliases = arrayOf("stop", "leave"),
+        aliases = ["stop", "leave"],
         description = "Stop and clear the music player.",
         category = Category.MUSIC,
         scope = Scope.VOICE,

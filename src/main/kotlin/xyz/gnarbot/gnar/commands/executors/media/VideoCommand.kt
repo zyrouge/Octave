@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 51,
-        aliases = arrayOf("video", "vid"),
+        aliases = ["video", "vid"],
         usage = "(query...)",
         description = "Search and get a YouTube video.",
         scope = Scope.TEXT,

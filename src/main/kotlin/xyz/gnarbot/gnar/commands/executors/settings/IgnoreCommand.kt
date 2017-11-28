@@ -13,11 +13,11 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 53,
-        aliases = arrayOf("ignore"),
+        aliases = ["ignore"],
         usage = "(user|channel|role|list) [?entity]",
         description = "Make the bot ignore certain users, channels or roles.",
         category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = [Permission.MANAGE_SERVER]
 )
 class IgnoreCommand : CommandTemplate() {
     @Description("Ignore/unignore users.")

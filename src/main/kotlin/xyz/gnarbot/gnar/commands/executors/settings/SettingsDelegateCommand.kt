@@ -8,11 +8,11 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 58,
-        aliases = arrayOf("settings", "setting", "set", "config", "configuration", "configure", "opts", "options"),
+        aliases = ["settings", "setting", "set", "config", "configuration", "configure", "opts", "options"],
         description = "Modify bot settings.",
         category = Category.SETTINGS,
         toggleable = false,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = [Permission.MANAGE_SERVER]
 )
 class SettingsDelegateCommand : CommandExecutor() {
     val map = mapOf(

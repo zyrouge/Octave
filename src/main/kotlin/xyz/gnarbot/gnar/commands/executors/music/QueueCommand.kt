@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
         id = 69,
-        aliases = arrayOf("queue", "list"),
+        aliases = ["queue", "list"],
         description = "Shows the music that's currently queued.",
         category = Category.MUSIC
 )

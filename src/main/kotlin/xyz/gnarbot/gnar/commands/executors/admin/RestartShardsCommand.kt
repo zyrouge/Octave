@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 37,
-        aliases = arrayOf("revive", "restartShards"),
+        aliases = ["revive", "restartShards"],
         description = "Restart all shard instances.",
         admin = true,
         category = Category.NONE

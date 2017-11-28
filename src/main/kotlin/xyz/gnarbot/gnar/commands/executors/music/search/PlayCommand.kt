@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 62,
-        aliases = arrayOf("play"),
+        aliases = ["play"],
         usage = "[url|YT search]",
         description = "Joins and play music in a channel.",
         scope = Scope.VOICE,

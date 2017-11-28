@@ -93,7 +93,7 @@ public final class Bot {
         STATE = LoadState.COMPLETE;
 
         for (Shard shard : shards) {
-            shard.getJda().getPresence().setGame(Game.of(String.format(CONFIG.getGame(), shard.getId())));
+            shard.getJda().getPresence().setGame(Game.playing(String.format(CONFIG.getGame(), shard.getId())));
         }
 
         LOG.info("The bot is now fully connected to Discord.");

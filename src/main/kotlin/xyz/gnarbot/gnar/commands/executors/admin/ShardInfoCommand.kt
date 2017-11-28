@@ -10,7 +10,7 @@ import java.util.*
 
 @Command(
         id = 48,
-        aliases = arrayOf("shards", "shard", "shardinfo"),
+        aliases = ["shards", "shard", "shardinfo"],
         description = "Get shard information.",
         admin = true,
         category = Category.NONE

@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 72,
-        aliases = arrayOf("shuffle"),
+        aliases = ["shuffle"],
         description = "Shuffle the music queue.",
         category = Category.MUSIC,
         scope = Scope.VOICE

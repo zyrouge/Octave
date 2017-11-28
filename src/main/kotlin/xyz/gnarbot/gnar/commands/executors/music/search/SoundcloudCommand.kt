@@ -15,7 +15,7 @@ import java.awt.Color
 
 @Command(
         id = 63,
-        aliases = arrayOf("soundcloud", "sc"),
+        aliases = ["soundcloud", "sc"],
         usage = "(query...)",
         description = "Search and see SoundCloud results.",
         scope = Scope.TEXT,

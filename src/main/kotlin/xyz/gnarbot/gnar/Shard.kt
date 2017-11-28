@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar
 
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.AccountType
@@ -31,7 +30,7 @@ class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager
         setEventManager(eventManager)
         addEventListener(*listeners)
         setEnableShutdownHook(true)
-        setGame(Game.of("Loading..."))
+        setGame(Game.playing("Loading..."))
     }
 
     lateinit var jda: JDA
@@ -54,7 +53,7 @@ class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager
         Bot.LOG.info("Building shard $id.")
 
         this.jda = builder.buildAsync().apply {
-            launch(CommonPool) {
+            launch {
                 while (status != JDA.Status.CONNECTED) {
                     delay(50)
                 }
@@ -71,7 +70,7 @@ class Shard(val id: Int, srq: SessionReconnectQueue, eventManager: IEventManager
 
         build()
 
-        jda.presence.game = Game.of(Bot.CONFIG.game.format(id))
+        jda.presence.game = Game.playing(Bot.CONFIG.game.format(id))
     }
 
     /**

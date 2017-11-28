@@ -11,7 +11,7 @@ import java.util.regex.Pattern
 
 @Command(
         id = 79,
-        aliases = arrayOf("remove"),
+        aliases = ["remove"],
         description = "Remove a song from the queue.",
         usage = "(first|last|all|start..end|#)",
         category = Category.MUSIC,

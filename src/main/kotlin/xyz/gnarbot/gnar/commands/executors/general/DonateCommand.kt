@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 43,
-        aliases = arrayOf("donate"),
+        aliases = ["donate"],
         description = "Show the donation info."
 )
 class DonateCommand : CommandExecutor() {

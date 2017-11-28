@@ -11,10 +11,10 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 55,
-        aliases = arrayOf("musicsettings", "musicconfig"),
+        aliases = ["musicsettings", "musicconfig"],
         description = "Change music settings.",
         category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = [Permission.MANAGE_SERVER]
 )
 class MusicSettingsCommand : CommandTemplate() {
     @Description("Toggle music announcement.")

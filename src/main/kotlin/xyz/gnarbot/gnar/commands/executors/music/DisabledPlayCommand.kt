@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 62,
-        aliases = arrayOf("play", "skip", "queue", "remove", "repeat", "np", "restart", "shuffle", "volume", "voteskip"),
+        aliases = ["play", "skip", "queue", "remove", "repeat", "np", "restart", "shuffle", "volume", "voteskip"],
         description = "Music is disabled TEMPORARILY."
 )
 class DisabledPlayCommand : CommandExecutor() {

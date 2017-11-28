@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.code
 
 @Command(
         id = 39,
-        aliases = arrayOf("ascii"),
+        aliases = ["ascii"],
         usage = "(words...)",
         description = "ASCII text art!",
         category = Category.FUN

@@ -16,7 +16,7 @@ import java.awt.Color
 
 @Command(
         id = 64,
-        aliases = arrayOf("youtube", "yt"),
+        aliases = ["youtube", "yt"],
         usage = "(query...)",
         description = "Search and see YouTube results.",
         scope = Scope.TEXT,

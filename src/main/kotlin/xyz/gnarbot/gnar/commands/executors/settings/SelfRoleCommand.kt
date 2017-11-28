@@ -11,11 +11,11 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 59,
-        aliases = arrayOf("selfroles", "selfrole"),
+        aliases = ["selfroles", "selfrole"],
         usage = "(add|remove|clear) [@role]",
         description = "Set self-roles that users can assign to themselves.",
         category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_ROLES)
+        permissions = [Permission.MANAGE_ROLES]
 )
 class SelfRoleCommand : CommandTemplate() {
     @Description("Add a self-role.")

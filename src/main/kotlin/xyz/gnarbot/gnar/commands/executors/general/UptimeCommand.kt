@@ -7,7 +7,7 @@ import java.lang.management.ManagementFactory
 
 @Command(
         id = 49,
-        aliases = arrayOf("uptime"),
+        aliases = ["uptime"],
         description = "Show the bot's uptime."
 )
 class UptimeCommand : CommandExecutor() {

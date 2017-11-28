@@ -10,11 +10,11 @@ import xyz.gnarbot.gnar.utils.Context
 
 @Command(
         id = 56,
-        aliases = arrayOf("prefix"),
+        aliases = ["prefix"],
         usage = "(set|reset) [string]",
         description = "Set the bot prefix for the server.",
         category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = [Permission.MANAGE_SERVER]
 )
 class PrefixCommand : CommandTemplate() {
     private val mention = Regex("<@!?(\\d+)>|<#(\\d+)>|<@&(\\d+)>")
