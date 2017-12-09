@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'xyz.gnarbot'
-version '4.8.3'
+version '4.8.4'
 
 mainClassName = 'xyz.gnarbot.gnar.Bot'
 
@@ -76,8 +76,8 @@ dependencies {
 compileJava.options.encoding = 'UTF-8'
 
 compileKotlin {
-    sourceCompatibility = JavaVersion.VERSION_1_9
-    targetCompatibility = JavaVersion.VERSION_1_9
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
         jvmTarget = '1.8'
