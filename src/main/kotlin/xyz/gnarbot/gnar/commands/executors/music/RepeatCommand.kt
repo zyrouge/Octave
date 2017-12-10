@@ -1,17 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.RepeatOption
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 70,
         aliases = ["repeat"],
         usage = "(song, playlist, none)",
-        description = "Set if the music player should repeat.",
+        description = "Set if the music player should repeat."
+)
+@BotInfo(
+        id = 70,
         category = Category.MUSIC,
         scope = Scope.VOICE
 )

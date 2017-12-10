@@ -1,17 +1,20 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.inlineCode
 
 @Command(
-        id = 67,
         aliases = ["nowplaying", "np"],
-        description = "Shows what's currently playing.",
+        description = "Shows what's currently playing."
+)
+@BotInfo(
+        id = 67,
         category = Category.MUSIC
 )
 class NowPlayingCommand : MusicCommandExecutor(false, true) {

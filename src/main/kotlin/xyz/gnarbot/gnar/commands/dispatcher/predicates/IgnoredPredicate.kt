@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import java.util.function.BiPredicate
 
 class IgnoredPredicate : BiPredicate<CommandExecutor, Context> {

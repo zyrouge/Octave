@@ -1,15 +1,14 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 
 @Command(
-        id = 33,
         aliases = ["sudo"],
-        description = "Power.",
+        description = "Power."
+)
+@BotInfo(
+        id = 33,
         admin = true,
         category = Category.NONE
 )

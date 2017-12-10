@@ -1,15 +1,14 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 71,
         aliases = ["restart"],
-        description = "Restart the current song.",
+        description = "Restart the current song."
+)
+@BotInfo(
+        id = 71,
         category = Category.MUSIC,
         scope = Scope.VOICE
 )

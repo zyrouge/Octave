@@ -1,11 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
-import xyz.gnarbot.gnar.utils.Context;
 
 import java.awt.*;
 import java.time.Instant;
@@ -15,10 +16,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 @Command(
-        id = 21,
         aliases = "redeem",
         usage = "(code)",
         description = "Redeem a key for your server."
+)
+@BotInfo(
+        id = 21
 )
 public class RedeemCommand extends CommandExecutor {
     @Override

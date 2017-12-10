@@ -1,16 +1,19 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.entities.Role
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 45,
         aliases = ["iam"],
         usage = "(a|not) (@role)",
         description = "Assign yourself a self-role."
+)
+@BotInfo(
+        id = 45
 )
 class IAmCommand : CommandTemplate() {
     @Description("Assign yourself a self-role.")

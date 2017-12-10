@@ -22,8 +22,8 @@ import net.dv8tion.jda.core.entities.VoiceChannel
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit

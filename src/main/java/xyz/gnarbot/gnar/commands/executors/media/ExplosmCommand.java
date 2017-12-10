@@ -2,18 +2,17 @@ package xyz.gnarbot.gnar.commands.executors.media;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 import java.util.Random;
 
 @Command(
-        id = 25,
         aliases = {"c&h", "cah"},
         description = "Get Cyanide and Happiness comics.",
-        usage = "~id",
+        usage = "~id"
+)
+@BotInfo(
+        id = 25,
         category = Category.MEDIA
 )
 public class ExplosmCommand extends CommandExecutor {

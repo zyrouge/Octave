@@ -1,20 +1,19 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
 import java.util.Arrays;
 import java.util.StringJoiner;
 
 @Command(
-        id = 9,
         aliases = {"roll"},
         usage = "[(rolls)d](max value) ie. 2d6",
-        description = "Roll a random number from 0 to argument.",
+        description = "Roll a random number from 0 to argument."
+)
+@BotInfo(
+        id = 9,
         category = Category.FUN
 )
 public class RollCommand extends CommandExecutor {

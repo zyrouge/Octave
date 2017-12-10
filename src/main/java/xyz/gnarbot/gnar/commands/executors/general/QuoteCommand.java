@@ -3,15 +3,18 @@ package xyz.gnarbot.gnar.commands.executors.general;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 
 @Command(
-        id = 19,
         aliases = {"quote", "quotemsg"},
         usage = "(message id) [#channel]",
         description = "Quote somebody else.."
+)
+@BotInfo(
+        id = 19
 )
 public class QuoteCommand extends CommandExecutor {
     @Override

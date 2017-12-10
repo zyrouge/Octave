@@ -7,19 +7,22 @@ import xyz.avarel.aljava.TexElement
 import xyz.avarel.aljava.lexer.Lexer
 import xyz.avarel.aljava.parser.Parser
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 @Command(
-        id = 80,
         aliases = ["math"],
         usage = "(x+y)^2` or `3x + 4 = 31",
         description = "Do mathematical stuff."
+)
+@BotInfo(
+        id = 80
 )
 class MathCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

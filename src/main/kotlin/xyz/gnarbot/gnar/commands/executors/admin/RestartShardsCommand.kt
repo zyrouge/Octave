@@ -6,15 +6,14 @@ import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Shard
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 
 @Command(
-        id = 37,
         aliases = ["revive", "restartShards"],
-        description = "Restart all shard instances.",
+        description = "Restart all shard instances."
+)
+@BotInfo(
+        id = 37,
         admin = true,
         category = Category.NONE
 )

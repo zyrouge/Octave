@@ -2,19 +2,18 @@ package xyz.gnarbot.gnar.commands.executors.media;
 
 import org.w3c.dom.Document;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.net.URL;
 
 @Command(
-        id = 24,
         aliases = {"cats", "cat"},
-        description = "Grab random cats for you.",
+        description = "Grab random cats for you."
+)
+@BotInfo(
+        id = 24,
         category = Category.MEDIA
 )
 public class CatsCommand extends CommandExecutor {

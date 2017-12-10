@@ -1,18 +1,17 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 import java.util.StringJoiner;
 
 @Command(
-        id = 8,
         aliases = {"poop"},
         usage = "[string]",
-        description = "Shit your heart out.",
+        description = "Shit your heart out."
+)
+@BotInfo(
+        id = 8,
         category = Category.FUN
 )
 public class PoopCommand extends CommandExecutor {

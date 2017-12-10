@@ -5,17 +5,20 @@ import net.dv8tion.jda.core.entities.IMentionable
 import net.dv8tion.jda.core.entities.Member
 import net.dv8tion.jda.core.entities.Role
 import net.dv8tion.jda.core.entities.TextChannel
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 53,
         aliases = ["ignore"],
         usage = "(user|channel|role|list) [?entity]",
-        description = "Make the bot ignore certain users, channels or roles.",
+        description = "Make the bot ignore certain users, channels or roles."
+)
+@BotInfo(
+        id = 53,
         category = Category.SETTINGS,
         permissions = [Permission.MANAGE_SERVER]
 )

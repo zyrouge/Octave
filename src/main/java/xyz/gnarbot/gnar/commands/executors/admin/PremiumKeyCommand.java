@@ -1,22 +1,25 @@
 package xyz.gnarbot.gnar.commands.executors.admin;
 
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.CommandTemplate;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
 import xyz.gnarbot.gnar.guilds.GuildData;
-import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
 import java.util.StringJoiner;
 import java.util.UUID;
 
 @Command(
+        aliases = {"key", "keys"}
+)
+@BotInfo(
         id = 1,
-        aliases = {"key", "keys"},
         admin = true,
         category = Category.NONE
 )

@@ -10,10 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
@@ -22,10 +19,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Command(
-        id = 28,
         aliases = {"meme", "memes"},
         usage = "(meme name) | (top text) | (bottom text)",
-        description = "Create the dankest memes ever.",
+        description = "Create the dankest memes ever."
+)
+@BotInfo(
+        id = 28,
         category = Category.MEDIA
 )
 public class MemeCommand extends CommandExecutor {

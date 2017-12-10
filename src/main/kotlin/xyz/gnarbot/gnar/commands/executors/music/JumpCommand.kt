@@ -1,20 +1,19 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 import java.time.Duration
 
 @Command(
-        id = 65,
         aliases = ["jump", "seek"],
         usage = "(to|forward|backward) (time)",
-        description = "Set the time marker of the music playback.",
+        description = "Set the time marker of the music playback."
+)
+@BotInfo(
+        id = 65,
         category = Category.MUSIC,
         scope = Scope.VOICE
 )

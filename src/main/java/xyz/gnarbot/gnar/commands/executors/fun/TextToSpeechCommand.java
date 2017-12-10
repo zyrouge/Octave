@@ -4,17 +4,15 @@ import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.commands.Scope;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 11,
         aliases = "tts",
         usage = "(words...)",
-        description = "Text to speech fun.",
+        description = "Text to speech fun."
+)
+@BotInfo(
+        id = 11,
         category = Category.FUN,
         scope = Scope.TEXT,
         permissions = Permission.MESSAGE_TTS

@@ -4,17 +4,20 @@ import net.dv8tion.jda.core.entities.MessageEmbed
 import xyz.avarel.kaiper.KaiperScript
 import xyz.avarel.kaiper.exceptions.KaiperException
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.utils.code
 import java.awt.Color
 
 @Command(
-        id = 46,
         aliases = ["kaiper", "aje"],
         usage = "(script)",
-        description = "Kaiper lang user-eval.",
+        description = "Kaiper lang user-eval."
+)
+@BotInfo(
+        id = 46,
         cooldown = 3000
 )
 class KaiperCommand : CommandExecutor() {

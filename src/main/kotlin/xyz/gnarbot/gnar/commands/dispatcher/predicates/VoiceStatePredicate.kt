@@ -2,13 +2,13 @@ package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
 import net.dv8tion.jda.core.entities.Channel
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.Scope
-import xyz.gnarbot.gnar.utils.Context
 import java.util.function.BiPredicate
 
 class VoiceStatePredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
-        if (cmd.info.scope != Scope.VOICE) return true
+        if (cmd.botInfo.scope != Scope.VOICE) return true
 
         if (context.member.voiceState.channel == null) {
             context.send().error("\uD83C\uDFB6 Music commands requires you to be in a voice channel.").queue()

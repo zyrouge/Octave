@@ -6,17 +6,16 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.code
 
 @Command(
-        id = 39,
         aliases = ["ascii"],
         usage = "(words...)",
-        description = "ASCII text art!",
+        description = "ASCII text art!"
+)
+@BotInfo(
+        id = 39,
         category = Category.FUN
 )
 class ASCIICommand : CommandExecutor() {

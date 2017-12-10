@@ -2,19 +2,18 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.desc
 import java.util.concurrent.TimeUnit
 
 @Command(
+        aliases = ["voteskip"],
+        description = "Vote to skip the current music track."
+)
+@BotInfo(
         id = 75,
-        aliases = arrayOf("voteskip"),
-        description = "Vote to skip the current music track.",
         scope = Scope.VOICE,
         category = Category.MUSIC
 )

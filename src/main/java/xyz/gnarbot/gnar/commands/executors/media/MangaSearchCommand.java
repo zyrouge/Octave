@@ -5,18 +5,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.EmbedMaker;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 
 @Command(
-        id = 27,
         aliases = {"manga", "mangasearch", "malmanga"},
         usage = "(manga name)",
-        description = "Search for an manga via MymangaList.",
+        description = "Search for an manga via MymangaList."
+)
+@BotInfo(
+        id = 27,
         category = Category.MEDIA
 )
 public class MangaSearchCommand extends CommandExecutor {

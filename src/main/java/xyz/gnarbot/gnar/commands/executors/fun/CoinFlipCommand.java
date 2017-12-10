@@ -1,14 +1,13 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 3,
         aliases = {"coinflip", "flip"},
-        description = "Heads or Tails?",
+        description = "Heads or Tails?"
+)
+@BotInfo(
+        id = 3,
         category = Category.FUN
 )
 public class CoinFlipCommand extends CommandExecutor {

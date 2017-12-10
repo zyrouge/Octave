@@ -1,16 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 4,
         aliases = "8ball",
         usage = "(question)",
-        description = "Ask for your wildest dreams!", category = Category.FUN
+        description = "Ask for your wildest dreams!"
+)
+@BotInfo(
+        id = 4,
+        category = Category.FUN
 )
 public class EightBallCommand extends CommandExecutor {
     private final String[] responses = {

@@ -3,15 +3,14 @@ package xyz.gnarbot.gnar.commands.executors.media;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 26,
         aliases = "rcg",
-        description = "Generate random Cyanide and Happiness comic.",
+        description = "Generate random Cyanide and Happiness comic."
+)
+@BotInfo(
+        id = 26,
         category = Category.MEDIA
 )
 public class ExplosmRCGCommand extends CommandExecutor {

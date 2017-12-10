@@ -1,11 +1,11 @@
 package xyz.gnarbot.gnar.commands.template;
 
 import org.apache.commons.lang3.StringUtils;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.commands.template.annotations.Name;
 import xyz.gnarbot.gnar.commands.template.parser.Parser;
 import xyz.gnarbot.gnar.commands.template.parser.Parsers;
-import xyz.gnarbot.gnar.utils.Context;
 import xyz.gnarbot.gnar.utils.EmbedMaker;
 
 import java.awt.*;

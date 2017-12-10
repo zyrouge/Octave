@@ -2,19 +2,18 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Command(
-        id = 5,
         aliases = {"leet"},
         usage = "(words...)",
-        description = "Leet a string!",
+        description = "Leet a string!"
+)
+@BotInfo(
+        id = 5,
         category = Category.FUN
 )
 public class LeetifyCommand extends CommandExecutor {

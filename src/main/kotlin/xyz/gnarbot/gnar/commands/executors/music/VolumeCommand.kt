@@ -1,16 +1,15 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 74,
         aliases = ["volume"],
         description = "Set the volume of the music player.",
-        usage = "(loudness %)",
+        usage = "(loudness %)"
+)
+@BotInfo(
+        id = 74,
         category = Category.MUSIC,
         scope = Scope.VOICE,
         donor = true

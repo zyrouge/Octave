@@ -4,17 +4,20 @@ import net.rithms.riot.api.ApiConfig
 import net.rithms.riot.api.RiotApi
 import net.rithms.riot.constant.Platform
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.commands.template.annotations.Name
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 84,
         aliases = ["lol", "league", "summoner", "summonerinfo", "si"],
         usage = "_summoner (summoner name) (region)",
         description = "Show information on the given summoner. **NOTICE:** This is a work in progress."
+)
+@BotInfo(
+        id = 84
 )
 class LeagueCommand : CommandTemplate() {
     private var riotAPI = RiotApi(ApiConfig().apply { Bot.KEYS.riotAPIKey?.let(this::setKey) })

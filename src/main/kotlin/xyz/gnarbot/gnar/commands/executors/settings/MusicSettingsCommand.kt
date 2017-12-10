@@ -3,16 +3,19 @@ package xyz.gnarbot.gnar.commands.executors.settings
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Channel
 import net.dv8tion.jda.core.entities.VoiceChannel
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 55,
         aliases = ["musicsettings", "musicconfig"],
-        description = "Change music settings.",
+        description = "Change music settings."
+)
+@BotInfo(
+        id = 55,
         category = Category.SETTINGS,
         permissions = [Permission.MANAGE_SERVER]
 )

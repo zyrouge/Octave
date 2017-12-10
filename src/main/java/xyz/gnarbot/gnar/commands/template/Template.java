@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.template;
 
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.utils.EmbedMaker;
 
 import java.awt.*;

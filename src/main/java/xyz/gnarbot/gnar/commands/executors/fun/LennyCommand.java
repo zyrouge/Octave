@@ -1,15 +1,14 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 6,
         aliases = "lenny",
         usage = "[integer]",
-        description = "( ͡° ͜ʖ ͡° )",
+        description = "( ͡° ͜ʖ ͡° )"
+)
+@BotInfo(
+        id = 6,
         category = Category.FUN
 )
 public class LennyCommand extends CommandExecutor {

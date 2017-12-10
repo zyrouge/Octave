@@ -1,19 +1,18 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 import java.util.*
 import java.util.regex.Pattern
 
 @Command(
-        id = 79,
         aliases = ["remove"],
         description = "Remove a song from the queue.",
-        usage = "(first|last|all|start..end|#)",
+        usage = "(first|last|all|start..end|#)"
+)
+@BotInfo(
+        id = 79,
         category = Category.MUSIC,
         scope = Scope.VOICE
 )

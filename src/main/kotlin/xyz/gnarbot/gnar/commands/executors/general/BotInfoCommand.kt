@@ -2,15 +2,18 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.JDAInfo
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import java.lang.management.ManagementFactory
 
 @Command(
-        id = 42,
         aliases = ["about", "info", "botinfo"],
         description = "Show information about the bot."
+)
+@BotInfo(
+        id = 42
 )
 class BotInfoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
@@ -37,7 +40,7 @@ class BotInfoCommand : CommandExecutor() {
             voiceChannels += shard.jda.voiceChannelCache.size()
         }
 
-        val commandSize = registry.entries.count { it.info.category.show }
+        val commandSize = registry.entries.count { it.botInfo.category.show }
 
         context.send().embed("Bot Information") {
             thumbnail { context.jda.selfUser.avatarUrl }

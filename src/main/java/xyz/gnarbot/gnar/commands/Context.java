@@ -1,15 +1,16 @@
-package xyz.gnarbot.gnar.utils;
+package xyz.gnarbot.gnar.commands;
 
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.Shard;
+import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.response.GuildResponseBuilder;
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
-public class CommandContext {
+public class Context {
+    private final GuildData guildOptions;
     private Message message;
     private TextChannel textChannel;
     private Guild guild;
@@ -18,7 +19,7 @@ public class CommandContext {
     private Member member;
     private User user;
 
-    public CommandContext(GuildMessageReceivedEvent event) {
+    public Context(GuildMessageReceivedEvent event) {
         this.jda = event.getJDA();
         this.shard = Bot.getShard(this.jda);
 
@@ -28,18 +29,11 @@ public class CommandContext {
         this.textChannel = event.getChannel();
         this.guild = event.getGuild();
         this.member = event.getMember();
+        this.guildOptions = Bot.getOptions().ofGuild(getGuild());
     }
 
-    public CommandContext(PrivateMessageReceivedEvent event) {
-        this.jda = event.getJDA();
-        this.shard = Bot.getShard(this.jda);
-
-        this.message = event.getMessage();
-        this.user = event.getAuthor();
-
-        this.textChannel = null;
-        this.guild = null;
-        this.member = null;
+    public GuildData getData() {
+        return this.guildOptions;
     }
 
     public Message getMessage() {

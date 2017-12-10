@@ -1,15 +1,14 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 
 @Command(
-        id = 58,
         aliases = ["settings", "setting", "set", "config", "configuration", "configure", "opts", "options"],
-        description = "Modify bot settings.",
+        description = "Modify bot settings."
+)
+@BotInfo(
+        id = 58,
         category = Category.SETTINGS,
         toggleable = false,
         permissions = [Permission.MANAGE_SERVER]

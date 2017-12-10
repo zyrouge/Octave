@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.music
 
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import java.awt.Color
 
 class MusicLimitException : Exception() {

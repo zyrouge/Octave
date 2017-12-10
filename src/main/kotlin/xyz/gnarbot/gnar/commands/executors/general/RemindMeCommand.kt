@@ -1,17 +1,20 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.utils.embed
 import java.util.concurrent.TimeUnit
 
 @Command(
-        id = 47,
         aliases = ["remindme", "remind"],
         usage = "(duration) (time unit) (msg)",
         description = "Send you a reminder after an amount of time."
+)
+@BotInfo(
+        id = 47
 )
 class RemindMeCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

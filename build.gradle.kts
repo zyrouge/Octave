@@ -37,9 +37,9 @@ dependencies {
     compile(group = "org.codehaus.groovy", name = "groovy-jsr223", version = "2.4.12")
 
     // JDA
-    compile(group = "net.dv8tion", name = "JDA", version = "3.3.1_307")
+    compile(group = "net.dv8tion", name = "JDA", version = "3.3.1_308")
     compile(group = "com.sedmelluq", name = "jda-nas", version = "1.0.5")
-    compile(group = "com.sedmelluq", name = "lavaplayer", version = "1.2.44")
+    compile(group = "com.sedmelluq", name = "lavaplayer", version = "1.2.45")
 
     // Configuration
     compile(group = "ninja.leaping.configurate", name = "configurate-hocon", version = "3.3")
@@ -78,22 +78,22 @@ dependencies {
     testCompile(group = "junit", name = "junit", version = "4.12")
 }
 
-tasks {
-    "compileJava"(JavaCompile::class) {
-        options.encoding = "UTF-8"
-    }
-    "compileKotlin"(KotlinCompile::class) {
-        targetCompatibility = JavaVersion.VERSION_1_9.name
-        sourceCompatibility = JavaVersion.VERSION_1_9.name
+task<JavaCompile>("compileJava") {
+    options.encoding = "UTF-8"
+}
 
-        kotlinOptions {
-            jvmTarget = "1.8"
-        }
+task<KotlinCompile>("compileKotlin") {
+    targetCompatibility = JavaVersion.VERSION_1_8.name
+    sourceCompatibility = JavaVersion.VERSION_1_8.name
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
-    "jar"(Jar::class) {
-        manifest {
-            attributes["Main-Class"] = mainClass
-        }
+}
+
+task<Jar>("jar") {
+    manifest {
+        attributes["Main-Class"] = mainClass
     }
 }
 

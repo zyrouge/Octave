@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.dispatcher.predicates;
 
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 
 import java.awt.*;
 import java.util.function.BiPredicate;
@@ -16,7 +16,7 @@ public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
 
     @Override
     public boolean test(CommandExecutor cmd, Context context) {
-        if (cmd.getInfo().donor() && !context.getData().isPremium()) {
+        if (cmd.getBotInfo().donor() && !context.getData().isPremium()) {
             context.send().embed("Donators Only")
                     .setColor(Color.ORANGE)
                     .setDescription(donatorMessage)

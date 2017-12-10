@@ -2,16 +2,15 @@ package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 
 @Command(
-        id = 44,
         aliases = ["help", "guide"],
         usage = "[command]",
         description = "Display the bot's list of commands."
+)
+@BotInfo(
+        id = 44
 )
 class HelpCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
@@ -29,7 +28,7 @@ class HelpCommand : CommandExecutor() {
             if (category != null) {
                 context.send().embed("${category.title} Commands") {
                     val filtered = registry.entries.filter {
-                        it.info.category == category
+                        it.botInfo.category == category
                     }
 
                     field("Commands") {
@@ -52,12 +51,12 @@ class HelpCommand : CommandExecutor() {
                 context.send().embed("Command Information") {
                     field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
                     field("Usage") { "_${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
-                    if (cmd.info.donor) {
+                    if (cmd.botInfo.donor) {
                         field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
                     }
 
-                    if (cmd.info.permissions.isNotEmpty()) {
-                        field("Required Permissions") { "${cmd.info.scope} ${cmd.info.permissions.map(Permission::getName)}" }
+                    if (cmd.botInfo.permissions.isNotEmpty()) {
+                        field("Required Permissions") { "${cmd.botInfo.scope} ${cmd.botInfo.permissions.map(Permission::getName)}" }
                     }
 
                     field("Description") { cmd.info.description }
@@ -82,7 +81,7 @@ class HelpCommand : CommandExecutor() {
             for (category in Category.values()) {
                 if (!category.show) continue
 
-                val filtered = commands.filter { it.info.category == category }
+                val filtered = commands.filter { it.botInfo.category == category }
                 if (filtered.isEmpty()) continue
 
                 field("${category.title} — ${filtered.size}\n") {

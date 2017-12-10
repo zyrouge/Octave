@@ -11,9 +11,9 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.LoadState;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.music.MusicManager;
-import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.OffsetDateTime;
 import java.util.Iterator;

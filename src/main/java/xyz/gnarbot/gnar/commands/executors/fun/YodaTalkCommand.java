@@ -5,20 +5,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Command(
-        id = 14,
         aliases = {"yodatalk"},
         usage = "(words...)",
-        description = "Learn to speak like Yoda, you will.",
+        description = "Learn to speak like Yoda, you will."
+)
+@BotInfo(
+        id = 14,
         category = Category.FUN
 )
 public class YodaTalkCommand extends CommandExecutor {

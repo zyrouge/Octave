@@ -2,17 +2,20 @@ package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 52,
         aliases = ["autorole"],
         usage = "(set|unset) [@role]",
-        description = "Set auto-roles that are assigned to users on joining.",
+        description = "Set auto-roles that are assigned to users on joining."
+)
+@BotInfo(
+        id = 52,
         category = Category.SETTINGS,
         permissions = [Permission.MANAGE_ROLES]
 )

@@ -4,20 +4,19 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 import java.util.Random;
 
 @Command(
-        id = 31,
         aliases = "xkcd",
         usage = "[comic #]",
-        description = "Grab some XKCD comics.",
+        description = "Grab some XKCD comics."
+)
+@BotInfo(
+        id = 31,
         category = Category.MEDIA
 )
 public class XKCDCommand extends CommandExecutor {

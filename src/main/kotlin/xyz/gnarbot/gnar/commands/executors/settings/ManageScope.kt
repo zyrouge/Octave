@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.entities.ISnowflake
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
-import xyz.gnarbot.gnar.utils.Context
 
 @Description("The scope of the command")
 enum class ManageScope {

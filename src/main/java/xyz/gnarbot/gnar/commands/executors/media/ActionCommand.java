@@ -5,10 +5,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
@@ -16,14 +13,16 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 
 @Command(
-        id = 78,
         aliases = {
                 "action", "cry", "cuddle", "hug", "kiss", "lewd", "lick",
                 "nom", "nyan", "owo", "pat", "potato", "pout", "rem",
                 "smug", "stare", "tickle", "triggered", "slap"
         },
         description = "Unleash your unrelenting yet suppressed emotions.",
-        usage = "(action)",
+        usage = "(action)"
+)
+@BotInfo(
+        id = 78,
         category = Category.MEDIA
 )
 public class ActionCommand extends CommandExecutor {

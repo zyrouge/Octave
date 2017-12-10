@@ -3,17 +3,16 @@ package xyz.gnarbot.gnar.commands.executors.media
 import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 import java.io.IOException
 
 @Command(
-        id = 50,
         aliases = ["google"],
         usage = "(query...)",
-        description = "Who needs browsers!?",
+        description = "Who needs browsers!?"
+)
+@BotInfo(
+        id = 50,
         category = Category.MEDIA
 )
 class GoogleCommand : CommandExecutor() {

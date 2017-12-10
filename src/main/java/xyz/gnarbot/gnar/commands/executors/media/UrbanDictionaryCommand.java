@@ -8,20 +8,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Command(
-        id = 30,
         aliases = {"urbandict", "ub", "urbandictionary"},
         usage = "(word)",
-        description = "Crowd-sourced definitions of the internet.",
+        description = "Crowd-sourced definitions of the internet."
+)
+@BotInfo(
+        id = 30,
         category = Category.MEDIA
 )
 public class UrbanDictionaryCommand extends CommandExecutor {

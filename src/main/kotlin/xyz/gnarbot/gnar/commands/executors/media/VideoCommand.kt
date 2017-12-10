@@ -1,18 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 51,
         aliases = ["video", "vid"],
         usage = "(query...)",
-        description = "Search and get a YouTube video.",
+        description = "Search and get a YouTube video."
+)
+@BotInfo(
+        id = 51,
         scope = Scope.TEXT,
         category = Category.MEDIA
 )

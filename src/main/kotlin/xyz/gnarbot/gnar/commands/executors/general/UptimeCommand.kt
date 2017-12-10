@@ -1,14 +1,17 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import java.lang.management.ManagementFactory
 
 @Command(
-        id = 49,
         aliases = ["uptime"],
         description = "Show the bot's uptime."
+)
+@BotInfo(
+        id = 49
 )
 class UptimeCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

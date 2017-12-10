@@ -2,19 +2,22 @@ package xyz.gnarbot.gnar.commands.executors.polls
 
 import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.desc
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @Command(
-        id = 76,
-        aliases = arrayOf("poll"),
+        aliases = ["poll"],
         usage = "(description) | (time) | (option 1);(option 2);...",
-        description = "Create a poll.",
+        description = "Create a poll."
+)
+@BotInfo(
+        id = 76,
         cooldown = 10000
 )
 class PollCommand : CommandExecutor() {

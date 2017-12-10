@@ -2,16 +2,15 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
-        id = 10,
         aliases = "ttb",
         usage = "(words...)",
-        description = "Text to bricks fun.",
+        description = "Text to bricks fun."
+)
+@BotInfo(
+        id = 10,
         category = Category.FUN
 )
 public class TextToBrickCommand extends CommandExecutor {

@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands;
 
 import net.dv8tion.jda.core.Permission;
-import xyz.gnarbot.gnar.utils.Context;
 
 public enum Scope {
     GUILD {

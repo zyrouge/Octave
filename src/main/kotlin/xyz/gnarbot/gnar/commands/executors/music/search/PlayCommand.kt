@@ -1,20 +1,18 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 62,
         aliases = ["play"],
         usage = "[url|YT search]",
-        description = "Joins and play music in a channel.",
+        description = "Joins and play music in a channel."
+)
+@BotInfo(
+        id = 62,
         scope = Scope.VOICE,
         category = Category.MUSIC
 )

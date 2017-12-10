@@ -3,17 +3,17 @@ package xyz.gnarbot.gnar.commands.dispatcher.predicates
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
-import xyz.gnarbot.gnar.utils.Context
 import java.util.function.BiPredicate
 
 class SettingsPredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
-        if (!cmd.info.toggleable) {
+        if (!cmd.botInfo.toggleable) {
             return true
         }
 
-        val options = CommandOptionsOverride(context.data.command.options[cmd.info.id], context.data.command.categoryOptions[cmd.info.category.ordinal])
+        val options = CommandOptionsOverride(context.data.command.options[cmd.botInfo.id], context.data.command.categoryOptions[cmd.botInfo.category.ordinal])
 
         if (!options.isEnabled) {
             context.send().error("This ${type(options.inheritToggle())} is disabled.").queue()

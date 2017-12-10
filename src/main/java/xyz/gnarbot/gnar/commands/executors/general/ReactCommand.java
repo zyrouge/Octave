@@ -2,17 +2,20 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.entities.Emote;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 
 import java.util.Arrays;
 
 @Command(
-        id = 20,
         aliases = "react",
         usage = "(message id) (emoji...)",
         description = "Make GNAR react to something, against it's " + "will. You evil prick."
+)
+@BotInfo(
+        id = 20
 )
 public class ReactCommand extends CommandExecutor {
     @Override

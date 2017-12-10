@@ -8,19 +8,18 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.commands.Category;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
 import java.io.IOException;
 
 @Command(
-        id = 15,
         aliases = {"game", "gamelookup"},
         usage = "(game name)",
-        description = "Look up information about a game.",
+        description = "Look up information about a game."
+)
+@BotInfo(
+        id = 15,
         category = Category.MEDIA
 )
 public class GameLookupCommand extends CommandExecutor {

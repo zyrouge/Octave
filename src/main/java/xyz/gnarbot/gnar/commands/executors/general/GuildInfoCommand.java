@@ -4,18 +4,21 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.lang3.StringUtils;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.utils.Utils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 @Command(
-        id = 16,
         aliases = {"guild", "server"},
         description = "Get information this guild."
+)
+@BotInfo(
+        id = 16
 )
 public class GuildInfoCommand extends CommandExecutor {
     @Override

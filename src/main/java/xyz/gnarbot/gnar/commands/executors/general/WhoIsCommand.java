@@ -3,19 +3,22 @@ package xyz.gnarbot.gnar.commands.executors.general;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.lang3.StringUtils;
+import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.parser.Parsers;
-import xyz.gnarbot.gnar.utils.Context;
 
 import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 @Command(
-        id = 22,
         aliases = {"user", "whois", "who"},
         usage = "[user]",
         description = "Get information on a user."
+)
+@BotInfo(
+        id = 22
 )
 public class WhoIsCommand extends CommandExecutor {
     @Override

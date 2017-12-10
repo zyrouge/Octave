@@ -1,26 +1,25 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.commands.template.annotations.Name
 import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
 import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
-import xyz.gnarbot.gnar.utils.Context
 import java.util.*
 
 @Command(
-        id = 54,
-        aliases = arrayOf("commands", "cmd", "command", "cmds"),
+        aliases = ["commands", "cmd", "command", "cmds"],
         usage = "(enable|disable|toggle) (specific|category) (_command|category) ...",
-        description = "Manage the usage of commands.",
+        description = "Manage the usage of commands."
+)
+@BotInfo(
+        id = 54,
         toggleable = false,
         category = Category.SETTINGS,
-        permissions = arrayOf(Permission.MANAGE_SERVER)
+        permissions = [Permission.MANAGE_SERVER]
 )
 class ManageCommandsCommand : CommandTemplate() {
     @Description("Completely disable or enable a command.")
@@ -62,12 +61,12 @@ class ManageCommandsCommand : CommandTemplate() {
         //      create or inherit options and create an empty list for scope
         // enable entity ?
         //      create or inherit options and subtract entity from parent scope
-        val options = context.data.command.options[cmd.info.id]
+        val options = context.data.command.options[cmd.botInfo.id]
         if (options == null || scope.rawTransform(options) == null) {
-            val desyncString = "\u26A0De-synced from the category option `${cmd.info.category.title}`."
+            val desyncString = "\u26A0De-synced from the category option `${cmd.botInfo.category.title}`."
 
             if (entity == "*") {
-                options(context, cmd.info.category) { categoryOptions ->
+                options(context, cmd.botInfo.category) { categoryOptions ->
                     val list = scope.rawTransform(categoryOptions)
                     if (list == null || list.isEmpty()) {
                         context.send().error("`${cmd.info.aliases[0]}` is not disabled for any ${scope.name.toLowerCase()}.").queue()
@@ -75,7 +74,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
 
                     (options?.copy() ?: CommandOptions()).let {
-                        context.data.command.options.put(cmd.info.id, it)
+                        context.data.command.options.put(cmd.botInfo.id, it)
                         scope.transform(it)
                     }
                     context.data.save()
@@ -89,7 +88,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 val all = HashSet<String>()
-                options(context, cmd.info.category) { all.addAll(scope.transform(it)) }
+                options(context, cmd.botInfo.category) { all.addAll(scope.transform(it)) }
 
                 if (!all.remove(item)) {
                     context.send().error("`${cmd.info.aliases[0]}` is not disabled for $itemDisplay.").queue()
@@ -97,7 +96,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
 
                 (options?.copy() ?: CommandOptions()).let {
-                    context.data.command.options.put(cmd.info.id, it)
+                    context.data.command.options.put(cmd.botInfo.id, it)
                     scope.transform(it).addAll(all)
                 }
                 context.data.save()
@@ -135,12 +134,12 @@ class ManageCommandsCommand : CommandTemplate() {
     fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope,
                          @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
     ) {
-        val options = context.data.command.options[cmd.info.id]
+        val options = context.data.command.options[cmd.botInfo.id]
         if (options == null || scope.rawTransform(options) == null) {
-            val desyncString = "\u26A0De-synced from the category option `${cmd.info.category.title}`."
+            val desyncString = "\u26A0De-synced from the category option `${cmd.botInfo.category.title}`."
 
             if (entity == "*") {
-                options(context, cmd.info.category) { categoryOptions ->
+                options(context, cmd.botInfo.category) { categoryOptions ->
                     val set = HashSet(scope.rawTransform(categoryOptions) ?: Collections.emptySet())
                     val all = scope.all(context)
 
@@ -150,7 +149,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
 
                     (options?.copy() ?: CommandOptions()).let {
-                        context.data.command.options.put(cmd.info.id, it)
+                        context.data.command.options.put(cmd.botInfo.id, it)
                         scope.transform(it).addAll(set)
                     }
                     context.data.save()
@@ -164,7 +163,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
                 val all = HashSet<String>()
-                options(context, cmd.info.category) { all.addAll(scope.transform(it)) }
+                options(context, cmd.botInfo.category) { all.addAll(scope.transform(it)) }
 
                 if (!all.add(item)) {
                     context.send().error("`${cmd.info.aliases[0]}` is already disabled for $itemDisplay.").queue()
@@ -172,7 +171,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
 
                 (options?.copy() ?: CommandOptions()).let {
-                    context.data.command.options.put(cmd.info.id, it)
+                    context.data.command.options.put(cmd.botInfo.id, it)
                     scope.transform(it).addAll(all)
                 }
                 context.data.save()
@@ -210,9 +209,9 @@ class ManageCommandsCommand : CommandTemplate() {
 
     @Description(value = "Show the options of the command.")
     fun options_specific(context: Context, cmd: CommandExecutor) {
-        val options = context.data.command.let { CommandOptionsOverride(it.options[cmd.info.id], it.categoryOptions[cmd.info.category.ordinal]) }
+        val options = context.data.command.let { CommandOptionsOverride(it.options[cmd.botInfo.id], it.categoryOptions[cmd.botInfo.category.ordinal]) }
 
-        val inheritString = "\uD83D\uDD01 Synced with the options from the command category `${cmd.info.category.title}`.\n"
+        val inheritString = "\uD83D\uDD01 Synced with the options from the command category `${cmd.botInfo.category.title}`.\n"
 
         context.send().embed("Command Management") {
             field("Toggle") {
@@ -389,7 +388,7 @@ class ManageCommandsCommand : CommandTemplate() {
 
     @Description("Clear all options for a command (will re-sync to category options).")
     fun clear_specific(context: Context, cmd: CommandExecutor) {
-        clear(context, context.data.command.options, cmd.info.id, "category", cmd.info.aliases[0])
+        clear(context, context.data.command.options, cmd.botInfo.id, "category", cmd.info.aliases[0])
     }
 
     @Description("Clear all options for a category.")
@@ -468,9 +467,9 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     private inline fun options(context: Context, cmd: CommandExecutor, block: (CommandOptions) -> Unit) {
-        cmd.info.let {
+        cmd.botInfo.let {
             if (!it.toggleable) {
-                context.send().error("`${it.aliases[0]}` can not be toggled.").queue()
+                context.send().error("`${cmd.info.aliases[0]}` can not be toggled.").queue()
                 return
             }
 

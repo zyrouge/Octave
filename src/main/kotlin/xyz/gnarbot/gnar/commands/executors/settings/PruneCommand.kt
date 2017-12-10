@@ -2,21 +2,19 @@ package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.commands.Scope
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 import java.time.OffsetDateTime
 
 @Command(
-        id = 57,
         aliases = ["prune", "purge", "delmessages", "delmsgs"],
         usage = "(2-100)",
-        description = "Delete up to 100 messages.",
+        description = "Delete up to 100 messages."
+)
+@BotInfo(
+        id = 57,
         category = Category.SETTINGS,
         scope = Scope.TEXT,
-        permissions = [Permission.MESSAGE_MANAGE]
+        permissions = [Permission.MANAGE_SERVER]
 )
 class PruneCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

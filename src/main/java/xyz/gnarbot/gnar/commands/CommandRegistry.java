@@ -11,7 +11,6 @@ import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
 import xyz.gnarbot.gnar.commands.executors.music.*;
-import xyz.gnarbot.gnar.commands.executors.music.dj.ForceSkipCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.executors.music.dj.StopCommand;
 import xyz.gnarbot.gnar.commands.executors.music.search.DiscordFMCommand;
@@ -133,7 +132,6 @@ public class CommandRegistry {
             register(new SkipCommand());
             register(new RemoveCommand());
             register(new MoveCommand());
-            register(new ForceSkipCommand());
             register(new ShuffleCommand());
             register(new NowPlayingCommand());
             register(new QueueCommand());
@@ -161,10 +159,10 @@ public class CommandRegistry {
             throw new IllegalStateException("@Command annotation not found for class: " + cls.getName());
         }
 
-        if (idSet.contains(cmd.getInfo().id())) {
+        if (idSet.contains(cmd.getBotInfo().id())) {
             throw new IllegalStateException("@Command duplicate ID for class: " + cls.getName());
         } else {
-            idSet.add(cmd.getInfo().id());
+            idSet.add(cmd.getBotInfo().id());
         }
 
         for (String alias : cmd.getInfo().aliases()) {

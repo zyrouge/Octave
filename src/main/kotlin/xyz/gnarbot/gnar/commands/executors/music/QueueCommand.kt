@@ -2,17 +2,16 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import com.jagrosh.jdautilities.paginator
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.TrackContext
-import xyz.gnarbot.gnar.utils.Context
 import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
-        id = 69,
         aliases = ["queue", "list"],
-        description = "Shows the music that's currently queued.",
+        description = "Shows the music that's currently queued."
+)
+@BotInfo(
+        id = 69,
         category = Category.MUSIC
 )
 class QueueCommand : CommandExecutor() {

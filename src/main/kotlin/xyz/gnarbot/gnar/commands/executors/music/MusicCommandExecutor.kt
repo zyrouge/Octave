@@ -2,8 +2,8 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.CommandExecutor
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 
 abstract class MusicCommandExecutor(private val sameChannel: Boolean, private val requirePlayingTrack: Boolean) : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

@@ -2,15 +2,14 @@ package xyz.gnarbot.gnar.commands.executors.admin
 
 import com.google.common.collect.Lists
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.CommandExecutor
-import xyz.gnarbot.gnar.utils.Context
+import xyz.gnarbot.gnar.commands.*
 
 @Command(
-        id = 34,
         aliases = ["emotes", "emotesList"],
-        description = "Get all of the custom emotes the bot has access to",
+        description = "Get all of the custom emotes the bot has access to"
+)
+@BotInfo(
+        id = 34,
         category = Category.NONE,
         admin = true
 )

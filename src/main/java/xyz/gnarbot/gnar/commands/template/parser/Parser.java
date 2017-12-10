@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.template.parser;
 
-import xyz.gnarbot.gnar.utils.Context;
+import xyz.gnarbot.gnar.commands.Context;
 
 import javax.annotation.Nullable;
 import java.util.function.BiFunction;

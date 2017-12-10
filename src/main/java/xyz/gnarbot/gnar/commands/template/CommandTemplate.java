@@ -2,11 +2,11 @@ package xyz.gnarbot.gnar.commands.template;
 
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
+import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.commands.template.annotations.Name;
 import xyz.gnarbot.gnar.commands.template.parser.Parser;
 import xyz.gnarbot.gnar.commands.template.parser.Parsers;
-import xyz.gnarbot.gnar.utils.Context;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;

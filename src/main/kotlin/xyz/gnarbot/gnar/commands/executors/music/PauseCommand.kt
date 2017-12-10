@@ -1,15 +1,14 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.commands.Category
-import xyz.gnarbot.gnar.commands.Command
-import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 68,
         aliases = ["pause"],
-        description = "Pause or resume the music player.",
+        description = "Pause or resume the music player."
+)
+@BotInfo(
+        id = 68,
         category = Category.MUSIC,
         scope = Scope.VOICE
 )

@@ -2,17 +2,20 @@ package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
+import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.Context
 
 @Command(
-        id = 56,
         aliases = ["prefix"],
         usage = "(set|reset) [string]",
-        description = "Set the bot prefix for the server.",
+        description = "Set the bot prefix for the server."
+)
+@BotInfo(
+        id = 56,
         category = Category.SETTINGS,
         permissions = [Permission.MANAGE_SERVER]
 )
