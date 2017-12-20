@@ -125,7 +125,7 @@ class Selector(waiter: EventWaiter,
             }
             Type.MESSAGE -> {
                 waiter.waitFor(GuildMessageReceivedEvent::class.java) {
-                    val content = it.message.content
+                    val content = it.message.contentDisplay
                     if (content == "cancel") {
                         finally(message)
                         return@waitFor
@@ -143,12 +143,12 @@ class Selector(waiter: EventWaiter,
                             false
                         }
                         else -> {
-                            val content = it.message.content
+                            val content = it.message.contentDisplay
                             if (content == "cancel") {
                                 true
                             } else {
                                 val value = content.toIntOrNull() ?: return@predicate false
-                                value in 0..options.size - 1
+                                value in 0 until options.size
                             }
                         }
                     }

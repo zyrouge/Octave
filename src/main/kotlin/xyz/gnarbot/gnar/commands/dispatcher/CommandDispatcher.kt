@@ -31,7 +31,7 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
             return
         }
 
-        val content = context.message.rawContent.let {
+        val content = context.message.contentRaw.let {
             when {
                 it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)

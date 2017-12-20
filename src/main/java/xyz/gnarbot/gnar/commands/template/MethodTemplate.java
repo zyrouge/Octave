@@ -78,7 +78,7 @@ public class MethodTemplate implements Template {
             EmbedMaker eb = new EmbedMaker();
 
             eb.setTitle("Insufficient Arguments");
-            eb.setDescription("Insufficient number of arguments, required:\n`" + requirements() + "`.");
+            eb.setDesc("Insufficient number of arguments, required:\n`" + requirements() + "`.");
 
             StringBuilder builder = new StringBuilder(parsers.length * 16);
             for (Parser parser : parsers) {

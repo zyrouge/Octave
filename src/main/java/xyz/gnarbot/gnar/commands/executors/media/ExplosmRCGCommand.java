@@ -28,7 +28,7 @@ public class ExplosmRCGCommand extends CommandExecutor {
             String logo = "http://explosm.net/img/logo.png";
 
             context.send().embed("Cyanide and Happiness")
-                    .setDescription("**Random Comic Generator**")
+                    .setDesc("**Random Comic Generator**")
                     .setImage(url)
                     .setThumbnail(logo)
                     .action().queue();

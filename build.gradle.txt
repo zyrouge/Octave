@@ -3,12 +3,12 @@ plugins {
     id 'idea'
     id 'application'
 //    id 'com.sedmelluq.jdaction' version '1.0.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.2.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.10'
     id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
 
 group 'xyz.gnarbot'
-version '4.8.4'
+version '4.8.5'
 
 mainClassName = 'xyz.gnarbot.gnar.Bot'
 
@@ -32,7 +32,7 @@ dependencies {
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.3.1_307'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.3.1_316'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.44'
 
@@ -69,7 +69,7 @@ dependencies {
     compile group: 'com.github.taycaldwell', name: 'riot-api-java', version: '4.0.1'
 
     // Test dependencies
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.2.0'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.2.10'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

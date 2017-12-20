@@ -34,7 +34,7 @@ public class QuoteCommand extends CommandExecutor {
             context.getMessage().getChannel().getMessageById(id).queue(msg ->
                     _targetChannel.sendMessage(new EmbedBuilder()
                             .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
-                            .setDescription(msg.getContent())
+                            .setDescription(msg.getContentDisplay())
                             .build()
                     ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
         }

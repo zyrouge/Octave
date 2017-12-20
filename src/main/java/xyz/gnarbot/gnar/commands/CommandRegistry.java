@@ -44,7 +44,7 @@ public class CommandRegistry {
         register(new KaiperCommand());
         register(new MathCommand());
         register(new RemindMeCommand());
-        register(new GoogleCommand());
+//        register(new GoogleCommand());
         register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());

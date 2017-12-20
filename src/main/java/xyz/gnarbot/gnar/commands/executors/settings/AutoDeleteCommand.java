@@ -20,14 +20,14 @@ public class AutoDeleteCommand extends CommandExecutor {
             context.getData().save();
 
             context.send().embed("Auto-Delete")
-                    .setDescription("The bot will no longer automatically delete messages after 10 seconds.")
+                    .setDesc("The bot will no longer automatically delete messages after 10 seconds.")
                     .action().queue();
         } else {
             context.getData().getCommand().setAutoDelete(true);
             context.getData().save();
 
             context.send().embed("Auto-Delete")
-                    .setDescription("The bot will now delete messages after 10 seconds.")
+                    .setDesc("The bot will now delete messages after 10 seconds.")
                     .action().queue();
         }
     }

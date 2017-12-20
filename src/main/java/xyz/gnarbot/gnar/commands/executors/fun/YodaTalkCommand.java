@@ -60,7 +60,7 @@ public class YodaTalkCommand extends CommandExecutor {
                     if (body == null) return;
 
                     context.send().embed()
-                            .setDescription(body.string())
+                            .setDesc(body.string())
                             .setThumbnail("https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png")
                             .action().queue();
 

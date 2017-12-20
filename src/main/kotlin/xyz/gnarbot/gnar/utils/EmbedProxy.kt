@@ -17,11 +17,11 @@ abstract class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
     }
 
     inline fun description(value: () -> Any?): T {
-        setDescription(value().toString())
+        setDesc(value().toString())
         return this as T
     }
 
-    override fun setDescription(description: CharSequence?): T {
+    fun setDesc(description: CharSequence?): T {
         super.setDescription(description)
         return this as T
     }
