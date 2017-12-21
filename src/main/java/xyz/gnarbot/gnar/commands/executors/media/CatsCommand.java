@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media;
 
 import org.w3c.dom.Document;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,7 +19,7 @@ public class CatsCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         try {
-            String apiKey = Bot.KEYS.getCat();
+            String apiKey = context.getBot().getCredentials().getCat();
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

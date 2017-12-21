@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
@@ -25,14 +24,14 @@ import java.io.IOException;
 public class GameLookupCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        String mashape = Bot.KEYS.getMashape();
+        String mashape = context.getBot().getCredentials().getMashape();
         if (mashape == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
 
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

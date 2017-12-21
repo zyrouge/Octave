@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import java.time.OffsetDateTime
 
@@ -24,7 +23,7 @@ class PruneCommand : CommandExecutor() {
         }
 
         if (args.isEmpty()) {
-            Bot.getCommandDispatcher().sendHelp(context, info)
+            context.bot.commandDispatcher.sendHelp(context, info)
             return
         }
 

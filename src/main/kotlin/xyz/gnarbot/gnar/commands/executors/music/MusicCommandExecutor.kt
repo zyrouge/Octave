@@ -1,13 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.music.MusicManager
 
 abstract class MusicCommandExecutor(private val sameChannel: Boolean, private val requirePlayingTrack: Boolean) : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        val manager = Bot.getPlayers().getExisting(context.guild)
+        val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
@@ -20,7 +19,7 @@ abstract class MusicCommandExecutor(private val sameChannel: Boolean, private va
         }
 
         if (sameChannel && context.voiceChannel != botChannel) {
-            context.send().error("You're not in the same channel as the bot.").queue()
+            context.send().error("You're not in the same channel as the context.bot.").queue()
             return
         }
 

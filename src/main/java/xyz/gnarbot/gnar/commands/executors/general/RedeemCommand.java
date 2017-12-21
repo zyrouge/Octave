@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -27,13 +26,13 @@ public class RedeemCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 
         String id = args[0];
 
-        PremiumKey key = Bot.db().getPremiumKey(id);
+        PremiumKey key = context.getBot().db().getPremiumKey(id);
 
         if (key != null) {
             if (key.getRedeemer() != null) {

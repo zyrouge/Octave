@@ -1,10 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
 import com.jagrosh.jdautilities.selector
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
-
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
@@ -23,7 +21,7 @@ import java.awt.Color
 )
 class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        if (!Bot.CONFIG.searchEnabled) {
+        if (!context.bot.configuration.searchEnabled) {
             context.send().error("Search is currently disabled. Try direct links instead.").queue()
             return
         }
@@ -44,7 +42,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             val botChannel = context.selfMember.voiceState.channel
             val userChannel = context.guild.getMember(context.message.author).voiceState.channel
 
-            if (!Bot.CONFIG.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
+            if (!context.bot.configuration.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("YouTube Results", "https://www.youtube.com", "https://www.youtube.com/favicon.ico")
                     thumbnail { "https://gnarbot.xyz/assets/img/youtube.png" }
@@ -69,7 +67,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                 }.action().queue()
                 return@search
             } else {
-                Bot.getWaiter().selector {
+                context.bot.eventWaiter.selector {
                     title { "YouTube Results" }
                     desc  { "Select one of the following options to play them in your current music channel." }
                     color { Color(141, 20, 0) }
@@ -80,7 +78,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                         addOption("`${Utils.getTimestamp(result.info.length)}` **[${result.info.embedTitle}](${result.info.uri})**") {
                             if (context.member.voiceState.inVoiceChannel()) {
                                 val manager = try {
-                                    Bot.getPlayers().get(context.guild)
+                                    context.bot.players.get(context.guild)
                                 } catch (e: MusicLimitException) {
                                     e.sendToContext(context)
                                     return@addOption

@@ -7,11 +7,10 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
-
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.*
 
-class TrackScheduler(private val manager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
+class TrackScheduler(private val bot: Bot, private val manager: MusicManager, private val player: AudioPlayer) : AudioEventAdapter() {
     val queue: Queue<AudioTrack> = LinkedList<AudioTrack>()
     var repeatOption = RepeatOption.NONE
     var lastTrack: AudioTrack? = null
@@ -46,7 +45,7 @@ class TrackScheduler(private val manager: MusicManager, private val player: Audi
         player.startTrack(track, false)
 
         // fixme DI point
-        if (Bot.getOptions().ofGuild(manager.guild).music.announce) {
+        if (bot.options.ofGuild(manager.guild).music.announce) {
             announceNext(track)
         }
     }

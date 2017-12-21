@@ -28,7 +28,7 @@ import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
+class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
     companion object {
         val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
             it.registerSourceManager(YoutubeAudioSourceManager().apply {
@@ -78,11 +78,11 @@ class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
         // fixme DI point
-        it.volume = Bot.getOptions().ofGuild(guild).music.volume
+        it.volume = bot.options.ofGuild(guild).music.volume
     }
 
     /**  @return Track scheduler for the player.*/
-    val scheduler: TrackScheduler = TrackScheduler(this, player).also(player::addListener)
+    val scheduler: TrackScheduler = TrackScheduler(bot, this, player).also(player::addListener)
 
     /** @return Wrapper around AudioPlayer to use it as an AudioSendHandler. */
     private val sendHandler: AudioPlayerSendHandler = AudioPlayerSendHandler(player)
@@ -117,7 +117,7 @@ class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
 
     fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
         when {
-            !Bot.CONFIG.musicEnabled -> {
+            !bot.configuration.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
                 playerRegistry.destroy(guild)
                 return false
@@ -206,14 +206,14 @@ class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
                     }
                 }
 
-                if (scheduler.queue.size >= Bot.CONFIG.queueLimit) {
-                    context.send().error("The queue can not exceed ${Bot.CONFIG.queueLimit} songs.").queue()
+                if (scheduler.queue.size >= bot.configuration.queueLimit) {
+                    context.send().error("The queue can not exceed ${bot.configuration.queueLimit} songs.").queue()
                     return
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    if (track.duration > Bot.CONFIG.durationLimit.toMillis()) {
-                        context.send().error("The track can not exceed ${Bot.CONFIG.durationLimitText}.").queue()
+                    if (track.duration > bot.configuration.durationLimit.toMillis()) {
+                        context.send().error("The track can not exceed ${bot.configuration.durationLimitText}.").queue()
                         return
                     }
                 }
@@ -255,7 +255,7 @@ class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
 
                 var added = 0
                 for (track in tracks) {
-                    if (scheduler.queue.size + 1 >= Bot.CONFIG.queueLimit) {
+                    if (scheduler.queue.size + 1 >= bot.configuration.queueLimit) {
                         ignored = tracks.size - added
                         break
                     }
@@ -271,7 +271,7 @@ class MusicManager(val guild: Guild, val playerRegistry: PlayerRegistry) {
                         buildString {
                             append("Added `$added` tracks to queue from playlist `${playlist.name}`.\n")
                             if (ignored > 0) {
-                                append("Ignored `$ignored` songs as the queue can not exceed `${Bot.CONFIG.queueLimit}` songs.")
+                                append("Ignored `$ignored` songs as the queue can not exceed `${bot.configuration.queueLimit}` songs.")
                             }
                         }
                     }

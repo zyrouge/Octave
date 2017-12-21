@@ -6,7 +6,6 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import org.json.JSONTokener
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.HttpUtils
 import java.awt.Color
@@ -26,7 +25,7 @@ class OverwatchLookupCommand : CommandExecutor() {
 
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            Bot.getCommandDispatcher().sendHelp(context, info)
+            context.bot.commandDispatcher.sendHelp(context, info)
             return
         }
 

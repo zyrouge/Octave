@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -19,7 +18,7 @@ import java.util.concurrent.TimeUnit
 class RemindMeCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.size < 3) {
-            Bot.getCommandDispatcher().sendHelp(context, info)
+            context.bot.commandDispatcher.sendHelp(context, info)
             return
         }
 

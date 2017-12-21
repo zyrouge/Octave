@@ -1,9 +1,9 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import net.dv8tion.jda.core.entities.Icon
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import java.net.URL
+import kotlin.use
 import kotlin.io.use as doNotUse
 
 @Command(
@@ -18,7 +18,7 @@ class UpdateBotAvatarCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (!args.isEmpty()) {
             URL(args.joinToString(" ")).openStream().use {
-                Bot.getShards()[0].jda.selfUser.manager.setAvatar(Icon.from(it)).queue()
+                context.bot.shardManager.shards[0].selfUser.manager.setAvatar(Icon.from(it)).queue()
             }
         }
     }

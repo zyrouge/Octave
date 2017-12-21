@@ -44,10 +44,10 @@ dependencies {
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.2'
 
-    // Custom language
-    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Interpreter', version: '1.1.0'
-    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-AST', version: '1.1.0'
-    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Runtime-Lib', version: '1.1.0'
+//    // Custom language
+//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Interpreter', version: '1.1.0'
+//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-AST', version: '1.1.0'
+//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Runtime-Lib', version: '1.1.0'
 
     // Math
     compile group: 'xyz.avarel', name: 'aljava', version: '0.0.3'

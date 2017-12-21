@@ -6,7 +6,6 @@ import ninja.leaping.configurate.ConfigurationNode
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-@Suppress("NOTHING_TO_INLINE")
 inline operator fun ConfigurationNode.get(vararg nodes: Any) : ConfigurationNode {
     return this.getNode(*nodes)
 }

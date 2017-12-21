@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.general;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
@@ -20,7 +19,7 @@ public class QuoteCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

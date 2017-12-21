@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.fun;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 
 @Command(
@@ -21,7 +20,7 @@ public class TextToSpeechCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

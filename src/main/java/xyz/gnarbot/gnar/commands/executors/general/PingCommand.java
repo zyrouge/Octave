@@ -19,6 +19,7 @@ public class PingCommand extends CommandExecutor {
 
         context.getTextChannel().sendTyping().queue(ignored -> {
             long ping = System.currentTimeMillis() - time;
+            // TODO add average ping for shards
             context.getTextChannel().sendMessageFormat("**REST**: %d ms\n**Websocket**: %d ms", ping, context.getJDA().getPing()).queue();
         });
     }

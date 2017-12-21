@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.LoadState;
 import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.music.MusicManager;
@@ -21,9 +20,15 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class BotListener extends ListenerAdapter {
+    private final Bot bot;
+
+    public BotListener(Bot bot) {
+        this.bot = bot;
+    }
+
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        if (Bot.STATE == LoadState.COMPLETE) {
+        if (bot.isLoaded()) {
             if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
                 return;
             }
@@ -34,24 +39,24 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (Bot.STATE == LoadState.COMPLETE) {
+        if (bot.isLoaded()) {
             if (event.getAuthor().isBot()) {
                 if (event.getAuthor() == event.getJDA().getSelfUser()) {
-                    if (Bot.getOptions().ofGuild(event.getGuild()).getCommand().isAutoDelete()) {
+                    if (bot.getOptions().ofGuild(event.getGuild()).getCommand().isAutoDelete()) {
                         event.getMessage().delete().queueAfter(10, TimeUnit.SECONDS);
                     }
                 }
                 return;
             }
 
-            Bot.getCommandDispatcher().handle(new Context(event));
+            bot.getCommandDispatcher().handle(new Context(bot, event));
         }
     }
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        if (Bot.STATE == LoadState.COMPLETE) {
-            GuildData options = Bot.getOptions().ofGuild(event.getGuild());
+        if (bot.isLoaded()) {
+            GuildData options = bot.getOptions().ofGuild(event.getGuild());
 
             // Autorole
             if (options.getRoles().getAutoRole() != null) {
@@ -78,8 +83,8 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        if (Bot.STATE == LoadState.COMPLETE) {
-            Bot.getPlayers().destroy(event.getGuild());
+        if (bot.isLoaded()) {
+            bot.getPlayers().destroy(event.getGuild());
             Bot.LOG.info("❌ Left `" + event.getGuild().getName() + "`");
         }
     }
@@ -91,26 +96,26 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onResume(ResumedEvent event) {
-        Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has resumed.");
+        Bot.LOG.info("JDA " + event.getJDA().getShardInfo().getShardId() + " has resumed.");
     }
 
     @Override
     public void onReconnect(ReconnectedEvent event) {
-        Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has reconnected.");
+        Bot.LOG.info("JDA " + event.getJDA().getShardInfo().getShardId() + " has reconnected.");
     }
 
     @Override
     public void onDisconnect(DisconnectEvent event) {
         if (event.isClosedByServer()) {
-            Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has disconnected (closed by server). "
+            Bot.LOG.info("JDA " + event.getJDA().getShardInfo().getShardId() + " has disconnected (closed by server). "
                     + "Code: " + event.getServiceCloseFrame().getCloseCode() + " "  + event.getCloseCode());
         } else {
-            Bot.LOG.info("JDA " + Bot.getShard(event.getJDA()).getId() + " has disconnected. "
+            Bot.LOG.info("JDA " + event.getJDA().getShardInfo().getShardId() + " has disconnected. "
                     + "Code: " + event.getClientCloseFrame().getCloseCode() + " " + event.getClientCloseFrame().getCloseReason());
         }
 
         // Clean up all of the MusicManagers associated with that shard.
-        Iterator<Map.Entry<Long, MusicManager>> iterator = Bot.getPlayers().getRegistry().entrySet().iterator();
+        Iterator<Map.Entry<Long, MusicManager>> iterator = bot.getPlayers().getRegistry().entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Long, MusicManager> entry = iterator.next();
             if (entry.getValue() == null) {

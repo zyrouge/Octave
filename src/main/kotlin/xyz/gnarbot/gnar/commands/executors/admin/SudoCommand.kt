@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 
 @Command(
@@ -19,7 +18,7 @@ class SudoCommand : CommandExecutor() {
             return
         }
 
-        val cmd = Bot.getCommandRegistry().getCommand(args[0])
+        val cmd = context.bot.commandRegistry.getCommand(args[0])
 
         if (cmd == null) {
             context.send().error("Not a valid command.").queue()

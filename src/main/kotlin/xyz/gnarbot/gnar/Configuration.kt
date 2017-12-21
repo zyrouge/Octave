@@ -8,8 +8,7 @@ import java.io.File
 import java.time.Duration
 import kotlin.jvm.JvmField as Field
 
-
-class BotConfiguration(file: File) {
+class Configuration(file: File) {
     private val loader = HoconConfigurationLoader.builder().setFile(file).build()
 
     private var config = loader.load()

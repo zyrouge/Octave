@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
@@ -20,7 +19,7 @@ import java.time.Duration
 class JumpCommand : CommandTemplate() {
     @Description("Set the time marker of the player.")
     fun to(context: Context, duration: Duration) {
-        val manager = Bot.getPlayers().getExisting(context.guild)!!
+        val manager = context.bot.players.getExisting(context.guild)!!
 
         manager.player.playingTrack.position = duration.toMillis().coerceIn(0, manager.player.playingTrack.duration)
 
@@ -31,7 +30,7 @@ class JumpCommand : CommandTemplate() {
 
     @Description("Move the time marker forward.")
     fun forward(context: Context, duration: Duration) {
-        val manager = Bot.getPlayers().getExisting(context.guild)!!
+        val manager = context.bot.players.getExisting(context.guild)!!
 
         manager.player.playingTrack.position = (manager.player.playingTrack.position + duration.toMillis())
                 .coerceIn(0, manager.player.playingTrack.duration)
@@ -43,7 +42,7 @@ class JumpCommand : CommandTemplate() {
 
     @Description("Move the time marker backward.")
     fun backward(context: Context, duration: Duration) {
-        val manager = Bot.getPlayers().getExisting(context.guild)!!
+        val manager = context.bot.players.getExisting(context.guild)!!
 
         manager.player.playingTrack.position = (manager.player.playingTrack.position - duration.toMillis())
                 .coerceIn(0, manager.player.playingTrack.duration)
@@ -54,7 +53,7 @@ class JumpCommand : CommandTemplate() {
     }
 
     override fun execute(context: Context, label: String, args: Array<out String>) {
-        val manager = Bot.getPlayers().getExisting(context.guild)
+        val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
             context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
@@ -67,7 +66,7 @@ class JumpCommand : CommandTemplate() {
         }
 
         if (context.voiceChannel != botChannel) {
-            context.send().error("You're not in the same channel as the bot.").queue()
+            context.send().error("You're not in the same channel as the context.bot.").queue()
             return
         }
 

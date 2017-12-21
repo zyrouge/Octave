@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 
 import java.util.HashMap;
@@ -35,7 +34,7 @@ public class LeetifyCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

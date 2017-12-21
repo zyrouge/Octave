@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.media
 
 import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import java.io.IOException
 
@@ -18,7 +17,7 @@ import java.io.IOException
 class GoogleCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            Bot.getCommandDispatcher().sendHelp(context, info)
+            context.bot.commandDispatcher.sendHelp(context, info)
             return
         }
 

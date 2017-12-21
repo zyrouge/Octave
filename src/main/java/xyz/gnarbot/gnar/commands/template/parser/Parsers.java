@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.commands.template.annotations.Name;
@@ -92,10 +92,10 @@ public class Parsers {
     });
 
     public static final Parser<CommandExecutor> COMMAND = new Parser<>("_command", "Command label", (c, s) -> {
-        if (s.startsWith(Bot.CONFIG.getPrefix())) {
-            return Bot.getCommandRegistry().getCommand(s.substring(Bot.CONFIG.getPrefix().length()));
+        if (s.startsWith(BotLoader.BOT.getConfiguration().getPrefix())) {
+            return BotLoader.BOT.getCommandRegistry().getCommand(s.substring(BotLoader.BOT.getConfiguration().getPrefix().length()));
         } else {
-            return Bot.getCommandRegistry().getCommand(s);
+            return BotLoader.BOT.getCommandRegistry().getCommand(s);
         }
     });
 

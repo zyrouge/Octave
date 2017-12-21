@@ -25,16 +25,15 @@ class Credentials(file: File) {
     val token = config["token"].string.takeIf { !it.isNullOrBlank() }
                 ?: error("Bot token can't be null or blank.")
 
-    val botShards = config["sharding", "total"].int.takeIf { it > 0 }
+    val totalShards = config["sharding", "total"].int.takeIf { it > 0 }
                 ?: error("Shard count total needs to be > 0")
     val shardStart = config["sharding", "start"].int.takeIf { it >= 0 }
                 ?: error("Shard start needs to be >= 0")
-    val shardEnd = config["sharding", "end"].int.takeIf { it in shardStart..botShards }
+    val shardEnd = config["sharding", "end"].int.takeIf { it in shardStart..totalShards }
                 ?: error("Shard end needs to be <= sharding.total")
-    val totalShards = shardEnd - shardStart
 
-    val webhookID: Long = config["webhook", "id"].long
-    val webhookToken: String? = config["webhook", "token"].string
+    val webHookID: Long = config["webhook", "id"].long
+    val webHookToken: String? = config["webhook", "token"].string
 
     val abal: String? = config["server counts", "abal"].string
     val carbonitex: String? = config["server counts", "carbonitex"].string

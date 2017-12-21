@@ -45,7 +45,7 @@
 //        try {
 //            ChatterBotSession session = sessions.computeIfAbsent(context.getGuild().getIdLong(), k -> {
 //                context.send().info("Pandora-Bot session created for the server.").queue();
-//                return bot.createSession();
+//                return context.getBot().createSession();
 //            });
 //
 //            String input = StringUtils.join(args, " ");

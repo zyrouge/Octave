@@ -1,11 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
-import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.Shard
 import xyz.gnarbot.gnar.commands.*
 
 @Command(
@@ -31,14 +28,11 @@ class RestartShardsCommand : CommandExecutor() {
                 }.action().queue()
 
                 launch(CommonPool) {
-                    for (shard in Bot.getShards()) {
-                        shard.revive()
-                        delay(5000)
-                    }
+                    context.bot.restart()
                 }
             }
             "dead" -> {
-                val deadShards = Bot.getShards().filter { it.jda.status != JDA.Status.CONNECTED }
+                val deadShards = context.bot.shardManager.shardCache.filter { it.status != JDA.Status.CONNECTED }
 
                 if (deadShards.isEmpty()) {
                     context.send().info("Every shard is connected.").queue()
@@ -47,14 +41,14 @@ class RestartShardsCommand : CommandExecutor() {
 
                 context.send().embed("Restarting Shards") {
                     desc {
-                        "Shards `${deadShards.map(Shard::id)}` are now restarting."
+                        "Shards `${deadShards.map { it.shardInfo.shardId }}` are now restarting."
                     }
                 }.action().queue()
 
-                deadShards.forEach(Shard::revive)
+                deadShards.map { it.shardInfo.shardId }.forEach { context.bot.shardManager.restart(it) }
             }
             else -> {
-                val id = args[0].toIntOrNull()?.coerceIn(0, Bot.getShards().size) ?: kotlin.run {
+                val id = args[0].toLongOrNull()?.coerceIn(0, context.bot.shardManager.shardCache.size())?.toInt() ?: kotlin.run {
                     context.send().error("You must enter a valid shard id.").queue()
                     return
                 }
@@ -65,7 +59,7 @@ class RestartShardsCommand : CommandExecutor() {
                     }
                 }.action().queue()
 
-                Bot.getShard(id).revive()
+                context.bot.shardManager.restart(id)
             }
         }
     }

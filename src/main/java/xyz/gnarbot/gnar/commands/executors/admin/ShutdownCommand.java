@@ -1,13 +1,12 @@
 package xyz.gnarbot.gnar.commands.executors.admin;
 
-import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.Shard;
+import net.dv8tion.jda.core.JDA;
 import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 
 @Command(
         aliases = "shutdown",
-        description = "Shutdown the bot."
+        description = "Shutdown the context.getBot()."
 )
 @BotInfo(
         id = 2,
@@ -18,13 +17,13 @@ public class ShutdownCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         try {
-            Bot.getPlayers().shutdown();
+            context.getBot().getPlayers().shutdown();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (Shard s : Bot.getShards()) {
-            s.getJda().shutdown();
+        for (JDA jda : context.getBot().getShardManager().getShardCache()) {
+            jda.shutdown();
         }
         DiscordLogBack.disable();
 

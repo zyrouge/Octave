@@ -6,7 +6,6 @@ import org.scilab.forge.jlatexmath.TeXFormula
 import xyz.avarel.aljava.TexElement
 import xyz.avarel.aljava.lexer.Lexer
 import xyz.avarel.aljava.parser.Parser
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -27,7 +26,7 @@ import javax.imageio.ImageIO
 class MathCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            Bot.getCommandDispatcher().sendHelp(context, info)
+            context.bot.commandDispatcher.sendHelp(context, info)
             return
         }
 

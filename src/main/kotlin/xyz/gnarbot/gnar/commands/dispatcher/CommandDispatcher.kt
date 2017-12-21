@@ -11,8 +11,8 @@ import xyz.gnarbot.gnar.commands.dispatcher.predicates.*
 import xyz.gnarbot.gnar.utils.Utils
 import java.util.concurrent.ExecutorService
 
-class CommandDispatcher(private val commandRegistry: CommandRegistry, private val executor: ExecutorService) {
-    private val namePrefix = "${Bot.CONFIG.name.toLowerCase()} "
+class CommandDispatcher(private val bot: Bot, private val commandRegistry: CommandRegistry, private val executor: ExecutorService) {
+    private val namePrefix = "${bot.configuration.name.toLowerCase()} "
 
     private val predicates = listOf(
             IgnoredPredicate(), // is the user ignored
@@ -33,7 +33,7 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
 
         val content = context.message.contentRaw.let {
             when {
-                it.startsWith(Bot.CONFIG.prefix) -> it.substring(Bot.CONFIG.prefix.length)
+                it.startsWith(bot.configuration.prefix) -> it.substring(bot.configuration.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {
                     val prefix = context.data.command.prefix
@@ -50,9 +50,7 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
         }
 
         executor.submit {
-            if (splitCommand(context, content)) {
-                context.shard.requests++
-            }
+            splitCommand(context, content)
         }
     }
 
@@ -97,6 +95,6 @@ class CommandDispatcher(private val commandRegistry: CommandRegistry, private va
     }
 
     fun sendHelp(context: Context, info: Command) {
-        Bot.getCommandRegistry().getCommand("help").execute(context, "help", arrayOf(info.aliases.first()))
+        bot.commandRegistry.getCommand("help").execute(context, "help", arrayOf(info.aliases.first()))
     }
 }

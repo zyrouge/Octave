@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.EmbedMaker;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
@@ -24,17 +23,17 @@ public class AnimeSearchCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 
-        if (!Bot.getMALAPI().isLogin()) {
+        if (!context.getBot().getMyAnimeListAPI().isLoggedIn()) {
             context.send().error("I've been disabled by our developers for now.").queue();
             return;
         }
 
         String query = StringUtils.join(args, " ");
-        JSONObject jso = Bot.getMALAPI().makeRequest(MyAnimeListAPI.SEARCH_ANIME, query);
+        JSONObject jso = context.getBot().getMyAnimeListAPI().makeRequest(MyAnimeListAPI.SEARCH_ANIME, query);
         if (jso == null) {
             context.send().error("API timed out. Try again in a bit.").queue();
             return;

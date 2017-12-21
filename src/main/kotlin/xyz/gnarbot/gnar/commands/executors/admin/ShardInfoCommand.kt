@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import com.google.common.collect.Lists
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import java.util.*
 
@@ -18,19 +17,18 @@ class ShardInfoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         context.send().text("```prolog\n ID |    STATUS |    PING | GUILDS |  USERS | REQUESTS |  VC\n```").queue()
 
-        Lists.partition(Bot.getShards().toList(), 20).forEach {
+        Lists.partition(context.bot.shardManager.shards, 20).forEach {
             val joiner = StringJoiner("\n", "```prolog\n", "```")
 
             it.forEach {
                 joiner.add(
-                        "%3d | %9.9s | %7.7s | %6d | %6d | %8d | %3d".format(
-                                it.id,
-                                it.jda.status,
-                                "${it.jda.ping}ms",
-                                it.jda.guildCache.size(),
-                                it.jda.userCache.size(),
-                                it.requests,
-                                Bot.getPlayers().registry.values.count { m -> m.guild.jda == it.jda }
+                        "%3d | %9.9s | %7.7s | %6d | %6d | ---- WIP | %3d".format(
+                                it.shardInfo.shardId,
+                                it.status,
+                                "${it.ping}ms",
+                                it.guildCache.size(),
+                                it.userCache.size(),
+                                context.bot.players.registry.values.count { m -> m.guild.jda == it }
                         )
                 )
             }

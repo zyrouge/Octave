@@ -27,7 +27,7 @@ class SettingsDelegateCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
             context.send().embed("Settings Commands") {
-                desc  { "Here are the available settings you can modify for the bot.\n" }
+                desc { "Here are the available settings you can modify for the context.bot.\n" }
                 field("Settings") {
                     buildString {
                         map.forEach { (name, cmd) ->

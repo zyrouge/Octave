@@ -5,9 +5,9 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.utils.DiscordFM
 
 class DiscordFMTrackContext(
+        private val bot: Bot,
         val station: String,
         requester: Long,
         requestedChannel: Long
@@ -18,7 +18,7 @@ class DiscordFMTrackContext(
     }
 
     fun nextDiscordFMTrack(musicManager: MusicManager, errorDepth: Int = 0) {
-        val randomSong = DiscordFM.getRandomSong(station) ?: return nextDiscordFMTrack(musicManager, errorDepth + 1)
+        val randomSong = bot.discordFM.getRandomSong(station) ?: return nextDiscordFMTrack(musicManager, errorDepth + 1)
 
         MusicManager.playerManager.loadItemOrdered(this, randomSong, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
@@ -32,13 +32,13 @@ class DiscordFMTrackContext(
 
             override fun noMatches() {
                 // Already confirmed that the list is empty.
-                Bot.getPlayers().destroy(musicManager.guild)
+                bot.players.destroy(musicManager.guild)
             }
 
             override fun loadFailed(exception: FriendlyException) {
                 if (errorDepth >= errorTolerance) {
                     // Already confirmed that the list is empty.
-                    Bot.getPlayers().destroy(musicManager.guild)
+                    bot.players.destroy(musicManager.guild)
                     return
                 } else {
                     nextDiscordFMTrack(musicManager, errorDepth + 1)

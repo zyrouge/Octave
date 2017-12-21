@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotLoader;
 
 import java.beans.ConstructorProperties;
 
@@ -51,11 +51,11 @@ public class PremiumKey implements ManagedObject {
 
     @Override
     public void save() {
-        Bot.db().savePremiumKey(this);
+        BotLoader.BOT.db().savePremiumKey(this);
     }
 
     @Override
     public void delete() {
-        Bot.db().deleteKey(id);
+        BotLoader.BOT.db().deleteKey(id);
     }
 }

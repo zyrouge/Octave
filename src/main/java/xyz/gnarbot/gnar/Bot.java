@@ -1,16 +1,19 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.requests.SessionReconnectQueue;
+import net.dv8tion.jda.core.utils.MiscUtil;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
+import net.rithms.riot.api.ApiConfig;
+import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.avarel.kaiper.interpreter.GlobalVisitorSettings;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
@@ -18,151 +21,158 @@ import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listener.VoiceListener;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
+import xyz.gnarbot.gnar.utils.CountUpdater;
 import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.DiscordLogBack;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.security.auth.login.LoginException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Supplier;
 
-/**
- * Main bot class.
- *
- * @author Avarel, Xevryll
- */
-public final class Bot {
+public class Bot {
     public static final Logger LOG = LoggerFactory.getLogger("Bot");
-    public static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor();
 
-    public static final Credentials KEYS = new Credentials(new File("credentials.conf"));
-    public static BotConfiguration CONFIG = new BotConfiguration(new File("bot.conf"));
+    private final Credentials credentials;
 
-    private static final MyAnimeListAPI malAPI = new MyAnimeListAPI(KEYS.getMalUsername(), KEYS.getMalPassword());
+    private final Supplier<Configuration> configurationGenerator;
+    private final Database database = new Database("bot");
+    private final OptionsRegistry optionsRegistry = new OptionsRegistry(this);
+    private final PlayerRegistry playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
+    private final MyAnimeListAPI myAnimeListAPI;
+    private final RiotApi riotApi;
+    private final DiscordFM discordFM = new DiscordFM(this);
+    private final CommandRegistry commandRegistry = new CommandRegistry(this);
+    private final CommandDispatcher commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
+    private final EventWaiter eventWaiter = new EventWaiter();
+    private final ShardManager shardManager;
+    private final CountUpdater countUpdater;
+    private Configuration configuration;
+    private boolean loadState;
 
-    private static final EventWaiter waiter = new EventWaiter();
+    public Bot(
+            Credentials credentials,
+            Supplier<Configuration> configurationGenerator
+    ) throws LoginException {
+        this.credentials = credentials;
 
-    private static final Database database = new Database("bot");
-    private static final OptionsRegistry optionsRegistry = new OptionsRegistry();
-    private static final PlayerRegistry playerRegistry = new PlayerRegistry(Executors.newSingleThreadScheduledExecutor());
-
-    private static final CommandRegistry commandRegistry = new CommandRegistry();
-    private static final CommandDispatcher commandDispatcher = new CommandDispatcher(commandRegistry, Executors.newWorkStealingPool());
-
-    private static final List<Shard> shards = new ArrayList<>(KEYS.getBotShards());
-
-    public static LoadState STATE = LoadState.LOADING;
-
-    public static void main(String[] args) throws InterruptedException {
-        DiscordFM.loadLibraries();
-
-        String token = KEYS.getWebhookToken();
-        if (token != null) {
-            DiscordLogBack.enable(new WebhookClientBuilder(KEYS.getWebhookID(), token).build());
-        }
-
-        // KAIPER settings
-        GlobalVisitorSettings.SIZE_LIMIT = 100;
-        GlobalVisitorSettings.RECURSION_DEPTH_LIMIT = 10;
-        GlobalVisitorSettings.ITERATION_LIMIT = 100;
-        GlobalVisitorSettings.MILLISECONDS_LIMIT = 5;
+        this.configurationGenerator = configurationGenerator;
+        reloadConfiguration();
 
         LOG.info("Initializing the Discord bot.");
 
-        LOG.info("Name  :\t" + CONFIG.getName());
-        LOG.info("Shards:\t" + KEYS.getBotShards());
-        LOG.info("Prefix:\t" + CONFIG.getPrefix());
-        LOG.info("Admins:\t" + CONFIG.getAdmins());
+        String token = this.credentials.getWebHookToken();
+        if (token != null) {
+            LOG.info("Connected to Discord web hook.");
+            DiscordLogBack.enable(new WebhookClientBuilder(this.credentials.getWebHookID(), token).build());
+        } else {
+            LOG.warn("Not connected to Discord web hook.");
+        }
+
+        LOG.info("Name  :\t" + configuration.getName());
+        LOG.info("Shards:\t" + this.credentials.getTotalShards());
+        LOG.info("Prefix:\t" + configuration.getPrefix());
+        LOG.info("Admins:\t" + configuration.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
-        SessionReconnectQueue srq = new SessionReconnectQueue();
-        BotListener botListener = new BotListener();
-        VoiceListener voiceListener = new VoiceListener();
+        shardManager = new DefaultShardManagerBuilder()
+                .setToken(credentials.getToken())
+                .setMaxReconnectDelay(32)
+                .setShardsTotal(credentials.getTotalShards())
+                .setShards(credentials.getShardStart(), credentials.getShardEnd())
+                .setAudioSendFactory(new NativeAudioSendFactory())
+                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
+                .setGameProvider(i -> Game.playing(String.format(configuration.getGame(), i)))
+                .setBulkDeleteSplittingEnabled(false)
+                .build();
 
-        for (int i = KEYS.getShardStart(); i < KEYS.getShardEnd(); i++) {
-            Shard shard = new Shard(i, srq, null, waiter, botListener, voiceListener);
-            shards.add(shard);
-            shard.buildAsync();
-            Thread.sleep(5000);
+        countUpdater = new CountUpdater(this, shardManager);
+
+        loadState = true;
+
+        myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
+
+        String riotApiKey = credentials.getRiotAPIKey();
+        ApiConfig apiConfig = new ApiConfig();
+        if (riotApiKey != null) {
+            apiConfig.setKey(riotApiKey);
         }
-
-        STATE = LoadState.COMPLETE;
-
-        for (Shard shard : shards) {
-            shard.getJda().getPresence().setGame(Game.playing(String.format(CONFIG.getGame(), shard.getId())));
-        }
+        riotApi = new RiotApi(new ApiConfig());
 
         LOG.info("The bot is now fully connected to Discord.");
     }
 
-    public static void reloadConfig() {
-        CONFIG = new BotConfiguration(new File("bot.conf"));
+    public void reloadConfiguration() {
+        configuration = configurationGenerator.get();
     }
 
-    public static MyAnimeListAPI getMALAPI() {
-        return malAPI;
+    public ShardManager getShardManager() {
+        return shardManager;
     }
 
-    public static Database db() {
+    public CountUpdater getCountUpdater() {
+        return countUpdater;
+    }
+
+    public Guild getGuildById(long id) {
+        return getJDA(MiscUtil.getShardForGuild(id, credentials.getTotalShards())).getGuildById(id);
+    }
+
+    public MyAnimeListAPI getMyAnimeListAPI() {
+        return myAnimeListAPI;
+    }
+
+    public DiscordFM getDiscordFM() {
+        return discordFM;
+    }
+
+    public Database db() {
         return database;
     }
 
-    public static CommandRegistry getCommandRegistry() {
+    public CommandRegistry getCommandRegistry() {
         return commandRegistry;
     }
 
-    public static CommandDispatcher getCommandDispatcher() {
+    public CommandDispatcher getCommandDispatcher() {
         return commandDispatcher;
     }
 
-    public static PlayerRegistry getPlayers() {
+    public PlayerRegistry getPlayers() {
         return playerRegistry;
     }
 
-    public static OptionsRegistry getOptions() {
+    public OptionsRegistry getOptions() {
         return optionsRegistry;
     }
 
-    public static EventWaiter getWaiter() {
-        return waiter;
+    public EventWaiter getEventWaiter() {
+        return eventWaiter;
     }
 
-    public static List<Shard> getShards() {
-        return shards;
+    public JDA getJDA(int id) {
+        return shardManager.getShardById(id);
     }
 
-    public static Guild getGuildById(long id) {
-        return getShard((int) ((id >> 22) % KEYS.getBotShards())).getJda().getGuildById(id);
+    public RiotApi getRiotAPI() {
+        return riotApi;
     }
 
-    public static int getUserCount() {
-        Set<Long> set = new HashSet<>();
-        for (Shard shard : shards) {
-            for (User user : shard.getJda().getUserCache()) {
-                set.add(user.getIdLong());
-            }
-        }
-        return set.size();
-    }
-
-    public static Shard getShard(int id) {
-        return shards.get(id);
-    }
-
-    public static Shard getShard(JDA jda) {
-        return shards.get(jda.getShardInfo() != null ? jda.getShardInfo().getShardId() : 0);
-    }
-
-    public static void restart() throws InterruptedException {
+    public void restart() throws InterruptedException {
         LOG.info("Restarting the Discord bot shards.");
-        for (Shard shard : shards) {
-            shard.revive();
-            Thread.sleep(5000);
-        }
+        shardManager.restart();
         LOG.info("Discord bot shards have now restarted.");
+    }
+
+    public boolean isLoaded() {
+        return loadState;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
     }
 }

@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.commands.Context;
 public class InviteBotCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        String link = context.getShard().getJda().asBot().getInviteUrl(Permission.ADMINISTRATOR);
+        String link = context.getJDA().asBot().getInviteUrl(Permission.ADMINISTRATOR);
 
         context.send().embed("Get Gnar on your server!")
                 .setDesc("__**[Click to invite Gnar to your server.](" + link + ")**__")

@@ -1,20 +1,21 @@
+import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
     java
     idea
     application
-//    id("com.sedmelluq.jdaction") version "1.0.1"
-    kotlin("jvm") version "1.2.0"
+    kotlin("jvm") version "1.2.10"
     id("com.github.johnrengelman.shadow") version "2.0.1"
 }
 
 group = "xyz.gnarbot"
 version = "4.8.3"
 
-val mainClass: String = "xyz.gnarbot.gnar.Bot"
+val mainClass: String = "xyz.gnarbot.gnar.BotLoader"
 
 configure<ApplicationPluginConvention> {
     mainClassName = mainClass
@@ -31,13 +32,13 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jre8", version = "1.2.0")
-    compile(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "0.19.3")
+    compile(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jre8", version = "1.2.10")
+    compile(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "0.20")
 
     compile(group = "org.codehaus.groovy", name = "groovy-jsr223", version = "2.4.12")
 
     // JDA
-    compile(group = "net.dv8tion", name = "JDA", version = "3.3.1_308")
+    compile(group = "net.dv8tion", name = "JDA", version = "3.4.0_317")
     compile(group = "com.sedmelluq", name = "jda-nas", version = "1.0.5")
     compile(group = "com.sedmelluq", name = "lavaplayer", version = "1.2.45")
 
@@ -50,9 +51,9 @@ dependencies {
     compile(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-xml", version = "2.9.2")
 
     // Custom language
-    compile(group = "xyz.avarel.kaiper", name = "Kaiper-Interpreter", version = "1.1.0")
-    compile(group = "xyz.avarel.kaiper", name = "Kaiper-AST", version = "1.1.0")
-    compile(group = "xyz.avarel.kaiper", name = "Kaiper-Runtime-Lib", version = "1.1.0")
+//    compile(group = "xyz.avarel.kaiper", name = "Kaiper-Interpreter", version = "1.1.0")
+//    compile(group = "xyz.avarel.kaiper", name = "Kaiper-AST", version = "1.1.0")
+//    compile(group = "xyz.avarel.kaiper", name = "Kaiper-Runtime-Lib", version = "1.1.0")
 
     // Math
     compile(group = "xyz.avarel", name = "aljava", version = "0.0.3")
@@ -74,15 +75,15 @@ dependencies {
     compile(group = "com.github.taycaldwell", name = "riot-api-java", version = "4.0.1")
 
     // Test dependencies
-    testCompile(group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version = "1.2.0")
+    testCompile(group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version = "1.2.10")
     testCompile(group = "junit", name = "junit", version = "4.12")
 }
 
-task<JavaCompile>("compileJava") {
+tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
 
-task<KotlinCompile>("compileKotlin") {
+tasks.withType<KotlinCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.name
     sourceCompatibility = JavaVersion.VERSION_1_8.name
 
@@ -91,7 +92,7 @@ task<KotlinCompile>("compileKotlin") {
     }
 }
 
-task<Jar>("jar") {
+tasks.withType<Jar> {
     manifest {
         attributes["Main-Class"] = mainClass
     }

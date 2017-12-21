@@ -37,11 +37,11 @@ public class CommandRegistry {
 
     private final TIntSet idSet = new TIntHashSet();
 
-    public CommandRegistry() {
+    public CommandRegistry(Bot bot) {
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
-        register(new KaiperCommand());
+//        register(new KaiperCommand());
         register(new MathCommand());
         register(new RemindMeCommand());
 //        register(new GoogleCommand());
@@ -125,7 +125,7 @@ public class CommandRegistry {
         register(new SudoCommand());
 
         //MUSIC COMMAND
-        if (Bot.CONFIG.getMusicEnabled()) {
+        if (bot.getConfiguration().getMusicEnabled()) {
             register(new PlayCommand());
             register(new PauseCommand());
             register(new StopCommand());

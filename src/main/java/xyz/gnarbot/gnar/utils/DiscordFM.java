@@ -23,9 +23,9 @@ public class DiscordFM {
 
     private static Map<String, List<String>> cache = new HashMap<>(LIBRARIES.length);
 
-    public static void loadLibraries() {
+    public DiscordFM(Bot bot) {
         for (String lib : LIBRARIES) {
-            String discordFMKey = Bot.KEYS.getDiscordFM();
+            String discordFMKey = bot.getCredentials().getDiscordFM();
             String url;
 
             try {
@@ -43,7 +43,7 @@ public class DiscordFM {
                 rb.header("Authorization", discordFMKey);
             }
 
-            HttpUtils.CLIENT.newCall(rb.build()).enqueue(new Callback() {
+            Callback callback = new Callback() {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     call.cancel();
@@ -61,12 +61,13 @@ public class DiscordFM {
                     }
                     response.close();
                 }
-            });
+            };
+
+            HttpUtils.CLIENT.newCall(rb.build()).enqueue(callback);
         }
     }
 
-    // todo stuff
-    public static String getRandomSong(String library) {
+    public String getRandomSong(String library) {
         try {
             List<String> urls = cache.get(library);
             return urls.get((int) (Math.random() * urls.size()));

@@ -1,6 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
-import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.DiscordBotsVotes
 import javax.script.*
@@ -46,7 +46,7 @@ class EvalCommand : CommandExecutor() {
                 put("context", context)
 
                 if (args[0] == "gv") {
-                    put("Bot", Bot::class.java)
+                    put("Bot", BotLoader::class.java)
                     put("DiscordBotsVotes", DiscordBotsVotes::class.java)
                 }
             }

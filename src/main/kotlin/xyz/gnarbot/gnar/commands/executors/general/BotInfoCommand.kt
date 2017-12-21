@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.JDAInfo
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
@@ -10,14 +9,14 @@ import java.lang.management.ManagementFactory
 
 @Command(
         aliases = ["about", "info", "botinfo"],
-        description = "Show information about the bot."
+        description = "Show information about the context.bot."
 )
 @BotInfo(
         id = 42
 )
 class BotInfoCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        val registry = Bot.getCommandRegistry()
+        val registry = context.bot.commandRegistry
 
         // Uptime
         val s = ManagementFactory.getRuntimeMXBean().uptime / 1000
@@ -25,19 +24,18 @@ class BotInfoCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        var requests = 0L
+//        var requests = 0L
         var textChannels = 0L
         var voiceChannels = 0L
         var guilds = 0L
 
         var users = 0L
 
-        for (shard in Bot.getShards()) {
-            guilds += shard.jda.guildCache.size()
-            requests += shard.requests
-            users += shard.jda.userCache.size()
-            textChannels += shard.jda.textChannelCache.size()
-            voiceChannels += shard.jda.voiceChannelCache.size()
+        for (shard in context.bot.shardManager.shardCache) {
+            guilds += shard.guildCache.size()
+            users += shard.userCache.size()
+            textChannels += shard.textChannelCache.size()
+            voiceChannels += shard.voiceChannelCache.size()
         }
 
         val commandSize = registry.entries.count { it.botInfo.category.show }
@@ -48,14 +46,14 @@ class BotInfoCommand : CommandExecutor() {
                 "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld."
             }
 
-            field("Session Requests", true) { requests }
-            field("Requests Per Hour", true) { requests / Math.max(1, h) }
+//            field("Session Requests", true) { requests }
+//            field("Requests Per Hour", true) { requests / Math.max(1, h) }
 
             field("Text Channels", true) { textChannels }
             field("Voice Channels", true) { voiceChannels }
 
             field("Guilds", true) { guilds }
-            field("Voice Connections", true) { Bot.getPlayers().size() }
+            field("Voice Connections", true) { context.bot.players.size() }
 
             field("Users", true) { users }
             field("Uptime", true) { "${d}d ${h % 24}h ${m % 60}m ${s % 60}s" }

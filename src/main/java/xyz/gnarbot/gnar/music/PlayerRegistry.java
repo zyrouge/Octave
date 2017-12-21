@@ -16,13 +16,16 @@ import java.util.concurrent.TimeUnit;
 public class PlayerRegistry {
     private final Logger LOG = LoggerFactory.getLogger("PlayerRegistry");
 
-    private final Map<Long, MusicManager> registry = new ConcurrentHashMap<>(Bot.CONFIG.getMusicLimit());
+    private final Map<Long, MusicManager> registry;
 
+    private final Bot bot;
     private final ScheduledExecutorService executor;
 
-    public PlayerRegistry(ScheduledExecutorService executor) {
+    public PlayerRegistry(Bot bot, ScheduledExecutorService executor) {
+        this.bot = bot;
         this.executor = executor;
 
+        registry = new ConcurrentHashMap<>(bot.getConfiguration().getMusicLimit());
         executor.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
     }
 
@@ -35,11 +38,11 @@ public class PlayerRegistry {
         MusicManager manager = registry.get(guild.getIdLong());
 
         if (manager == null) {
-            if (size() >= Bot.CONFIG.getMusicLimit() && !Bot.getOptions().ofGuild(guild).isPremium()) {
+            if (size() >= bot.getConfiguration().getMusicLimit() && !bot.getOptions().ofGuild(guild).isPremium()) {
                 throw new MusicLimitException();
             }
 
-            manager = new MusicManager(guild, this);
+            manager = new MusicManager(bot, guild, this);
             registry.put(guild.getIdLong(), manager);
         }
 

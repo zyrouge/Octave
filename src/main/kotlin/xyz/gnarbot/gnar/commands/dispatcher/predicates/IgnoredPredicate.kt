@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Member
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import java.util.function.BiPredicate
@@ -21,6 +20,6 @@ class IgnoredPredicate : BiPredicate<CommandExecutor, Context> {
                 || context.data.ignored.channels.contains(context.textChannel.id)
                 || context.data.ignored.roles.any { id -> member.roles.any { it.id == id } })
                 && !member.hasPermission(Permission.ADMINISTRATOR)
-                && member.user.idLong !in Bot.CONFIG.admins
+                && member.user.idLong !in context.bot.configuration.admins
     }
 }

@@ -3,7 +3,7 @@ package xyz.gnarbot.gnar.guilds;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.db.ManagedObject;
 import xyz.gnarbot.gnar.guilds.suboptions.CommandData;
 import xyz.gnarbot.gnar.guilds.suboptions.IgnoredData;
@@ -112,12 +112,12 @@ public class GuildData implements ManagedObject {
 
     @Override
     public void save() {
-        Bot.db().saveGuildData(this);
+        BotLoader.BOT.db().saveGuildData(this);
     }
 
     @Override
     public void delete() {
-        Bot.db().deleteGuildData(id);
+        BotLoader.BOT.db().deleteGuildData(id);
     }
 
     public void reset() {

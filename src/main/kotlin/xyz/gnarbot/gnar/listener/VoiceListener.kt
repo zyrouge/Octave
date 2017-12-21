@@ -5,12 +5,11 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.LoadState
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder
 
-class VoiceListener : ListenerAdapter() {
+class VoiceListener(private val bot: Bot) : ListenerAdapter() {
     override fun onGuildVoiceJoin(event: GuildVoiceJoinEvent) {
-        if (Bot.STATE == LoadState.COMPLETE) {
+        if (bot.isLoaded) {
             // I just joined the channel
             if (event.member.user == event.jda.selfUser) {
                 return
@@ -18,9 +17,9 @@ class VoiceListener : ListenerAdapter() {
 
             val guild = event.guild ?: return
 
-            Bot.getPlayers().getExisting(guild.idLong)?.let {
+            bot.players.getExisting(guild.idLong)?.let {
                 if (!it.guild.selfMember.voiceState.inVoiceChannel()) {
-                    Bot.getPlayers().destroy(guild.idLong)
+                    bot.players.destroy(guild.idLong)
                 } else if (it.isAlone()) {
                     it.queueLeave()
                 } else {
@@ -31,18 +30,18 @@ class VoiceListener : ListenerAdapter() {
     }
 
     override fun onGuildVoiceLeave(event: GuildVoiceLeaveEvent) {
-        if (Bot.STATE == LoadState.COMPLETE) {
+        if (bot.isLoaded) {
             // If the bot left the channel, destroy player.
             if (event.member.user == event.jda.selfUser) {
-                Bot.getPlayers().destroy(event.guild.idLong)
+                bot.players.destroy(event.guild.idLong)
                 return
             }
 
             val guild = event.guild ?: return
 
-            Bot.getPlayers().getExisting(guild.idLong)?.let {
+            bot.players.getExisting(guild.idLong)?.let {
                 if (!it.guild.selfMember.voiceState.inVoiceChannel()) {
-                    Bot.getPlayers().destroy(guild.idLong)
+                    bot.players.destroy(guild.idLong)
                 } else if (it.isAlone()) {
                     it.queueLeave()
                 }
@@ -51,20 +50,20 @@ class VoiceListener : ListenerAdapter() {
     }
 
     override fun onGuildVoiceMove(event: GuildVoiceMoveEvent) {
-        if (Bot.STATE == LoadState.COMPLETE) {
+        if (bot.isLoaded) {
             if (event.member.user == event.jda.selfUser) {
                 if (!event.guild.selfMember.voiceState.inVoiceChannel()) {
-                    Bot.getPlayers().destroy(event.guild.idLong)
+                    bot.players.destroy(event.guild.idLong)
                     return
                 }
 
                 if (event.channelJoined?.id == event.guild.afkChannel?.id) {
-                    Bot.getPlayers().destroy(event.guild.idLong)
+                    bot.players.destroy(event.guild.idLong)
                     return
                 }
 
-                Bot.getPlayers().getExisting(event.guild.idLong)?.let {
-                    val options = Bot.getOptions().ofGuild(event.guild)
+                bot.players.getExisting(event.guild.idLong)?.let {
+                    val options = bot.options.ofGuild(event.guild)
                     if (options.music.channels.isNotEmpty()) {
                         if (event.channelJoined.id !in options.music.channels) {
                             it.currentRequestChannel?.let { requestChannel ->
@@ -73,7 +72,7 @@ class VoiceListener : ListenerAdapter() {
                                 ).queue()
                             }
 
-                            Bot.getPlayers().destroy(event.guild.idLong)
+                            bot.players.destroy(event.guild.idLong)
                             return
                         }
                     }
@@ -91,9 +90,9 @@ class VoiceListener : ListenerAdapter() {
 
             val guild = event.guild ?: return
 
-            Bot.getPlayers().getExisting(guild.idLong)?.let {
+            bot.players.getExisting(guild.idLong)?.let {
                 if (!event.guild.selfMember.voiceState.inVoiceChannel()) {
-                    Bot.getPlayers().destroy(event.guild.idLong)
+                    bot.players.destroy(event.guild.idLong)
                     return
                 } else if (it.isAlone()) {
                     it.queueLeave()

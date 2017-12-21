@@ -4,24 +4,23 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.Shard;
 import xyz.gnarbot.gnar.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.response.GuildResponseBuilder;
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
 public class Context {
+    private final Bot bot;
     private final GuildData guildOptions;
-    private Message message;
-    private TextChannel textChannel;
-    private Guild guild;
-    private JDA jda;
-    private Shard shard;
-    private Member member;
-    private User user;
+    private final Message message;
+    private final TextChannel textChannel;
+    private final Guild guild;
+    private final JDA jda;
+    private final Member member;
+    private final User user;
 
-    public Context(GuildMessageReceivedEvent event) {
+    public Context(Bot bot, GuildMessageReceivedEvent event) {
+        this.bot = bot;
         this.jda = event.getJDA();
-        this.shard = Bot.getShard(this.jda);
 
         this.message = event.getMessage();
         this.user = event.getAuthor();
@@ -29,7 +28,11 @@ public class Context {
         this.textChannel = event.getChannel();
         this.guild = event.getGuild();
         this.member = event.getMember();
-        this.guildOptions = Bot.getOptions().ofGuild(getGuild());
+        this.guildOptions = bot.getOptions().ofGuild(getGuild());
+    }
+
+    public Bot getBot() {
+        return bot;
     }
 
     public GuildData getData() {
@@ -50,10 +53,6 @@ public class Context {
 
     public JDA getJDA() {
         return this.jda;
-    }
-
-    public Shard getShard() {
-        return this.shard;
     }
 
     public Member getMember() {

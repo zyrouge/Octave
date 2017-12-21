@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
@@ -29,7 +28,7 @@ class PlayCommand : CommandExecutor() {
         }
 
         if (args.isEmpty()) {
-            val manager = Bot.getPlayers().getExisting(context.guild)
+            val manager = context.bot.players.getExisting(context.guild)
             if (manager == null) {
                 context.send().error("There's no music player in this guild.\n" +
                         "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
@@ -57,7 +56,7 @@ class PlayCommand : CommandExecutor() {
 
         if ("https://" in args[0] || "http://" in args[0]) {
             val manager = try {
-                Bot.getPlayers().get(context.guild)
+                context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
                 e.sendToContext(context)
                 return
@@ -73,7 +72,7 @@ class PlayCommand : CommandExecutor() {
                     footnote
             )
         } else {
-            if (!Bot.CONFIG.searchEnabled) {
+            if (!context.bot.configuration.searchEnabled) {
                 context.send().error("Search is currently disabled. Try direct links instead.").queue()
                 return
             }
@@ -103,7 +102,7 @@ class PlayCommand : CommandExecutor() {
                 val result = results[0]
 
                 val manager = try {
-                    Bot.getPlayers().get(context.guild)
+                    context.bot.players.get(context.guild)
                 } catch (e: MusicLimitException) {
                     e.sendToContext(context)
                     return@search

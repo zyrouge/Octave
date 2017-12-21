@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin;
 
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Category;
 import xyz.gnarbot.gnar.commands.Command;
@@ -52,7 +51,7 @@ public class PremiumKeyCommand extends CommandTemplate {
         for (String id : ids) {
             if (id.isEmpty()) continue;
 
-            PremiumKey key = Bot.db().getPremiumKey(id);
+            PremiumKey key = context.getBot().db().getPremiumKey(id);
 
             joiner.add("**Key** `" + id + "`");
 
@@ -66,7 +65,7 @@ public class PremiumKeyCommand extends CommandTemplate {
             if (redeemer != null) {
                 switch (redeemer.getType()) {
                     case GUILD:
-                        GuildData guildData = Bot.db().getGuildData(redeemer.getId());
+                        GuildData guildData = context.getBot().db().getGuildData(redeemer.getId());
 
                         if (guildData != null) {
                             guildData.getPremiumKeys().remove(key.getId());

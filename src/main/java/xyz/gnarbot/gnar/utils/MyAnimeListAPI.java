@@ -7,11 +7,10 @@ import okhttp3.ResponseBody;
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONObject;
 import org.json.XML;
+import xyz.gnarbot.gnar.Bot;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import static xyz.gnarbot.gnar.Bot.LOG;
 
 public class MyAnimeListAPI {
     private static final String API_PREFIX = "https://myanimelist.net/api/";
@@ -24,10 +23,10 @@ public class MyAnimeListAPI {
 
     public MyAnimeListAPI(String username, String password) {
         if (username == null || password == null) {
-            LOG.error("No MyAnimeListAPI credentials provided.");
+            Bot.LOG.error("No MyAnimeListAPI credentials provided.");
             login = false;
         } else {
-            LOG.info("Attempting to log in.");
+            Bot.LOG.info("Attempting to log in.");
             Request request = new Request.Builder().url(API_PREFIX + "account/verify_credentials.xml")
                     .header("Authorization", Credentials.basic(username, password))
                     .build();
@@ -37,14 +36,14 @@ public class MyAnimeListAPI {
                     JSONObject jso = XML.toJSONObject(body.string());
                     response.close();
                     if (jso.has("user") && jso.getJSONObject("user").has("id")) {
-                        LOG.info("Logged in to MyAnimeListAPI.");
+                        Bot.LOG.info("Logged in to MyAnimeListAPI.");
                         login = true;
                     }
                 } else {
-                    LOG.error("Response was null when logging in to MyAnimeListAPI");
+                    Bot.LOG.error("Response was null when logging in to MyAnimeListAPI");
                 }
             } catch (IOException e) {
-                LOG.info("Error logging in to MyAnimeListAPI.", e);
+                Bot.LOG.info("Error logging in to MyAnimeListAPI.", e);
                 login = false;
             }
         }
@@ -52,12 +51,12 @@ public class MyAnimeListAPI {
         this.password = password;
     }
 
-    public boolean isLogin() {
+    public boolean isLoggedIn() {
         return login;
     }
 
     public JSONObject makeRequest(String target, String query) {
-        if (isLogin()) {
+        if (isLoggedIn()) {
             String url;
             try {
                 url = new URIBuilder(API_PREFIX + target).addParameter("q", query).toString();

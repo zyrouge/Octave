@@ -10,20 +10,23 @@ import xyz.gnarbot.gnar.Bot;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class DiscordBotsVotes {
-    private static final List<String> voteIDs = new ArrayList<>();
+    private final ScheduledExecutorService executor;
+    private final List<String> voteIDs = new ArrayList<>();
 
-    static {
-        String auth = Bot.KEYS.getDiscordBots();
+    public DiscordBotsVotes(Bot bot, ScheduledExecutorService executor) {
+        this.executor = executor;
+        String auth = bot.getCredentials().getDiscordBots();
         if (auth != null) {
             Request request = new Request.Builder()
                     .url("https://discordbots.org/api/bots/201503408652419073/votes?onlyids=true")
                     .addHeader("Authorization", auth)
                     .build();
 
-            Bot.EXECUTOR.scheduleAtFixedRate(() -> {
+            executor.scheduleAtFixedRate(() -> {
                 try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
                     ResponseBody body = response.body();
                     if (body == null) return;
@@ -39,7 +42,11 @@ public class DiscordBotsVotes {
         }
     }
 
-    public static List<String> getVoteIDs() {
+    public void shutdown() {
+        executor.shutdown();
+    }
+
+    public List<String> getVoteIDs() {
         return voteIDs;
     }
 }

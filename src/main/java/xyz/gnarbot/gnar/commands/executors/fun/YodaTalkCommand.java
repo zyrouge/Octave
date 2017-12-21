@@ -4,7 +4,6 @@ import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.jetbrains.annotations.NotNull;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
 import xyz.gnarbot.gnar.utils.HttpUtils;
 
@@ -23,14 +22,14 @@ import java.net.URISyntaxException;
 public class YodaTalkCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        String mashape = Bot.KEYS.getMashape();
+        String mashape = context.getBot().getCredentials().getMashape();
         if (mashape == null) {
             context.send().error("Mashape key is null").queue();
             return;
         }
 
         if (args.length == 0) {
-            Bot.getCommandDispatcher().sendHelp(context, getInfo());
+            context.getBot().getCommandDispatcher().sendHelp(context, getInfo());
             return;
         }
 

@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 
 @Command(
@@ -14,7 +13,7 @@ import xyz.gnarbot.gnar.commands.*
 )
 class HelpCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        val registry = Bot.getCommandRegistry()
+        val registry = context.bot.commandRegistry
 
         if (args.isNotEmpty()) {
             val target = args[0]
@@ -49,7 +48,7 @@ class HelpCommand : CommandExecutor() {
             val cmd = registry.getCommand(target)
             if (cmd != null) {
                 context.send().embed("Command Information") {
-                    field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${Bot.CONFIG.prefix}", prefix = Bot.CONFIG.prefix) }
+                    field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${context.bot.configuration.prefix}", prefix = context.bot.configuration.prefix) }
                     field("Usage") { "_${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                     if (cmd.botInfo.donor) {
                         field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
@@ -73,7 +72,7 @@ class HelpCommand : CommandExecutor() {
         context.send().embed("Guides") {
             desc {
                 buildString {
-                    append("The prefix of the bot on this server is `").append(context.data.command.prefix ?: Bot.CONFIG.prefix).append("`.\n")
+                    append("The prefix of the bot on this server is `").append(context.data.command.prefix ?: context.bot.configuration.prefix).append("`.\n")
                     append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
                 }
             }

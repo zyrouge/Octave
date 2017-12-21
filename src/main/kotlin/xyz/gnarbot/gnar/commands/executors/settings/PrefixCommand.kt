@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.settings
 
 import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.Command
@@ -44,7 +43,7 @@ class PrefixCommand : CommandTemplate() {
 
     @Description("Reset to the default prefix.")
     fun reset(context: Context) {
-        if (context.data.command.prefix == Bot.CONFIG.prefix) {
+        if (context.data.command.prefix == context.bot.configuration.prefix) {
             context.send().error("The prefix is already set to the default.").queue()
             return
         }

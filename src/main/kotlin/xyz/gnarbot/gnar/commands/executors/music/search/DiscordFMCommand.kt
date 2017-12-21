@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music.search
 
 import org.apache.commons.lang3.StringUtils
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.executors.music.PLAY_MESSAGE
 import xyz.gnarbot.gnar.music.DiscordFMTrackContext
@@ -42,7 +41,7 @@ class DiscordFMCommand : CommandExecutor() {
         }
 
         if (args[0] == "stop") {
-            val manager = Bot.getPlayers().getExisting(context.guild)
+            val manager = context.bot.players.getExisting(context.guild)
 
             if (manager == null) {
                 context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
@@ -77,16 +76,16 @@ class DiscordFMCommand : CommandExecutor() {
         }
 
         val manager = try {
-            Bot.getPlayers().get(context.guild)
+            context.bot.players.get(context.guild)
         } catch (e: MusicLimitException) {
             e.sendToContext(context)
             return
         }
 
-        DiscordFMTrackContext(library, context.user.idLong, context.textChannel.idLong).let {
+        DiscordFMTrackContext(context.bot, library, context.user.idLong, context.textChannel.idLong).let {
             manager.discordFMTrack = it
             manager.loadAndPlay(context,
-                    DiscordFM.getRandomSong(library),
+                    context.bot.discordFM.getRandomSong(library),
                     it,
                     "Now streaming random tracks from the `$library` Discord.FM station!"
             )

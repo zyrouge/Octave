@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.Utils
 
@@ -14,7 +13,7 @@ import xyz.gnarbot.gnar.utils.Utils
 )
 class ThrowError : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        val cmds = Bot.getCommandRegistry().entries
+        val cmds = context.bot.commandRegistry.entries
         context.send().text(
                 Utils.hasteBin(
                         buildString {

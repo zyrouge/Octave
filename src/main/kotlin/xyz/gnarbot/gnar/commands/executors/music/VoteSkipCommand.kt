@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
 import net.dv8tion.jda.core.EmbedBuilder
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.utils.b
@@ -27,12 +26,12 @@ class VoteSkipCommand : MusicCommandExecutor(true, true) {
             context.send().error("There is already a vote going on!").queue()
             return
         }
-        if (System.currentTimeMillis() - manager.lastVoteTime < Bot.CONFIG.voteSkipCooldown.toMillis()) {
-            context.send().error("You must wait ${Bot.CONFIG.voteSkipCooldownText} before starting a new vote.").queue()
+        if (System.currentTimeMillis() - manager.lastVoteTime < context.bot.configuration.voteSkipCooldown.toMillis()) {
+            context.send().error("You must wait ${context.bot.configuration.voteSkipCooldownText} before starting a new vote.").queue()
             return
         }
-        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= Bot.CONFIG.voteSkipDuration.toMillis()) {
-            context.send().error("By the time the vote finishes in ${Bot.CONFIG.voteSkipDurationText}, the song will be over.").queue()
+        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= context.bot.configuration.voteSkipDuration.toMillis()) {
+            context.send().error("By the time the vote finishes in ${context.bot.configuration.voteSkipDurationText}, the song will be over.").queue()
             return
         }
 
@@ -45,7 +44,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true) {
                     append(b(context.message.author.name))
                     append(" has voted to **skip** the current track!")
                     append(" React with :thumbsup: or :thumbsdown:\n")
-                    append("Whichever has the most votes in ${Bot.CONFIG.voteSkipDurationText} will win!")
+                    append("Whichever has the most votes in ${context.bot.configuration.voteSkipDurationText} will win!")
                 }
             }
         }.action().queue {
@@ -55,7 +54,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true) {
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
                 desc { "Voting has ended! Check the newer messages for results." }
                 clearFields()
-            }.build()).queueAfter(Bot.CONFIG.voteSkipDuration.seconds, TimeUnit.SECONDS) {
+            }.build()).queueAfter(context.bot.configuration.voteSkipDuration.seconds, TimeUnit.SECONDS) {
                 var skip = 0
                 var stay = 0
 

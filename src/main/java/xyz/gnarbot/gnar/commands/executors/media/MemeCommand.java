@@ -62,7 +62,7 @@ public class MemeCommand extends CommandExecutor {
 
     @Override
     public void execute(Context context, String label, String[] args) {
-        String mashape = Bot.KEYS.getMashape();
+        String mashape = context.getBot().getCredentials().getMashape();
         if (mashape == null) {
             context.send().text("Mashape key is null").queue();
             return;
@@ -80,7 +80,7 @@ public class MemeCommand extends CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase("list")) {
-            new PaginatorBuilder(Bot.getWaiter())
+            new PaginatorBuilder(context.getBot().getEventWaiter())
                     .setTitle("Meme list")
                     .setDescription("Use one of these like so: `_meme (meme name) | (top text) | (bottom text)`")
                     .addAll(map.keySet())
@@ -114,7 +114,7 @@ public class MemeCommand extends CommandExecutor {
             url = new URIBuilder("https://api.imgflip.com/caption_image")
                     .addParameter("template_id", id)
                     .addParameter("username", "GNARBot")
-                    .addParameter("password", Bot.KEYS.getImgFlip())
+                    .addParameter("password", context.getBot().getCredentials().getImgFlip())
                     .addParameter("text0", arguments[1].trim())
                     .addParameter("text1", arguments[2].trim())
                     .toString();

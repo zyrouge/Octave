@@ -1,9 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.games
 
-import net.rithms.riot.api.ApiConfig
-import net.rithms.riot.api.RiotApi
 import net.rithms.riot.constant.Platform
-import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.Context
@@ -20,13 +17,11 @@ import xyz.gnarbot.gnar.commands.template.annotations.Name
         id = 84
 )
 class LeagueCommand : CommandTemplate() {
-    private var riotAPI = RiotApi(ApiConfig().apply { Bot.KEYS.riotAPIKey?.let(this::setKey) })
-
     @Description("List general account information")
     fun account(context: Context,
                 @[Name("summoner name") Description("Leauge of Legends username.")] name: String,
                 region: Platform) {
-        val summoner = riotAPI.getSummonerByName(region, name)
+        val summoner = context.bot.riotAPI.getSummonerByName(region, name)
 
         context.send().embed("Summoner Info") {
             thumbnail {
@@ -48,19 +43,19 @@ class LeagueCommand : CommandTemplate() {
     fun main(context: Context,
              @[Name("summoner name") Description("Leauge of Legends username.")] name: String,
              region: Platform) {
-        val summoner = riotAPI.getSummonerByName(region, name)
+        val summoner = context.bot.riotAPI.getSummonerByName(region, name)
 
-        val summonerMasteries = riotAPI.getChampionMasteriesBySummoner(region, summoner.id)
+        val summonerMasteries = context.bot.riotAPI.getChampionMasteriesBySummoner(region, summoner.id)
 
         val championId = summonerMasteries[0].championId
 
         context.send().embed("$name's Mastery Info") {
             image {
-                "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${riotAPI.getDataChampion(region, championId).name}_0.jpg"
+                "http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${context.bot.riotAPI.getDataChampion(region, championId).name}_0.jpg"
             }
             desc {
                 buildString {
-                    append("**Champion Name:** ").append(riotAPI.getDataChampion(region, championId).name).append('\n')
+                    append("**Champion Name:** ").append(context.bot.riotAPI.getDataChampion(region, championId).name).append('\n')
                     append("**Mastery Level:** ").append(summonerMasteries.get(0).championLevel).append('\n')
                     append("**Mastery Points:** ").append(summonerMasteries.get(0).championPoints).append('\n')
                     append("**Chest Acquired:** ").append(summonerMasteries.get(0).isChestGranted).append('\n')
@@ -74,9 +69,9 @@ class LeagueCommand : CommandTemplate() {
     fun last(context: Context,
              @[Name("summoner name") Description("Leauge of Legends username.")] name: String,
              region: Platform) {
-        val summoner = riotAPI.getSummonerByName(region, name)
+        val summoner = context.bot.riotAPI.getSummonerByName(region, name)
 
-        val game = riotAPI.getMatchListByAccountId(region,summoner.accountId)
+        val game = context.bot.riotAPI.getMatchListByAccountId(region, summoner.accountId)
 
         val games = game.matches
         if (games == null || games.isEmpty()) {
@@ -88,7 +83,7 @@ class LeagueCommand : CommandTemplate() {
             thumbnail{ "http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map1.png" }
             desc {
                 buildString {
-                    append("**Champion Played:** ").append(riotAPI.getDataChampion(region, games[0].champion).name).append('\n')
+                    append("**Champion Played:** ").append(context.bot.riotAPI.getDataChampion(region, games[0].champion).name).append('\n')
                     append("**Lane Played:** ").append(games[0].lane).append('\n')
                     append("**Role:** ").append(games[0].role).append('\n')
                     append("**Region:** ").append(games[0].platformId).append('\n')
