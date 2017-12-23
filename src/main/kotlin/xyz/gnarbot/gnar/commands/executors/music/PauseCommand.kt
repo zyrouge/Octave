@@ -16,7 +16,7 @@ class PauseCommand : MusicCommandExecutor(true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         manager.player.isPaused = !manager.player.isPaused
 
-        context.send().embed("Playback Control") {
+        context.send().embed {
             desc {
                 if (manager.player.isPaused) {
                     "The player has been paused."

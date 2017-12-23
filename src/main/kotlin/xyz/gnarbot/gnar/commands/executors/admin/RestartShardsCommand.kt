@@ -1,7 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.JDA
 import xyz.gnarbot.gnar.commands.*
 
@@ -23,13 +21,8 @@ class RestartShardsCommand : CommandExecutor() {
 
         when(args[0]) {
             "all" -> {
-                context.send().embed("Restarting Shards") {
-                    desc { "Bot is now restarting." }
-                }.action().queue()
-
-                launch(CommonPool) {
-                    context.bot.restart()
-                }
+                context.send().info("Bot is now restarting.").queue()
+                context.bot.restart()
             }
             "dead" -> {
                 val deadShards = context.bot.shardManager.shardCache.filter { it.status != JDA.Status.CONNECTED }
@@ -39,12 +32,7 @@ class RestartShardsCommand : CommandExecutor() {
                     return
                 }
 
-                context.send().embed("Restarting Shards") {
-                    desc {
-                        "Shards `${deadShards.map { it.shardInfo.shardId }}` are now restarting."
-                    }
-                }.action().queue()
-
+                context.send().info("Shards `${deadShards.map { it.shardInfo.shardId }}` are now restarting.").queue()
                 deadShards.map { it.shardInfo.shardId }.forEach { context.bot.shardManager.restart(it) }
             }
             else -> {
@@ -53,12 +41,7 @@ class RestartShardsCommand : CommandExecutor() {
                     return
                 }
 
-                context.send().embed("Restarting Shards") {
-                    desc {
-                        "Shards `$id` are now restarting."
-                    }
-                }.action().queue()
-
+                context.send().info("Shards `$id` are now restarting.").queue()
                 context.bot.shardManager.restart(id)
             }
         }

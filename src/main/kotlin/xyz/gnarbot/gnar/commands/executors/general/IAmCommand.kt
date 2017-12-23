@@ -28,11 +28,7 @@ class IAmCommand : CommandTemplate() {
 
         context.guild.controller.addSingleRoleToMember(context.member, role).queue()
 
-        context.send().embed("Self-Roles") {
-            desc {
-                "You're now a ${role.asMention}."
-            }
-        }.action().queue()
+        context.send().info("You're now a ${role.asMention}.").queue()
 
     }
 
@@ -48,11 +44,7 @@ class IAmCommand : CommandTemplate() {
 
         context.guild.controller.removeSingleRoleFromMember(context.member, role).queue()
 
-        context.send().embed("Self-Roles") {
-            desc {
-                "You're no longer a ${role.asMention}."
-            }
-        }.action().queue()
+        context.send().info("You're no longer a ${role.asMention}.").queue()
     }
 
     @Description("List self-assignable roles.")

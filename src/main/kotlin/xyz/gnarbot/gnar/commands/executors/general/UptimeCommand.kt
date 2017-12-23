@@ -20,8 +20,6 @@ class UptimeCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        context.send().embed("Bot Uptime") {
-            desc { "$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds" }
-        }.action().queue()
+        context.send().info("$d days, ${h % 24} hours, ${m % 60} minutes and ${s % 60} seconds").queue()
     }
 }

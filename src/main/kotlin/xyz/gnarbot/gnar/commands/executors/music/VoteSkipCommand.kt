@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.music
 import net.dv8tion.jda.core.EmbedBuilder
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
-import xyz.gnarbot.gnar.utils.b
 import xyz.gnarbot.gnar.utils.desc
 import java.util.concurrent.TimeUnit
 
@@ -41,7 +40,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true) {
         context.send().embed("Vote Skip") {
             desc {
                 buildString {
-                    append(b(context.message.author.name))
+                    append(context.message.author.asMention)
                     append(" has voted to **skip** the current track!")
                     append(" React with :thumbsup: or :thumbsdown:\n")
                     append("Whichever has the most votes in ${context.bot.configuration.voteSkipDurationText} will win!")

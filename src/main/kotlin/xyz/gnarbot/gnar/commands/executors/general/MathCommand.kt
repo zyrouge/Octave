@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import net.dv8tion.jda.core.MessageBuilder
 import org.scilab.forge.jlatexmath.TeXConstants
 import org.scilab.forge.jlatexmath.TeXFormula
 import xyz.avarel.aljava.TexElement
@@ -77,11 +76,7 @@ class MathCommand : CommandExecutor() {
 
         val img = texImageByteArray(finalTex)
 
-        context.textChannel.sendFile(img, "attachment.png", MessageBuilder().setEmbed(
-                context.send().embed {
-                    image { "attachment://attachment.png" }
-                }.build()).build()
-        ).queue()
+        context.textChannel.sendFile(img, "attachment.png").queue()
     }
 
     private fun texImageByteArray(tex: String): ByteArray {

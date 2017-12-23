@@ -46,11 +46,7 @@ class SelfRoleCommand : CommandTemplate() {
         context.data.roles.selfRoles.add(role.id)
         context.data.save()
 
-        context.send().embed("Self-Roles") {
-            desc {
-                "Added ${role.asMention} to the list of self-assignable roles. Users can get them using `_iam`."
-            }
-        }.action().queue()
+        context.send().info("Added ${role.asMention} to the list of self-assignable roles. Users can get them using `_iam`.").queue()
     }
 
     @Description("Remove a self-role.")
@@ -63,11 +59,7 @@ class SelfRoleCommand : CommandTemplate() {
         context.data.roles.selfRoles.remove(role.id)
         context.data.save()
 
-        context.send().embed("Self-Roles") {
-            desc {
-                "Removed ${role.asMention} from the list of self-assignable roles."
-            }
-        }.action().queue()
+        context.send().info("Removed ${role.asMention} from the list of self-assignable roles.").queue()
     }
 
     @Description("Clear all self-assignable roles.")
@@ -80,11 +72,7 @@ class SelfRoleCommand : CommandTemplate() {
         context.data.roles.selfRoles.clear()
         context.data.save()
 
-        context.send().embed("Self-Roles") {
-            desc {
-                "Cleared the list of self-assignable roles."
-            }
-        }.action().queue()
+        context.send().info("Cleared the list of self-assignable roles.").queue()
     }
 
     @Description("List self-assignable roles.")

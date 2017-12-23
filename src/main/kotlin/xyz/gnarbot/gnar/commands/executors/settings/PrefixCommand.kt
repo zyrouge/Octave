@@ -36,9 +36,7 @@ class PrefixCommand : CommandTemplate() {
         context.data.command.prefix = prefix
         context.data.save()
 
-        context.send().embed("Server Prefix") {
-            desc { "The prefix has been set to `${context.data.command.prefix}`." }
-        }.action().queue()
+        context.send().info("The prefix has been set to `${context.data.command.prefix}`.").queue()
     }
 
     @Description("Reset to the default prefix.")
@@ -51,9 +49,7 @@ class PrefixCommand : CommandTemplate() {
         context.data.command.prefix = null
         context.data.save()
 
-        context.send().embed("Server Prefix") {
-            desc { "The prefix has been reset to `${context.data.command.prefix}`." }
-        }.action().queue()
+        context.send().info("The prefix has been reset to `${context.data.command.prefix}`.").queue()
     }
 
     override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {

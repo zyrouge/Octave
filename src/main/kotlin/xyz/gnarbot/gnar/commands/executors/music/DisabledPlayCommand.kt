@@ -14,10 +14,6 @@ import xyz.gnarbot.gnar.commands.Context
 )
 class DisabledPlayCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        context.send().embed("Music Is Disabled") {
-            desc {
-                "For several reasons, music is **TEMPORARILY** disabled until the problem resolves."
-            }
-        }.action().queue()
+        context.send().error("For several reasons, music is **TEMPORARILY** disabled.").queue()
     }
 }

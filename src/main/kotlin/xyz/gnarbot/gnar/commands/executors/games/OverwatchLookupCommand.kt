@@ -123,26 +123,22 @@ class OverwatchLookupCommand : CommandExecutor() {
                             }
                         }
                         field("Quick Play", true) {
-                            it.optJSONObject("average_stats")?.let {
-                                buildString {
+                            buildString {
+                                it.optJSONObject("average_stats")?.let {
                                     appendln("Avg. Elims: **[${it.optDouble("eliminations_avg")}]()**")
                                     appendln("Avg. Deaths: **[${it.optDouble("deaths_avg")}]()**")
                                 }
-                            }
 
-                            it.optJSONObject("overall_stats")?.let {
-                                buildString {
+                                it.optJSONObject("overall_stats")?.let {
                                     appendln("Wins: **[${it.optInt("wins")}]()**")
                                 }
-                            }
 
-                            it.optJSONObject("game_stats")?.let {
-                                eliminations += it.optDouble("eliminations").toInt()
-                                medals += it.optDouble("medals").toInt()
-                                dmg_done += it.optDouble("damage_done").toInt()
-                                cards += it.optDouble("cards").toInt()
+                                it.optJSONObject("game_stats")?.let {
+                                    eliminations += it.optDouble("eliminations").toInt()
+                                    medals += it.optDouble("medals").toInt()
+                                    dmg_done += it.optDouble("damage_done").toInt()
+                                    cards += it.optDouble("cards").toInt()
 
-                                buildString {
                                     appendln("K/D Ratio: **[${it.optDouble("kpd")}]()**")
                                     appendln("Played for: **[${it.optInt("time_played")} hours]()**")
                                 }
@@ -154,7 +150,6 @@ class OverwatchLookupCommand : CommandExecutor() {
 
                     overall.optJSONObject("competitive")?.let {
                         field("Competitive", true) {
-
                             buildString {
                                 it.optJSONObject("average_stats")?.let {
                                     appendln("Avg. Elims: **[" + it.optDouble("eliminations_avg") + "]()**")

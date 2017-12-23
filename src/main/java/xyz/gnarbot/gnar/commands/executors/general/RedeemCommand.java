@@ -53,7 +53,7 @@ public class RedeemCommand extends CommandExecutor {
 
                     context.send().embed("Premium Code")
                             .setColor(Color.ORANGE)
-                            .setDesc("Redeemed key `" + key.getId() + "`. **Thank you for supporting the bot's development!**\n")
+                            .description("Redeemed key `" + key.getId() + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + expiresBy.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
                             .field("Donator Perks", true,  new StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")

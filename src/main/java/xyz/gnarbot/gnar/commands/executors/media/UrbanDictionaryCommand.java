@@ -63,7 +63,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 ResponseBody body = response.body();
                 if (body == null) return;
 
@@ -79,7 +79,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                 context.send().embed()
                         .setTitle(word.getString("word"), word.getString("permalink"))
                         .setThumbnail("https://s3.amazonaws.com/mashape-production-logos/apis/53aa4f67e4b0a9b1348da532_medium")
-                        .setDesc("Definition by " + word.optString("author"))
+                        .description("Definition by " + word.optString("author"))
                         .field("\uD83D\uDC4D Upvotes", true, word.optInt("thumbs_up"))
                         .field("\uD83D\uDC4E Downvotes", true, word.optInt("thumbs_down"))
                         .field("Definition", false, word.optString("definition"))

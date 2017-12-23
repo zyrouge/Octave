@@ -42,9 +42,7 @@ class BotInfoCommand : CommandExecutor() {
 
         context.send().embed("Bot Information") {
             thumbnail { context.jda.selfUser.avatarUrl }
-            desc {
-                "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld."
-            }
+            desc { "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld." }
 
 //            field("Session Requests", true) { requests }
 //            field("Requests Per Hour", true) { requests / Math.max(1, h) }

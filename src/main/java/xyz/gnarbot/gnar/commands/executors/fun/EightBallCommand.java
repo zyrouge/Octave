@@ -26,8 +26,6 @@ public class EightBallCommand extends CommandExecutor {
             return;
         }
 
-        context.send().embed()
-                .setDesc("\uD83C\uDFB1 " + responses[(int) (Math.random() * responses.length)])
-                .action().queue();
+        context.send().info("\uD83C\uDFB1 " + responses[(int) (Math.random() * responses.length)]).queue();
     }
 }

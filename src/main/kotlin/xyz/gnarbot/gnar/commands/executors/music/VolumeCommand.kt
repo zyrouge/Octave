@@ -73,10 +73,12 @@ class VolumeCommand : MusicCommandExecutor(false, false) {
                 }
             }
 
-            if (old == amount) {
-                setFooter("Volume remained the same.", null)
-            } else {
-                setFooter("Volume changed from $old% to $amount%.", null)
+            footer {
+                if (old == amount) {
+                    "Volume remained the same."
+                } else {
+                    "Volume changed from $old% to $amount%."
+                }
             }
         }.action().queue()
     }

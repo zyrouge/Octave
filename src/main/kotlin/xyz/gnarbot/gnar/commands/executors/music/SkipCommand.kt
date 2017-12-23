@@ -25,8 +25,6 @@ class SkipCommand : MusicCommandExecutor(true, true) {
 
         manager.scheduler.nextTrack()
 
-        context.send().embed("Skip Current Track") {
-            desc { "The track was skipped." }
-        }.action().queue()
+        context.send().info("The track was skipped.").queue()
     }
 }

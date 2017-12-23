@@ -26,16 +26,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.data.music.announce = !value
         context.data.save()
 
-        if (value) {
-            context.send().embed("Music Settings") {
-                desc { "Announcements for music disabled."
-               }
-            }.action().queue()
-        } else {
-            context.send().embed("Music Settings") {
-                desc { "Announcements for music enabled." }
-            }.action().queue()
-        }
+        context.send().info(if (value) "Announcements for music disabled." else "Announcements for music enabled.").queue()
     }
 
     @Description("Add voice channels that Gnar can play music in.")
@@ -53,9 +44,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.data.music.channels.add(channel.id)
         context.data.save()
 
-        context.send().embed("Music Settings") {
-            desc { "`${channel.name}` is now a designated music channel." }
-        }.action().queue()
+        context.send().info("`${channel.name}` is now a designated music channel.").queue()
     }
 
     @Description("Remove voice channels that Gnar can play music in.")
@@ -68,9 +57,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.data.music.channels.remove(channel.id)
         context.data.save()
 
-        context.send().embed("Music Settings") {
-            desc { "${channel.name} is no longer a designated music channel." }
-        }.action().queue()
+        context.send().info("${channel.name} is no longer a designated music channel.").queue()
     }
 
     @Description("List all settings, their description and their values.")

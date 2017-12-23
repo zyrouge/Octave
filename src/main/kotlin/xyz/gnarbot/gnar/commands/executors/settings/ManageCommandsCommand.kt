@@ -79,11 +79,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
                     context.data.save()
 
-                    context.send().embed("Command Management") {
-                        desc {
-                            "Enabled `${cmd.info.aliases[0]}` for every ${scope.name.toLowerCase()}.\n$desyncString"
-                        }
-                    }.action().queue()
+                    context.send().info("Enabled `${cmd.info.aliases[0]}` for every ${scope.name.toLowerCase()}.\n$desyncString").queue()
                     return
                 }
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
@@ -101,9 +97,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
                 context.data.save()
 
-                context.send().embed("Command Management") {
-                    desc { "`${cmd.info.aliases[0]}` is now allowed for $itemDisplay.\n$desyncString" }
-                }.action().queue()
+                context.send().info("`${cmd.info.aliases[0]}` is now allowed for $itemDisplay.\n$desyncString").queue()
                 return
             }
         }
@@ -154,11 +148,7 @@ class ManageCommandsCommand : CommandTemplate() {
                     }
                     context.data.save()
 
-                    context.send().embed("Command Management") {
-                        desc {
-                            "Disabled the command for every ${scope.name.toLowerCase()}.\n$desyncString"
-                        }
-                    }.action().queue()
+                    context.send().info("Disabled the command for every ${scope.name.toLowerCase()}.\n$desyncString").queue()
                     return
                 }
             } else entity(context, scope, entity)?.let { (item, itemDisplay) ->
@@ -176,11 +166,7 @@ class ManageCommandsCommand : CommandTemplate() {
                 }
                 context.data.save()
 
-                context.send().embed("Command Management") {
-                    desc {
-                        "`${cmd.info.aliases[0]}` is now disabled for $itemDisplay.\n$desyncString"
-                    }
-                }.action().queue()
+                context.send().info("`${cmd.info.aliases[0]}` is now disabled for $itemDisplay.\n$desyncString").queue()
                 return
             }
         }
@@ -271,9 +257,7 @@ class ManageCommandsCommand : CommandTemplate() {
     fun options_category(context: Context, category: Category) {
         val options = context.data.command.categoryOptions[category.ordinal]
         if (options == null) {
-            context.send().embed("Command Management") {
-                desc { "Category `${category.title}` is allowed to everybody with the appropriate permission." }
-            }.action().queue()
+            context.send().info("Category `${category.title}` is allowed to everybody with the appropriate permission.").queue()
             return
         }
 
@@ -335,9 +319,7 @@ class ManageCommandsCommand : CommandTemplate() {
         set.clear()
         context.data.save()
 
-        context.send().embed("Command Management") {
-            desc { "Enabled `$cmd` for every ${scope.name.toLowerCase()}." }
-        }.action().queue()
+        context.send().info("Enabled `$cmd` for every ${scope.name.toLowerCase()}.").queue()
     }
 
     private fun allowTo(context: Context, id: String, target: String,
@@ -350,9 +332,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
 
         context.data.save()
-        context.send().embed("Command Management") {
-            desc { "`$cmd` is now allowed for $target." }
-        }.action().queue()
+        context.send().info("`$cmd` is now allowed for $target.").queue()
     }
 
     private fun disallowAll(context: Context, options: CommandOptions, cmd: String, scope: ManageScope) {
@@ -366,9 +346,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
         context.data.save()
 
-        context.send().embed("Command Management") {
-            desc { "Disabled `$cmd` for every `${scope.name.toLowerCase()}`." }
-        }.action().queue()
+        context.send().info("Disabled `$cmd` for every `${scope.name.toLowerCase()}`.").queue()
     }
 
     private fun disallowTo(context: Context, id: String, target: String,
@@ -381,9 +359,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
 
         context.data.save()
-        context.send().embed("Command Management") {
-            desc { "`$cmd` is now disabled for $target." }
-        }.action().queue()
+        context.send().info("`$cmd` is now disabled for $target.").queue()
     }
 
     @Description("Clear all options for a command (will re-sync to category options).")
@@ -399,20 +375,14 @@ class ManageCommandsCommand : CommandTemplate() {
     private fun clear(context: Context, map: MutableMap<Int, CommandOptions>, key: Int, type: String, item: String) {
         val options = map[key]
         if (options == null) {
-            context.send().embed("Command Management") {
-                desc { "There's no options configured for this $type." }
-            }.action().queue()
+            context.send().info("There's no options configured for this $type.").queue()
             return
         }
 
         map.remove(key)
         context.data.save()
 
-        context.send().embed("Command Management") {
-            desc {
-                "Cleared the $type options for $item."
-            }
-        }.action().queue()
+        context.send().info("Cleared the $type options for $item.").queue()
     }
 
     @Description("Clear all command options.")
@@ -426,9 +396,7 @@ class ManageCommandsCommand : CommandTemplate() {
         context.data.command.categoryOptions.clear()
         context.data.save()
 
-        context.send().embed("Command Management") {
-            desc { "Cleared all command and category options." }
-        }.action().queue()
+        context.send().info("Cleared all command and category options.").queue()
     }
 
     private fun entity(context: Context, scope: ManageScope, entity: String): Pair<String, String>? {

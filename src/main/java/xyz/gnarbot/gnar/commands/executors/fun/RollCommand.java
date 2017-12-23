@@ -55,7 +55,7 @@ public class RollCommand extends CommandExecutor {
                 .setTitle(rolls + " \uD83C\uDFB2 [1 — " + maxValue + "]");
 
         if (rolls == 1) {
-            eb.setDesc("You rolled a **" + (int) (Math.random() * maxValue + 1) + "**.").action().queue();
+            eb.description("You rolled a **" + (int) (Math.random() * maxValue + 1) + "**.");
         } else {
             int sum = 0;
 
@@ -71,9 +71,8 @@ public class RollCommand extends CommandExecutor {
             for (int i : results) {
                 joiner.add(String.valueOf(i));
             }
-
-            eb.setDesc("You rolled **" + joiner + "** = **" + sum + "**.");
-            eb.action().queue();
+            eb.description("You rolled **" + joiner + "** = **" + sum + "**.");
         }
+        eb.action().queue();
     }
 }

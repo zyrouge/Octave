@@ -19,8 +19,6 @@ class StopCommand : MusicCommandExecutor(false, false) {
         manager.discordFMTrack = null
         context.bot.players.destroy(context.guild.idLong)
 
-        context.send().embed("Stop Playback") {
-            desc { "Playback has been completely stopped and the queue has been cleared." }
-        }.action().queue()
+        context.send().info("Playback has been completely stopped and the queue has been cleared.").queue()
     }
 }

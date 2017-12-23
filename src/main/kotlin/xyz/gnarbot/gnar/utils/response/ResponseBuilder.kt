@@ -28,7 +28,6 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      */
     open fun info(msg: String): RestAction<Message> {
         return embed {
-            title { "Info" }
             desc  { msg }
         }.action()
     }

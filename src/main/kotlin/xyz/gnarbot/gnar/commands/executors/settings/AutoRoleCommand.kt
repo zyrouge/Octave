@@ -46,11 +46,7 @@ class AutoRoleCommand : CommandTemplate() {
         context.data.roles.autoRole = role.id
         context.data.save()
 
-        context.send().embed("Auto-Role") {
-            desc {
-                "Users joining the guild will now be granted the role ${role.asMention}."
-            }
-        }.action().queue()
+        context.send().info("Users joining the guild will now be granted the role ${role.asMention}.").queue()
     }
 
     @Description("Unset the auto-role.")
@@ -63,11 +59,7 @@ class AutoRoleCommand : CommandTemplate() {
         context.data.roles.autoRole = null
         context.data.save()
 
-        context.send().embed("Auto-Role") {
-            desc {
-                "Unset autorole. Users joining the guild will not be granted any role."
-            }
-        }.action().queue()
+        context.send().info("Unset autorole. Users joining the guild will not be granted any role.").queue()
     }
 
     override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {

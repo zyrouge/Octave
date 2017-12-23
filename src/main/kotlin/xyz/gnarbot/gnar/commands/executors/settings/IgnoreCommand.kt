@@ -34,19 +34,11 @@ class IgnoreCommand : CommandTemplate() {
             if (it.contains(member.user.id)) {
                 it.remove(member.user.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "No longer ignoring user ${member.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("No longer ignoring user ${member.asMention}.").queue()
             } else {
                 it.add(member.user.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "Ignored user ${member.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("Ignored user ${member.asMention}.").queue()
             }
         }
         context.data.save()
@@ -58,19 +50,11 @@ class IgnoreCommand : CommandTemplate() {
             if (it.contains(channel.id)) {
                 it.remove(channel.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "No longer ignoring channel ${channel.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("No longer ignoring channel ${channel.asMention}.").queue()
             } else {
                 it.add(channel.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "Ignored channel ${channel.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("Ignored channel ${channel.asMention}.").queue()
             }
         }
         context.data.save()
@@ -87,19 +71,11 @@ class IgnoreCommand : CommandTemplate() {
             if (it.contains(role.id)) {
                 it.remove(role.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "No longer ignoring role ${role.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("No longer ignoring role ${role.asMention}.").queue()
             } else {
                 it.add(role.id)
 
-                context.send().embed("Ignore") {
-                    desc {
-                        "Ignored role ${role.asMention}."
-                    }
-                }.action().queue()
+                context.send().info("Ignored role ${role.asMention}.").queue()
             }
         }
         context.data.save()

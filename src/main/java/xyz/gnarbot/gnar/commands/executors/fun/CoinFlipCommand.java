@@ -13,6 +13,6 @@ import xyz.gnarbot.gnar.commands.*;
 public class CoinFlipCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        context.send().embed().setDesc((int) (Math.random() * 2) == 0 ? "Heads!" : "Tails!").action().queue();
+        context.send().info((int) (Math.random() * 2) == 0 ? "Heads!" : "Tails!").queue();
     }
 }

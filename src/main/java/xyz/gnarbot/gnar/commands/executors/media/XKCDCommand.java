@@ -34,7 +34,7 @@ public class XKCDCommand extends CommandExecutor {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 ResponseBody body = response.body();
                 if (body == null) return;
 
@@ -79,7 +79,7 @@ public class XKCDCommand extends CommandExecutor {
                     }
 
                     @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                    public void onResponse(@NotNull Call call, @NotNull Response response) {
                         ResponseBody body = response.body();
                         if (body == null) return;
 
@@ -94,7 +94,7 @@ public class XKCDCommand extends CommandExecutor {
                         String logo = "http://imgs.xkcd.com/static/terrible_small_logo.png";
 
                         context.send().embed(title)
-                                .setDesc("No: " + num)
+                                .description("No: " + num)
                                 .setThumbnail(logo)
                                 .setImage(url)
                                 .action().queue();

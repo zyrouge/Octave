@@ -7,7 +7,6 @@ import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
-import xyz.gnarbot.gnar.utils.inlineCode
 
 @Command(
         aliases = ["nowplaying", "np"],
@@ -59,11 +58,11 @@ class NowPlayingCommand : MusicCommandExecutor(false, true) {
 
             field("Time", true) {
                 if (track.duration == Long.MAX_VALUE) {
-                    inlineCode { "Streaming" }
+                    "`Streaming`"
                 } else {
                     val position = Utils.getTimestamp(track.position)
                     val duration = Utils.getTimestamp(track.duration)
-                    inlineCode { "[$position / $duration]" }
+                    "`[$position / $duration]`"
                 }
             }
 

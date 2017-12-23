@@ -164,7 +164,7 @@ class Paginator(waiter: EventWaiter,
         return MessageBuilder().setEmbed(embed(title) {
             setColor(color)
 
-            emptyMessage?.let(this::setDesc)
+            emptyMessage?.let(this::description)
 
             super.fields.forEach {
                 addField(it)

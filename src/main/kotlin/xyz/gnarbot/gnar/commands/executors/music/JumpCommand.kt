@@ -23,9 +23,7 @@ class JumpCommand : CommandTemplate() {
 
         manager.player.playingTrack.position = duration.toMillis().coerceIn(0, manager.player.playingTrack.duration)
 
-        context.send().embed("Jump To") {
-            desc { "The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}." }
-        }.action().queue()
+        context.send().info("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.").queue()
     }
 
     @Description("Move the time marker forward.")
@@ -35,9 +33,7 @@ class JumpCommand : CommandTemplate() {
         manager.player.playingTrack.position = (manager.player.playingTrack.position + duration.toMillis())
                 .coerceIn(0, manager.player.playingTrack.duration)
 
-        context.send().embed("Jump Forward") {
-            desc { "The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}." }
-        }.action().queue()
+        context.send().info("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.").queue()
     }
 
     @Description("Move the time marker backward.")

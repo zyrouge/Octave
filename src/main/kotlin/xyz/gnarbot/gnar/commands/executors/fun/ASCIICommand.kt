@@ -6,7 +6,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.TextNode
 import xyz.gnarbot.gnar.commands.*
-import xyz.gnarbot.gnar.utils.code
 
 @Command(
         aliases = ["ascii"],
@@ -37,13 +36,7 @@ class ASCIICommand : CommandExecutor() {
 
             val element = document.getElementsByTag("body")[0]
 
-            context.send().embed("ASCII Text") {
-                desc {
-                    code {
-                        "\n${getText(element)}"
-                    }
-                }
-            }.action().queue()
+            context.send().info("```\n${getText(element)}```").queue()
 
         } catch (e: Exception) {
             context.send().error("Unable to generate ASCII art.").queue()

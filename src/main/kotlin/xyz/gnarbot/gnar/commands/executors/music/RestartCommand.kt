@@ -17,9 +17,7 @@ class RestartCommand : MusicCommandExecutor(true, false) {
         val track = manager.player.playingTrack ?: manager.scheduler.lastTrack
 
         if (track != null) {
-            context.send().embed("Restart Song") {
-                desc { "Restarting track: `${track.info.embedTitle}`." }
-            }.action().queue()
+            context.send().info("Restarting track: `${track.info.embedTitle}`.").queue()
 
             manager.player.playTrack(track.makeClone())
         } else {

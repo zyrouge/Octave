@@ -79,13 +79,13 @@ public interface Template {
 
         if (title == null && description == null) {
             eb.setTitle(positions[depth] + " Argument Candidates");
-            eb.setDesc(builder);
+            eb.description(builder);
         } else if (description == null) {
             eb.setTitle(title);
             eb.field(positions[depth] + " Argument Candidates", false, builder);
         } else {
             eb.setTitle(title);
-            eb.setDesc(description);
+            eb.description(description);
             eb.field(positions[depth] + " Argument Candidates", false, builder);
         }
 

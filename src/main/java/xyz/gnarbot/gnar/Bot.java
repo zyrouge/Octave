@@ -36,15 +36,15 @@ public class Bot {
     private final Credentials credentials;
 
     private final Supplier<Configuration> configurationGenerator;
-    private final Database database = new Database("bot");
-    private final OptionsRegistry optionsRegistry = new OptionsRegistry(this);
-    private final PlayerRegistry playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
+    private final Database database;
+    private final OptionsRegistry optionsRegistry;
+    private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
-    private final DiscordFM discordFM = new DiscordFM(this);
-    private final CommandRegistry commandRegistry = new CommandRegistry(this);
-    private final CommandDispatcher commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
-    private final EventWaiter eventWaiter = new EventWaiter();
+    private final DiscordFM discordFM;
+    private final CommandRegistry commandRegistry;
+    private final CommandDispatcher commandDispatcher;
+    private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final CountUpdater countUpdater;
     private Configuration configuration;
@@ -55,11 +55,12 @@ public class Bot {
             Supplier<Configuration> configurationGenerator
     ) throws LoginException {
         this.credentials = credentials;
-
         this.configurationGenerator = configurationGenerator;
         reloadConfiguration();
 
         LOG.info("Initializing the Discord bot.");
+
+        database = new Database("bot");
 
         String token = this.credentials.getWebHookToken();
         if (token != null) {
@@ -75,6 +76,7 @@ public class Bot {
         LOG.info("Admins:\t" + configuration.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
+        eventWaiter = new EventWaiter();
         shardManager = new DefaultShardManagerBuilder()
                 .setToken(credentials.getToken())
                 .setMaxReconnectDelay(32)
@@ -89,9 +91,14 @@ public class Bot {
         countUpdater = new CountUpdater(this, shardManager);
 
         loadState = true;
+        LOG.info("The bot is now fully connected to Discord.");
 
+        optionsRegistry = new OptionsRegistry(this);
+        playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
+
+        // SETUP APIs
+        discordFM = new DiscordFM(this);
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
-
         String riotApiKey = credentials.getRiotAPIKey();
         ApiConfig apiConfig = new ApiConfig();
         if (riotApiKey != null) {
@@ -99,7 +106,10 @@ public class Bot {
         }
         riotApi = new RiotApi(new ApiConfig());
 
-        LOG.info("The bot is now fully connected to Discord.");
+        commandRegistry = new CommandRegistry(this);
+        commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
+
+        LOG.info("Finish setting up bot internals.");
     }
 
     public void reloadConfiguration() {
@@ -158,7 +168,7 @@ public class Bot {
         return riotApi;
     }
 
-    public void restart() throws InterruptedException {
+    public void restart() {
         LOG.info("Restarting the Discord bot shards.");
         shardManager.restart();
         LOG.info("Discord bot shards have now restarted.");

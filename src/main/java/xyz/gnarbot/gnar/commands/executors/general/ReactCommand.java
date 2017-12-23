@@ -44,6 +44,3 @@ public class ReactCommand extends CommandExecutor {
         }, t -> context.send().error("Invalid message ID `" + args[0] + "`.").queue());
     }
 }
-
-
-

@@ -45,7 +45,7 @@ public class CatsCommand extends CommandExecutor {
 
             String url = doc.getElementsByTagName("url").item(0).getTextContent();
 
-            context.send().embed("Random Cat Pictures")
+            context.send().embed()
                     .setImage(url)
                     .action().queue();
         } catch (Exception e) {

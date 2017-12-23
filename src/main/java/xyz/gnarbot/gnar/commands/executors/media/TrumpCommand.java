@@ -96,7 +96,7 @@ public class TrumpCommand extends CommandExecutor {
 
             g2.dispose();
 
-            context.getTextChannel().sendFile(imageInByte, "attachment.jpg", null).queue();
+            context.getTextChannel().sendFile(imageInByte, "attachment.jpg").queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

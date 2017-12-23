@@ -21,8 +21,6 @@ class ShuffleCommand : MusicCommandExecutor(true, false) {
 
         manager.scheduler.shuffle()
 
-        context.send().embed("Shuffle Queue") {
-            desc { "Player has been shuffled" }
-        }.action().queue()
+        context.send().info("Player has been shuffled").queue()
     }
 }

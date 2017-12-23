@@ -34,7 +34,7 @@ class EmoteListCommand : CommandExecutor() {
                 }
             }
 
-            setFooter("Page [$page/${pages.size}]", null)
+            footer { "Page [$page/${pages.size}]" }
         }.action().queue()
     }
 }

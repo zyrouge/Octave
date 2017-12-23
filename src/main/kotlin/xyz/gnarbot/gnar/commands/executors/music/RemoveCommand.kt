@@ -32,11 +32,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
             "last" -> queue.removeLast()
             "all" -> {
                 queue.clear()
-
-                context.send().embed("Queue Clear") {
-                    desc { "Cleared the music queue." }
-                }.action().queue()
-
+                context.send().info("Cleared the music queue.").queue()
                 return
             }
             else -> {
@@ -68,9 +64,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
                         queue.removeAt(i - 1)
                     }
 
-                    context.send().embed("Remove Track") {
-                        desc { "Removed track number `$start..$end` from the queue." }
-                    }.action().queue()
+                    context.send().info("Removed track number `$start..$end` from the queue.").queue()
 
                     return
                 }
@@ -86,8 +80,6 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
             }
         }
 
-        context.send().embed("Remove Track") {
-            desc { "Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue." }
-        }.action().queue()
+        context.send().info("Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue.").queue()
     }
 }
