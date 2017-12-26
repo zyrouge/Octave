@@ -48,7 +48,6 @@ public class Bot {
     private final ShardManager shardManager;
     private final CountUpdater countUpdater;
     private Configuration configuration;
-    private boolean loadState;
 
     public Bot(
             Credentials credentials,
@@ -81,7 +80,7 @@ public class Bot {
                 .setToken(credentials.getToken())
                 .setMaxReconnectDelay(32)
                 .setShardsTotal(credentials.getTotalShards())
-                .setShards(credentials.getShardStart(), credentials.getShardEnd())
+                .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
                 .setGameProvider(i -> Game.playing(String.format(configuration.getGame(), i)))
@@ -90,8 +89,9 @@ public class Bot {
 
         countUpdater = new CountUpdater(this, shardManager);
 
-        loadState = true;
-        LOG.info("The bot is now fully connected to Discord.");
+        shardManager.addEventListener();
+
+        LOG.info("The bot is now connecting to Discord.");
 
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
@@ -101,9 +101,7 @@ public class Bot {
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
         ApiConfig apiConfig = new ApiConfig();
-        if (riotApiKey != null) {
-            apiConfig.setKey(riotApiKey);
-        }
+        if (riotApiKey != null) apiConfig.setKey(riotApiKey);
         riotApi = new RiotApi(new ApiConfig());
 
         commandRegistry = new CommandRegistry(this);
@@ -175,7 +173,7 @@ public class Bot {
     }
 
     public boolean isLoaded() {
-        return loadState;
+        return shardManager.getShardsRunning() == credentials.getTotalShards();
     }
 
     public Configuration getConfiguration() {

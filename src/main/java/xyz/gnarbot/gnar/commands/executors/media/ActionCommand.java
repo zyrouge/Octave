@@ -80,6 +80,6 @@ public class ActionCommand extends CommandExecutor {
             return;
         }
 
-        context.send().embed("Action").setImage(getImage(action, token)).action().queue();
+        context.send().embed().setImage(getImage(action, token)).action().queue();
     }
 }

@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "xyz.gnarbot"
-version = "4.8.3"
+version = "5.0.0"
 
 val mainClass: String = "xyz.gnarbot.gnar.BotLoader"
 
@@ -38,7 +38,7 @@ dependencies {
     compile(group = "org.codehaus.groovy", name = "groovy-jsr223", version = "2.4.12")
 
     // JDA
-    compile(group = "net.dv8tion", name = "JDA", version = "3.4.0_317")
+    compile(group = "net.dv8tion", name = "JDA", version = "3.4.0_318")
     compile(group = "com.sedmelluq", name = "jda-nas", version = "1.0.5")
     compile(group = "com.sedmelluq", name = "lavaplayer", version = "1.2.45")
 
