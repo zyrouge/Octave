@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.commands.template.CommandTemplate;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
 import xyz.gnarbot.gnar.db.PremiumKey;
 import xyz.gnarbot.gnar.db.Redeemer;
-import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.db.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.Utils;
 
 import java.util.StringJoiner;

@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Role
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
-import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
+import xyz.gnarbot.gnar.db.guilds.suboptions.CommandOptionsOverride
 import java.util.function.BiPredicate
 
 class SettingsPredicate : BiPredicate<CommandExecutor, Context> {

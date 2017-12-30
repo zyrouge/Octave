@@ -43,12 +43,12 @@ fun parseDuration(input: String): Long {
         else -> throw RuntimeException("Could not parse time unit '$originalUnitString' (try ns, us, ms, s, m, h, d)")
     }
 
-    try {
+    return try {
         if (numberString.matches("[+-]?[0-9]+".toRegex())) {
-            return units.toNanos(numberString.toLong())
+            units.toNanos(numberString.toLong())
         } else {
             val nanosInUnit = units.toNanos(1)
-            return (numberString.toDouble() * nanosInUnit).toLong()
+            (numberString.toDouble() * nanosInUnit).toLong()
         }
     } catch (e: NumberFormatException) {
         throw RuntimeException("Could not parse duration number '$numberString'")

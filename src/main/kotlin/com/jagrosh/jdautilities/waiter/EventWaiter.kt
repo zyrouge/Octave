@@ -1,6 +1,5 @@
 package com.jagrosh.jdautilities.waiter
 
-import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import net.dv8tion.jda.core.events.Event
@@ -38,7 +37,7 @@ class EventWaiter : EventListener {
         if (timeout > 0) {
             requireNotNull(unit)
 
-            launch(CommonPool) {
+            launch {
                 delay(timeout, unit!!)
                 if (list.remove(waiter)) {
                     timeoutAction?.invoke()

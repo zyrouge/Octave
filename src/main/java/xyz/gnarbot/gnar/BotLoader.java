@@ -11,7 +11,7 @@ import java.io.File;
 public final class BotLoader {
     public static Bot BOT;
 
-    public static void main(String[] args) throws LoginException {
+    public static void main(String[] args) throws LoginException, InterruptedException {
         BOT = new Bot(new Credentials(new File("credentials.conf")), () -> new Configuration(new File("bot.conf")));
     }
 //    public static final Logger LOG = LoggerFactory.getLogger("Bot");

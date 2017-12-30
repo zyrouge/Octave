@@ -41,7 +41,7 @@ class PrefixCommand : CommandTemplate() {
 
     @Description("Reset to the default prefix.")
     fun reset(context: Context) {
-        if (context.data.command.prefix == context.bot.configuration.prefix) {
+        if (context.data.command.prefix == null) {
             context.send().error("The prefix is already set to the default.").queue()
             return
         }
@@ -49,7 +49,7 @@ class PrefixCommand : CommandTemplate() {
         context.data.command.prefix = null
         context.data.save()
 
-        context.send().info("The prefix has been reset to `${context.data.command.prefix}`.").queue()
+        context.send().info("The prefix has been reset to `${context.bot.configuration.prefix}`.").queue()
     }
 
     override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {

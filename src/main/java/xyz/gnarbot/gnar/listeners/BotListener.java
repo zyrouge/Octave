@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.Context;
-import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.db.guilds.GuildData;
 import xyz.gnarbot.gnar.music.MusicManager;
 
 import java.time.OffsetDateTime;
@@ -28,29 +28,25 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        if (bot.isLoaded()) {
-            if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
-                return;
-            }
-
-            Bot.LOG.info("✅ Joined `" + event.getGuild().getName() + "`");
+        if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
+            return;
         }
+
+        Bot.LOG.info("✅ Joined `" + event.getGuild().getName() + "`");
     }
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (bot.isLoaded()) {
-            if (event.getAuthor().isBot()) {
-                if (event.getAuthor() == event.getJDA().getSelfUser()) {
-                    if (bot.getOptions().ofGuild(event.getGuild()).getCommand().isAutoDelete()) {
-                        event.getMessage().delete().queueAfter(10, TimeUnit.SECONDS);
-                    }
+        if (event.getAuthor().isBot()) {
+            if (event.getAuthor() == event.getJDA().getSelfUser()) {
+                if (bot.getOptions().ofGuild(event.getGuild()).getCommand().isAutoDelete()) {
+                    event.getMessage().delete().queueAfter(10, TimeUnit.SECONDS);
                 }
-                return;
             }
-
-            bot.getCommandDispatcher().handle(new Context(bot, event));
+            return;
         }
+
+        bot.getCommandDispatcher().handle(new Context(bot, event));
     }
 
     @Override
@@ -83,10 +79,8 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        if (bot.isLoaded()) {
-            bot.getPlayers().destroy(event.getGuild());
-            Bot.LOG.info("❌ Left `" + event.getGuild().getName() + "`");
-        }
+        bot.getPlayers().destroy(event.getGuild());
+        Bot.LOG.info("❌ Left `" + event.getGuild().getName() + "`");
     }
 
     @Override

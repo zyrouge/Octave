@@ -4,18 +4,15 @@ import com.rethinkdb.gen.exc.ReqlDriverError;
 import com.rethinkdb.net.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.db.guilds.GuildData;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 import static com.rethinkdb.RethinkDB.r;
 
 public class Database {
     private static final Logger LOG = LoggerFactory.getLogger("Database");
-    private final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     private final Connection conn;
 
     public Database(String name) {
@@ -39,6 +36,10 @@ public class Database {
         this.conn = conn;
     }
 
+    public Connection getConn() {
+        return conn;
+    }
+
     public boolean isOpen() {
         return conn != null && conn.isOpen();
     }
@@ -49,39 +50,20 @@ public class Database {
 
     @Nullable
     public GuildData getGuildData(String id) {
-        return isOpen() ? r.table("guilds_v2").get(id).run(conn, GuildData.class) : null;
-    }
-
-    public void saveGuildData(GuildData guildData) {
-        if (isOpen()) r.table("guilds_v2").insert(guildData)
-                .optArg("conflict", "replace")
-                .runNoReply(conn);
-    }
-
-    public void deleteGuildData(String id) {
-        if (isOpen()) r.table("guilds_v2").get(id)
-                .delete()
-                .runNoReply(conn);
+        return get("guilds_v2", id, GuildData.class);
     }
 
     @Nullable
     public PremiumKey getPremiumKey(String id) {
-        return isOpen() ? r.table("keys").get(id).run(conn, PremiumKey.class) : null;
+        return get("keys", id, PremiumKey.class);
     }
 
-    public void savePremiumKey(PremiumKey key) {
-        if (isOpen()) r.table("keys").insert(key)
-                .optArg("conflict", "replace")
-                .runNoReply(conn);
+    @Nullable
+    public PatreonEntry getPatreonEntry(String id) {
+        return get("patreon", id, PatreonEntry.class);
     }
 
-    public void deleteKey(String id) {
-        if (isOpen()) r.table("keys").get(id)
-                .delete()
-                .runNoReply(conn);
-    }
-
-    public ScheduledExecutorService getExecutor() {
-        return exec;
+    public <T> T get(String table, String id, Class<T> cls) {
+        return isOpen() ? r.table(table).get(id).run(conn, cls) : null;
     }
 }

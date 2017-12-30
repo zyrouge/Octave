@@ -6,8 +6,8 @@ import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
 import xyz.gnarbot.gnar.commands.template.annotations.Name
 import xyz.gnarbot.gnar.commands.template.parser.Parsers
-import xyz.gnarbot.gnar.guilds.suboptions.CommandOptions
-import xyz.gnarbot.gnar.guilds.suboptions.CommandOptionsOverride
+import xyz.gnarbot.gnar.db.guilds.suboptions.CommandOptions
+import xyz.gnarbot.gnar.db.guilds.suboptions.CommandOptionsOverride
 import java.util.*
 
 @Command(

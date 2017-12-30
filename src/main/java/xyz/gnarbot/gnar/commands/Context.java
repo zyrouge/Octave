@@ -4,7 +4,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.guilds.GuildData;
+import xyz.gnarbot.gnar.db.guilds.GuildData;
 import xyz.gnarbot.gnar.utils.response.GuildResponseBuilder;
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
