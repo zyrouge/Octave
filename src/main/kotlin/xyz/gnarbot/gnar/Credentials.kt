@@ -49,5 +49,7 @@ class Credentials(file: File) {
     val weebSh: String? = config["weebsh"].string
     val discordFM: String? = config["discordfm"].string
 
+    val patreonToken: String? = config["patreon", "token"].string
+
     val riotAPIKey: String? = config["riot", "apiKey"].string
 }

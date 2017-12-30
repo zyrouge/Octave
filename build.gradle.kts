@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-
 plugins {
     java
     idea
@@ -27,7 +26,8 @@ tasks.create("wrapper", Wrapper::class.java) {
 
 repositories {
     jcenter()
-    maven { setUrl("https://jitpack.io") }
+    maven("https://jitpack.io")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
@@ -67,6 +67,9 @@ dependencies {
     compile(group = "org.apache.commons", name = "commons-text", version = "1.1")
     compile(group = "commons-io", name = "commons-io", version = "2.6")
     compile(group = "com.google.guava", name = "guava", version = "23.2-jre")
+
+    // patreon
+    compile(group = "com.github.jasminb", name = "jsonapi-converter", version = "0.9-SNAPSHOT")
 
     // Logger
     compile(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")

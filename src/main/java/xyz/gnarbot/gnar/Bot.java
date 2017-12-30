@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -18,8 +19,9 @@ import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
-import xyz.gnarbot.gnar.listener.VoiceListener;
 import xyz.gnarbot.gnar.listeners.BotListener;
+import xyz.gnarbot.gnar.listeners.PatreonListener;
+import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.CountUpdater;
 import xyz.gnarbot.gnar.utils.DiscordFM;
@@ -42,6 +44,7 @@ public class Bot {
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
     private final DiscordFM discordFM;
+    private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
     private final CommandDispatcher commandDispatcher;
     private final EventWaiter eventWaiter;
@@ -82,7 +85,7 @@ public class Bot {
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
-                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
+                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
                 .setGameProvider(i -> Game.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
@@ -98,6 +101,9 @@ public class Bot {
 
         // SETUP APIs
         discordFM = new DiscordFM(this);
+
+        patreon = new PatreonAPI(credentials.getPatreonToken());
+
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
         ApiConfig apiConfig = new ApiConfig();
@@ -182,5 +188,9 @@ public class Bot {
 
     public Credentials getCredentials() {
         return credentials;
+    }
+
+    public PatreonAPI getPatreon() {
+        return patreon;
     }
 }

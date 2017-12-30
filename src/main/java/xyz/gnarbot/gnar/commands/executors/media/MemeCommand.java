@@ -42,7 +42,7 @@ public class MemeCommand extends CommandExecutor {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 ResponseBody body = response.body();
                 if (body == null) return;
 
@@ -137,7 +137,7 @@ public class MemeCommand extends CommandExecutor {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 ResponseBody body = response.body();
                 if (body == null) return;
 

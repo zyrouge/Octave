@@ -1,0 +1,3 @@
+motd=Remember to contribute to the fall of mankind!
+port=7777
+difficulty=0

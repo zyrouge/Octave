@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.listener
+package xyz.gnarbot.gnar.listeners
 
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent
