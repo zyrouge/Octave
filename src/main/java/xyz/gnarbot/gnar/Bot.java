@@ -36,8 +36,9 @@ public class Bot {
     public static final Logger LOG = LoggerFactory.getLogger("Bot");
 
     private final Credentials credentials;
-
     private final Supplier<Configuration> configurationGenerator;
+    private Configuration configuration;
+
     private final Database database;
     private final OptionsRegistry optionsRegistry;
     private final PlayerRegistry playerRegistry;
@@ -50,7 +51,6 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final CountUpdater countUpdater;
-    private Configuration configuration;
 
     public Bot(
             Credentials credentials,
@@ -64,10 +64,10 @@ public class Bot {
 
         database = new Database("bot");
 
-        String token = this.credentials.getWebHookToken();
-        if (token != null) {
+        String url = this.credentials.getWebHookURL();
+        if (url != null) {
             LOG.info("Connected to Discord web hook.");
-            DiscordLogBack.enable(new WebhookClientBuilder(this.credentials.getWebHookID(), token).build());
+            DiscordLogBack.enable(new WebhookClientBuilder(url).build());
         } else {
             LOG.warn("Not connected to Discord web hook.");
         }

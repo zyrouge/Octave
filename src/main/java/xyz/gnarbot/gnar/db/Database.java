@@ -63,6 +63,7 @@ public class Database {
         return get("patreon", id, PatreonEntry.class);
     }
 
+    @Nullable
     public <T> T get(String table, String id, Class<T> cls) {
         return isOpen() ? r.table(table).get(id).run(conn, cls) : null;
     }

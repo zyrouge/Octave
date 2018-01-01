@@ -145,6 +145,8 @@ public class PatreonAPI {
             URL url = new URL(prefix.concat(suffix));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Authorization", "Bearer ".concat(this.accessToken));
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
             return connection.getInputStream();
         } catch (IOException e) {
             LOG.error(e.getMessage());

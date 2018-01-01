@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.db.PremiumKey
 import xyz.gnarbot.gnar.utils.Utils
 import xyz.gnarbot.gnar.utils.response.respond
 import java.awt.Color
+import java.io.IOException
 import java.time.Duration
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -33,7 +34,14 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
 
                 event.channel.respond().info("Looking you up from the Patron list...").queue {
                     launch {
-                        val pledge = getPledges().find {
+                        val pledges = try {
+                            getPledges()
+                        } catch (e: IOException) {
+                            it.delete().queue()
+                            it.privateChannel.respond().exception(e).queue()
+                            return@launch
+                        }
+                        val pledge = pledges.find {
                             user.id == it.patron.discordId || name == it.patron.fullName
                         }
 
