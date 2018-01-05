@@ -87,19 +87,17 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     }
 
     private fun updateCarbonitex(jda: JDA) {
-        val authAbal = bot.credentials.discordBots ?: return
         val authCarbon = bot.credentials.carbonitex ?: return
 
         val json = JSONObject()
-                .put("key", bot.credentials.carbonitex)
+                .put("key", authCarbon)
                 .put("shardid", jda.shardInfo.shardId)
-                .put("shardcount", authCarbon)
+                .put("shardcount", bot.credentials.totalShards)
                 .put("servercount", jda.guildCache.size())
 
         val request = Request.Builder()
                 .url("https://www.carbonitex.net/discord/data/botdata.php")
                 .header("User-Agent", "Gnar Bot")
-                .header("Authorization", authAbal)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))
