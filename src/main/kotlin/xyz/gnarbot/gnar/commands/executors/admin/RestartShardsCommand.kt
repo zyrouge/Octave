@@ -19,7 +19,7 @@ class RestartShardsCommand : CommandExecutor() {
             return
         }
 
-        when(args[0]) {
+        when (args[0]) {
             "all" -> {
                 context.send().info("Bot is now restarting.").queue()
                 context.bot.restart()

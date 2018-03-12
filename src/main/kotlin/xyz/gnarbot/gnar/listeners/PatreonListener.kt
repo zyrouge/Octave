@@ -21,6 +21,8 @@ import java.util.*
 
 class PatreonListener(private val bot: Bot) : ListenerAdapter() {
     override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
+        if (event.author.isBot) return
+
         val parts = Utils.stringSplit(event.message.contentRaw)
 
         if (parts.isEmpty()) {
@@ -42,7 +44,7 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
                             return@launch
                         }
                         val pledge = pledges.find {
-                            user.id == it.patron.discordId || name == it.patron.fullName
+                            user.id == it.patron.discordId || name.equals(it.patron.fullName, true)
                         }
 
                         it.delete().queue()
@@ -77,7 +79,7 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
 
     private fun sendKeys(channel: PrivateChannel, message: String, keys: List<String>) {
         channel.respond().embed("Premium Keys") {
-            desc { message + "\nRedeem them in your server using `_redeem (key)`." }
+            desc { "$message\nRedeem them in your server using `_redeem (key)`." }
             color { Color.ORANGE }
             field("Keys") {
                 buildString {
@@ -97,7 +99,7 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
         return key.id
     }
 
-    private suspend fun getPledges(): List<Pledge> {
+    private fun getPledges(): List<Pledge> {
         val campaign = bot.patreon.fetchCampaigns().get().first()
 
         val pledges = mutableListOf<Pledge>()

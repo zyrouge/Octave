@@ -19,7 +19,7 @@ public class PingCommand extends CommandExecutor {
 
         context.getTextChannel().sendTyping().queue(ignored -> context.send().embed()
                 .field("Rest", true, System.currentTimeMillis() - time)
-                .field("Web Socket", true, context.getBot().getShardManager().getAveragePing())
+                .field("Web Socket", true, (int) context.getBot().getShardManager().getAveragePing())
                 .action().queue());
     }
 }

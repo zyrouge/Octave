@@ -3,38 +3,39 @@ plugins {
     id 'idea'
     id 'application'
 //    id 'com.sedmelluq.jdaction' version '1.0.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.2.10'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'org.jetbrains.kotlin.jvm' version '1.2.30'
+    id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 group 'xyz.gnarbot'
-version '4.8.5'
+version '5.0.2'
 
-mainClassName = 'xyz.gnarbot.gnar.Bot'
+mainClassName = 'xyz.gnarbot.gnar.BotLoader'
 
 sourceCompatibility = 9
 targetCompatibility = 9
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.3.1'
+    gradleVersion = '4.5'
 }
 
 repositories {
     jcenter()
     maven { url 'https://jitpack.io' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
     // Kotlin
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.2.10'
-    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.20'
+    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.2.30'
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
 
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.4.0_318'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.5.1_348'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.45'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.56'
 
     // Configuration
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'
@@ -43,11 +44,6 @@ dependencies {
     // Database
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.2'
-
-//    // Custom language
-//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Interpreter', version: '1.1.0'
-//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-AST', version: '1.1.0'
-//    compile group: 'xyz.avarel.kaiper', name: 'Kaiper-Runtime-Lib', version: '1.1.0'
 
     // Math
     compile group: 'xyz.avarel', name: 'aljava', version: '0.0.3'
@@ -61,6 +57,8 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.google.guava', name: 'guava', version: '23.2-jre'
+
+    compile group: "com.github.jasminb", name: "jsonapi-converter", version: "0.9-SNAPSHOT"
 
     // Logger
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
@@ -89,6 +87,7 @@ jar {
         attributes 'Main-Class': mainClassName
     }
 }
+
 kotlin {
     experimental {
         coroutines "enable"

@@ -25,7 +25,7 @@ import java.util.Set;
 
 public class PatreonAPI {
     private static final Logger LOG = LoggerFactory.getLogger(PatreonAPI.class);
-    private final String accessToken;
+    private String accessToken;
     private ResourceConverter converter;
 
     /**
@@ -45,6 +45,10 @@ public class PatreonAPI {
                 Pledge.class
         );
         this.converter.enableDeserializationOption(DeserializationFeature.ALLOW_UNKNOWN_INCLUSIONS);
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     /**

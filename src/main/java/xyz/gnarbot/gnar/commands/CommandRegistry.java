@@ -118,6 +118,7 @@ public class CommandRegistry {
         register(new RestartShardsCommand());
         register(new EvalCommand());
         register(new UpdateBotAvatarCommand());
+        register(new UpdatePatreonTokenCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new PremiumKeyCommand());

@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.utils.embed
 import java.util.concurrent.TimeUnit
 
 @Command(
-        aliases = ["remindme", "remind"],
+        aliases = ["remindMe", "remind"],
         usage = "(duration) (time unit) (msg)",
         description = "Send you a reminder after an amount of time."
 )
