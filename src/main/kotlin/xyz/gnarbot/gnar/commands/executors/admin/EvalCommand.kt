@@ -18,6 +18,7 @@ class EvalCommand : CommandExecutor() {
     private val scriptEngines: Map<String, ScriptEngine> = ScriptEngineManager().let {
         mapOf(
                 "js" to it.getEngineByName("javascript"),
+                "kt" to it.getEngineByName("kotlin"),
                 "gv" to it.getEngineByName("groovy")
         )
     }
@@ -39,15 +40,20 @@ class EvalCommand : CommandExecutor() {
             return
         }
 
-        val script = args.copyOfRange(1, args.size).joinToString(" ")
+        var script = args.copyOfRange(1, args.size).joinToString(" ")
+
+        val variables = hashMapOf<String, Any>().apply {
+            put("context", context)
+            put("Bot", BotLoader.BOT)
+            put("DiscordBotsVotes", DiscordBotsVotes::class.java)
+        }
 
         val scope = SimpleScriptContext().apply {
             getBindings(ScriptContext.ENGINE_SCOPE).apply {
-                put("context", context)
+                variables.forEach { k, o -> this[k] = o }
 
-                if (args[0] == "gv") {
-                    put("Bot", BotLoader::class.java)
-                    put("DiscordBotsVotes", DiscordBotsVotes::class.java)
+                if (args[0] == "kt") {
+                    variables.forEach { k, _ -> script = "val $k = bindings[\"$k\"]\n$script" }
                 }
             }
         }

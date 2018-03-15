@@ -7,8 +7,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
+String kotlinVersion = '1.2.30'
+Closure kotlinModule = { String module -> "org.jetbrains.kotlin:kotlin-$module:$kotlinVersion" }
+
 group 'xyz.gnarbot'
-version '5.0.2'
+version '5.0.3'
 
 mainClassName = 'xyz.gnarbot.gnar.BotLoader'
 
@@ -27,9 +30,12 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-jre8', version: '1.2.30'
+    compile kotlinModule("stdlib-jre8")
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
 
+    compile kotlinModule("script-runtime")
+    compile kotlinModule("script-util")
+    runtime kotlinModule("compiler-embeddable")
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
