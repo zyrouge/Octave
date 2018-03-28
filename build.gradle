@@ -2,16 +2,18 @@ plugins {
     id 'java'
     id 'idea'
     id 'application'
-//    id 'com.sedmelluq.jdaction' version '1.0.1'
     id 'org.jetbrains.kotlin.jvm' version '1.2.30'
     id 'com.github.johnrengelman.shadow' version '2.0.2'
 }
 
 String kotlinVersion = '1.2.30'
-Closure kotlinModule = { String module -> "org.jetbrains.kotlin:kotlin-$module:$kotlinVersion" }
+
+static String kotlinModule(String module, String version) {
+    "org.jetbrains.kotlin:kotlin-$module:$version"
+}
 
 group 'xyz.gnarbot'
-version '5.0.3'
+version '5.0.4'
 
 mainClassName = 'xyz.gnarbot.gnar.BotLoader'
 
@@ -30,16 +32,16 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile kotlinModule("stdlib-jre8")
+    compile kotlinModule("stdlib-jre8", kotlinVersion)
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
 
-    compile kotlinModule("script-runtime")
-    compile kotlinModule("script-util")
-    runtime kotlinModule("compiler-embeddable")
+//    compile kotlinModule("script-runtime", kotlinVersion)
+//    compile kotlinModule("script-util", kotlinVersion)
+//    runtime kotlinModule("compiler-embeddable", kotlinVersion)
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.5.1_348'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.5.1_351'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
     compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.56'
 
