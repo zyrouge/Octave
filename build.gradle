@@ -41,9 +41,9 @@ dependencies {
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.5.1_351'
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.6.0_356'
     compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.5'
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.56'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.2.63'
 
     // Configuration
     compile group: 'ninja.leaping.configurate', name: 'configurate-hocon', version: '3.3'

@@ -28,10 +28,6 @@ public class BotListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        if (event.getGuild().getSelfMember().getJoinDate().isBefore(OffsetDateTime.now().minusSeconds(30))) {
-            return;
-        }
-
         Bot.LOG.info("✅ Joined `" + event.getGuild().getName() + "`");
     }
 

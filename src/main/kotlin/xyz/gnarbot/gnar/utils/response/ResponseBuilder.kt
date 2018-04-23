@@ -61,7 +61,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
                     append("```\n")
                     val link = Utils.hasteBin(ExceptionUtils.getStackTrace(exception))
                     if (link != null) {
-                        append("[Full stack trace.](").append(link).append(')')
+                        append("[Full stack trace.](").append("Probably a music error tbh").append(')')
                     } else {
                         append("HasteBin down.")
                     }

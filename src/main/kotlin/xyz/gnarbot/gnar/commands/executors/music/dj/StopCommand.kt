@@ -17,6 +17,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 class StopCommand : MusicCommandExecutor(false, false) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         manager.discordFMTrack = null
+        context.guild.audioManager.closeAudioConnection()
         context.bot.players.destroy(context.guild.idLong)
 
         context.send().info("Playback has been completely stopped and the queue has been cleared.").queue()

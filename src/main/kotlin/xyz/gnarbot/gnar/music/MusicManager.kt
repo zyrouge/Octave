@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.music
 
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
@@ -75,6 +76,10 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
     @Volatile
     private var leaveTask: Future<*>? = null
 
+    private var equalizer: EqualizerFactory = EqualizerFactory()
+
+    private var equalizerEnabled = false
+
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
         // fixme DI point
@@ -112,6 +117,7 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
 
     fun destroy() {
         player.destroy()
+        disableBass()
         closeAudioConnection()
     }
 
@@ -299,5 +305,25 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
                 context.send().exception(e).queue()
             }
         })
+    }
+
+    //Credit to JukeBot and CircuitCRay
+    fun boostBass(b1: Float, b2: Float) {
+        equalizer.setGain(0, b1)
+        equalizer.setGain(1, b2)
+
+        if(!equalizerEnabled) {
+            player.setFilterFactory(equalizer)
+            equalizerEnabled = true
+        }
+    }
+
+    fun disableBass() {
+        if(equalizerEnabled) {
+            equalizer.setGain(0, 0F)
+            equalizer.setGain(1, 0F)
+            player.setFilterFactory(null)
+            equalizerEnabled = false
+        }
     }
 }
