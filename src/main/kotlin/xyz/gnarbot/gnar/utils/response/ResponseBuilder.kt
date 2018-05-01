@@ -52,19 +52,30 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      * @return The Message created by this function.
      */
     open fun exception(exception: Exception): RestAction<Message> {
+        if(exception.toString().contains("decoding")) {
+            return embed {
+                title { "Exception" }
+                desc {
+                    buildString {
+                        append("```\n")
+                        append(exception.toString())
+                        append("```\n")
+                        val link = Utils.hasteBin(ExceptionUtils.getStackTrace(exception))
+                        if (link != null) {
+                            append("[Full stack trace.](").append("Probably a music error tbh").append(')')
+                        } else {
+                            append("HasteBin down.")
+                        }
+                    }
+                }
+                color { Color.RED }
+            }.action()
+        }
         return embed {
             title { "Exception" }
-            desc  {
+            desc {
                 buildString {
-                    append("```\n")
-                    append(exception.toString())
-                    append("```\n")
-                    val link = Utils.hasteBin(ExceptionUtils.getStackTrace(exception))
-                    if (link != null) {
-                        append("[Full stack trace.](").append("Probably a music error tbh").append(')')
-                    } else {
-                        append("HasteBin down.")
-                    }
+                    append("For some reason this track causes errors, ignore this.")
                 }
             }
             color { Color.RED }

@@ -299,6 +299,10 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
                 // No track found and queue is empty
                 // destroy player
 
+                if(e.message!!.contains("decoding")) {
+                    return
+                }
+
                 if (scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }

@@ -23,10 +23,7 @@ import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
-import xyz.gnarbot.gnar.utils.CountUpdater;
-import xyz.gnarbot.gnar.utils.DiscordFM;
-import xyz.gnarbot.gnar.utils.DiscordLogBack;
-import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
+import xyz.gnarbot.gnar.utils.*;
 
 import javax.security.auth.login.LoginException;
 import java.util.concurrent.Executors;
@@ -51,6 +48,7 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final CountUpdater countUpdater;
+    private final SoundManager soundManager;
 
     public Bot(
             Credentials credentials,
@@ -58,6 +56,8 @@ public class Bot {
     ) throws LoginException {
         this.credentials = credentials;
         this.configurationGenerator = configurationGenerator;
+        this.soundManager = new SoundManager();
+        soundManager.loadSounds();
         reloadConfiguration();
 
         LOG.info("Initializing the Discord bot.");
@@ -192,5 +192,9 @@ public class Bot {
 
     public PatreonAPI getPatreon() {
         return patreon;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
     }
 }

@@ -78,6 +78,9 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
     }
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {
+        if(exception.toString().contains("decoding")) {
+            return
+        }
         track.getUserData(TrackContext::class.java).requestedChannel.let {
             manager.guild.getTextChannelById(it)
         }.respond().exception(exception).queue()
