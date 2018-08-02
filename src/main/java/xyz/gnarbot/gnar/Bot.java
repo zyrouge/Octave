@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar;
 
+import ch.qos.logback.classic.LoggerContext;
 import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
@@ -9,12 +10,16 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.requests.WebSocketClient;
 import net.dv8tion.jda.core.utils.MiscUtil;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
 import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;
+import org.apache.commons.logging.impl.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.event.Level;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
@@ -41,7 +46,7 @@ public class Bot {
     private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
-    private final DiscordFM discordFM;
+    //private final DiscordFM discordFM;
     private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
     private final CommandDispatcher commandDispatcher;
@@ -57,8 +62,11 @@ public class Bot {
         this.credentials = credentials;
         this.configurationGenerator = configurationGenerator;
         this.soundManager = new SoundManager();
-        soundManager.loadSounds();
         reloadConfiguration();
+
+        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+        Logger rootLogger = loggerContext.getLogger("Bot");
+        ((ch.qos.logback.classic.Logger) rootLogger).setLevel(ch.qos.logback.classic.Level.DEBUG);
 
         LOG.info("Initializing the Discord bot.");
 
@@ -72,11 +80,12 @@ public class Bot {
             LOG.warn("Not connected to Discord web hook.");
         }
 
-        LOG.info("Name  :\t" + configuration.getName());
-        LOG.info("Shards:\t" + this.credentials.getTotalShards());
-        LOG.info("Prefix:\t" + configuration.getPrefix());
-        LOG.info("Admins:\t" + configuration.getAdmins());
-        LOG.info("JDA v.:\t" + JDAInfo.VERSION);
+        LOG.info("Name         :\t" + configuration.getName());
+        LOG.info("Shards       :\t" + this.credentials.getTotalShards());
+        LOG.info("Prefix       :\t" + configuration.getPrefix());
+        LOG.info("Music Enabled:\t" + configuration.getMusicEnabled());
+        LOG.info("Admins       :\t" + configuration.getAdmins());
+        LOG.info("JDA Version  :\t" + JDAInfo.VERSION);
 
         eventWaiter = new EventWaiter();
         shardManager = new DefaultShardManagerBuilder()
@@ -99,8 +108,11 @@ public class Bot {
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
 
-        // SETUP APIs
-        discordFM = new DiscordFM(this);
+        if (configuration.getMusicEnabled()) {
+            soundManager.loadSounds();
+            // SETUP APIs
+            //discordFM = new DiscordFM(this);
+        }
 
         patreon = new PatreonAPI(credentials.getPatreonToken());
 
@@ -136,9 +148,9 @@ public class Bot {
         return myAnimeListAPI;
     }
 
-    public DiscordFM getDiscordFM() {
-        return discordFM;
-    }
+    //public DiscordFM getDiscordFM() {
+    //    return discordFM;
+    //}
 
     public Database db() {
         return database;

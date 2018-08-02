@@ -61,14 +61,14 @@ class SoundboardCommand : CommandExecutor() {
 
             val result = results[0]
 
-            val manager = try {
+            val managers = try {
                 context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
                 e.sendToContext(context)
                 return@search
             }
 
-            manager.loadAndPlay(
+            managers.loadAndPlay(
                     context,
                     result.info.uri,
                     TrackContext(

@@ -19,6 +19,7 @@ class Configuration(file: File) {
     val prefix: String = config["commands", "prefix"].getString("_")
 
     val admins: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
+    val blocked: List<Long> = config["commands", "blocked"].getList(TypeToken.of(Long::class.javaObjectType))
 
     val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
     val searchEnabled: Boolean = config["music", "search"].getBoolean(true)

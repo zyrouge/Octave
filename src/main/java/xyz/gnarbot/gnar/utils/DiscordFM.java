@@ -24,46 +24,50 @@ public class DiscordFM {
     private static Map<String, List<String>> cache = new HashMap<>(LIBRARIES.length);
 
     public DiscordFM(Bot bot) {
-        for (String lib : LIBRARIES) {
-            String discordFMKey = bot.getCredentials().getDiscordFM();
-            String url;
+        if(bot.getConfiguration().getMusicEnabled()) {
+            for (String lib : LIBRARIES) {
+                String discordFMKey = bot.getCredentials().getDiscordFM();
+                String url;
 
-            try {
-                url = new URIBuilder("https://gnarbot.xyz/assets/dfm/" + lib + ".txt").toString();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-                continue;
-            }
-
-            Request.Builder rb = new Request.Builder()
-                    .url(url)
-                    .header("Accept", "application/plain");
-
-            if (discordFMKey != null) {
-                rb.header("Authorization", discordFMKey);
-            }
-
-            Callback callback = new Callback() {
-                @Override
-                public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                    call.cancel();
-                    Bot.LOG.error("DiscordFM Error", e);
+                try {
+                    url = new URIBuilder("https://gnarbot.xyz/assets/dfm/" + lib + ".txt").toString();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    continue;
                 }
 
-                @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                    ResponseBody body = response.body();
-                    if (body != null) {
-                        cache.put(lib, Arrays.stream(body.string().split("\n"))
-                                .parallel()
-                                .filter(s -> s.startsWith("https://")) // make sure hte line starts with a valid link
-                                .collect(Collectors.toList()));
+                Request.Builder rb = new Request.Builder()
+                        .url(url)
+                        .header("Accept", "application/plain");
+
+                if (discordFMKey != null) {
+                    rb.header("Authorization", discordFMKey);
+                }
+
+                Callback callback = new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        call.cancel();
+                        Bot.LOG.error("DiscordFM Error", e);
                     }
-                    response.close();
-                }
-            };
 
-            HttpUtils.CLIENT.newCall(rb.build()).enqueue(callback);
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        ResponseBody body = response.body();
+                        if (body != null) {
+                            cache.put(lib, Arrays.stream(body.string().split("\n"))
+                                    .parallel()
+                                    .filter(s -> s.startsWith("https://")) // make sure the line starts with a valid link
+                                    .collect(Collectors.toList()));
+                        }
+                        response.close();
+                    }
+                };
+
+                HttpUtils.CLIENT.newCall(rb.build()).enqueue(callback);
+            }
+        } else {
+            Bot.LOG.info("Music is disabled, skipping DiscordFM.");
         }
     }
 
