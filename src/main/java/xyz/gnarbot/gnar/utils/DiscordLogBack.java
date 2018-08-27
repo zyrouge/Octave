@@ -19,6 +19,10 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
         client = webhookClient;
     }
 
+    protected void pingDevs(ILoggingEvent event) {
+
+    }
+
     @Override
     protected void append(ILoggingEvent event) {
         if (client == null) return;
@@ -26,6 +30,8 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
         if (!event.getLevel().isGreaterOrEqual(Level.INFO)) return;
 
         String content = patternLayout.doLayout(event);
+
+        if(!content.contains("UnknownHostException")) //Spams the shit out of console, not needed
 
         if (content.length() > 2000) {
             StringBuilder sb = new StringBuilder(":warning: Received a message but it was too long. ");

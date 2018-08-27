@@ -63,10 +63,7 @@ public class Bot {
         this.configurationGenerator = configurationGenerator;
         this.soundManager = new SoundManager();
         reloadConfiguration();
-
-        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
-        Logger rootLogger = loggerContext.getLogger("Bot");
-        ((ch.qos.logback.classic.Logger) rootLogger).setLevel(ch.qos.logback.classic.Level.DEBUG);
+        ((ch.qos.logback.classic.Logger) LOG).setLevel(ch.qos.logback.classic.Level.DEBUG);
 
         LOG.info("Initializing the Discord bot.");
 
@@ -112,6 +109,7 @@ public class Bot {
             soundManager.loadSounds();
             // SETUP APIs
             //discordFM = new DiscordFM(this);
+            LOG.info("DiscordFM is temporarily disabled due to moving serves.");
         }
 
         patreon = new PatreonAPI(credentials.getPatreonToken());
