@@ -15,7 +15,7 @@ public class OptionsRegistry {
     }
 
     @Nonnull
-    public GuildData ofGuild(Guild guild) {
+    public GuildData ofGuild(Guild guild) { // causing errors for some reason
         GuildData data = bot.db().getGuildData(guild.getId());
         return data == null ? new GuildData(guild.getId()) : data;
     }

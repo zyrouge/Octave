@@ -68,6 +68,7 @@ public class Bot {
         LOG.info("Initializing the Discord bot.");
 
         database = new Database("bot");
+        optionsRegistry = new OptionsRegistry(this);
 
         String url = this.credentials.getWebHookURL();
         if (url != null) {
@@ -102,7 +103,6 @@ public class Bot {
 
         LOG.info("The bot is now connecting to Discord.");
 
-        optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
 
         if (configuration.getMusicEnabled()) {

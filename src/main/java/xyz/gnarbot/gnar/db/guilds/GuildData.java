@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GuildData extends ManagedObject {
+
     @JsonSerialize
     @JsonDeserialize(as = CommandData.class)
     private CommandData commandData;
