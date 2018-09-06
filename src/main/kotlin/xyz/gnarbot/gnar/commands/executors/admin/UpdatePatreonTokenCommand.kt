@@ -13,8 +13,8 @@ import kotlin.io.use as doNotUse
 )
 class UpdatePatreonTokenCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        context.bot.patreon.setAccessToken(args.joinToString(" "))
+        //context.bot.patreon.setAccessToken(args.joinToString(" "))
 
-        context.send().info("Updated Patreon access token!").queue()
+        context.send().info("Unable to update Patreon token, they updated their API :(").queue()
     }
 }

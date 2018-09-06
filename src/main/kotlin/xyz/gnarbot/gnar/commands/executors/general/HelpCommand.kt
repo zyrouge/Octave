@@ -1,6 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.core.Permission
+import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 
 @Command(
@@ -88,7 +90,11 @@ class HelpCommand : CommandExecutor() {
                 }
             }
 
-            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music\nNeed further support? Feel free to join (Gnar's Cave {Click Me})[https://discord.gg/NQRpmr2]" }
+            field("Futher Help?") {
+                "Need further support? Feel free to join [Gnar's Cave {Click Me}](https://discord.gg/NQRpmr2)"
+            }
+            val prefix = BotLoader.BOT.configuration.prefix
+            footer { "For more information try ${prefix}help (command) or ${prefix}help (category), ex: ${prefix}help ttb or ${prefix}help Music" }
         }.action().queue()
     }
 }

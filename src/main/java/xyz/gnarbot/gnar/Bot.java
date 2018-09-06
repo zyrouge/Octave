@@ -110,6 +110,7 @@ public class Bot {
             // SETUP APIs
             //discordFM = new DiscordFM(this);
             LOG.info("DiscordFM is temporarily disabled due to moving serves.");
+
         }
 
         patreon = new PatreonAPI(credentials.getPatreonToken());

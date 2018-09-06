@@ -20,18 +20,18 @@ public class RequestUtil {
         connection.setRequestProperty("User-Agent",
                 String.format(
                         "Patreon-Java, version %s, platform %s %s",
-                        getVersion(),
+                        "Modified: 0.4.1",
                         System.getProperty("os.name"),
                         System.getProperty("os.version")));
         return connection.getInputStream();
     }
 
-    private String getVersion() throws IOException {
+    /*private String getVersion() throws IOException {
         InputStream resourceAsStream = this.getClass().getResourceAsStream("/version.properties");
         java.util.Properties prop = new java.util.Properties();
         prop.load(resourceAsStream);
         return prop.getProperty("version");
-    }
+    }*/
 
 
 }

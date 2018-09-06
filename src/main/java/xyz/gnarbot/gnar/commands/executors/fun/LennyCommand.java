@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.fun;
 
+import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.commands.*;
 
 @Command(
@@ -45,7 +46,7 @@ public class LennyCommand extends CommandExecutor {
             try {
                 count = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                context.send().error("That's not a number. `_lenny 10`").queue();
+                context.send().error("That's not a number. `" + BotLoader.BOT.getConfiguration().getPrefix() +"lenny 10`").queue();
                 return;
             }
             count = Math.min(Math.max(count, 1), 15);
