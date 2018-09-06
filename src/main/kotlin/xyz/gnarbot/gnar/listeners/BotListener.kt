@@ -29,6 +29,10 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             return
         }
 
+        if (event.message.contentRaw.endsWith('_') && event.message.contentRaw.startsWith('_')) {
+            return
+        }
+
         bot.commandDispatcher.handle(Context(bot, event))
     }
 

@@ -88,7 +88,7 @@ class HelpCommand : CommandExecutor() {
                 }
             }
 
-            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music" }
+            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music\nNeed further support? Feel free to join (Gnar's Cave {Click Me})[https://discord.gg/NQRpmr2]" }
         }.action().queue()
     }
 }
