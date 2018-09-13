@@ -1,4 +1,4 @@
-<img align="right" src="https://i.imgur.com/uLkw43c.png" height="250" width="250">
+<img align="right" src="https://i.imgur.com/FoPo1E7.png" height="250" width="250">
 
 # Gnar-bot  [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/NQRpmr2)
 **Gnar** is an open-source Discord bot written in Java and Kotlin, using JDA 3 and Lavaplayer.
