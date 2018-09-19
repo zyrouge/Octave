@@ -105,7 +105,7 @@ public class CommandRegistry {
         register(new MangaSearchCommand());
         register(new MemeCommand());
         register(new TrumpCommand());
-        register(new CatsCommand());
+        register(new CatCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
         register(new XKCDCommand());
