@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.WebSocketClient;
 import net.dv8tion.jda.core.utils.MiscUtil;
 import net.dv8tion.jda.webhook.WebhookClientBuilder;
@@ -24,6 +25,7 @@ import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
+import xyz.gnarbot.gnar.db.guilds.UserData;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
@@ -31,6 +33,7 @@ import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.*;
 
 import javax.security.auth.login.LoginException;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
@@ -141,6 +144,10 @@ public class Bot {
 
     public Guild getGuildById(long id) {
         return getJDA(MiscUtil.getShardForGuild(id, credentials.getTotalShards())).getGuildById(id);
+    }
+
+    public User getUserById(String id) {
+        return getShardManager().getUserById(id);
     }
 
     public MyAnimeListAPI getMyAnimeListAPI() {

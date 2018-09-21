@@ -16,7 +16,7 @@ import java.util.Map;
         category = Category.FUN
 )
 public class LeetifyCommand extends CommandExecutor {
-    private final Map<String, String> substitutions = new HashMap<String, String>() {{
+    private final Map<String, String> substitutions = new HashMap<>() {{
         put("a", "4");
         put("A", "@");
         put("G", "6");

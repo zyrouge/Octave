@@ -3,6 +3,8 @@ package xyz.gnarbot.gnar.db;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.gnarbot.gnar.BotLoader;
 
+import javax.annotation.Nullable;
+
 import static com.rethinkdb.RethinkDB.r;
 
 public abstract class ManagedObject<T> {
@@ -11,10 +13,14 @@ public abstract class ManagedObject<T> {
     @JsonIgnore
     private final String table;
 
+    @Nullable
+    private final String userID;
+
     @JsonIgnore
     public ManagedObject(String id, String table) {
         this.id = id;
         this.table = table;
+        this.userID = null;
     }
 
     public String getId() {

@@ -20,6 +20,7 @@ import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.entities.Guild
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.VoiceChannel
+import net.dv8tion.jda.core.utils.MiscUtil
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
@@ -116,9 +117,13 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
     var discordFMTrack : DiscordFMTrackContext? = null
 
     fun destroy() {
-        player.destroy()
-        disableBass()
-        closeAudioConnection()
+        try {
+            player.destroy()
+            disableBass()
+            closeAudioConnection()
+        } catch (e: IllegalStateException) {
+            Bot.LOG.warn("IllegalStateException thrown from Shard ${MiscUtil.getShardForGuild(guild, bot.credentials.totalShards)}")
+        }
     }
 
     fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {

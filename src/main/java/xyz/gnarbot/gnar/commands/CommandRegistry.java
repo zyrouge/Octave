@@ -55,6 +55,7 @@ public class CommandRegistry {
         register(new RedeemCommand());
         register(new IAmCommand());
         register(new QuoteCommand());
+        register(new ActiveShardCommand());
         //End General Commands
 
         //Fun Commands
@@ -124,6 +125,8 @@ public class CommandRegistry {
         register(new PremiumKeyCommand());
         register(new EmoteListCommand());
         register(new SudoCommand());
+        register(new xyz.gnarbot.gnar.commands.executors.admin.TestCommand());
+        register(new UpdateAvatarCommand());
 
         //MUSIC COMMAND
         if (bot.getConfiguration().getMusicEnabled()) {

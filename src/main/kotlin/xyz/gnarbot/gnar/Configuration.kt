@@ -15,6 +15,7 @@ class Configuration(file: File) {
 
     val name: String = config["bot", "name"].getString("Gnar")
     val game: String = config["bot", "game"].getString("_help | %d")
+    val avatar: String = config["bot", "avatar"].getString("https://gnarbot.xyz/assets/img/logo.png")
 
     val prefix: String = config["commands", "prefix"].getString("_")
 
