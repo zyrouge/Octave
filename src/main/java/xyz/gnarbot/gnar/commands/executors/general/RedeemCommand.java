@@ -59,6 +59,31 @@ public class RedeemCommand extends CommandExecutor {
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")
                                     .add("• Use the music bot during maximum music capacity.")
+                                    .add("• Bass Boosted Music!")
+                                    .add("• Access to Jinx (Gnar Alpha bot)")
+                            )
+                            .action().queue();
+                    break;
+                case PREMIUM_OVERRIDE:
+                    key.setRedeemer(new Redeemer(Redeemer.Type.PREMIUM_OVERRIDE, context.getUser().getId()));
+                    System.out.println(key.getRedeemer());
+                    key.save();
+
+                    context.getData().addPremiumKey(key.getId(), key.getDuration());
+                    context.getData().save();
+
+                    OffsetDateTime expiration = OffsetDateTime.ofInstant(Instant.ofEpochMilli(context.getData().getPremiumUntil()), ZoneId.systemDefault());
+
+                    context.send().embed("Premium Code")
+                            .setColor(Color.ORANGE)
+                            .description("Redeemed key `" + key.getId() + "`. **Thank you for supporting the bot's development!**\n")
+                            .appendDescription("Your **Premium** status will be valid until `" + expiration.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
+                            .field("Donator Perks", true,  new StringJoiner("\n")
+                                    .add("• `volume` Change the volume of the music player!")
+                                    .add("• First access to new features.")
+                                    .add("• Use the music bot during maximum music capacity.")
+                                    .add("• Bass Boosted Music!")
+                                    .add("• Access to Jinx (Gnar Alpha bot)")
                             )
                             .action().queue();
                     break;

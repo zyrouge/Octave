@@ -21,7 +21,7 @@ class CatCommand : CommandExecutor() {
         HttpUtils.CLIENT.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 call.cancel()
-                context.send().error("Can't get cat images for you. Sorry!")
+                context.send().error("Error grabbing cat pics, blame the API")
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -32,7 +32,7 @@ class CatCommand : CommandExecutor() {
                             .setImage(catUrl)
                             .action().queue()
                 } catch (e: NullPointerException) {
-                    context.send().error("No cat pics, sorry man.")
+                    context.send().error("A developer dun messed up, pls report this to Xevryll#0001")
                 }
             }
         })

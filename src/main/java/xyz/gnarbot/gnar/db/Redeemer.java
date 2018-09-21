@@ -5,6 +5,7 @@ import java.beans.ConstructorProperties;
 public class Redeemer {
     public enum Type {
         GUILD,
+        PREMIUM_OVERRIDE,
         USER
     }
 
