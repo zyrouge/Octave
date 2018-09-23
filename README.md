@@ -36,6 +36,7 @@ Note that only experienced developers should use or modify the bot.
 * [Avarel](https://github.com/Avarel)
 * [Xevryll](https://github.com/Xevryll)
 * [Gatt](https://github.com/RealGatt)
+* [CircuitRCay](https://github.com/circuitcodes)
 
 ## Dependencies
 * [Kotlin 1.1](https://kotlinlang.org/)
