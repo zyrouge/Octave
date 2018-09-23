@@ -30,10 +30,12 @@ import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
+import xyz.gnarbot.gnar.sentry.SentryUtil;
 import xyz.gnarbot.gnar.utils.*;
 
 import javax.security.auth.login.LoginException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
@@ -57,6 +59,7 @@ public class Bot {
     private final ShardManager shardManager;
     private final CountUpdater countUpdater;
     private final SoundManager soundManager;
+    private final SentryUtil sentryUtil;
 
     public Bot(
             Credentials credentials,
@@ -126,6 +129,8 @@ public class Bot {
 
         commandRegistry = new CommandRegistry(this);
         commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
+
+        sentryUtil = new SentryUtil(this, Objects.requireNonNull(getCredentials().getSentryPubDsn()));
 
         LOG.info("Finish setting up bot internals.");
     }
