@@ -34,6 +34,7 @@ import xyz.gnarbot.gnar.sentry.SentryUtil;
 import xyz.gnarbot.gnar.utils.*;
 
 import javax.security.auth.login.LoginException;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
@@ -47,6 +48,9 @@ public class Bot {
     private Configuration configuration;
 
     private final Database database;
+    private final DatabaseManager db;
+    private final Connection connection;
+
     private final OptionsRegistry optionsRegistry;
     private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
@@ -73,7 +77,14 @@ public class Bot {
 
         LOG.info("Initializing the Discord bot.");
 
-        database = new Database("bot");
+        this.database = new Database("bot");
+        this.db = new DatabaseManager(this, "");
+        this.connection = db.establishConnection();
+
+        if(connection == null) {
+            LOG.error("Postgres connection failed. Make sure your information is correct.");
+            System.exit(0);
+        }
         optionsRegistry = new OptionsRegistry(this);
 
         String url = this.credentials.getWebHookURL();
@@ -165,6 +176,10 @@ public class Bot {
 
     public Database db() {
         return database;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     public CommandRegistry getCommandRegistry() {

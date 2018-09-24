@@ -53,4 +53,9 @@ class Credentials(file: File) {
     val riotAPIKey: String? = config["riot", "apiKey"].string
 
     val sentryPubDsn: String? = config["sentry", "pubDsn"].string
+
+    //Database stuffs
+    val databaseURL: String? = config["db", "url"].string
+    val databaseUsername: String? = config["db", "username"].string
+    val databasePassword: String? = config["db", "password"].string
 }

@@ -45,6 +45,7 @@ public class CommandRegistry {
         register(new MathCommand());
         register(new RemindMeCommand());
 //        register(new GoogleCommand());
+        register(new GoodShitCommand());
         register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
@@ -125,7 +126,6 @@ public class CommandRegistry {
         register(new PremiumKeyCommand());
         register(new EmoteListCommand());
         register(new SudoCommand());
-        register(new xyz.gnarbot.gnar.commands.executors.admin.TestCommand());
         register(new UpdateAvatarCommand());
 
         //MUSIC COMMAND
