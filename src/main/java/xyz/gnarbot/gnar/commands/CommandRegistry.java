@@ -21,6 +21,8 @@ import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.SettingsDelegateCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
+import xyz.gnarbot.gnar.commands.executors.test.FakeCommand;
+
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -88,6 +90,7 @@ public class CommandRegistry {
 
         //Testing Commands
         register(new TestCommand());
+        register(new FakeCommand());
         //End Testing Commands
 
         //Game Commands
