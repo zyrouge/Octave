@@ -10,7 +10,7 @@ import xyz.gnarbot.gnar.commands.Context;
         description = "you should hide this command"
 )
 @BotInfo(
-        id = 33
+        id = 9999999
 )
 public class FakeCommand extends CommandExecutor {
     @Override
