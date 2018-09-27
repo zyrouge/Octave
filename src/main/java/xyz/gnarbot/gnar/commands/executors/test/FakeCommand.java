@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.general;
+package xyz.gnarbot.gnar.commands.executors.test;
 
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
