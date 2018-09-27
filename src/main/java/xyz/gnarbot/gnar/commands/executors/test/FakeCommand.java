@@ -17,7 +17,7 @@ public class FakeCommand extends CommandExecutor {
     public void execute(Context context, String label, String[] args) {
 
         context.getTextChannel().sendTyping().queue(ignored -> context.send().embed()
-                .field("why", true, "you shouldt be seeing this")
+                .field("why", true, "you should'nt be seeing this")
                 .field("this is so bleeding", true, "i want to stop")
                 .action().queue());
     }
