@@ -18,7 +18,7 @@ public class OptionsRegistry {
 
     @Nonnull
     public GuildData ofGuild(Guild guild) { // causing errors for some reason
-        GuildData data = bot.db().getGuildData(guild.getId());
+        GuildData data = bot.db().getGuildData(guild.getId(), "options");
         return data == null ? new GuildData(guild.getId()) : data;
     }
 
@@ -28,15 +28,15 @@ public class OptionsRegistry {
         return guild == null ? null : ofGuild(guild);
     }
 
-    @Nonnull
-    public UserData ofUser(User user) {
-        UserData data = bot.db().getUserData(user.getId());
-        return data == null ? new UserData(user.getId()) : data;
-    }
+//    @Nonnull
+//    public UserData ofUser(User user) {
+//        UserData data = bot;
+//        return data == null ? new UserData(user.getId()) : data;
+//    }
 
-    @Nullable
-    public UserData ofUser(String id) {
-        User user = bot.getUserById(id);
-        return user == null ? null : ofUser(user);
-    }
+//    @Nullable
+//    public UserData ofUser(String id) {
+//        User user = bot.getUserById(id);
+//        return user == null ? null : ofUser(user);
+//    }
 }

@@ -77,7 +77,7 @@ public class Bot {
 
         LOG.info("Initializing the Discord bot.");
 
-        this.database = new Database("bot");
+        this.database = new Database(getConnection(), this);
         this.db = new DatabaseManager(this, "");
         this.connection = db.establishConnection();
 
@@ -234,5 +234,13 @@ public class Bot {
 
     public SoundManager getSoundManager() {
         return soundManager;
+    }
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    public DatabaseManager getDb() {
+        return db;
     }
 }
