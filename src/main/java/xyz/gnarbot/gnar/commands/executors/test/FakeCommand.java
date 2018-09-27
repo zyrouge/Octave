@@ -1,16 +1,16 @@
 package xyz.gnarbot.gnar.commands.executors.test;
 
-import xyz.gnarbot.gnar.commands.BotInfo;
-import xyz.gnarbot.gnar.commands.Command;
-import xyz.gnarbot.gnar.commands.CommandExecutor;
-import xyz.gnarbot.gnar.commands.Context;
+import net.dv8tion.jda.core.Permission;
+import xyz.gnarbot.gnar.commands.*;
 
 @Command(
         aliases = "fake",
         description = "you should hide this command"
 )
 @BotInfo(
-        id = 9999999
+        id = 9999999,
+        permissions = Permission.VIEW_AUDIT_LOGS,
+        category = Category.NONE
 )
 public class FakeCommand extends CommandExecutor {
     @Override
