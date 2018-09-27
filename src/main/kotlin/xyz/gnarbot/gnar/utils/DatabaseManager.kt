@@ -6,7 +6,7 @@ import java.sql.DriverManager
 import java.sql.ResultSet
 import java.sql.Statement
 
-class DatabaseManager(val bot: Bot, val mainTable: String) {
+class DatabaseManager(val bot: Bot, private val mainTable: String) {
 
     fun establishConnection() : Connection? {
         var c : Connection? = null
