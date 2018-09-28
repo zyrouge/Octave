@@ -75,7 +75,7 @@ class HelpCommand : CommandExecutor() {
             desc {
                 buildString {
                     append("The prefix of the bot on this server is `").append(context.data.command.prefix ?: context.bot.configuration.prefix).append("`.\n")
-                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
+                    append("Donations: **[Patreon](https://www.patreon.com/gnarbot)**  **[PayPal](https://gnarbot.xyz/donate)**\n")
                 }
             }
 
