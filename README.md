@@ -33,10 +33,14 @@ Note that only experienced developers should use or modify the bot.
         and running `java -jar Gnar-bot-1.0-all.jar`.
 
 ## Main Contributors
-* [Avarel](https://github.com/Avarel)
+**Owners and Developers**
+* [Avarel](https://github.com/Avarel) 
 * [Xevryll](https://github.com/Xevryll)
-* [Gatt](https://github.com/RealGatt)
-* [CircuitRCay](https://github.com/circuitcodes)
+
+## Other Contributors (We love these guys)
+* [Gatt](https://github.com/RealGatt) 
+* [CircuitRCay](https://github.com/circuitcodes) 
+* [MaxGrosshandler](https://github.com/maxgrosshandler)
 
 ## Dependencies
 * [Kotlin 1.1](https://kotlinlang.org/)
