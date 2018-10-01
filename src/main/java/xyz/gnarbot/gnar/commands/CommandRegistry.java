@@ -23,7 +23,7 @@ import xyz.gnarbot.gnar.commands.executors.settings.SettingsDelegateCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 import xyz.gnarbot.gnar.commands.executors.test.FakeCommand;
 import xyz.gnarbot.gnar.commands.executors.test.KickCommand;
-
+import xyz.gnarbot.gnar.commands.executors.test.BanCommand;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -91,8 +91,10 @@ public class CommandRegistry {
 
         //Testing Commands
         register(new TestCommand());
+        //note - commands below are purely mockups at this stage
         register(new FakeCommand());
         register(new KickCommand());
+        register(new BanCommand()));
         //End Testing Commands
 
         //Game Commands
