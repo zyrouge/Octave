@@ -13,7 +13,7 @@ import xyz.gnarbot.gnar.commands.Context;
 @BotInfo(
         id = 66686868
 )
-public class FakeCommand extends CommandExecutor {
+public class KickCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
 
