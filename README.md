@@ -39,7 +39,7 @@ Note that only experienced developers should use or modify the bot.
 
 ## Other Contributors (We love these guys)
 * [Gatt](https://github.com/RealGatt) 
-* [CircuitRCay](https://github.com/circuitcodes) 
+* [CircuitRCAY](https://github.com/circuitcodes) 
 * [MaxGrosshandler](https://github.com/maxgrosshandler)
 
 ## Dependencies
