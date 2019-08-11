@@ -35,7 +35,6 @@ class RedeemCommand : CommandExecutor() {
             when (key.type) {
                 PremiumKey.Type.PREMIUM -> {
                     key.setRedeemer(Redeemer(Redeemer.Type.GUILD, context.guild.id)).save()
-                    println(key.redeemer)
 
                     context.data.addPremiumKey(key.id, key.duration).save()
 

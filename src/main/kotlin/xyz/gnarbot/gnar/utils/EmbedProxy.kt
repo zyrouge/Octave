@@ -26,6 +26,11 @@ abstract class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
         return this as T
     }
 
+    override fun appendDescription(description: CharSequence): T {
+        super.appendDescription(description)
+        return this as T
+    }
+
     override fun setAuthor(name: String?, url: String?, iconUrl: String?): T {
         super.setAuthor(name, url, iconUrl)
         return this as T
