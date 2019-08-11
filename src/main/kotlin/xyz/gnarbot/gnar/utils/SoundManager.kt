@@ -1,9 +1,6 @@
 package xyz.gnarbot.gnar.utils
 
-import xyz.gnarbot.gnar.Bot
 import java.io.File
-import java.net.URL
-import java.util.regex.Pattern
 
 class SoundManager {
 

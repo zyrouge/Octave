@@ -1,8 +1,9 @@
 package xyz.gnarbot.gnar.sentry
 
 import io.sentry.Sentry
-import io.sentry.SentryClient
-import org.slf4j.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import xyz.gnarbot.gnar.Bot
 
 class SentryUtil(val bot: Bot, dsn: String){

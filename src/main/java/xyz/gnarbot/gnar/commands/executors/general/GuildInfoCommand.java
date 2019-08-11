@@ -1,8 +1,8 @@
 package xyz.gnarbot.gnar.commands.executors.general;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
@@ -30,15 +30,20 @@ public class GuildInfoCommand extends CommandExecutor {
             roleStr.add(role.getName());
         }
 
+        String owner = "None.";
+        if (guild.getOwner() != null) {
+            owner = guild.getOwner().getAsMention();
+        }
+
         context.send().embed("Guild Information")
                 .setThumbnail(context.getGuild().getIconUrl())
                 .field("Name", true, guild.getName())
                 .field("Region", true, guild.getRegion().getName())
 
                 .field("ID", true, guild.getId())
-                .field("Creation Time", true, guild.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME))
+                .field("Creation Time", true, guild.getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME))
 
-                .field("Owner", true, guild.getOwner().getAsMention())
+                .field("Owner", true, owner)
                 .field("Members", true, guild.getMemberCache().size())
 
                 .field("Text Channels", true, guild.getTextChannelCache().size())

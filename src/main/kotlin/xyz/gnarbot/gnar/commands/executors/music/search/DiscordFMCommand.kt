@@ -3,7 +3,6 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.executors.music.PLAY_MESSAGE
-import xyz.gnarbot.gnar.music.DiscordFMTrackContext
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.DiscordFM
 

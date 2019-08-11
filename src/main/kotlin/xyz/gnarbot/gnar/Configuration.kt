@@ -6,7 +6,6 @@ import xyz.gnarbot.gnar.utils.get
 import xyz.gnarbot.gnar.utils.toDuration
 import java.io.File
 import java.time.Duration
-import kotlin.jvm.JvmField as Field
 
 class Configuration(file: File) {
     private val loader = HoconConfigurationLoader.builder().setFile(file).build()

@@ -15,11 +15,9 @@ import xyz.gnarbot.gnar.commands.Context;
 public class PingCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-        long time = System.currentTimeMillis();
-
-        context.getTextChannel().sendTyping().queue(ignored -> context.send().embed()
-                .field("Rest", true, System.currentTimeMillis() - time)
-                .field("Web Socket", true, (int) context.getBot().getShardManager().getAveragePing())
+        context.getJDA().getRestPing().queue(restPing -> context.send().embed()
+                .field("Rest", true, restPing)
+                .field("Gateway Ping", true, (int) context.getBot().getShardManager().getAverageGatewayPing())
                 .action().queue());
     }
 }

@@ -20,10 +20,8 @@ import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.SettingsDelegateCommand;
-import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 import xyz.gnarbot.gnar.commands.executors.test.FakeCommand;
-import xyz.gnarbot.gnar.commands.executors.test.KickCommand;
-import xyz.gnarbot.gnar.commands.executors.test.BanCommand;
+import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -95,7 +93,7 @@ public class CommandRegistry {
         //note - commands below are purely mockups at this stage
         register(new FakeCommand());
         register(new KickCommand());
-        register(new BanCommand()));
+        register(new BanCommand());
         //End Testing Commands
 
         //Game Commands

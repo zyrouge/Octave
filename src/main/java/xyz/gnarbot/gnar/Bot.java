@@ -1,41 +1,36 @@
 package xyz.gnarbot.gnar;
 
-import ch.qos.logback.classic.LoggerContext;
 import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
-import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
-import net.dv8tion.jda.bot.sharding.ShardManager;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDAInfo;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.requests.WebSocketClient;
-import net.dv8tion.jda.core.utils.MiscUtil;
-import net.dv8tion.jda.webhook.WebhookClientBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDAInfo;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MiscUtil;
 import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;
-import org.apache.commons.logging.impl.SimpleLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.event.Level;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
-import xyz.gnarbot.gnar.db.guilds.UserData;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.sentry.SentryUtil;
-import xyz.gnarbot.gnar.utils.*;
+import xyz.gnarbot.gnar.utils.CountUpdater;
+import xyz.gnarbot.gnar.utils.DatabaseManager;
+import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
+import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
 import java.sql.Connection;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -90,7 +85,7 @@ public class Bot {
         String url = this.credentials.getWebHookURL();
         if (url != null) {
             LOG.info("Connected to Discord web hook.");
-            DiscordLogBack.enable(new WebhookClientBuilder(url).build());
+            //DiscordLogBack.enable(new WebhookClientBuilder(url).build());
         } else {
             LOG.warn("Not connected to Discord web hook.");
         }
@@ -110,7 +105,7 @@ public class Bot {
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
-                .setGameProvider(i -> Game.playing(String.format(configuration.getGame(), i)))
+                .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
 
@@ -169,10 +164,6 @@ public class Bot {
     public MyAnimeListAPI getMyAnimeListAPI() {
         return myAnimeListAPI;
     }
-
-    //public DiscordFM getDiscordFM() {
-    //    return discordFM;
-    //}
 
     public Database db() {
         return database;

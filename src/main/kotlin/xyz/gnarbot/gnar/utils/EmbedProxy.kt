@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.utils
 
-import net.dv8tion.jda.core.EmbedBuilder
-import net.dv8tion.jda.core.entities.MessageEmbed
+import net.dv8tion.jda.api.EmbedBuilder
+import net.dv8tion.jda.api.entities.MessageEmbed
 import java.awt.Color
 import java.time.temporal.TemporalAccessor
 
@@ -23,11 +23,6 @@ abstract class EmbedProxy<T: EmbedProxy<T>> : EmbedBuilder() {
 
     fun description(description: CharSequence?): T {
         super.setDescription(description)
-        return this as T
-    }
-
-    override fun appendDescription(description: CharSequence?): T {
-        super.appendDescription(description)
         return this as T
     }
 

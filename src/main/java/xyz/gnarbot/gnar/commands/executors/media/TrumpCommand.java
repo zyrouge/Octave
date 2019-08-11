@@ -36,6 +36,10 @@ public class TrumpCommand extends CommandExecutor {
         }
 
         try (InputStream is = Bot.class.getClassLoader().getResourceAsStream("trump.jpg")) {
+            if (is == null) {
+                context.send().error("Internal error (resource missing?)").queue();
+            }
+
             BufferedImage image = ImageIO.read(is);
 
             Graphics2D g2 = image.createGraphics();

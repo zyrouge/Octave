@@ -1,12 +1,13 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
-import okhttp3.*
-import org.jetbrains.annotations.NotNull
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Request
+import okhttp3.Response
 import org.json.JSONObject
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.HttpUtils
 import java.io.IOException
-import java.util.*
 
 @Command(aliases = ["cats", "cat"], description = "Grab random cats for you.")
 @BotInfo(id = 24, category = Category.MEDIA)

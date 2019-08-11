@@ -4,14 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
-import xyz.gnarbot.gnar.db.guilds.UserData;
 
 import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
-
-import static com.rethinkdb.RethinkDB.r;
 
 public class Database {
     private static final Logger LOG = LoggerFactory.getLogger("Database");

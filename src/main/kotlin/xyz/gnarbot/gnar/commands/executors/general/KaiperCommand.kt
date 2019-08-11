@@ -1,6 +1,6 @@
 //package xyz.gnarbot.gnar.commands.executors.general
 //
-//import net.dv8tion.jda.core.entities.MessageEmbed
+//import net.dv8tion.jda.api.entities.MessageEmbed
 //import xyz.avarel.kaiper.KaiperScript
 //import xyz.avarel.kaiper.exceptions.KaiperException
 //import xyz.gnarbot.gnar.Bot

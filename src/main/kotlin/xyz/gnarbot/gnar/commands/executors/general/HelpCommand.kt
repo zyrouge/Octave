@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
-import net.dv8tion.jda.core.Permission
-import xyz.gnarbot.gnar.Bot
+import net.dv8tion.jda.api.Permission
 import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 

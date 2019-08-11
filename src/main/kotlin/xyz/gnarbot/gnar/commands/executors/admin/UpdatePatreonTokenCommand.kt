@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import xyz.gnarbot.gnar.commands.*
-import kotlin.io.use as doNotUse
 
 @Command(
         aliases = ["patreonUpdate"]

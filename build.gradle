@@ -2,27 +2,23 @@ plugins {
     id 'java'
     id 'idea'
     id 'application'
-    id 'org.jetbrains.kotlin.jvm' version '1.2.30'
-    id 'com.github.johnrengelman.shadow' version '2.0.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.41'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-String kotlinVersion = '1.2.40'
+String kotlinVersion = '1.3.41'
 
 static String kotlinModule(String module, String version) {
     "org.jetbrains.kotlin:kotlin-$module:$version"
 }
 
 group 'xyz.gnarbot'
-version '5.0.4'
+version '6.0.0'
 
 mainClassName = 'xyz.gnarbot.gnar.BotLoader'
 
 sourceCompatibility = 9
 targetCompatibility = 9
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.5'
-}
 
 repositories {
     jcenter()
@@ -32,8 +28,8 @@ repositories {
 
 dependencies {
     // Kotlin
-    compile kotlinModule("stdlib-jre8", kotlinVersion)
-    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '0.22.5'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.2.2'
 
 //    compile kotlinModule("script-runtime", kotlinVersion)
 //    compile kotlinModule("script-util", kotlinVersion)
@@ -41,9 +37,9 @@ dependencies {
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.7.1_418'
-    compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.0.6'
-    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.7'
+    compile group: 'net.dv8tion', name: 'JDA', version: '4.BETA.0_38'
+    compile group: 'com.sedmelluq', name: 'jda-nas', version: '1.1.0'
+    compile group: 'com.sedmelluq', name: 'lavaplayer', version: '1.3.20'
 
     //implementation 'com.github.DV8FromTheWorld:JDA:2adfdcaf54'
 
@@ -53,7 +49,7 @@ dependencies {
 
     // Database
     compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
-    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.2'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.9'
 
     // Math
     compile group: 'xyz.avarel', name: 'aljava', version: '0.0.3'
@@ -67,7 +63,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.1'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.google.guava', name: 'guava', version: '23.2-jre'
-    compile 'io.sentry:sentry:1.7.10'
+    compile 'io.sentry:sentry:1.7.26'
 
     compile group: "com.github.jasminb", name: "jsonapi-converter", version: "0.9-SNAPSHOT"
 
@@ -77,11 +73,14 @@ dependencies {
     // Riot API
     compile group: 'com.github.taycaldwell', name: 'riot-api-java', version: '4.0.1'
 
+    // Trove4J Specialized Implementations of Data Structures
+    compile group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+
     // Sentry, an exception logger. This is for the Logback logger.
     compile group: 'io.sentry', name: 'sentry-logback', version: '1.7.5'
 
     // Test dependencies
-    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.2.10'
+    testCompile group: 'org.jetbrains.kotlin', name: 'kotlin-test-junit', version: '1.3.41'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

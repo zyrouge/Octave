@@ -24,21 +24,5 @@ class ThrowError : CommandExecutor() {
                         }
                 ) ?: "Can not post to HasteBin."
         ).queue()
-////        if (rateLimiter.check(context.user.idLong)) {
-////            context.send().text("Not rate-limited!").queue()
-////        } else {
-////            context.send().text("Rate-limited! Try again in ${Utils.getTime(rateLimiter.remainingTime(context.user.idLong))}").queue()
-////        }
-//
-//        context.send().info(buildString {
-//            var x = 0
-//
-//            val ms = measureTimeMillis {
-//                x = Bot.getUserCount()
-//            }
-//
-//            append(ms).append("ms")
-//            append(x).append(" unique users")
-//        }).queue()
     }
 }

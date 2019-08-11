@@ -1,9 +1,11 @@
 package com.jagrosh.jdautilities.waiter
 
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import net.dv8tion.jda.core.events.Event
-import net.dv8tion.jda.core.hooks.EventListener
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import net.dv8tion.jda.api.events.Event
+import net.dv8tion.jda.api.events.GenericEvent
+import net.dv8tion.jda.api.hooks.EventListener
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
@@ -20,25 +22,25 @@ import java.util.function.Consumer
  * @author Avarel
  */
 class EventWaiter : EventListener {
-    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<Event>>>()
+    private val waiters = mutableMapOf<Class<*>, MutableList<Waiter<GenericEvent>>>()
 
     @Suppress("UNCHECKED_CAST")
-    fun <T: Event> waitForEvent(cls: Class<in T>,
-                                predicate: (T) -> Boolean,
-                                action: (T) -> Unit,
-                                timeout: Long,
-                                unit: TimeUnit?,
-                                timeoutAction: (() -> Unit)?): Waiter<T> {
+    fun <T : GenericEvent> waitForEvent(cls: Class<in T>,
+                                        predicate: (T) -> Boolean,
+                                        action: (T) -> Unit,
+                                        timeout: Long,
+                                        unit: TimeUnit?,
+                                        timeoutAction: (() -> Unit)?): Waiter<T> {
         val list = waiters.getOrPut(cls, ::mutableListOf)
 
         val waiter = Waiter(cls, predicate, action)
-        list.add(waiter as Waiter<Event>)
+        list.add(waiter as Waiter<GenericEvent>)
 
         if (timeout > 0) {
             requireNotNull(unit)
 
-            launch {
-                delay(timeout, unit!!)
+            GlobalScope.launch {
+                delay(unit.toMillis(timeout))
                 if (list.remove(waiter)) {
                     timeoutAction?.invoke()
                 }
@@ -49,7 +51,7 @@ class EventWaiter : EventListener {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onEvent(event: Event) {
+    override fun onEvent(event: GenericEvent) {
         var cls: Class<in Event> = event.javaClass
 
         while (cls.superclass != null) {
@@ -66,7 +68,7 @@ class EventWaiter : EventListener {
     fun <T: Event> waitFor(cls: Class<T>, action: Consumer<T>) : WaiterBuilder<T> = WaiterBuilder(cls) { action.accept(it) }
 
     // builder
-    inner class WaiterBuilder<T: Event>(private var cls: Class<T>, private var action: (T) -> Unit) {
+    inner class WaiterBuilder<T : GenericEvent>(private var cls: Class<T>, private var action: (T) -> Unit) {
         private var predicate: ((T) -> Boolean) = { true }
 
         fun predicate(predicate: (event: T) -> Boolean): WaiterBuilder<T> {
@@ -91,9 +93,9 @@ class EventWaiter : EventListener {
         }
     }
 
-    inner class Waiter<in T: Event>(private val cls: Class<in T>,
-                                    private val predicate: (T) -> Boolean,
-                                    private val action: (T) -> Unit) {
+    inner class Waiter<in T : GenericEvent>(private val cls: Class<in T>,
+                                            private val predicate: (T) -> Boolean,
+                                            private val action: (T) -> Unit) {
         fun isValid(): Boolean {
             return waiters[cls]?.contains(this) == true
         }

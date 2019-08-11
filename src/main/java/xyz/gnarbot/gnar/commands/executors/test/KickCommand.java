@@ -1,5 +1,5 @@
 
-package xyz.gnarbot.gnar.commands.executors.general;
+package xyz.gnarbot.gnar.commands.executors.test;
 
 import xyz.gnarbot.gnar.commands.BotInfo;
 import xyz.gnarbot.gnar.commands.Command;
@@ -16,8 +16,7 @@ import xyz.gnarbot.gnar.commands.Context;
 public class KickCommand extends CommandExecutor {
     @Override
     public void execute(Context context, String label, String[] args) {
-
-        context.guild.getController().kick(args[0], args[1]).queue();
+        context.getGuild().kick(args[0], args[1]).queue();
     }
 }
 

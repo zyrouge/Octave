@@ -1,7 +1,7 @@
 package xyz.gnarbot.gnar.commands.dispatcher
 
-import net.dv8tion.jda.core.Permission
-import net.dv8tion.jda.core.exceptions.PermissionException
+import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor

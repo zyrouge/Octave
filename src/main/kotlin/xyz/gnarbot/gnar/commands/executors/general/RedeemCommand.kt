@@ -6,14 +6,12 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.db.PremiumKey
 import xyz.gnarbot.gnar.db.Redeemer
-import xyz.gnarbot.gnar.db.guilds.UserData
-
-import java.awt.*
+import java.awt.Color
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.StringJoiner
+import java.util.*
 
 @Command(aliases = arrayOf("redeem"), usage = "(code)", description = "Redeem a key for your server.")
 @BotInfo(id = 21)
