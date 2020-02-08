@@ -2,6 +2,7 @@ package xyz.gnarbot.gnar.commands.executors.music
 
 import com.google.common.collect.Lists
 import xyz.gnarbot.gnar.commands.*
+import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
         aliases = ["sbl", "sblist"],

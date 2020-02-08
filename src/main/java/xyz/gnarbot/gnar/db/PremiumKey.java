@@ -7,32 +7,19 @@ import java.beans.ConstructorProperties;
 @JsonIgnoreProperties("expiresBy")
 public class PremiumKey extends ManagedObject {
     public enum Type {
-        PREMIUM("Donor level Premium Access"), // GUILD
-        PREMIUM_OVERRIDE("Developer Override Premium Access"), //Eventual user overrides
-        USER("OwO what's this");
-
-        final String description;
-
-        Type(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
+        PREMIUM, // GUILD
+        USER
     }
 
     private final long duration;
     private final Type type;
-    private final boolean override;
     private Redeemer redeemer;
 
-    @ConstructorProperties({"id", "type", "duration", "override"})
-    public PremiumKey(String id, Type type, long duration, boolean override) {
+    @ConstructorProperties({"id", "type", "duration"})
+    public PremiumKey(String id, Type type, long duration) {
         super(id, "keys");
         this.type = type;
         this.duration = duration;
-        this.override = override;
     }
 
     public Type getType() {
@@ -43,13 +30,8 @@ public class PremiumKey extends ManagedObject {
         return duration;
     }
 
-    public boolean isOverride() {
-        return override;
-    }
-
-    public PremiumKey setRedeemer(Redeemer redeemer) {
+    public void setRedeemer(Redeemer redeemer) {
         this.redeemer = redeemer;
-        return this;
     }
 
     public Redeemer getRedeemer() {

@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.admin;
 
 import net.dv8tion.jda.api.JDA;
 import xyz.gnarbot.gnar.commands.*;
-import xyz.gnarbot.gnar.utils.DiscordLogBack;
 
 @Command(
         aliases = "shutdown",
@@ -25,7 +24,6 @@ public class ShutdownCommand extends CommandExecutor {
         for (JDA jda : context.getBot().getShardManager().getShardCache()) {
             jda.shutdown();
         }
-        DiscordLogBack.disable();
 
         System.exit(21);
     }

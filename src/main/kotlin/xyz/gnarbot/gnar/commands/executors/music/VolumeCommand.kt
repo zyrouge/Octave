@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.executors.music
 
-import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
 
@@ -37,7 +36,7 @@ class VolumeCommand : MusicCommandExecutor(false, false) {
                     }
                 }
 
-                setFooter("Set the volume by using ${BotLoader.BOT.configuration.prefix}${info.aliases[0]} ${info.usage}.", null)
+                setFooter("Set the volume by using _${info.aliases[0]} ${info.usage}.", null)
             }.action().queue()
 
             return

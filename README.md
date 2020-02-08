@@ -1,6 +1,6 @@
-<img align="right" src="https://i.imgur.com/FoPo1E7.png" height="250" width="250">
+<img align="right" src="https://gnarbot.xyz/assets/img/logo.jpg" height="250" width="250">
 
-# Gnar-bot  [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/NQRpmr2)
+# Gnar-bot [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/NQRpmr2)
 **Gnar** is an open-source Discord bot written in Java and Kotlin, using JDA 3 and Lavaplayer.
 Gnar provides various features including music playback, fun and moderation commands.
 
@@ -33,14 +33,9 @@ Note that only experienced developers should use or modify the bot.
         and running `java -jar Gnar-bot-1.0-all.jar`.
 
 ## Main Contributors
-**Owners and Developers**
-* [Avarel](https://github.com/Avarel) 
+* [Avarel](https://github.com/Avarel)
 * [Xevryll](https://github.com/Xevryll)
-
-## Other Contributors (We love these guys)
-* [Gatt](https://github.com/RealGatt) 
-* [CircuitRCAY](https://github.com/circuitcodes) 
-* [MaxGrosshandler](https://github.com/maxgrosshandler)
+* [Gatt](https://github.com/RealGatt)
 
 ## Dependencies
 * [Kotlin 1.1](https://kotlinlang.org/)

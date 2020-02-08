@@ -20,7 +20,6 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.VoiceChannel
-import net.dv8tion.jda.api.utils.MiscUtil
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
@@ -38,7 +37,6 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
                     RequestConfig.copy(it).setCookieSpec(CookieSpecs.IGNORE_COOKIES).build()
                 }
             })
-            it.registerSourceManager(SoundCloudAudioSourceManager())
             it.registerSourceManager(BandcampAudioSourceManager())
             it.registerSourceManager(VimeoAudioSourceManager())
             it.registerSourceManager(TwitchStreamAudioSourceManager())
@@ -117,13 +115,9 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
     var discordFMTrack : DiscordFMTrackContext? = null
 
     fun destroy() {
-        try {
-            player.destroy()
-            disableBass()
-            closeAudioConnection()
-        } catch (e: IllegalStateException) {
-            Bot.LOG.warn("IllegalStateException thrown from Shard ${MiscUtil.getShardForGuild(guild, bot.credentials.totalShards)}")
-        }
+        player.destroy()
+        disableBass()
+        closeAudioConnection()
     }
 
     fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
@@ -187,7 +181,7 @@ class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: P
     }
 
     fun isAlone(): Boolean {
-        return guild.selfMember.voiceState?.channel?.members?.let {
+        return guild.selfMember.voiceState!!.channel?.members?.let {
             it.size == 1 && it[0] == guild.selfMember
         } != false
     }

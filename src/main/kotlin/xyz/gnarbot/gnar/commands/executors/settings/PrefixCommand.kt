@@ -33,6 +33,11 @@ class PrefixCommand : CommandTemplate() {
             return
         }
 
+        if(prefix == "__" || prefix == "~~" || prefix == "**" || prefix == "`" || prefix == "```" || prefix == "*" || prefix == "_") {
+            context.send().error("To prevent markdown formatting issues, `$prefix` is not an allowable prefix.").queue()
+            return
+        }
+
         context.data.command.prefix = prefix
         context.data.save()
 

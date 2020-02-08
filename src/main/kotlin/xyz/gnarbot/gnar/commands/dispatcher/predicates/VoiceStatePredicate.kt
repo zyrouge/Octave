@@ -17,7 +17,7 @@ class VoiceStatePredicate : BiPredicate<CommandExecutor, Context> {
             context.send().error("Music can't be played in the AFK channel.").queue()
             return false
         } else if (context.data.music.channels.isNotEmpty()
-                && context.member.voiceState!!.channel?.id !in context.data.music.channels) {
+                && context.member.voiceState?.channel?.id !in context.data.music.channels) {
 
             val channels = context.data.music.channels
                     .mapNotNull(context.guild::getVoiceChannelById)

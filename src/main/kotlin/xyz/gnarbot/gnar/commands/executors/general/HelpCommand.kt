@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.general
 
 import net.dv8tion.jda.api.Permission
-import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 
 @Command(
@@ -74,7 +73,7 @@ class HelpCommand : CommandExecutor() {
             desc {
                 buildString {
                     append("The prefix of the bot on this server is `").append(context.data.command.prefix ?: context.bot.configuration.prefix).append("`.\n")
-                    append("Donations: **[Patreon](https://www.patreon.com/gnarbot)**  **[PayPal](https://gnarbot.xyz/donate)**\n")
+                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
                 }
             }
 
@@ -89,11 +88,7 @@ class HelpCommand : CommandExecutor() {
                 }
             }
 
-            field("Futher Help?") {
-                "Need further support? Feel free to join [Gnar's Cave {Click Me}](https://discord.gg/NQRpmr2)"
-            }
-            val prefix = BotLoader.BOT.configuration.prefix
-            footer { "For more information try ${prefix}help (command) or ${prefix}help (category), ex: ${prefix}help ttb or ${prefix}help Music" }
+            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music" }
         }.action().queue()
     }
 }

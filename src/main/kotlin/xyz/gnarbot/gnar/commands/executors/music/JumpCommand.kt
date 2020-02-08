@@ -17,12 +17,15 @@ import java.time.Duration
         scope = Scope.VOICE
 )
 class JumpCommand : CommandTemplate() {
-    @Description("Set the timer marker of the player.")
+    @Description("Set the time marker of the player.")
     fun to(context: Context, duration: Duration) {
         val manager = context.bot.players.getExisting(context.guild)!!
+
         manager.player.playingTrack.position = duration.toMillis().coerceIn(0, manager.player.playingTrack.duration)
-        context.send().info("The position of the track has been set to {${Utils.getTimestamp(manager.player.playingTrack.position)}.").queue()
+
+        context.send().info("The position of the track has been set to ${Utils.getTimestamp(manager.player.playingTrack.position)}.").queue()
     }
+
     @Description("Move the time marker forward.")
     fun forward(context: Context, duration: Duration) {
         val manager = context.bot.players.getExisting(context.guild)!!

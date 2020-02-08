@@ -55,7 +55,7 @@ public class WhoIsCommand extends CommandExecutor {
                 .field("Join Date", true, member.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME))
 
                 .field("Nickname", true, member.getNickname() != null ? member.getNickname() : "No nickname.")
-                .field("Activity", true, !member.getActivities().isEmpty() ? member.getActivities().get(0).getName() : "No activity.")
+                .field("Activity", true, !member.getActivities().isEmpty() ? member.getActivities().get(0).getName() : "No game.")
 
                 .field("Roles", true, roleStr)
 

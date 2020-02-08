@@ -20,7 +20,6 @@ import xyz.gnarbot.gnar.commands.executors.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.executors.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.PruneCommand;
 import xyz.gnarbot.gnar.commands.executors.settings.SettingsDelegateCommand;
-import xyz.gnarbot.gnar.commands.executors.test.FakeCommand;
 import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 
 import java.util.LinkedHashMap;
@@ -43,10 +42,8 @@ public class CommandRegistry {
         register(new InviteBotCommand());
         register(new PingCommand());
 //        register(new KaiperCommand());
-        register(new MathCommand());
         register(new RemindMeCommand());
 //        register(new GoogleCommand());
-        register(new GoodShitCommand());
         register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
@@ -57,7 +54,6 @@ public class CommandRegistry {
         register(new RedeemCommand());
         register(new IAmCommand());
         register(new QuoteCommand());
-        register(new ActiveShardCommand());
         //End General Commands
 
         //Fun Commands
@@ -65,7 +61,7 @@ public class CommandRegistry {
         register(new ASCIICommand());
         register(new CoinFlipCommand());
         register(new DialogCommand());
-        register(new YodaTalkCommand());
+        //TODO: register(new YodaTalkCommand());
         register(new RollCommand());
         register(new PoopCommand());
         register(new EightBallCommand());
@@ -90,17 +86,13 @@ public class CommandRegistry {
 
         //Testing Commands
         register(new TestCommand());
-        //note - commands below are purely mockups at this stage
-        register(new FakeCommand());
-        register(new KickCommand());
-        register(new BanCommand());
         //End Testing Commands
 
         //Game Commands
         register(new OverwatchLookupCommand());
-        register(new LeagueCommand());
+        //TODO: MAYBE? register(new LeagueCommand());
 //        register(new PokemonCommand());
-        register(new GameLookupCommand());
+        //TODO: register(new GameLookupCommand());
         //End Game Commands
 
         //Poll Commands
@@ -108,13 +100,16 @@ public class CommandRegistry {
         //End Poll Commands
 
         //Media Commands
-        register(new AnimeSearchCommand());
-        register(new MangaSearchCommand());
+        //TODO: register(new AnimeSearchCommand());
+        //TODO: register(new MangaSearchCommand());
         register(new MemeCommand());
         register(new TrumpCommand());
-        register(new CatCommand());
+        register(new CatsCommand());
+        register(new DogCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
+        //TODO: register(new KetoCommand());
+        //TODO: Site has new system for generating RCG comics, need to rework
         register(new XKCDCommand());
         register(new ActionCommand());
         //End Media Commands
@@ -131,7 +126,6 @@ public class CommandRegistry {
         register(new PremiumKeyCommand());
         register(new EmoteListCommand());
         register(new SudoCommand());
-        register(new UpdateAvatarCommand());
 
         //MUSIC COMMAND
         if (bot.getConfiguration().getMusicEnabled()) {

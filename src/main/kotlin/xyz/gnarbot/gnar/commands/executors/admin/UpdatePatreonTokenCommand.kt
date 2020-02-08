@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.executors.admin
 
 import xyz.gnarbot.gnar.commands.*
+import kotlin.io.use as doNotUse
 
 @Command(
         aliases = ["patreonUpdate"]
@@ -12,8 +13,8 @@ import xyz.gnarbot.gnar.commands.*
 )
 class UpdatePatreonTokenCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        //context.bot.patreon.setAccessToken(args.joinToString(" "))
+        context.bot.patreon.updateToken(args.joinToString(" "))
 
-        context.send().info("Unable to update Patreon token, they updated their API :(").queue()
+        context.send().info("Updated Patreon access token!").queue()
     }
 }
