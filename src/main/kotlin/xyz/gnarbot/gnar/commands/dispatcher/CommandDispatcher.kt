@@ -10,11 +10,12 @@ import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.dispatcher.predicates.*
 import xyz.gnarbot.gnar.utils.Utils
 import java.util.concurrent.ExecutorService
+import java.util.function.BiPredicate
 
 class CommandDispatcher(private val bot: Bot, private val commandRegistry: CommandRegistry, private val executor: ExecutorService) {
     private val namePrefix = "${bot.configuration.name.toLowerCase()} "
 
-    private val predicates = listOf(
+    private val predicates = listOf<BiPredicate<CommandExecutor, Context>>(
             IgnoredPredicate(), // is the user ignored
             AdministratorPredicate(), // does the command require admin rights
             SettingsPredicate(), // command settings
@@ -33,6 +34,10 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
 
         val content = context.message.contentRaw.let {
             when {
+                //Markdown detection and prevention of bot displaying messages from blank commands
+                (it.startsWith(bot.configuration.prefix) && it.endsWith(bot.configuration.prefix)) -> return
+
+
                 it.startsWith(bot.configuration.prefix) -> it.substring(bot.configuration.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {

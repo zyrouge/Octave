@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.utils.get
 import xyz.gnarbot.gnar.utils.toDuration
 import java.io.File
 import java.time.Duration
+import kotlin.jvm.JvmField as Field
 
 class Configuration(file: File) {
     private val loader = HoconConfigurationLoader.builder().setFile(file).build()
@@ -14,12 +15,10 @@ class Configuration(file: File) {
 
     val name: String = config["bot", "name"].getString("Gnar")
     val game: String = config["bot", "game"].getString("_help | %d")
-    val avatar: String = config["bot", "avatar"].getString("https://gnarbot.xyz/assets/img/logo.png")
 
     val prefix: String = config["commands", "prefix"].getString("_")
 
     val admins: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
-    val blocked: List<Long> = config["commands", "blocked"].getList(TypeToken.of(Long::class.javaObjectType))
 
     val musicEnabled: Boolean = config["music", "enabled"].getBoolean(true)
     val searchEnabled: Boolean = config["music", "search"].getBoolean(true)

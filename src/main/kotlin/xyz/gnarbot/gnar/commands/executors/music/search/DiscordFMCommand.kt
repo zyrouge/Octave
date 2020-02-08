@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.executors.music.PLAY_MESSAGE
+import xyz.gnarbot.gnar.music.DiscordFMTrackContext
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.DiscordFM
 
@@ -81,8 +82,7 @@ class DiscordFMCommand : CommandExecutor() {
             return
         }
 
-
-        /*DiscordFMTrackContext(context.bot, library, context.user.idLong, context.textChannel.idLong).let {
+        DiscordFMTrackContext(context.bot, library, context.user.idLong, context.textChannel.idLong).let {
             manager.discordFMTrack = it
             manager.loadAndPlay(context,
                     context.bot.discordFM.getRandomSong(library),
@@ -90,6 +90,5 @@ class DiscordFMCommand : CommandExecutor() {
                     "Now streaming random tracks from the `$library` Discord.FM station!"
             )
         }
-        */
     }
 }

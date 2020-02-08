@@ -93,16 +93,16 @@ class Selector(waiter: EventWaiter,
                     }
 
                     val value = it.reaction.reactionEmote.name[0] - '\u0030'
-                    it.channel.retrieveMessageById(it.messageIdLong).queue { msg ->
-                        options[value].action(msg)
+                    it.channel.retrieveMessageById(it.messageIdLong).queue {
+                        options[value].action(it)
                     }
                     finally(message)
                 }.predicate {
                     when {
                         it.messageIdLong != message?.idLong -> false
-                        it.user.isBot -> false
+                        it!!.user!!.isBot -> false
                         user != null && it.user != user -> {
-                            it.reaction.removeReaction(it.user).queue()
+                            it.reaction.removeReaction(it!!.user!!).queue()
                             false
                         }
                         else -> {
@@ -113,7 +113,7 @@ class Selector(waiter: EventWaiter,
                                 if (value in 0 until options.size) {
                                     true
                                 } else {
-                                    it.reaction.removeReaction(it.user).queue()
+                                    it.reaction.removeReaction(it!!.user!!).queue()
                                     false
                                 }
                             }
@@ -132,8 +132,8 @@ class Selector(waiter: EventWaiter,
                     }
 
                     val value = content.toIntOrNull() ?: return@waitFor
-                    it.channel.retrieveMessageById(it.messageIdLong).queue { msg ->
-                        options[value].action(msg)
+                    it.channel.retrieveMessageById(it.messageIdLong).queue {
+                        options[value].action(it)
                     }
                     finally(message)
                 }.predicate {

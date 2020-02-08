@@ -30,11 +30,6 @@ public class GuildInfoCommand extends CommandExecutor {
             roleStr.add(role.getName());
         }
 
-        String owner = "None.";
-        if (guild.getOwner() != null) {
-            owner = guild.getOwner().getAsMention();
-        }
-
         context.send().embed("Guild Information")
                 .setThumbnail(context.getGuild().getIconUrl())
                 .field("Name", true, guild.getName())
@@ -43,7 +38,7 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("ID", true, guild.getId())
                 .field("Creation Time", true, guild.getTimeCreated().format(DateTimeFormatter.RFC_1123_DATE_TIME))
 
-                .field("Owner", true, owner)
+                .field("Owner", true, guild.getOwner() == null ? "No Owner" : guild.getOwner().getAsMention())
                 .field("Members", true, guild.getMemberCache().size())
 
                 .field("Text Channels", true, guild.getTextChannelCache().size())

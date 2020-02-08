@@ -3,7 +3,6 @@ package com.jagrosh.jdautilities.waiter
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.hooks.EventListener
 import java.util.concurrent.TimeUnit
@@ -12,7 +11,7 @@ import java.util.function.Consumer
 /**
  * A simple object used primarily for entities found in [com.jagrosh.jdautilities.menu].
  *
- * <p>The EventWaiter is capable of handling specialized forms of [Event]
+ * <p>The EventWaiter is capable of handling specialized forms of [GenericEvent]
  * that must meet criteria not normally specifiable without implementation of an [EventListener].
  *
  * <p>If you intend to use the EventWaiter, it is highly recommended you <b>DO NOT create multiple EventWaiters</b>!
@@ -52,7 +51,7 @@ class EventWaiter : EventListener {
 
     @Suppress("UNCHECKED_CAST")
     override fun onEvent(event: GenericEvent) {
-        var cls: Class<in Event> = event.javaClass
+        var cls: Class<in GenericEvent> = event.javaClass
 
         while (cls.superclass != null) {
             if (cls in waiters) {
@@ -63,9 +62,9 @@ class EventWaiter : EventListener {
         }
     }
 
-    fun <T: Event> waitFor(cls: Class<T>, action: (T) -> Unit) : WaiterBuilder<T> = WaiterBuilder(cls, action)
+    fun <T : GenericEvent> waitFor(cls: Class<T>, action: (T) -> Unit): WaiterBuilder<T> = WaiterBuilder(cls, action)
 
-    fun <T: Event> waitFor(cls: Class<T>, action: Consumer<T>) : WaiterBuilder<T> = WaiterBuilder(cls) { action.accept(it) }
+    fun <T : GenericEvent> waitFor(cls: Class<T>, action: Consumer<T>): WaiterBuilder<T> = WaiterBuilder(cls) { action.accept(it) }
 
     // builder
     inner class WaiterBuilder<T : GenericEvent>(private var cls: Class<T>, private var action: (T) -> Unit) {

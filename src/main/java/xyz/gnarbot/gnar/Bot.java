@@ -3,11 +3,16 @@ package xyz.gnarbot.gnar;
 import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkAdapter;
+import net.dean.jraw.http.OkHttpNetworkAdapter;
+import net.dean.jraw.http.UserAgent;
+import net.dean.jraw.oauth.Credentials;
+import net.dean.jraw.oauth.OAuthHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MiscUtil;
@@ -23,79 +28,71 @@ import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
-import xyz.gnarbot.gnar.sentry.SentryUtil;
 import xyz.gnarbot.gnar.utils.CountUpdater;
-import xyz.gnarbot.gnar.utils.DatabaseManager;
+import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
-import java.sql.Connection;
-import java.util.Objects;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class Bot {
     public static final Logger LOG = LoggerFactory.getLogger("Bot");
 
-    private final Credentials credentials;
+    private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
+    private final UserAgent ua = new UserAgent("bot", "xyz.gnarbot.gnar", "5.1.2", "GnarDiscordBot");
     private Configuration configuration;
 
+    private final Bot bot = this; //strictly there for counter
     private final Database database;
-    private final DatabaseManager db;
-    private final Connection connection;
-
+    //private final RedditClient redditClient;
     private final OptionsRegistry optionsRegistry;
     private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
-    //private final DiscordFM discordFM;
+    private final DiscordFM discordFM;
     private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
     private final CommandDispatcher commandDispatcher;
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
-    private final CountUpdater countUpdater;
+    private CountUpdater countUpdater;
     private final SoundManager soundManager;
-    private final SentryUtil sentryUtil;
 
     public Bot(
-            Credentials credentials,
+            BotCredentials credentials,
             Supplier<Configuration> configurationGenerator
     ) throws LoginException {
         this.credentials = credentials;
         this.configurationGenerator = configurationGenerator;
         this.soundManager = new SoundManager();
+        soundManager.loadSounds();
         reloadConfiguration();
-        ((ch.qos.logback.classic.Logger) LOG).setLevel(ch.qos.logback.classic.Level.DEBUG);
+        //Credentials cred = Credentials.script(credentials.getRedditUsername(), credentials.getRedditPassword(), credentials.getRedditClient(), credentials.getRedditSecret());
+        //NetworkAdapter adapter = new OkHttpNetworkAdapter(ua);
+        //this.redditClient = OAuthHelper.automatic(adapter, cred);
 
         LOG.info("Initializing the Discord bot.");
 
-        this.database = new Database(getConnection(), this);
-        this.db = new DatabaseManager(this, "");
-        this.connection = db.establishConnection();
-
-        if(connection == null) {
-            LOG.error("Postgres connection failed. Make sure your information is correct.");
-            System.exit(0);
-        }
-        optionsRegistry = new OptionsRegistry(this);
+        database = new Database("bot");
 
         String url = this.credentials.getWebHookURL();
         if (url != null) {
             LOG.info("Connected to Discord web hook.");
-            //DiscordLogBack.enable(new WebhookClientBuilder(url).build());
         } else {
             LOG.warn("Not connected to Discord web hook.");
         }
 
-        LOG.info("Name         :\t" + configuration.getName());
-        LOG.info("Shards       :\t" + this.credentials.getTotalShards());
-        LOG.info("Prefix       :\t" + configuration.getPrefix());
-        LOG.info("Music Enabled:\t" + configuration.getMusicEnabled());
-        LOG.info("Admins       :\t" + configuration.getAdmins());
-        LOG.info("JDA Version  :\t" + JDAInfo.VERSION);
+        LOG.info("Name  :\t" + configuration.getName());
+        LOG.info("Shards:\t" + this.credentials.getTotalShards());
+        LOG.info("Prefix:\t" + configuration.getPrefix());
+        LOG.info("Admins:\t" + configuration.getAdmins());
+        LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
         eventWaiter = new EventWaiter();
         shardManager = new DefaultShardManagerBuilder()
@@ -109,23 +106,30 @@ public class Bot {
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
 
-        countUpdater = new CountUpdater(this, shardManager);
-
         shardManager.addEventListener();
+
+
+        //Added this as a quick fix as the other system only updated shard 0.
+        Timer timer = new Timer(900000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                System.out.println("Running");
+                countUpdater = new CountUpdater(bot, shardManager);
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
 
         LOG.info("The bot is now connecting to Discord.");
 
+        optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
 
-        if (configuration.getMusicEnabled()) {
-            soundManager.loadSounds();
-            // SETUP APIs
-            //discordFM = new DiscordFM(this);
-            LOG.info("DiscordFM is temporarily disabled due to moving serves.");
-
-        }
+        // SETUP APIs
+        discordFM = new DiscordFM(this);
 
         patreon = new PatreonAPI(credentials.getPatreonToken());
+        System.out.println("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
@@ -135,8 +139,6 @@ public class Bot {
 
         commandRegistry = new CommandRegistry(this);
         commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
-
-        sentryUtil = new SentryUtil(this, Objects.requireNonNull(getCredentials().getSentryPubDsn()));
 
         LOG.info("Finish setting up bot internals.");
     }
@@ -149,28 +151,24 @@ public class Bot {
         return shardManager;
     }
 
-    public CountUpdater getCountUpdater() {
-        return countUpdater;
-    }
+    //public CountUpdater getCountUpdater() {
+    //    return countUpdater;
+    //}
 
     public Guild getGuildById(long id) {
         return getJDA(MiscUtil.getShardForGuild(id, credentials.getTotalShards())).getGuildById(id);
-    }
-
-    public User getUserById(String id) {
-        return getShardManager().getUserById(id);
     }
 
     public MyAnimeListAPI getMyAnimeListAPI() {
         return myAnimeListAPI;
     }
 
-    public Database db() {
-        return database;
+    public DiscordFM getDiscordFM() {
+        return discordFM;
     }
 
-    public Connection getConnection() {
-        return connection;
+    public Database db() {
+        return database;
     }
 
     public CommandRegistry getCommandRegistry() {
@@ -215,7 +213,7 @@ public class Bot {
         return configuration;
     }
 
-    public Credentials getCredentials() {
+    public BotCredentials getCredentials() {
         return credentials;
     }
 
@@ -227,11 +225,7 @@ public class Bot {
         return soundManager;
     }
 
-    public Database getDatabase() {
-        return database;
-    }
-
-    public DatabaseManager getDb() {
-        return db;
-    }
+    //public RedditClient getRedditClient() {
+    //    return redditClient;
+    //}
 }

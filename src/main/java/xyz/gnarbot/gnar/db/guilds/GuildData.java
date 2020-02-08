@@ -4,14 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import xyz.gnarbot.gnar.db.ManagedObject;
-import xyz.gnarbot.gnar.db.guilds.suboptions.*;
+import xyz.gnarbot.gnar.db.guilds.suboptions.CommandData;
+import xyz.gnarbot.gnar.db.guilds.suboptions.IgnoredData;
+import xyz.gnarbot.gnar.db.guilds.suboptions.MusicData;
+import xyz.gnarbot.gnar.db.guilds.suboptions.RoleData;
 
 import java.beans.ConstructorProperties;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GuildData extends ManagedObject {
-
     @JsonSerialize
     @JsonDeserialize(as = CommandData.class)
     private CommandData commandData;
@@ -28,20 +30,19 @@ public class GuildData extends ManagedObject {
     @JsonDeserialize(as = MusicData.class)
     private MusicData musicData;
 
-    @JsonSerialize
-    @JsonDeserialize(as = LogData.class)
-    private LogData logData;
-
     @JsonSerialize(keyAs = String.class, contentAs = Long.class)
     @JsonDeserialize(keyAs = String.class, contentAs = Long.class)
     private Map<String, Long> premiumKeys;
+
+    @JsonIgnore
+    public Object logData;
 
     @ConstructorProperties("id")
     public GuildData(String id) {
         super(id, "guilds_v2");
     }
 
-    public GuildData addPremiumKey(String id, long duration) {
+    public void addPremiumKey(String id, long duration) {
         if (premiumKeys == null) premiumKeys = new HashMap<>();
 
         if (!isPremium()) {
@@ -50,8 +51,6 @@ public class GuildData extends ManagedObject {
         }
 
         premiumKeys.put(id, duration);
-
-        return this;
     }
 
     @JsonIgnore
@@ -105,12 +104,6 @@ public class GuildData extends ManagedObject {
     public RoleData getRoles() {
         if (roleData == null) roleData = new RoleData();
         return roleData;
-    }
-
-    @JsonIgnore
-    public LogData getLog() {
-        if (logData == null) logData = new LogData();
-        return logData;
     }
 
     public void reset() {

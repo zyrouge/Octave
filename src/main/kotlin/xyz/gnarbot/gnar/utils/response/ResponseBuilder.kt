@@ -75,7 +75,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
             title { "Exception" }
             desc {
                 buildString {
-                    append("Error: ${exception.message}")
+                    append("For some reason this track causes errors, ignore this.")
                 }
             }
             color { Color.RED }

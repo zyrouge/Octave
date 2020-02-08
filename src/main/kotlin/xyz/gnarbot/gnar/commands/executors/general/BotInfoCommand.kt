@@ -68,7 +68,6 @@ class BotInfoCommand : CommandExecutor() {
                     append("The Serious: **[Avarel](https://github.com/Avarel)**\n")
                     append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**\n")
                     append("Contributor: **[Gatt](https://github.com/RealGatt)**\n")
-                    append("Other Contributor: **[CircuitRCAY](https://github.com/CircuitCodes)**")
                 }
             }
         }.action().queue()

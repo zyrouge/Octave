@@ -37,7 +37,7 @@ class SoundboardCommand : CommandExecutor() {
 
 
         var distance = 999
-        var meme : String = ""
+        var meme = ""
         for (s in context.bot.soundManager.map.keys) {
             val dist = StringUtils.getLevenshteinDistance(s, args.joinToString())
             if(dist < distance) {
@@ -57,14 +57,14 @@ class SoundboardCommand : CommandExecutor() {
 
             val result = results[0]
 
-            val managers = try {
+            val manager = try {
                 context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
                 e.sendToContext(context)
                 return@search
             }
 
-            managers.loadAndPlay(
+            manager.loadAndPlay(
                     context,
                     result.info.uri,
                     TrackContext(

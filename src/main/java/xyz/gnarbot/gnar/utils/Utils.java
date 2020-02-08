@@ -106,24 +106,24 @@ public class Utils {
 
     @Nullable
     public static String hasteBin(String content) {
-            try {
-                Request request = new Request.Builder().url("https://hastebin.com/documents")
-                        .header("User-Agent", "Gnar")
-                        .header("Content-Type", "text/plain")
-                        .post(RequestBody.create(null, content))
-                        .build();
+        Request request = new Request.Builder().url("https://hastebin.com/documents")
+                .header("User-Agent", "Gnar")
+                .header("Content-Type", "text/plain")
+                .post(RequestBody.create(null, content))
+                .build();
 
-                Response response = HttpUtils.CLIENT.newCall(request).execute();
+        try (Response response = HttpUtils.CLIENT.newCall(request).execute()) {
+            ResponseBody body = response.body();
+            if (body == null) return null;
 
-                ResponseBody body = response.body();
-                if (body == null) return "Null body";
+            JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()));
 
-                JSONObject jso = new JSONObject(new JSONTokener(body.byteStream()));
-                response.close();
-                return "https://hastebin.com/" + jso.get("key");
+            response.close();
 
-            } catch (IOException e) {
-                return "Error logging to Hastebin. TL;DR error: " + content.substring(0, 500);
-            }
+            return "https://hastebin.com/" + jso.get("key");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

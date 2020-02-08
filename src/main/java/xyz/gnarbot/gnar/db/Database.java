@@ -1,22 +1,39 @@
 package xyz.gnarbot.gnar.db;
 
+import com.rethinkdb.gen.exc.ReqlDriverError;
+import com.rethinkdb.net.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
 
 import javax.annotation.Nullable;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
+
+import static com.rethinkdb.RethinkDB.r;
 
 public class Database {
     private static final Logger LOG = LoggerFactory.getLogger("Database");
     private final Connection conn;
-    private final Bot bot; //Simply here for referencing data we may need
 
-    public Database(Connection conn, Bot bot) {
+    public Database(String name) {
+        Connection conn = null;
+        try {
+            Connection.Builder builder = r.connection().hostname("localhost").port(28015);
+            // potential spot for authentication
+            conn = builder.connect();
+            if (r.dbList().<List<String>>run(conn).contains(name)) {
+                LOG.info("Connected to database.");
+                conn.use(name);
+            } else {
+                LOG.info("Rethink Database `" + name + "` is not present. Closing connection.");
+                close();
+                System.exit(0);
+            }
+        } catch (ReqlDriverError e) {
+            LOG.error("Rethink Database connection failed.", e);
+            System.exit(0);
+        }
         this.conn = conn;
-        this.bot = bot;
     }
 
     public Connection getConn() {
@@ -24,34 +41,30 @@ public class Database {
     }
 
     public boolean isOpen() {
-        try {
-            return conn != null && !conn.isClosed();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        return conn != null && conn.isOpen();
     }
 
     public void close() {
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        conn.close();
     }
 
     @Nullable
-    public GuildData getGuildData(String id, String dataType) {
-        return (GuildData) get(id, dataType);
+    public GuildData getGuildData(String id) {
+        return get("guilds_v2", id, GuildData.class);
     }
 
     @Nullable
-    public Object get(String id, String columnName) {
-        try {
-            return isOpen() ? bot.getDb().selectGuildData(Integer.valueOf(id)).getObject("") : null;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public PremiumKey getPremiumKey(String id) {
+        return get("keys", id, PremiumKey.class);
+    }
+
+    @Nullable
+    public PatreonEntry getPatreonEntry(String id) {
+        return get("patreon", id, PatreonEntry.class);
+    }
+
+    @Nullable
+    public <T> T get(String table, String id, Class<T> cls) {
+        return isOpen() ? r.table(table).get(id).run(conn, cls) : null;
     }
 }
