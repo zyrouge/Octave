@@ -8,7 +8,6 @@ import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioTrack
-import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioTrack
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager
@@ -16,6 +15,11 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import com.sedmelluq.lava.extensions.youtuberotator.YoutubeIpRotatorSetup
+import com.sedmelluq.lava.extensions.youtuberotator.planner.AbstractRoutePlanner
+import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
@@ -23,53 +27,72 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 import org.apache.http.client.config.CookieSpecs
 import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.Configuration
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.utils.response.respond
+import java.net.Inet6Address
+import java.net.InetAddress
+import java.util.*
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-class MusicManager(private val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
-    companion object {
-        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager().also {
-            it.registerSourceManager(YoutubeAudioSourceManager().apply {
-                configureRequests {
-                    RequestConfig.copy(it).setCookieSpec(CookieSpecs.IGNORE_COOKIES).build()
+class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
+    private val playerManager: AudioPlayerManager
+    init {
+        playerManager = DefaultAudioPlayerManager().also { it ->
+            val youtubeAudioSourceManager = YoutubeAudioSourceManager(true)
+            val config: Configuration = this.bot.configuration
+
+            if(config.ipv6Block.isNotEmpty()) {
+                val planner: AbstractRoutePlanner
+                val block: String = config.ipv6Block
+                val blocks: List<IpBlock<Inet6Address>> = Collections.singletonList(Ipv6Block(block))
+
+                planner = if(config.ipv6Exclude.isNotEmpty()) {
+                    RotatingNanoIpRoutePlanner(blocks)
+                } else {
+                    val blacklistedGW: InetAddress = InetAddress.getByName(config.ipv6Exclude)
+                    RotatingNanoIpRoutePlanner(blocks).also { inetAddress -> !inetAddress.equals(blacklistedGW) };
                 }
-            })
+
+                YoutubeIpRotatorSetup(planner).forSource(youtubeAudioSourceManager).setup();
+            }
+
+            it.registerSourceManager(youtubeAudioSourceManager)
             it.registerSourceManager(BandcampAudioSourceManager())
             it.registerSourceManager(VimeoAudioSourceManager())
             it.registerSourceManager(TwitchStreamAudioSourceManager())
             it.registerSourceManager(BeamAudioSourceManager())
         }
+    }
 
-        fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
-            playerManager.loadItem(query, object : AudioLoadResultHandler {
-                override fun trackLoaded(track: AudioTrack) {
-                    callback(listOf(track))
+    fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
+        playerManager.loadItem(query, object : AudioLoadResultHandler {
+            override fun trackLoaded(track: AudioTrack) {
+                callback(listOf(track))
+            }
+
+            override fun playlistLoaded(playlist: AudioPlaylist) {
+                if (!playlist.isSearchResult) {
+                    return
                 }
 
-                override fun playlistLoaded(playlist: AudioPlaylist) {
-                    if (!playlist.isSearchResult) {
-                        return
-                    }
-
-                    if (maxResults == -1) {
-                        callback(playlist.tracks)
-                    } else {
-                        callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
-                    }
+                if (maxResults == -1) {
+                    callback(playlist.tracks)
+                } else {
+                    callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
                 }
+            }
 
-                override fun noMatches() {
-                    callback(emptyList())
-                }
+            override fun noMatches() {
+                callback(emptyList())
+            }
 
-                override fun loadFailed(e: FriendlyException) {
-                    callback(emptyList())
-                }
-            })
-        }
+            override fun loadFailed(e: FriendlyException) {
+                callback(emptyList())
+            }
+        })
     }
 
     @Volatile
