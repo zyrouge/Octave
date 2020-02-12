@@ -38,7 +38,9 @@ public class TriviaQuestions {
                         System.out.println(line);
                     }
                 }
-            } catch (Exception e) {e.printStackTrace();}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

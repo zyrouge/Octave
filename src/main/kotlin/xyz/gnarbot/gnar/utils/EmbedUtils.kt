@@ -1,5 +1,6 @@
 @file:Suppress("NOTHING_TO_INLINE")
 @file:JvmName("EmbedUtils")
+
 package xyz.gnarbot.gnar.utils
 
 import net.dv8tion.jda.api.EmbedBuilder

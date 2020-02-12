@@ -79,7 +79,8 @@ public class Utils {
         List<String> parts = new ArrayList<>();
 
         Matcher matcher = ARGUMENT_PATTERN.matcher(s);
-        outer: while (matcher.find()) {
+        outer:
+        while (matcher.find()) {
             for (int i = 1; i <= matcher.groupCount(); i++) {
                 String match = matcher.group(i);
                 if (match != null) {

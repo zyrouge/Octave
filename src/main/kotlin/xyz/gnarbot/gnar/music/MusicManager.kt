@@ -37,17 +37,18 @@ import java.util.concurrent.TimeUnit
 
 class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
     val playerManager: AudioPlayerManager
+
     init {
         playerManager = DefaultAudioPlayerManager().also { it ->
             val youtubeAudioSourceManager = YoutubeAudioSourceManager(true)
             val config: Configuration = this.bot.configuration
 
-            if(config.ipv6Block.isNotEmpty()) {
+            if (config.ipv6Block.isNotEmpty()) {
                 val planner: AbstractRoutePlanner
                 val block: String = config.ipv6Block
                 val blocks: List<IpBlock<Inet6Address>> = Collections.singletonList(Ipv6Block(block))
 
-                planner = if(config.ipv6Exclude.isNotEmpty()) {
+                planner = if (config.ipv6Exclude.isNotEmpty()) {
                     RotatingNanoIpRoutePlanner(blocks)
                 } else {
                     val blacklistedGW: InetAddress = InetAddress.getByName(config.ipv6Exclude)
@@ -79,7 +80,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 if (maxResults == -1) {
                     callback(playlist.tracks)
                 } else {
-                    callback(playlist.tracks.subList(0, Math.min(maxResults, playlist.tracks.size)))
+                    callback(playlist.tracks.subList(0, maxResults.coerceAtMost(playlist.tracks.size)))
                 }
             }
 
@@ -133,7 +134,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
     /**
      * @return If the user is listening to DiscordFM
      */
-    var discordFMTrack : DiscordFMTrackContext? = null
+    var discordFMTrack: DiscordFMTrackContext? = null
 
     fun destroy() {
         player.destroy()
@@ -141,7 +142,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
         closeAudioConnection()
     }
 
-    fun openAudioConnection(channel: VoiceChannel, context: Context) : Boolean {
+    fun openAudioConnection(channel: VoiceChannel, context: Context): Boolean {
         when {
             !bot.configuration.musicEnabled -> {
                 context.send().error("Music is disabled.").queue()
@@ -319,7 +320,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 // No track found and queue is empty
                 // destroy player
 
-                if(e.message!!.contains("decoding")) {
+                if (e.message!!.contains("decoding")) {
                     return
                 }
 
@@ -336,14 +337,14 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
         equalizer.setGain(0, b1)
         equalizer.setGain(1, b2)
 
-        if(!equalizerEnabled) {
+        if (!equalizerEnabled) {
             player.setFilterFactory(equalizer)
             equalizerEnabled = true
         }
     }
 
     fun disableBass() {
-        if(equalizerEnabled) {
+        if (equalizerEnabled) {
             equalizer.setGain(0, 0F)
             equalizer.setGain(1, 0F)
             player.setFilterFactory(null)

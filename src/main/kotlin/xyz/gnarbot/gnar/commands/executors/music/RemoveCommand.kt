@@ -27,7 +27,7 @@ class RemoveCommand : MusicCommandExecutor(true, false) {
             return
         }
 
-        val track = when(args[0]) {
+        val track = when (args[0]) {
             "first" -> queue.removeFirst()
             "last" -> queue.removeLast()
             "all" -> {

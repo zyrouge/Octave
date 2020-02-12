@@ -13,12 +13,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Command {
-    /** @return The aliases of this command. */
+    /**
+     * @return The aliases of this command.
+     */
     String[] aliases();
 
-    /** @return The description of this command. */
+    /**
+     * @return The description of this command.
+     */
     String description() default "No description provided.";
 
-    /** @return The usage of this command. */
+    /**
+     * @return The usage of this command.
+     */
     String usage() default "";
 }

@@ -80,11 +80,12 @@ class Selector(waiter: EventWaiter,
                     }
                     it.addReaction(cancel).queue()
                 }
-                Type.MESSAGE -> { /* pass */ }
+                Type.MESSAGE -> { /* pass */
+                }
             }
         }
 
-        when(type) {
+        when (type) {
             Type.REACTIONS -> {
                 waiter.waitFor(MessageReactionAddEvent::class.java) {
                     if (it.reaction.reactionEmote.name == cancel) {

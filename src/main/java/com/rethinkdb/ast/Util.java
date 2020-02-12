@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 
 public class Util {
+    private Util() {
+    }
+
     /**
      * Coerces objects from their native type to ReqlAst
      *
@@ -131,6 +134,4 @@ public class Util {
         // val is a non-null POJO, let's introspect its public properties
         return toReqlAst(toMap(val));
     }
-
-    private Util() {}
 }

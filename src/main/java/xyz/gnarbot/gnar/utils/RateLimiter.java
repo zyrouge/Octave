@@ -46,7 +46,7 @@ public class RateLimiter<K> {
      * pre-defined timeout amount and unit.
      *
      * @param amount Amount of the duration, in terms of the unit.
-     * @param unit Unit that the duration is measured in.
+     * @param unit   Unit that the duration is measured in.
      */
     public RateLimiter(long amount, TimeUnit unit) {
         this(1, amount, unit);
@@ -57,7 +57,7 @@ public class RateLimiter<K> {
      * along with pre-defined timeout duration instance.
      *
      * @param threshold Checks allowed before rate-limit status.
-     * @param duration Duration instance, converted to milliseconds.
+     * @param duration  Duration instance, converted to milliseconds.
      */
     public RateLimiter(int threshold, Duration duration) {
         this(threshold, duration.toMillis());
@@ -68,8 +68,8 @@ public class RateLimiter<K> {
      * along with pre-defined timeout amount and unit.
      *
      * @param threshold Checks allowed before rate-limit status.
-     * @param amount Amount of the duration, in terms of the unit.
-     * @param unit Unit that the duration is measured in.
+     * @param amount    Amount of the duration, in terms of the unit.
+     * @param unit      Unit that the duration is measured in.
      */
     public RateLimiter(int threshold, long amount, TimeUnit unit) {
         this(threshold, unit.toMillis(amount));
@@ -80,7 +80,7 @@ public class RateLimiter<K> {
      * along with pre-defined timeout value measured in milliseconds.
      *
      * @param threshold Checks allowed before rate-limit status.
-     * @param timeout Timeout duration in milliseconds.
+     * @param timeout   Timeout duration in milliseconds.
      */
     public RateLimiter(int threshold, long timeout) {
         this.threshold = threshold;
@@ -89,14 +89,14 @@ public class RateLimiter<K> {
 
     /**
      * Checks if the key is rate-limited.
-     *
+     * <p>
      * The number of checks allowed before rate-limited status is defined
      * by the {@link #threshold}. How long the key will be timed out for
      * is defined by the {@link #timeout}.
      *
      * @param key The key to check if it is rate-limited.
      * @return {@code true} if the key is not rate-limited.
-     *         {@code false} if the key is rate-limited.
+     * {@code false} if the key is rate-limited.
      */
     public boolean check(final K key) {
         // Pair ( count to check against threshold, time until rate-limit entry is cleared )
@@ -125,6 +125,7 @@ public class RateLimiter<K> {
 
     /**
      * Checks the remaining time until rate-limit for the key is cleared.
+     *
      * @param key The key to check for remaining time.
      * @return The remaining time of which the key's rate-limit entry is cleared.
      */

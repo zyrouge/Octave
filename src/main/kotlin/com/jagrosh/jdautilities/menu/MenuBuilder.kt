@@ -11,9 +11,10 @@ import java.awt.Color
 import java.util.concurrent.TimeUnit
 
 @Suppress("UNCHECKED_CAST")
-abstract class MenuBuilder<T: MenuBuilder<T>>(val waiter: EventWaiter) {
+abstract class MenuBuilder<T : MenuBuilder<T>>(val waiter: EventWaiter) {
     companion object {
-        @JvmStatic val DEFAULT_FINALLY: (Message?) -> Unit = { it?.delete()?.queue() }
+        @JvmStatic
+        val DEFAULT_FINALLY: (Message?) -> Unit = { it?.delete()?.queue() }
     }
 
     protected var user: User? = null

@@ -38,8 +38,6 @@ public class Bot {
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
     private final UserAgent ua = new UserAgent("bot", "xyz.gnarbot.gnar", "5.1.2", "GnarDiscordBot");
-    private Configuration configuration;
-
     private final Bot bot = this; //strictly there for counter
     private final Database database;
     //private final RedditClient redditClient;
@@ -53,8 +51,9 @@ public class Bot {
     private final CommandDispatcher commandDispatcher;
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
-    private CountUpdater countUpdater;
     private final SoundManager soundManager;
+    private Configuration configuration;
+    private CountUpdater countUpdater;
 
     public Bot(
             BotCredentials credentials,

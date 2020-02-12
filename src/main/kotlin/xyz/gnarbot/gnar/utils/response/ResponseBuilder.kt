@@ -28,7 +28,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      */
     open fun info(msg: String): RestAction<Message> {
         return embed {
-            desc  { msg }
+            desc { msg }
         }.action()
     }
 
@@ -41,7 +41,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
     open fun error(msg: String): RestAction<Message> {
         return embed {
             title { "Error" }
-            desc  { msg }
+            desc { msg }
             color { Color.RED }
         }.action()
     }
@@ -52,7 +52,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      * @return The Message created by this function.
      */
     open fun exception(exception: Exception): RestAction<Message> {
-        if(exception.toString().contains("decoding")) {
+        if (exception.toString().contains("decoding")) {
             return embed {
                 title { "Exception" }
                 desc {

@@ -64,7 +64,7 @@ public class MangaSearchCommand extends CommandExecutor {
                             "**Chapters:** `" + entry.getInt("chapters") + "`\n"
                                     + "**Score:** `" + entry.getDouble("score") + "/10`\n"
                                     + "**Status:** `" + entry.getString("status") + "`\n"
-                                    + "**Start Date:** `" +  entry.getString("start_date") + "`\n"
+                                    + "**Start Date:** `" + entry.getString("start_date") + "`\n"
                                     + "**End Date:** `" + entry.getString("end_date") + "`");
 
                     String synopsis = Jsoup.parse(entry.getString("synopsis")).text().replaceAll("\\[i]", "").replaceAll("\\[/i]", "");

@@ -34,7 +34,18 @@ public class Parsers {
             return null;
         }
     });
-
+    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<>("voice channel", "Voice channel name", (c, s) -> {
+        List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
+        return list.isEmpty() ? null : list.get(0);
+    });
+    public static final Parser<CommandExecutor> COMMAND = new Parser<>("_command", "Command label", (c, s) -> {
+        if (s.startsWith(BotLoader.BOT.getConfiguration().getPrefix())) {
+            return BotLoader.BOT.getCommandRegistry().getCommand(s.substring(BotLoader.BOT.getConfiguration().getPrefix().length()));
+        } else {
+            return BotLoader.BOT.getCommandRegistry().getCommand(s);
+        }
+    });
+    public static final Map<Class<?>, Parser<?>> PARSER_MAP = new HashMap<>();
     private static final Pattern durationPattern = Pattern.compile("^(?:(?:(\\d+):)?(\\d+):)?(\\d+)$");
     public static final Parser<Duration> DURATION = new Parser<>("hh:mm:ss", "Timestamp", (c, s) -> {
         Matcher m = durationPattern.matcher(s);
@@ -53,7 +64,6 @@ public class Parsers {
 
         return Duration.ofSeconds(seconds);
     });
-
     private static final Pattern memberPattern = Pattern.compile("<@!?(\\d+)>");
     public static final Parser<Member> MEMBER = new Parser<>("@user", "User mention or name", (c, s) -> {
         Matcher matcher = memberPattern.matcher(s);
@@ -64,7 +74,6 @@ public class Parsers {
             return list.isEmpty() ? null : list.get(0);
         }
     });
-
     private static final Pattern textChannelPattern = Pattern.compile("<#(\\d+)>");
     public static final Parser<TextChannel> TEXT_CHANNEL = new Parser<>("#channel", "Channel mention or name", (c, s) -> {
         Matcher matcher = textChannelPattern.matcher(s);
@@ -75,11 +84,6 @@ public class Parsers {
             return list.isEmpty() ? null : list.get(0);
         }
     });
-    public static final Parser<VoiceChannel> VOICE_CHANNEL = new Parser<>("voice channel", "Voice channel name", (c, s) -> {
-        List<VoiceChannel> list = c.getGuild().getVoiceChannelsByName(s, false);
-        return list.isEmpty() ? null : list.get(0);
-    });
-
     private static final Pattern rolePattern = Pattern.compile("<@&(\\d+)>");
     public static final Parser<Role> ROLE = new Parser<>("@role", "Role mention or name", (c, s) -> {
         Matcher matcher = rolePattern.matcher(s);
@@ -91,15 +95,6 @@ public class Parsers {
         }
     });
 
-    public static final Parser<CommandExecutor> COMMAND = new Parser<>("_command", "Command label", (c, s) -> {
-        if (s.startsWith(BotLoader.BOT.getConfiguration().getPrefix())) {
-            return BotLoader.BOT.getCommandRegistry().getCommand(s.substring(BotLoader.BOT.getConfiguration().getPrefix().length()));
-        } else {
-            return BotLoader.BOT.getCommandRegistry().getCommand(s);
-        }
-    });
-
-    public static final Map<Class<?>, Parser<?>> PARSER_MAP = new HashMap<>();
     static {
         PARSER_MAP.put(String.class, Parsers.STRING);
         PARSER_MAP.put(int.class, Parsers.INTEGER);
@@ -121,7 +116,7 @@ public class Parsers {
         String name = ann0 != null ? ann0.value() : null;
         if (name == null) {
             StringJoiner sj = new StringJoiner(", ");
-            for (T item: cls.getEnumConstants()) {
+            for (T item : cls.getEnumConstants()) {
                 sj.add(item.name().toLowerCase());
             }
             name = sj.toString();

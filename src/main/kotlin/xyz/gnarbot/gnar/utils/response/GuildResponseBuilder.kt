@@ -5,13 +5,13 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.RestAction
 
-class GuildResponseBuilder(channel: TextChannel): ResponseBuilder(channel) {
+class GuildResponseBuilder(channel: TextChannel) : ResponseBuilder(channel) {
     val guild: Guild = channel.guild
 
     override fun info(msg: String): RestAction<Message> {
         return embed {
             title { "Info" }
-            desc  { msg }
+            desc { msg }
             color { guild.selfMember.color }
         }.action()
     }

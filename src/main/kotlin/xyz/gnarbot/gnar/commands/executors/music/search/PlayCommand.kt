@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.commands.executors.music.search
 
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
-import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(

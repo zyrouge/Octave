@@ -1,7 +1,7 @@
 package com.patreon.resources.shared;
 
 public interface Field {
-  String getPropertyName();
+    String getPropertyName();
 
-  boolean isDefault();
+    boolean isDefault();
 }

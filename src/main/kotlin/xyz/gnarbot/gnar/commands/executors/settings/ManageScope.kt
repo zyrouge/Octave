@@ -11,9 +11,11 @@ enum class ManageScope {
         override fun all(context: Context): Set<String> {
             return context.guild.memberCache.mapTo(HashSet()) { it.user.id }
         }
+
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledUsers
         }
+
         override fun rawTransform(map: CommandOptions): MutableSet<String>? {
             return map.rawDisabledUsers()
         }
@@ -22,9 +24,11 @@ enum class ManageScope {
         override fun all(context: Context): Set<String> {
             return context.guild.roleCache.mapTo(HashSet(), ISnowflake::getId)
         }
+
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledRoles
         }
+
         override fun rawTransform(map: CommandOptions): MutableSet<String>? {
             return map.rawDisabledRoles()
         }
@@ -33,9 +37,11 @@ enum class ManageScope {
         override fun all(context: Context): Set<String> {
             return context.guild.textChannelCache.mapTo(HashSet(), ISnowflake::getId)
         }
+
         override fun transform(map: CommandOptions): MutableSet<String> {
             return map.disabledChannels
         }
+
         override fun rawTransform(map: CommandOptions): MutableSet<String>? {
             return map.rawDisabledChannels()
         }

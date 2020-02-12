@@ -31,16 +31,16 @@ public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
 
         String content = patternLayout.doLayout(event);
 
-        if(!content.contains("UnknownHostException")) //Spams the shit out of console, not needed
+        if (!content.contains("UnknownHostException")) //Spams the shit out of console, not needed
 
-        if (content.length() > 2000) {
-            StringBuilder sb = new StringBuilder(":warning: Received a message but it was too long. ");
+            if (content.length() > 2000) {
+                StringBuilder sb = new StringBuilder(":warning: Received a message but it was too long. ");
 
-            String url = Utils.hasteBin(content);
-            sb.append(url != null ? url : "Error while posting to HasteBin.");
+                String url = Utils.hasteBin(content);
+                sb.append(url != null ? url : "Error while posting to HasteBin.");
 
-            content = sb.toString();
-        }
+                content = sb.toString();
+            }
 
         client.send(content);
     }

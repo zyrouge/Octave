@@ -1,4 +1,3 @@
-
 package xyz.gnarbot.gnar.commands.executors.test;
 
 import xyz.gnarbot.gnar.commands.BotInfo;

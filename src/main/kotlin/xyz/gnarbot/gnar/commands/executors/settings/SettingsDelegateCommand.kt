@@ -42,7 +42,7 @@ class SettingsDelegateCommand : CommandExecutor() {
             return
         }
 
-        when(args[0]) {
+        when (args[0]) {
             "reset" -> {
                 context.data.reset()
                 context.data.save()

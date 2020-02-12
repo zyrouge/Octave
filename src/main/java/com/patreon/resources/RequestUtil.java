@@ -12,23 +12,23 @@ import static com.patreon.PatreonAPI.BASE_URI;
  */
 public class RequestUtil {
 
-  public InputStream request(String pathSuffix, String accessToken) throws IOException {
-      String prefix = BASE_URI + "/api/oauth2/api/";
-      URL url = new URL(prefix.concat(pathSuffix));
-      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestProperty("Authorization", "Bearer ".concat(accessToken));
-      connection.setRequestProperty("User-Agent",
-        String.format(
-          "Patreon-Java, version %s, platform %s %s",
-          getVersion(),
-          System.getProperty("os.name"),
-          System.getProperty("os.version")));
-    return connection.getInputStream();
-  }
+    public InputStream request(String pathSuffix, String accessToken) throws IOException {
+        String prefix = BASE_URI + "/api/oauth2/api/";
+        URL url = new URL(prefix.concat(pathSuffix));
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("Authorization", "Bearer ".concat(accessToken));
+        connection.setRequestProperty("User-Agent",
+                String.format(
+                        "Patreon-Java, version %s, platform %s %s",
+                        getVersion(),
+                        System.getProperty("os.name"),
+                        System.getProperty("os.version")));
+        return connection.getInputStream();
+    }
 
-  private String getVersion() throws IOException {
-    return "0.4.2";
-  }
+    private String getVersion() throws IOException {
+        return "0.4.2";
+    }
 
 
 }

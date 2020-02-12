@@ -80,7 +80,7 @@ class LeagueCommand : CommandTemplate() {
         }
 
         context.send().embed("$name's Last Game") {
-            thumbnail{ "http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map1.png" }
+            thumbnail { "http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map1.png" }
             desc {
                 buildString {
                     append("**Champion Played:** ").append(context.bot.riotAPI.getDataChampion(region, games[0].champion).name).append('\n')

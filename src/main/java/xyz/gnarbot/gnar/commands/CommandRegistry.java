@@ -5,8 +5,6 @@ import gnu.trove.set.hash.TIntHashSet;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.executors.admin.*;
 import xyz.gnarbot.gnar.commands.executors.fun.*;
-import xyz.gnarbot.gnar.commands.executors.games.GameLookupCommand;
-import xyz.gnarbot.gnar.commands.executors.games.LeagueCommand;
 import xyz.gnarbot.gnar.commands.executors.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.executors.general.*;
 import xyz.gnarbot.gnar.commands.executors.media.*;
@@ -32,7 +30,9 @@ import java.util.Set;
  */
 public class CommandRegistry {
 
-    /** The mapped registry of invoking key to the classes. */
+    /**
+     * The mapped registry of invoking key to the classes.
+     */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
 
     private final TIntSet idSet = new TIntHashSet();
@@ -176,8 +176,9 @@ public class CommandRegistry {
 
     /**
      * Register the CommandExecutor instance into the registry.
+     *
      * @param label Invoking key.
-     * @param cmd Command entry.
+     * @param cmd   Command entry.
      */
     private void registerCommand(String label, CommandExecutor cmd) {
         if (commandEntryMap.containsKey(label.toLowerCase())) {

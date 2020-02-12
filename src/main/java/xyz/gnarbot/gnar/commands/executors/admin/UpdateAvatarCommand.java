@@ -16,7 +16,7 @@ import java.io.File;
 )
 public class UpdateAvatarCommand extends CommandExecutor {
     @Override
-    public void execute(Context context, String label, String[] args)  {
+    public void execute(Context context, String label, String[] args) {
         try {
             context.getJDA().getSelfUser().getManager().setAvatar(Icon.from(new File("/home/Gnar/logo.png"))).queue();
         } catch (Exception e) {

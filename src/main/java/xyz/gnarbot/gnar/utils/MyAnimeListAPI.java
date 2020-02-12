@@ -13,10 +13,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 public class MyAnimeListAPI {
-    private static final String API_PREFIX = "https://myanimelist.net/api/";
     public static final String SEARCH_ANIME = "anime/search.xml";
     public static final String SEARCH_MANGA = "manga/search.xml";
-
+    private static final String API_PREFIX = "https://myanimelist.net/api/";
     private final String username;
     private final String password;
     private boolean login = false;

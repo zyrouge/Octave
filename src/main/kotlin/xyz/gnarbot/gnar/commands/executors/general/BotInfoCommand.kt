@@ -24,7 +24,6 @@ class BotInfoCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-//        var requests = 0L
         var textChannels = 0L
         var voiceChannels = 0L
         var guilds = 0L
@@ -43,9 +42,6 @@ class BotInfoCommand : CommandExecutor() {
         context.send().embed("Bot Information") {
             thumbnail { context.jda.selfUser.avatarUrl }
             desc { "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld." }
-
-//            field("Session Requests", true) { requests }
-//            field("Requests Per Hour", true) { requests / Math.max(1, h) }
 
             field("Text Channels", true) { textChannels }
             field("Voice Channels", true) { voiceChannels }

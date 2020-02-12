@@ -9,10 +9,10 @@ import java.util.function.BiPredicate;
 public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
     private static final String donatorMessage =
             "🌟 This command is for donators' servers only.\n" +
-            "In order to enjoy donator perks, please consider pledging to " +
-            "__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n" +
-            "Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ " +
-            "and ask one of the owners.";
+                    "In order to enjoy donator perks, please consider pledging to " +
+                    "__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n" +
+                    "Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ " +
+                    "and ask one of the owners.";
 
     @Override
     public boolean test(CommandExecutor cmd, Context context) {

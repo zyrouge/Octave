@@ -36,10 +36,11 @@ class RestartShardsCommand : CommandExecutor() {
                 deadShards.map { it.shardInfo.shardId }.forEach { context.bot.shardManager.restart(it) }
             }
             else -> {
-                val id = args[0].toLongOrNull()?.coerceIn(0, context.bot.shardManager.shardCache.size())?.toInt() ?: kotlin.run {
-                    context.send().error("You must enter a valid shard id.").queue()
-                    return
-                }
+                val id = args[0].toLongOrNull()?.coerceIn(0, context.bot.shardManager.shardCache.size())?.toInt()
+                        ?: kotlin.run {
+                            context.send().error("You must enter a valid shard id.").queue()
+                            return
+                        }
 
                 context.send().info("Shards `$id` are now restarting.").queue()
                 context.bot.shardManager.restart(id)

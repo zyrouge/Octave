@@ -16,11 +16,11 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     var index = 0
 
     init {
-        executor.scheduleAtFixedRate({ for(shard in shardManager.shards) { update(shard); index++ } }, 10L + index * 5, 30, TimeUnit.MINUTES)
-    }
-
-    fun shutdown() {
-        executor.shutdown()
+        executor.scheduleAtFixedRate({
+            for (shard in shardManager.shards) {
+                update(shard); index++
+            }
+        }, 10L + index * 5, 30, TimeUnit.MINUTES)
     }
 
     private fun update(jda: JDA) {
@@ -70,7 +70,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     private fun updateAbal(jda: JDA) {
         val auth = bot.credentials.abal ?: return
 
-        val json =  JSONObject()
+        val json = JSONObject()
                 .put("shards", jda.guildCache.size())
                 .put("shard_id", jda.shardInfo.shardId)
                 .put("shard_count", bot.credentials.totalShards)

@@ -12,25 +12,39 @@ import java.lang.annotation.Target;
 public @interface BotInfo {
     int id();
 
-    /** @return If the command requires the user to be the bot administrator */
+    /**
+     * @return If the command requires the user to be the bot administrator
+     */
     boolean admin() default false;
 
-    /** @return If the command requires the user to be a donator. */
+    /**
+     * @return If the command requires the user to be a donator.
+     */
     boolean donor() default false;
 
-    /** @return If the command can be disabled. */
+    /**
+     * @return If the command can be disabled.
+     */
     boolean toggleable() default true;
 
-    /** @return Command cooldown in milliseconds. */
+    /**
+     * @return Command cooldown in milliseconds.
+     */
     long cooldown() default 0L;
 
-    /** @return The category of the command. */
+    /**
+     * @return The category of the command.
+     */
     Category category() default Category.GENERAL;
 
-    /** @return The intended location where the command is used.. */
+    /**
+     * @return The intended location where the command is used..
+     */
     Scope scope() default Scope.GUILD;
 
-    /** @return The Discord permissions the member requires. */
+    /**
+     * @return The Discord permissions the member requires.
+     */
     Permission[] permissions() default {};
 
     String roleRequirement() default "";

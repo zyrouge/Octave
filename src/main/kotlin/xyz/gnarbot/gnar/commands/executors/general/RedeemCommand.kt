@@ -17,7 +17,7 @@ import java.util.*
 @BotInfo(id = 21)
 class RedeemCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        if (args.size == 0) {
+        if (args.isEmpty()) {
             context.bot.commandDispatcher.sendHelp(context, info)
             return
         }

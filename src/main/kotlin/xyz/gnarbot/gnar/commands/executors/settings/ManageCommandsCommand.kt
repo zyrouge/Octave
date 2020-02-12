@@ -124,7 +124,7 @@ class ManageCommandsCommand : CommandTemplate() {
         }
     }
 
-    @Description(value ="Disable a command for a user/role/channel.")
+    @Description(value = "Disable a command for a user/role/channel.")
     fun disable_specific(context: Context, cmd: CommandExecutor, scope: ManageScope,
                          @[Name("@user|@role|@channel|*") Description("Name or mention of a user, role, or channel")] entity: String
     ) {
@@ -400,7 +400,7 @@ class ManageCommandsCommand : CommandTemplate() {
     }
 
     private fun entity(context: Context, scope: ManageScope, entity: String): Pair<String, String>? {
-        return when(scope) {
+        return when (scope) {
             ManageScope.USER -> {
                 val member = Parsers.MEMBER.parse(context, entity)
 

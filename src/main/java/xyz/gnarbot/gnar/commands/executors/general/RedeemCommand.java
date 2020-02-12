@@ -55,7 +55,7 @@ public class RedeemCommand extends CommandExecutor {
                             .setColor(Color.ORANGE)
                             .description("Redeemed key `" + key.getId() + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + expiresBy.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
-                            .field("Donator Perks", true,  new StringJoiner("\n")
+                            .field("Donator Perks", true, new StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")
                                     .add("• Use the music bot during maximum music capacity.")

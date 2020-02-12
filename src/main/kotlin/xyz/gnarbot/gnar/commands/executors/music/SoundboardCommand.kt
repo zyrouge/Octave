@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import org.apache.commons.lang3.StringUtils
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
-import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(
@@ -40,7 +39,7 @@ class SoundboardCommand : CommandExecutor() {
         var meme = ""
         for (s in context.bot.soundManager.map.keys) {
             val dist = StringUtils.getLevenshteinDistance(s, args.joinToString())
-            if(dist < distance) {
+            if (dist < distance) {
                 distance = dist
                 meme = context.bot.soundManager.map[s]!!
             }

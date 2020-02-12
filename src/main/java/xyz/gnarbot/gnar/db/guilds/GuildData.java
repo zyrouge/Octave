@@ -14,28 +14,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GuildData extends ManagedObject {
+    @JsonIgnore
+    public Object logData;
     @JsonSerialize
     @JsonDeserialize(as = CommandData.class)
     private CommandData commandData;
-
     @JsonSerialize
     @JsonDeserialize(as = RoleData.class)
     private RoleData roleData;
-
     @JsonSerialize
     @JsonDeserialize(as = IgnoredData.class)
     private IgnoredData ignoredData;
-
     @JsonSerialize
     @JsonDeserialize(as = MusicData.class)
     private MusicData musicData;
-
     @JsonSerialize(keyAs = String.class, contentAs = Long.class)
     @JsonDeserialize(keyAs = String.class, contentAs = Long.class)
     private Map<String, Long> premiumKeys;
-
-    @JsonIgnore
-    public Object logData;
 
     @ConstructorProperties("id")
     public GuildData(String id) {

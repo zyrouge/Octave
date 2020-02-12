@@ -23,14 +23,14 @@ class Credentials(file: File) {
     private val config = loader.load()
 
     val token = config["token"].string.takeIf { !it.isNullOrBlank() }
-                ?: error("Bot token can't be null or blank.")
+            ?: error("Bot token can't be null or blank.")
 
     val totalShards = config["sharding", "total"].int.takeIf { it > 0 }
-                ?: error("Shard count total needs to be > 0")
+            ?: error("Shard count total needs to be > 0")
     val shardStart = config["sharding", "start"].int.takeIf { it >= 0 }
-                ?: error("Shard start needs to be >= 0")
+            ?: error("Shard start needs to be >= 0")
     val shardEnd = config["sharding", "end"].int.takeIf { it in shardStart..totalShards }
-                ?: error("Shard end needs to be <= sharding.total")
+            ?: error("Shard end needs to be <= sharding.total")
 
     val webHookURL: String? = config["webhook url"].string
 

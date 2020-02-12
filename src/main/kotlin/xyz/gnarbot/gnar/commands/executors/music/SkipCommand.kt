@@ -18,7 +18,7 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 class SkipCommand : MusicCommandExecutor(true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         if (!(context.member.hasAnyRoleNamed("DJ") || context.member.hasPermission(Permission.ADMINISTRATOR)
-                || manager.player.playingTrack.getUserData(TrackContext::class.java)?.requester == context.user.idLong)) {
+                        || manager.player.playingTrack.getUserData(TrackContext::class.java)?.requester == context.user.idLong)) {
             context.send().error("You did not request this track.").queue()
             return
         }

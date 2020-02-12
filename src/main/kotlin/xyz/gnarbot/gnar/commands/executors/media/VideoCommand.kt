@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.executors.media
 
 import xyz.gnarbot.gnar.commands.*
-import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
         aliases = ["video", "vid"],

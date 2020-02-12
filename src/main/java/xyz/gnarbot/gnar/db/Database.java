@@ -59,7 +59,7 @@ public class Database {
         return get("keys", id, PremiumKey.class);
     }
 
-    public UserData getUserData(String id ) {
+    public UserData getUserData(String id) {
         return get("users", id, UserData.class);
     }
 

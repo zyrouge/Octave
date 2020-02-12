@@ -15,7 +15,8 @@ public class LogData {
 
     @NotNull
     public final Map<String, Long> getChannels() {
-        if (logChannels == null) logChannels = new HashMap<>() {};
+        if (logChannels == null) logChannels = new HashMap<>() {
+        };
         return logChannels;
     }
 }

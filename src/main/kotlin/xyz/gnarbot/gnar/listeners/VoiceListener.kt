@@ -68,7 +68,7 @@ class VoiceListener(private val bot: Bot) : ListenerAdapter() {
                         if (event.channelJoined.id !in options.music.channels) {
                             it.currentRequestChannel?.let { requestChannel ->
                                 ResponseBuilder(requestChannel).error(
-                                    "Can not join `${event.channelJoined.name}`, it isn't one of the designated music channels."
+                                        "Can not join `${event.channelJoined.name}`, it isn't one of the designated music channels."
                                 ).queue()
                             }
 

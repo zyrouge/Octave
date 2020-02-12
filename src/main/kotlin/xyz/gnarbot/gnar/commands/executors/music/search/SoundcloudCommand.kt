@@ -4,7 +4,6 @@ import com.jagrosh.jdautilities.selector
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.executors.music.embedTitle
 import xyz.gnarbot.gnar.music.MusicLimitException
-import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
@@ -69,7 +68,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             } else {
                 context.bot.eventWaiter.selector {
                     title { "SoundCloud Results" }
-                    desc  { "Select one of the following options to play them in your current music channel." }
+                    desc { "Select one of the following options to play them in your current music channel." }
                     color { Color(255, 110, 0) }
 
                     setUser(context.user)
