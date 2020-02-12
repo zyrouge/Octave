@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MiscUtil;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
+import java.util.EnumSet;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
@@ -94,6 +96,7 @@ public class Bot {
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
+                .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.EMOTE))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
