@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
-import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import net.dean.jraw.http.UserAgent;
 import net.dv8tion.jda.api.JDA;
@@ -21,7 +20,6 @@ import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listeners.BotListener;
-import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.CountUpdater;
@@ -95,7 +93,7 @@ public class Bot {
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
-                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
+                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.EMOTE))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)

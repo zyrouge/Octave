@@ -33,7 +33,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
 
         val query = args.joinToString(" ")
 
-        MusicManager.search("scsearch:$query", 5) { results ->
+        context.bot.players.get(context.guild).search("scsearch:$query", 5) { results ->
             if (results.isEmpty()) {
                 context.send().error("No search results for `$query`.").queue()
                 return@search

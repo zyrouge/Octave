@@ -38,4 +38,8 @@ class BotCredentials(file: File) {
     val patreonToken: String? = config["patreon", "token"].string
 
     val riotAPIKey: String? = config["riot", "apiKey"].string
+
+    val databaseURL: String? = config["db", "url"].string
+    val databaseUsername: String? = config["db", "username"].string
+    val databasePassword: String? = config["db", "password"].string
 }

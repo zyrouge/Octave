@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.utils;
+/*package xyz.gnarbot.gnar.utils;
 
 import net.dv8tion.jda.api.entities.Guild;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
@@ -12,4 +12,4 @@ public class LogHelper {
 
     }
 
-}
+}*/

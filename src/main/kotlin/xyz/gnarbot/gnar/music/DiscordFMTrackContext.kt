@@ -20,7 +20,7 @@ class DiscordFMTrackContext(
     fun nextDiscordFMTrack(musicManager: MusicManager, errorDepth: Int = 0) {
         val randomSong = bot.discordFM.getRandomSong(station) ?: return nextDiscordFMTrack(musicManager, errorDepth + 1)
 
-        MusicManager.playerManager.loadItemOrdered(this, randomSong, object : AudioLoadResultHandler {
+        musicManager.playerManager.loadItemOrdered(this, randomSong, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
                 track.userData = this@DiscordFMTrackContext
                 musicManager.scheduler.queue(track)

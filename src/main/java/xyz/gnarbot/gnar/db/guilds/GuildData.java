@@ -42,7 +42,7 @@ public class GuildData extends ManagedObject {
         super(id, "guilds_v2");
     }
 
-    public void addPremiumKey(String id, long duration) {
+    public GuildData addPremiumKey(String id, long duration) {
         if (premiumKeys == null) premiumKeys = new HashMap<>();
 
         if (!isPremium()) {
@@ -51,6 +51,7 @@ public class GuildData extends ManagedObject {
         }
 
         premiumKeys.put(id, duration);
+        return this;
     }
 
     @JsonIgnore

@@ -35,7 +35,6 @@ class RedeemCommand : CommandExecutor() {
             when (key.type) {
                 PremiumKey.Type.PREMIUM -> {
                     key.setRedeemer(Redeemer(Redeemer.Type.GUILD, context.guild.id)).save()
-
                     context.data.addPremiumKey(key.id, key.duration).save()
 
                     val expiresBy = OffsetDateTime.ofInstant(Instant.ofEpochMilli(context.data.premiumUntil), ZoneId.systemDefault())
@@ -44,7 +43,7 @@ class RedeemCommand : CommandExecutor() {
                             .setColor(Color.ORANGE)
                             .description("Redeemed key `" + key.id + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + expiresBy.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
-                            .field("**Key Type:** ${key.type.description}", true, StringJoiner("\n"))
+                            .field("**Key Type:** ${key.type}", true, StringJoiner("\n"))
                             .field("Donator Perks", true, StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")
@@ -54,9 +53,9 @@ class RedeemCommand : CommandExecutor() {
                             )
                             .action().queue()
                 }
+
                 PremiumKey.Type.PREMIUM_OVERRIDE -> {
                     key.setRedeemer(Redeemer(Redeemer.Type.PREMIUM_OVERRIDE, context.user.id)).save()
-                    println(key.redeemer)
 
                     context.bot.options.ofUser(context.user).addPremiumKey(key.id, key.duration).save()
 
@@ -66,7 +65,7 @@ class RedeemCommand : CommandExecutor() {
                             .setColor(Color.ORANGE)
                             .description("Redeemed key `" + key.id + "`. **Thank you for supporting the bot's development!**\n")
                             .appendDescription("Your **Premium** status will be valid until `" + expiration.format(DateTimeFormatter.RFC_1123_DATE_TIME) + "`.")
-                            .field("**Key Type:** ${key.type.description}", true, StringJoiner("\n"))
+                            .field("**Key Type:** ${key.type}", true, StringJoiner("\n"))
                             .field("Donator Perks", true, StringJoiner("\n")
                                     .add("• `volume` Change the volume of the music player!")
                                     .add("• First access to new features.")

@@ -93,7 +93,7 @@ class PlayCommand : CommandExecutor() {
 //                return
 //            }
 
-            MusicManager.search("ytsearch:$query", 1) { results ->
+            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
                 if (results.isEmpty()) {
                     context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
                     return@search

@@ -1,4 +1,4 @@
-package xyz.gnarbot.gnar.commands.executors.admin
+/* package xyz.gnarbot.gnar.commands.executors.admin
 
 import xyz.gnarbot.gnar.commands.*
 import kotlin.io.use as doNotUse
@@ -17,4 +17,4 @@ class UpdatePatreonTokenCommand : CommandExecutor() {
 
         context.send().info("Updated Patreon access token!").queue()
     }
-}
+} */

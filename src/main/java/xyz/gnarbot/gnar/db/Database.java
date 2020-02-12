@@ -5,6 +5,7 @@ import com.rethinkdb.net.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
+import xyz.gnarbot.gnar.db.guilds.UserData;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -56,6 +57,10 @@ public class Database {
     @Nullable
     public PremiumKey getPremiumKey(String id) {
         return get("keys", id, PremiumKey.class);
+    }
+
+    public UserData getUserData(String id ) {
+        return get("users", id, UserData.class);
     }
 
     @Nullable

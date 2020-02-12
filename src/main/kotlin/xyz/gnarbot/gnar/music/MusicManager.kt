@@ -36,7 +36,7 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
-    private val playerManager: AudioPlayerManager
+    val playerManager: AudioPlayerManager
     init {
         playerManager = DefaultAudioPlayerManager().also { it ->
             val youtubeAudioSourceManager = YoutubeAudioSourceManager(true)

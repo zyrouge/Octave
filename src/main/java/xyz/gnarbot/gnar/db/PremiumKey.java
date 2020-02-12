@@ -8,7 +8,8 @@ import java.beans.ConstructorProperties;
 public class PremiumKey extends ManagedObject {
     public enum Type {
         PREMIUM, // GUILD
-        USER
+        USER,
+        PREMIUM_OVERRIDE
     }
 
     private final long duration;
@@ -30,8 +31,9 @@ public class PremiumKey extends ManagedObject {
         return duration;
     }
 
-    public void setRedeemer(Redeemer redeemer) {
+    public PremiumKey setRedeemer(Redeemer redeemer) {
         this.redeemer = redeemer;
+        return this;
     }
 
     public Redeemer getRedeemer() {

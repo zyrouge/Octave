@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-import net.dv8tion.jda.webhook.WebhookClient;
+import club.minnced.discord.webhook.WebhookClient;
 
 public class DiscordLogBack extends AppenderBase<ILoggingEvent> {
     private static WebhookClient client;

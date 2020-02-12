@@ -46,10 +46,12 @@ class SoundboardCommand : CommandExecutor() {
             }
         }
 
-        AudioSourceManagers.registerLocalSource(MusicManager.playerManager)
-        AudioSourceManagers.registerRemoteSources(MusicManager.playerManager)
+        if (manager != null) {
+            AudioSourceManagers.registerLocalSource(manager.playerManager)
+            AudioSourceManagers.registerRemoteSources(manager.playerManager)
+        }
 
-        MusicManager.search(meme, 1) { results ->
+        manager?.search(meme, 1) { results ->
             if (results.isEmpty()) {
                 context.send().error("Dank Meme not found, NANI?").queue()
                 return@search

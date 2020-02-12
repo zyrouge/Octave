@@ -41,9 +41,8 @@ public class CommandRegistry {
         register(new HelpCommand());
         register(new InviteBotCommand());
         register(new PingCommand());
-//        register(new KaiperCommand());
+        register(new SupportCommand());
         register(new RemindMeCommand());
-//        register(new GoogleCommand());
         register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
@@ -61,7 +60,6 @@ public class CommandRegistry {
         register(new ASCIICommand());
         register(new CoinFlipCommand());
         register(new DialogCommand());
-        //TODO: register(new YodaTalkCommand());
         register(new RollCommand());
         register(new PoopCommand());
         register(new EightBallCommand());
@@ -120,7 +118,7 @@ public class CommandRegistry {
         register(new RestartShardsCommand());
         register(new EvalCommand());
         register(new UpdateBotAvatarCommand());
-        register(new UpdatePatreonTokenCommand());
+        //register(new UpdatePatreonTokenCommand());
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new PremiumKeyCommand());
