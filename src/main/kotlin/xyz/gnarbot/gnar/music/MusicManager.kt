@@ -27,7 +27,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Configuration
 import xyz.gnarbot.gnar.commands.Context
-import xyz.gnarbot.gnar.commands.executors.music.embedTitle
+import xyz.gnarbot.gnar.commands.music.embedTitle
 import xyz.gnarbot.gnar.utils.response.respond
 import java.net.Inet6Address
 import java.net.InetAddress

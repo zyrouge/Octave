@@ -6,7 +6,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.commands.executors.music.embedTitle
+import xyz.gnarbot.gnar.commands.music.embedTitle
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.*
 
