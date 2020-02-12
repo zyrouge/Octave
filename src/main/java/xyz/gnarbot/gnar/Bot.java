@@ -3,12 +3,7 @@ package xyz.gnarbot.gnar;
 import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
-import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkAdapter;
-import net.dean.jraw.http.OkHttpNetworkAdapter;
 import net.dean.jraw.http.UserAgent;
-import net.dean.jraw.oauth.Credentials;
-import net.dean.jraw.oauth.OAuthHelper;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Activity;
@@ -34,9 +29,6 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
@@ -56,7 +48,7 @@ public class Bot {
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
     private final DiscordFM discordFM;
-    private final PatreonAPI patreon;
+    //private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
     private final CommandDispatcher commandDispatcher;
     private final EventWaiter eventWaiter;
@@ -108,18 +100,6 @@ public class Bot {
 
         shardManager.addEventListener();
 
-
-        //Added this as a quick fix as the other system only updated shard 0.
-        Timer timer = new Timer(900000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                System.out.println("Running");
-                countUpdater = new CountUpdater(bot, shardManager);
-            }
-        });
-        timer.setRepeats(false);
-        timer.start();
-
         LOG.info("The bot is now connecting to Discord.");
 
         optionsRegistry = new OptionsRegistry(this);
@@ -128,13 +108,15 @@ public class Bot {
         // SETUP APIs
         discordFM = new DiscordFM(this);
 
-        patreon = new PatreonAPI(credentials.getPatreonToken());
-        System.out.println("Patreon Established.");
+        //patreon = new PatreonAPI(credentials.getPatreonToken());
+        //System.out.println("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
         ApiConfig apiConfig = new ApiConfig();
-        if (riotApiKey != null) apiConfig.setKey(riotApiKey);
+        if (riotApiKey != null)
+            apiConfig.setKey(riotApiKey);
+
         riotApi = new RiotApi(new ApiConfig());
 
         commandRegistry = new CommandRegistry(this);
@@ -217,9 +199,10 @@ public class Bot {
         return credentials;
     }
 
-    public PatreonAPI getPatreon() {
+    //Commented for now, might be the cause of some issues?
+    /* public PatreonAPI getPatreon() {
         return patreon;
-    }
+    } */
 
     public SoundManager getSoundManager() {
         return soundManager;

@@ -4,19 +4,6 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader
 import xyz.gnarbot.gnar.utils.get
 import java.io.File
 
-//val request = Request.Builder().url("https://discordapp.com/api/gateway/bot")
-//        .header("Authorization", "Bot $token")
-//        .header("Content-Type", "application/json")
-//        .build()
-//
-//HttpUtils.CLIENT.newCall(request).execute().use { response ->
-//    response.body()?.let {
-//        val jso = JSONObject(JSONTokener(it.byteStream()))
-//        response.close()
-//        jso.getInt("shards")
-//    } ?: error("Invalid shards response from Discord")
-//}
-
 class BotCredentials(file: File) {
     private val loader = HoconConfigurationLoader.builder().setFile(file).build()
 
@@ -51,9 +38,4 @@ class BotCredentials(file: File) {
     val patreonToken: String? = config["patreon", "token"].string
 
     val riotAPIKey: String? = config["riot", "apiKey"].string
-
-    //val redditClient: String? = config["reddit", "client"].string
-    //val redditSecret: String? = config["reddit", "secret"].string
-    //val redditUsername: String? = config["reddit", "username"].string
-    //val redditPassword: String? = config["reddit", "password"].string
 }

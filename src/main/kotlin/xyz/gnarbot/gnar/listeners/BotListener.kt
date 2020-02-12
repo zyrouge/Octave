@@ -57,10 +57,13 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
                 // Add the role to the member
                 event.guild.addRoleToMember(event.member, role).reason("Auto-role").queue()
             }
-
-            //LogHelper.tryLogging("${event.member.effectiveName} has joined the server! (Member #${event.guild.members.size})", options, event.guild, "UserJoin")
         }
     }
+
+    override fun onStatusChange(event: StatusChangeEvent) {
+        Bot.LOG.info(String.format("Shard #%d: Changed from %s to %s", event.jda.shardInfo.shardId, event.oldStatus, event.newStatus))
+    }
+
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
         bot.players.destroy(event.guild)
