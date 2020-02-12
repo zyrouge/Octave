@@ -18,7 +18,6 @@ import xyz.gnarbot.gnar.commands.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.polls.PollCommand;
 import xyz.gnarbot.gnar.commands.settings.PruneCommand;
 import xyz.gnarbot.gnar.commands.settings.SettingsDelegateCommand;
-import xyz.gnarbot.gnar.commands.executors.test.TestCommand;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -80,10 +79,6 @@ public class CommandRegistry {
 //        register(new MusicSettingsCommand());
         register(new SettingsDelegateCommand());
         //End Mod Commands
-
-        //Testing Commands
-        register(new TestCommand());
-        //End Testing Commands
 
         //Game Commands
         register(new OverwatchLookupCommand());
