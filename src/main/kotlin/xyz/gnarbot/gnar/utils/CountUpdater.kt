@@ -6,7 +6,6 @@ import okhttp3.*
 import org.json.JSONObject
 import xyz.gnarbot.gnar.Bot
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -27,7 +26,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     private fun update(jda: JDA) {
         if (jda.status != JDA.Status.CONNECTED) return
 
-        Bot.LOG.info("Sending shard updates for shard ${jda.shardInfo.shardId}")
+        Bot.getLogger().info("Sending shard updates for shard ${jda.shardInfo.shardId}")
         updateCarbonitex(jda)
         updateAbal(jda)
         //updateDiscordBots(jda)
@@ -36,7 +35,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     private fun createCallback(name: String, jda: JDA): Callback {
         return object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Bot.LOG.error("$name update failed for shard ${jda.shardInfo.shardId}: ${e.message}")
+                Bot.getLogger().error("$name update failed for shard ${jda.shardInfo.shardId}: ${e.message}")
                 call.cancel()
             }
 

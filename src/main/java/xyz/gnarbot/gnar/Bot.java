@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class Bot {
-    public static final Logger LOG = LoggerFactory.getLogger("Bot");
+    private static final Logger LOG = LoggerFactory.getLogger("Bot");
 
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
@@ -126,6 +126,11 @@ public class Bot {
         commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
 
         LOG.info("Finish setting up bot internals.");
+    }
+
+
+    public static Logger getLogger() {
+        return LOG;
     }
 
     public void reloadConfiguration() {

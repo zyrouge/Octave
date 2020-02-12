@@ -45,7 +45,7 @@ public class UrbanDictionaryCommand extends CommandExecutor {
                     .addParameter("term", query)
                     .toString();
         } catch (URISyntaxException e) {
-            Bot.LOG.error("Urban dictionary error", e);
+            Bot.getLogger().error("Urban dictionary error", e);
             return;
         }
 

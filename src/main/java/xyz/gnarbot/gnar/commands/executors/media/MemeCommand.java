@@ -119,7 +119,7 @@ public class MemeCommand extends CommandExecutor {
                     .addParameter("text1", arguments[2].trim())
                     .toString();
         } catch (URISyntaxException e) {
-            Bot.LOG.warn("Meme error", e);
+            Bot.getLogger().warn("Meme error", e);
             return;
         }
 

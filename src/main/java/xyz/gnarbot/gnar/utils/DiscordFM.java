@@ -47,7 +47,7 @@ public class DiscordFM {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     call.cancel();
-                    Bot.LOG.error("DiscordFM Error", e);
+                    Bot.getLogger().error("DiscordFM Error", e);
                 }
 
                 @Override
@@ -72,7 +72,7 @@ public class DiscordFM {
             List<String> urls = cache.get(library);
             return urls.get((int) (Math.random() * urls.size()));
         } catch (Exception e) {
-            Bot.LOG.error("DiscordFM Error", e);
+            Bot.getLogger().error("DiscordFM Error", e);
             return "https://www.youtube.com/watch?v=D7npse9n-Yw"; //Technical Difficulties video
         }
     }

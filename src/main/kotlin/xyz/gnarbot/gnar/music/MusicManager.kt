@@ -24,8 +24,6 @@ import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.VoiceChannel
-import org.apache.http.client.config.CookieSpecs
-import org.apache.http.client.config.RequestConfig
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.Configuration
 import xyz.gnarbot.gnar.commands.Context

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 
 class BotListener(private val bot: Bot) : ListenerAdapter() {
     override fun onGuildJoin(event: GuildJoinEvent) {
-        Bot.LOG.info("✅ Joined `" + event.guild.name + "`")
+        Bot.getLogger().info("✅ Joined `" + event.guild.name + "`")
     }
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
@@ -61,37 +61,37 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
     }
 
     override fun onStatusChange(event: StatusChangeEvent) {
-        Bot.LOG.info(String.format("Shard #%d: Changed from %s to %s", event.jda.shardInfo.shardId, event.oldStatus, event.newStatus))
+        Bot.getLogger().info(String.format("Shard #%d: Changed from %s to %s", event.jda.shardInfo.shardId, event.oldStatus, event.newStatus))
     }
 
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
         bot.players.destroy(event.guild)
-        Bot.LOG.info("❌ Left `" + event.guild.name + "`")
+        Bot.getLogger().info("❌ Left `" + event.guild.name + "`")
     }
 
     override fun onReady(event: ReadyEvent) {
-        Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " is ready.")
+        Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " is ready.")
     }
 
     override fun onResume(event: ResumedEvent) {
-        Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " has resumed.")
+        Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has resumed.")
     }
 
     override fun onReconnect(event: ReconnectedEvent) {
-        Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " has reconnected.")
+        Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has reconnected.")
     }
 
     override fun onDisconnect(event: DisconnectEvent) {
         if (event.isClosedByServer) {
-            Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " has disconnected (closed by server). "
+            Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has disconnected (closed by server). "
                     + "Code: " + event.serviceCloseFrame?.closeCode + " " + event.closeCode)
         } else {
             if (event.clientCloseFrame != null) {
-                Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " has disconnected. "
+                Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has disconnected. "
                         + "Code: " + event.clientCloseFrame?.closeCode + " " + event.clientCloseFrame?.closeReason)
             } else {
-                Bot.LOG.info("JDA " + event.jda.shardInfo.shardId + " has disconnected. CCF Null. Code: " + event.closeCode)
+                Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has disconnected. CCF Null. Code: " + event.closeCode)
             }
         }
 
@@ -101,7 +101,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             val entry = iterator.next()
             if (entry.value == null) {
                 iterator.remove()
-                Bot.LOG.warn("Null manager for id " + entry.key)
+                Bot.getLogger().warn("Null manager for id " + entry.key)
             } else if (entry.value.guild.jda === event.jda) {
                 entry.value.destroy()
                 iterator.remove()
@@ -111,6 +111,6 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
     }
 
     override fun onException(event: ExceptionEvent) {
-        if (!event.isLogged) Bot.LOG.error("Error thrown by JDA.", event.cause)
+        if (!event.isLogged) Bot.getLogger().error("Error thrown by JDA.", event.cause)
     }
 }

@@ -23,10 +23,10 @@ public class MyAnimeListAPI {
 
     public MyAnimeListAPI(String username, String password) {
         if (username == null || password == null) {
-            Bot.LOG.error("No MyAnimeListAPI credentials provided.");
+            Bot.getLogger().error("No MyAnimeListAPI credentials provided.");
             login = false;
         } else {
-            Bot.LOG.info("Attempting to log in.");
+            Bot.getLogger().info("Attempting to log in.");
             Request request = new Request.Builder().url(API_PREFIX + "account/verify_credentials.xml")
                     .header("Authorization", Credentials.basic(username, password))
                     .build();
@@ -36,14 +36,14 @@ public class MyAnimeListAPI {
                     JSONObject jso = XML.toJSONObject(body.string());
                     response.close();
                     if (jso.has("user") && jso.getJSONObject("user").has("id")) {
-                        Bot.LOG.info("Logged in to MyAnimeListAPI.");
+                        Bot.getLogger().info("Logged in to MyAnimeListAPI.");
                         login = true;
                     }
                 } else {
-                    Bot.LOG.error("Response was null when logging in to MyAnimeListAPI");
+                    Bot.getLogger().error("Response was null when logging in to MyAnimeListAPI");
                 }
             } catch (IOException e) {
-                Bot.LOG.info("Error logging in to MyAnimeListAPI.", e);
+                Bot.getLogger().info("Error logging in to MyAnimeListAPI.", e);
                 login = false;
             }
         }
