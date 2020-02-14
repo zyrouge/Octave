@@ -14,6 +14,6 @@ import xyz.gnarbot.gnar.commands.Context
 )
 class DisabledPlayCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        context.send().error("Music is disabled due to YouTube causing issues. Please stay tuned. https://discord.gg/NQRpmr2").queue()
+        context.send().error("Music is disabled due to YouTube causing issues. Please stay tuned. https://discord.gg/musicbot").queue()
     }
 }
