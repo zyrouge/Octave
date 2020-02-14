@@ -54,16 +54,9 @@ class BotInfoCommand : CommandExecutor() {
 
             field("General", true) {
                 buildString {
-                    append("Donations: **[Patreon](https://gnarbot.xyz/donate)**\n")
+                    append("Premium: **[Patreon](https://www.patreon.com/gnarbot)**\n")
                     append("Commands: **$commandSize**\n")
                     append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**\n")
-                }
-            }
-            field("Credits", true) {
-                buildString {
-                    append("The Serious: **[Avarel](https://github.com/Avarel)**\n")
-                    append("The Sarcastic: **[Xevryll](https://github.com/xevryll)**\n")
-                    append("Contributor: **[Gatt](https://github.com/RealGatt)**\n")
                 }
             }
         }.action().queue()
