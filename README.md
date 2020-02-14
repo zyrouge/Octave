@@ -1,6 +1,6 @@
 <img align="right" src="https://gnarbot.xyz/assets/img/logo.jpg" height="250" width="250">
 
-# Gnar-bot [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/NQRpmr2)
+# Gnar-bot [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/musicbot)
 **Gnar** is an open-source Discord bot written in Java and Kotlin, using JDA 3 and Lavaplayer.
 Gnar provides various features including music playback, fun and moderation commands.
 
