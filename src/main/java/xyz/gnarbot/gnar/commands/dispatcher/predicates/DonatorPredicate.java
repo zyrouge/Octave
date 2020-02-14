@@ -11,7 +11,7 @@ public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
             "🌟 This command is for donators' servers only.\n" +
                     "In order to enjoy donator perks, please consider pledging to " +
                     "__**[our Patreon](https://www.patreon.com/gnarbot)**__.\n" +
-                    "Once you donate, join our __**[support guild](http://discord.gg/NQRpmr2)**__ " +
+                    "Once you donate, join our __**[support guild](http://discord.gg/musicbot)**__ " +
                     "and ask one of the owners.";
 
     @Override
