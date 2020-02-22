@@ -41,7 +41,7 @@ class BotInfoCommand : CommandExecutor() {
 
         context.send().embed("Bot Information") {
             thumbnail { context.jda.selfUser.avatarUrl }
-            desc { "Gnar is a music bot packed with dank memes to rescue your soul from the depths of the underworld." }
+            desc { "Never miss a beat with Octave, a simple and easy to use Discord music bot delivering high quality audio to hundreds of thousands of servers. We support Youtube, Soundcloud, and more!" }
 
             field("Text Channels", true) { textChannels }
             field("Voice Channels", true) { voiceChannels }
@@ -54,7 +54,7 @@ class BotInfoCommand : CommandExecutor() {
 
             field("General", true) {
                 buildString {
-                    append("Premium: **[Patreon](https://www.patreon.com/gnarbot)**\n")
+                    append("Premium: **[Patreon](https://www.patreon.com/octave)**\n")
                     append("Commands: **$commandSize**\n")
                     append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**\n")
                 }

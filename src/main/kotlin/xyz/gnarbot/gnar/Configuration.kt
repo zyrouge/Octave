@@ -12,7 +12,7 @@ class Configuration(file: File) {
 
     private var config = loader.load()
 
-    val name: String = config["bot", "name"].getString("Gnar")
+    val name: String = config["bot", "name"].getString("Octave")
     val game: String = config["bot", "game"].getString("_help | %d")
 
     val prefix: String = config["commands", "prefix"].getString("_")

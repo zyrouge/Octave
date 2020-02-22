@@ -1,15 +1,15 @@
-<img align="right" src="https://gnarbot.xyz/assets/img/logo.jpg" height="250" width="250">
+<img align="right" src="https://octave.gg/assets/img/logo.jpg" height="250" width="250">
 
-# Gnar-bot [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/musicbot)
-**Gnar** is an open-source Discord bot written in Java and Kotlin, using JDA 3 and Lavaplayer.
-Gnar provides various features including music playback, fun and moderation commands.
+# Octave [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/musicbot)
+**Octave** is an open-source Discord bot written in Java and Kotlin, using JDA 3 and Lavaplayer.
+Octave provides various features including music playback, fun and moderation commands.
 
-## The Official Gnar-bot
-Click the following [link](https://discordapp.com/oauth2/authorize?client_id=201492375653056512&scope=bot&permissions=8) and add Gnar to a server, provided that you have the
-    `Manage Server` permission. The official website for Gnar-bot can be founded [here](https://gnarbot.xyz/).
+## The Official Octave
+Click the following [link](https://discordapp.com/oauth2/authorize?client_id=201492375653056512&scope=bot&permissions=8) and add Octave to a server, provided that you have the
+    `Manage Server` permission. The official website for Octave can be founded [here](https://octave.gg/).
 
-## Self-hosting Gnar-bot
-- Though we do not disallow user-hosted versions of Gnar, we will not provide **any** support for it.
+## Self-hosting Octave-bot
+- Though we do not disallow user-hosted versions of Octave, we will not provide **any** support for it.
 - We are not responsible for anything that this project does to you or your server and can not be held liable 
     for anything pertaining to it. 
 
@@ -26,7 +26,7 @@ Note that only experienced developers should use or modify the bot.
 - **Step 3:** Compile the bot. This project uses **Java 8** and **Kotlin 1.1.3**.
     - Run the Gradle command `gradlew shadowJar` to create a fully shaded jar with all of the necessary
         dependencies.
-- **Step 4:** Gnar-bot requires RethinkDB in order to setup. The RethinkDB requires a database name that
+- **Step 4:** Octave requires RethinkDB in order to setup. The RethinkDB requires a database name that
     can be specified inside `credentials.conf` along with other necessary credentials. The database needs to
     have 3 tables: `guilds` `keys` `users` in order for the bot to work.
 - **Step 5:** Once compilation is done, you can run the bot by grabbing the `.jar` file from `build/libs` 

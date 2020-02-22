@@ -57,7 +57,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
 
         val request = Request.Builder()
                 .url("https://discordbots.org/api/bots/201503408652419073/stats")
-                .header("User-Agent", "Gnar Bot")
+                .header("User-Agent", "Octave")
                 .header("Authorization", auth)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
@@ -77,7 +77,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
 
         val request = Request.Builder()
                 .url("https://top.gg/api/bots/138481382794985472/stats")
-                .header("User-Agent", "Gnar Bot")
+                .header("User-Agent", "Octave")
                 .header("Authorization", auth)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
@@ -98,7 +98,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
 
         val request = Request.Builder()
                 .url("https://www.carbonitex.net/discord/data/botdata.php")
-                .header("User-Agent", "Gnar Bot")
+                .header("User-Agent", "Octave")
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
                 .post(RequestBody.create(HttpUtils.JSON, json.toString()))

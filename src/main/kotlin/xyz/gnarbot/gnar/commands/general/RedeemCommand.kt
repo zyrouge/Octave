@@ -49,7 +49,6 @@ class RedeemCommand : CommandExecutor() {
                                     .add("• First access to new features.")
                                     .add("• Use the music bot during maximum music capacity.")
                                     .add("• Bass Boosted Music!")
-                                    .add("• Access to Jinx (Gnar Alpha bot)")
                             )
                             .action().queue()
                 }
@@ -71,7 +70,6 @@ class RedeemCommand : CommandExecutor() {
                                     .add("• First access to new features.")
                                     .add("• Use the music bot during maximum music capacity.")
                                     .add("• Bass Boosted Music!")
-                                    .add("• Access to Jinx (Gnar Alpha bot)")
                             )
                             .action().queue()
                 }

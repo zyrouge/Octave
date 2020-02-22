@@ -17,9 +17,8 @@ class DonateCommand : CommandExecutor() {
         context.send().embed("Donations") {
             desc {
                 buildString {
-                    append("Want to donate to support Gnar?\n")
-                    append("**[PayPal](https://gnarbot.xyz/donate)**\n")
-                    append("**[Patreon](https://www.patreon.com/gnarbot)**\n")
+                    append("Want to donate to support Octave?\n")
+                    append("**[Patreon](https://www.patreon.com/octave)**\n")
                 }
             }
         }.action().queue()

@@ -54,7 +54,7 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
                             processPledge(event.channel, pledge)
                         } else {
                             event.channel.respond().error("**Sorry! I don't recognize you as a patron.**\n" +
-                                    "You can support Gnar's development on our __**[Patreon](https://www.patreon.com/gnarbot)**__.\n" +
+                                    "You can support Octave's development on our __**[Patreon](https://www.patreon.com/octave)**__.\n" +
                                     "If you are a patron, make sure you either link your Discord account or enter your Patreon name, ie. `_patron Bill Gates`").queue()
                         }
                     }

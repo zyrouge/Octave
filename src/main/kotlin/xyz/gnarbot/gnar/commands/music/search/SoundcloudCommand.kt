@@ -44,7 +44,7 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             if (!context.bot.configuration.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("SoundCloud Results", "https://soundcloud.com", "https://soundcloud.com/favicon.ico")
-                    thumbnail { "https://gnarbot.xyz/assets/img/soundcloud.png" }
+                    thumbnail { "https://octave.gg/assets/img/soundcloud.png" }
                     color { Color(255, 110, 0) }
 
                     desc {

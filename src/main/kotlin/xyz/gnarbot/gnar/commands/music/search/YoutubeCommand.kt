@@ -44,7 +44,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
             if (!context.bot.configuration.musicEnabled || userChannel == null || botChannel != null && botChannel != userChannel) {
                 context.send().embed {
                     setAuthor("YouTube Results", "https://www.youtube.com", "https://www.youtube.com/favicon.ico")
-                    thumbnail { "https://gnarbot.xyz/assets/img/youtube.png" }
+                    thumbnail { "https://octave.gg/assets/img/youtube.png" }
                     color { Color(141, 20, 0) }
 
                     desc {

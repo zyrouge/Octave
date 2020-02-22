@@ -108,7 +108,7 @@ public class Utils {
     @Nullable
     public static String hasteBin(String content) {
         Request request = new Request.Builder().url("https://hastebin.com/documents")
-                .header("User-Agent", "Gnar")
+                .header("User-Agent", "Octave")
                 .header("Content-Type", "text/plain")
                 .post(RequestBody.create(null, content))
                 .build();

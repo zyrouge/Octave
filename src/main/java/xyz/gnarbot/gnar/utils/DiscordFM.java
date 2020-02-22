@@ -29,7 +29,7 @@ public class DiscordFM {
             String url;
 
             try {
-                url = new URIBuilder("https://gnarbot.xyz/assets/dfm/" + lib + ".txt").toString();
+                url = new URIBuilder("https://octave.gg/assets/dfm/" + lib + ".txt").toString();
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 continue;

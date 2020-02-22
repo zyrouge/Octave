@@ -28,7 +28,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.send().info(if (value) "Announcements for music disabled." else "Announcements for music enabled.").queue()
     }
 
-    @Description("Add voice channels that Gnar can play music in.")
+    @Description("Add voice channels that Octave can play music in.")
     fun voice_channel_add(context: Context, channel: VoiceChannel) {
         if (channel.id in context.data.music.channels) {
             context.send().error("`${channel.name}` is already a music channel.").queue()
@@ -46,7 +46,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.send().info("`${channel.name}` is now a designated music channel.").queue()
     }
 
-    @Description("Remove voice channels that Gnar can play music in.")
+    @Description("Remove voice channels that Octave can play music in.")
     fun voice_channel_remove(context: Context, channel: VoiceChannel) {
         if (channel.id !in context.data.music.channels) {
             context.send().error("`${channel.name}` is not one of the music channels.").queue()
@@ -72,7 +72,7 @@ class MusicSettingsCommand : CommandTemplate() {
 
             field("Music Channels") {
                 buildString {
-                    append("If this is not empty, Gnar will only play music in these voice channels.\n\n")
+                    append("If this is not empty, Octave will only play music in these voice channels.\n\n")
                     context.data.music.channels.let {
                         if (it.isEmpty()) append("None.")
 

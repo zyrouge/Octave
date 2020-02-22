@@ -33,7 +33,7 @@ class CatCommand : CommandExecutor() {
                             .setImage(catUrl)
                             .action().queue()
                 } catch (e: NullPointerException) {
-                    context.send().error("A developer dun messed up, pls report this to Xevryll#0001")
+                    context.send().error("A developer dun messed up, pls report this to Melmsie#0001")
                 }
             }
         })
