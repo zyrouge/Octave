@@ -50,7 +50,7 @@ public class GuildInfoCommand extends CommandExecutor {
                 .field("Roles", true, StringUtils.truncate(roleStr.toString(), MessageEmbed.VALUE_MAX_LENGTH))
                 .field("Premium", true, context.getData().isPremium()
                         ? "Premium status expires in `" + Utils.getTime(context.getData().remainingPremium()) + "`."
-                        : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/octave)**__ to find out more."
+                        : "This guild does not have the premium status.\nVisit our __**[Patreon](https://www.patreon.com/octavebot)**__ to find out more."
                 ).action().queue();
     }
 }

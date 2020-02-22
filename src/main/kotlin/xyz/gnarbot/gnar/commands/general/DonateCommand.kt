@@ -18,7 +18,7 @@ class DonateCommand : CommandExecutor() {
             desc {
                 buildString {
                     append("Want to donate to support Octave?\n")
-                    append("**[Patreon](https://www.patreon.com/octave)**\n")
+                    append("**[Patreon](https://www.patreon.com/octavebot)**\n")
                 }
             }
         }.action().queue()

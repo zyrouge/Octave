@@ -10,7 +10,7 @@ class MusicLimitException : Exception() {
             description {
                 buildString {
                     append("Music is currently at maximum capacity, please try again later.\n")
-                    append("Please consider donating to our **[Patreon](https://www.patreon.com/octave)** ")
+                    append("Please consider donating to our **[Patreon](https://www.patreon.com/octavebot)** ")
                     append("to help us with hosting costs.")
                 }
             }

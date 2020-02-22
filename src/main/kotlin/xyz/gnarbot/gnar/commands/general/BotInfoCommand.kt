@@ -54,7 +54,7 @@ class BotInfoCommand : CommandExecutor() {
 
             field("General", true) {
                 buildString {
-                    append("Premium: **[Patreon](https://www.patreon.com/octave)**\n")
+                    append("Premium: **[Patreon](https://www.patreon.com/octavebot)**\n")
                     append("Commands: **$commandSize**\n")
                     append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**\n")
                 }
