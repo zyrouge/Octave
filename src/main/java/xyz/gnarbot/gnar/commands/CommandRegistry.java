@@ -82,9 +82,7 @@ public class CommandRegistry {
 
         //Game Commands
         register(new OverwatchLookupCommand());
-        //TODO: MAYBE? register(new LeagueCommand());
 //        register(new PokemonCommand());
-        //TODO: register(new GameLookupCommand());
         //End Game Commands
 
         //Poll Commands
@@ -92,16 +90,12 @@ public class CommandRegistry {
         //End Poll Commands
 
         //Media Commands
-        //TODO: register(new AnimeSearchCommand());
-        //TODO: register(new MangaSearchCommand());
         register(new MemeCommand());
         register(new TrumpCommand());
         register(new CatsCommand());
         register(new DogCommand());
         register(new ExplosmCommand());
         register(new ExplosmRCGCommand());
-        //TODO: register(new KetoCommand());
-        //TODO: Site has new system for generating RCG comics, need to rework
         register(new XKCDCommand());
         register(new ActionCommand());
         //End Media Commands

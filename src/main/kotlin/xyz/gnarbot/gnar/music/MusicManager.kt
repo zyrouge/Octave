@@ -35,37 +35,7 @@ import java.util.*
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
-class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry) {
-    val playerManager: AudioPlayerManager
-
-    init {
-        playerManager = DefaultAudioPlayerManager().also { it ->
-            val youtubeAudioSourceManager = YoutubeAudioSourceManager(true)
-            val config: Configuration = this.bot.configuration
-
-            if (config.ipv6Block.isNotEmpty()) {
-                val planner: AbstractRoutePlanner
-                val block: String = config.ipv6Block
-                val blocks: List<IpBlock<Inet6Address>> = Collections.singletonList(Ipv6Block(block))
-
-                planner = if (config.ipv6Exclude.isNotEmpty()) {
-                    RotatingNanoIpRoutePlanner(blocks)
-                } else {
-                    val blacklistedGW: InetAddress = InetAddress.getByName(config.ipv6Exclude)
-                    RotatingNanoIpRoutePlanner(blocks).also { inetAddress -> !inetAddress.equals(blacklistedGW) };
-                }
-
-                YoutubeIpRotatorSetup(planner).forSource(youtubeAudioSourceManager).setup();
-            }
-
-            it.registerSourceManager(youtubeAudioSourceManager)
-            it.registerSourceManager(BandcampAudioSourceManager())
-            it.registerSourceManager(VimeoAudioSourceManager())
-            it.registerSourceManager(TwitchStreamAudioSourceManager())
-            it.registerSourceManager(BeamAudioSourceManager())
-        }
-    }
-
+class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry, val playerManager: AudioPlayerManager) {
     fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
         playerManager.loadItem(query, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
@@ -103,7 +73,6 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
 
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
-        // fixme DI point
         it.volume = bot.options.ofGuild(guild).music.volume
     }
 
