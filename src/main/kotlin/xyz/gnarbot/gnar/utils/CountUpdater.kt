@@ -24,12 +24,12 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     }
 
     private fun update(jda: JDA) {
-        if (jda.status != JDA.Status.CONNECTED) return
+        if (jda.status != JDA.Status.CONNECTED)
+            return
 
         Bot.getLogger().info("Sending shard updates for shard ${jda.shardInfo.shardId}")
         updateCarbonitex(jda)
-        updateAbal(jda)
-        //updateDiscordBots(jda)
+        updateGuildCount(jda)
     }
 
     private fun createCallback(name: String, jda: JDA): Callback {
@@ -45,29 +45,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
         }
     }
 
-    //About this one - may or may not be banned from here :)))))))
-    /*
-    private fun updateDiscordBots(jda: JDA) {
-        val auth = bot.credentials.discordBots ?: return
-
-        val json =  JSONObject()
-                .put("server_count", jda.guildCache.size())
-                .put("shard_id", jda.shardInfo.shardId)
-                .put("shard_count", bot.credentials.totalShards)
-
-        val request = Request.Builder()
-                .url("https://discordbots.org/api/bots/201503408652419073/stats")
-                .header("User-Agent", "Octave")
-                .header("Authorization", auth)
-                .header("Content-Type", "application/json")
-                .header("Accept", "application/json")
-                .post(RequestBody.create(HttpUtils.JSON, json.toString()))
-                .build()
-
-        client.newCall(request).enqueue(createCallback("discordbots.org", jda))
-    }*/
-
-    private fun updateAbal(jda: JDA) {
+    private fun updateGuildCount(jda: JDA) {
         val auth = bot.credentials.abal ?: return
 
         val json = JSONObject()
