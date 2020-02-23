@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 
 @Command(
-        aliases = [""],
+        aliases = ["support"],
         description = "Shows a link to the support server."
 )
 @BotInfo(

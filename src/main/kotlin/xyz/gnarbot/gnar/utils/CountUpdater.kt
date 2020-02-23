@@ -46,7 +46,7 @@ class CountUpdater(private val bot: Bot, shardManager: ShardManager) {
     }
 
     private fun updateGuildCount(jda: JDA) {
-        val auth = bot.credentials.abal ?: return
+        val auth = bot.credentials.discordBots ?: return
 
         val json = JSONObject()
                 .put("shards", jda.guildCache.size())
