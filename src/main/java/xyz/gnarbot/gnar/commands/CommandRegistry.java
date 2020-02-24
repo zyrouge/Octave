@@ -129,7 +129,8 @@ public class CommandRegistry {
             register(new VoteSkipCommand());
             register(new VolumeCommand());
             register(new JumpCommand());
-            register(new DiscordFMCommand());
+            //TODO: fix
+            //register(new DiscordFMCommand());
             register(new SoundboardCommand());
             register(new SoundboardListCommand());
         } else {

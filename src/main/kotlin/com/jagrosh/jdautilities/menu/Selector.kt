@@ -101,9 +101,9 @@ class Selector(waiter: EventWaiter,
                 }.predicate {
                     when {
                         it.messageIdLong != message?.idLong -> false
-                        it!!.user!!.isBot -> false
+                        it.user!!.isBot -> false
                         user != null && it.user != user -> {
-                            it.reaction.removeReaction(it!!.user!!).queue()
+                            it.reaction.removeReaction(it.user!!).queue()
                             false
                         }
                         else -> {
@@ -114,7 +114,7 @@ class Selector(waiter: EventWaiter,
                                 if (value in 0 until options.size) {
                                     true
                                 } else {
-                                    it.reaction.removeReaction(it!!.user!!).queue()
+                                    it.reaction.removeReaction(it.user!!).queue()
                                     false
                                 }
                             }

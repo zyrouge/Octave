@@ -107,7 +107,7 @@ class Paginator(waiter: EventWaiter,
                             }
                         }
 
-                        it.reaction.removeReaction(it!!.user!!).queue()
+                        it.reaction.removeReaction(it.user!!).queue()
 
                         if (pageNew != page) {
                             message?.editMessage(renderPage(pageNew))?.queue {
@@ -119,7 +119,7 @@ class Paginator(waiter: EventWaiter,
                             it.messageIdLong != message?.idLong -> false
                             it.user!!.isBot -> false
                             user != null && it.user != user -> {
-                                it.reaction.removeReaction(it!!.user!!).queue()
+                                it.reaction.removeReaction(it.user!!).queue()
                                 false
                             }
                             else -> when (it.reactionEmote.name) {
