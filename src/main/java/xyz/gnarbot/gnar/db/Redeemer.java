@@ -5,6 +5,7 @@ import java.beans.ConstructorProperties;
 public class Redeemer {
     private final Type type;
     private final String id;
+
     @ConstructorProperties({"type", "id"})
     public Redeemer(Type type, String id) {
         this.type = type;

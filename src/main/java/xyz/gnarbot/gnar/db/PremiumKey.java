@@ -9,6 +9,7 @@ public class PremiumKey extends ManagedObject {
     private final long duration;
     private final Type type;
     private Redeemer redeemer;
+
     @ConstructorProperties({"id", "type", "duration"})
     public PremiumKey(String id, Type type, long duration) {
         super(id, "keys");

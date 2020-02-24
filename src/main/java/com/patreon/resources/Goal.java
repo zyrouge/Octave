@@ -18,6 +18,7 @@ public class Goal extends BaseResource {
     private String description;
     private String reached_at;
     private String title;
+
     public Goal(
             @JsonProperty("amount_cents") int amount_cents,
             @JsonProperty("completed_percentage") int completed_percentage,
