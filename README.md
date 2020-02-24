@@ -1,6 +1,6 @@
 <img align="right" src="https://octave.gg/assets/img/logo.png" height="250" width="250">
 
-# Octave [![Dependency Status](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59516ed46725bd003cde1144) [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/musicbot)
+# Octave [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](LICENSE) [![Chat](https://img.shields.io/badge/chat-discord-blue.svg?style=flat-square)](https://discord.gg/musicbot)
 **Octave** is an open-source Discord bot written in Java and Kotlin, using JDA and Lavaplayer.
 Octave provides various features including music playback, fun and moderation commands.
 
