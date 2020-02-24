@@ -111,7 +111,6 @@ public class CommandRegistry {
         register(new ShardInfoCommand());
         register(new ThrowError());
         register(new PremiumKeyCommand());
-        register(new EmoteListCommand());
         register(new SudoCommand());
 
         //MUSIC COMMAND

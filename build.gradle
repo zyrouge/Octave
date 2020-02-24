@@ -48,7 +48,7 @@ dependencies {
     compile group: 'net.dean.jraw', name: 'JRAW', version: '1.1.0'
 
     // Database
-    compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.3.3'
+    compile group: 'com.rethinkdb', name: 'rethinkdb-driver', version: '2.4.0'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.2'
 
     // Net stuff

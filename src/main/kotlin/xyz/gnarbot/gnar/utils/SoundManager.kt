@@ -8,7 +8,7 @@ class SoundManager {
 
     fun loadSounds() {
         try {
-            for (s in File("/home/Gnar/sounds").listFiles()) {
+            for (s in File("/home/gnar/data/sounds").listFiles()) {
                 print(s)
                 map[s.name.replace(".mp3", "").replace("sounds\\", "")] = s.path
             }
