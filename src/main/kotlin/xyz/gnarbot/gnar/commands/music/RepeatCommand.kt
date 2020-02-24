@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.RepeatOption
 
 @Command(
-        aliases = ["repeat"],
+        aliases = ["repeat", "loop"],
         usage = "(song, playlist, none)",
         description = "Set if the music player should repeat."
 )
