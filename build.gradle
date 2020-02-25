@@ -17,6 +17,7 @@ targetCompatibility = 9
 repositories {
     jcenter()
     maven { url 'https://jitpack.io' }
+    maven { url 'https://dl.bintray.com/natanbc/maven' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven {
         url 'https://dl.bintray.com/sedmelluq/com.sedmelluq'
@@ -28,9 +29,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version: '1.2.2'
 
-//    compile kotlinModule("script-runtime", kotlinVersion)
-//    compile kotlinModule("script-util", kotlinVersion)
-//    runtime kotlinModule("compiler-embeddable", kotlinVersion)
     compile group: 'org.codehaus.groovy', name: 'groovy-jsr223', version: '2.4.12'
 
     // JDA
@@ -39,6 +37,8 @@ dependencies {
     compile 'club.minnced:discord-webhooks:0.1.7'
     compile 'com.sedmelluq:lavaplayer:1.3.34'
     compile 'com.sedmelluq:lavaplayer-ext-youtube-rotator:0.2.1'
+
+    compile 'com.github.natanbc:discordbots-api:3.3.3'
 
     //implementation 'com.github.DV8FromTheWorld:JDA:2adfdcaf54'
 

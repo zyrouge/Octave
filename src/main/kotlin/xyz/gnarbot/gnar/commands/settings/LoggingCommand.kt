@@ -23,6 +23,5 @@ class LoggingCommand : CommandTemplate() {
     @Description("Enable logging messages for a channel")
     fun set(context: Context, member: Member) {
 
-
     }
 }

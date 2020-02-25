@@ -64,9 +64,6 @@ public class Bot {
         this.soundManager = new SoundManager();
         soundManager.loadSounds();
         reloadConfiguration();
-        //Credentials cred = Credentials.script(credentials.getRedditUsername(), credentials.getRedditPassword(), credentials.getRedditClient(), credentials.getRedditSecret());
-        //NetworkAdapter adapter = new OkHttpNetworkAdapter(ua);
-        //this.redditClient = OAuthHelper.automatic(adapter, cred);
 
         LOG.info("Initializing the Discord bot.");
 
@@ -98,12 +95,11 @@ public class Bot {
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
 
-        shardManager.addEventListener();
-
         LOG.info("The bot is now connecting to Discord.");
 
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
+        countUpdater = new CountUpdater(this);
 
         // SETUP APIs
         discordFM = new DiscordFM(this);
