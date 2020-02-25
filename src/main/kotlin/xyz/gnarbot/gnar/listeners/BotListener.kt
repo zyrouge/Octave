@@ -28,12 +28,12 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
         val embedBuilder = EmbedBuilder()
                 .setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
                 .setColor(Color.BLUE)
-                .setDescription("Welcome to Octane! The fast and complete Discord bot!\n" +
+                .setDescription("Welcome to Octave! The fast and complete Discord bot!\n" +
                         "Please check the links below to get help, and use `_help` to get started!")
                 .addField("Important Links",
                         "[Support Server](https://discord.gg/musicbot) - Support server.\n" +
                                 "[Patreon](https://patreon.com/octane) - Patreon.", true)
-                .setFooter("Thanks for using Octane!")
+                .setFooter("Thanks for using Octave!")
 
 
         //Find the first channel we can talk to.
