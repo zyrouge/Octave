@@ -44,6 +44,8 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
 
         channel.sendMessage(embedBuilder.build()).queue { m: Message -> m.delete().queueAfter(1, TimeUnit.MINUTES) }
 
+        bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
+        bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
         Bot.getLogger().info("✅ Joined `" + event.guild.name + "`")
     }
 
@@ -97,6 +99,8 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
         bot.players.destroy(event.guild)
+        bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
+        bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
         Bot.getLogger().info("❌ Left `" + event.guild.name + "`")
     }
 

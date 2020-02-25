@@ -2,6 +2,8 @@ package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import net.dean.jraw.http.UserAgent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
@@ -54,6 +56,7 @@ public class Bot {
     private final SoundManager soundManager;
     private Configuration configuration;
     private CountUpdater countUpdater;
+    private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     public Bot(
             BotCredentials credentials,
@@ -121,6 +124,10 @@ public class Bot {
         LOG.info("Finish setting up bot internals.");
     }
 
+
+    public StatsDClient getDatadog() {
+        return statsDClient;
+    }
 
     public static Logger getLogger() {
         return LOG;
