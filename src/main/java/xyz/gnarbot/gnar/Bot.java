@@ -90,7 +90,7 @@ public class Bot {
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
-                .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.EMOTE))
+                .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
