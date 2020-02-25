@@ -129,6 +129,7 @@ public class CommandRegistry {
             register(new VoteSkipCommand());
             register(new VolumeCommand());
             register(new JumpCommand());
+            register(new BassBoostedCommand());
             //TODO: fix
             //register(new DiscordFMCommand());
             register(new SoundboardCommand());

@@ -286,7 +286,6 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
         })
     }
 
-    //Credit to JukeBot and CircuitCRay
     fun boostBass(b1: Float, b2: Float) {
         equalizer.setGain(0, b1)
         equalizer.setGain(1, b2)
