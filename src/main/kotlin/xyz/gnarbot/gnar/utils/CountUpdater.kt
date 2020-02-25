@@ -21,7 +21,7 @@ class CountUpdater(private val bot: Bot) {
     init {
         executor.scheduleAtFixedRate({
             update(bot.shardManager)
-        }, 10L, 30, TimeUnit.MINUTES)
+        }, 30, 30, TimeUnit.MINUTES)
     }
 
     private fun update(shardManager: ShardManager) {
