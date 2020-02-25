@@ -16,11 +16,34 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.Context
 import java.awt.Color
+import java.time.OffsetDateTime
 import java.util.concurrent.TimeUnit
-import java.util.function.Predicate
 
 class BotListener(private val bot: Bot) : ListenerAdapter() {
     override fun onGuildJoin(event: GuildJoinEvent) {
+        //Don't fire this if the SelfMember joined a longish time ago. This avoids discord fuckups.
+        if (event.guild.selfMember.timeJoined.isBefore(OffsetDateTime.now().minusSeconds(30))) return
+
+        //Greet message start.
+        val embedBuilder = EmbedBuilder()
+                .setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
+                .setColor(Color.BLUE)
+                .setDescription("Welcome to Octane! The fast and complete Discord bot!\n" +
+                        "Please check the links below to get help, and use `_help` to get started!")
+                .addField("Important Links",
+                        "[Support Server](https://discord.gg/musicbot) - Support server.\n" +
+                                "[Patreon](https://patreon.com/octane) - Patreon.", true)
+                .setFooter("Thanks for using Octane!")
+
+
+        //Find the first channel we can talk to.
+        val channel = event.guild.channels.stream()
+                .filter { guildChannel: GuildChannel -> guildChannel.type == ChannelType.TEXT && (guildChannel as TextChannel).canTalk() }
+                .findFirst()
+                .get() as TextChannel
+
+        channel.sendMessage(embedBuilder.build()).queue { m: Message -> m.delete().queueAfter(1, TimeUnit.MINUTES) }
+
         Bot.getLogger().info("✅ Joined `" + event.guild.name + "`")
     }
 
@@ -33,24 +56,6 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             }
             return
         }
-
-        //Greet message start.
-        val embedBuilder = EmbedBuilder()
-                .setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
-                .setColor(Color.PINK)
-                .setDescription("Hello")
-                .addField("Important Links",
-                        "Links go here", true)
-                .setFooter("Something quirky")
-
-
-        //Find the first channel we can talk to.
-        val channel = event.guild.channels.stream()
-                .filter { guildChannel: GuildChannel -> guildChannel.type == ChannelType.TEXT && (guildChannel as TextChannel).canTalk() }
-                .findFirst()
-                .get() as TextChannel
-
-        channel.sendMessage(embedBuilder.build()).queue { m: Message -> m.delete().queueAfter(1, TimeUnit.MINUTES) }
 
         if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(BotLoader.BOT.configuration.prefix) && (event.message.contentRaw.endsWith(BotLoader.BOT.configuration.prefix)))) {
             return
