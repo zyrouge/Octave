@@ -42,7 +42,6 @@ public class CommandRegistry {
         register(new PingCommand());
         register(new SupportCommand());
         register(new VoteCommand());
-        register(new RemindMeCommand());
         register(new VideoCommand());
         register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
