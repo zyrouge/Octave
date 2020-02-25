@@ -52,6 +52,8 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      * @return The Message created by this function.
      */
     open fun exception(exception: Exception): RestAction<Message> {
+        exception.printStackTrace()
+
         return embed {
             title { "Exception" }
             desc {
