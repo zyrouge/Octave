@@ -39,6 +39,7 @@ dependencies {
     compile 'com.sedmelluq:lavaplayer-ext-youtube-rotator:0.2.1'
 
     compile 'com.github.natanbc:discordbots-api:3.3.3'
+    implementation 'com.github.natanbc:reliqua:1.0'
 
     compile 'com.datadoghq:java-dogstatsd-client:2.9.0'
 
