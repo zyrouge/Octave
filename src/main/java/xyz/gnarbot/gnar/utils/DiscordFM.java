@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 
 public class DiscordFM {
     public static final String[] LIBRARIES = {
-            "electro-hub", "chill-corner", "korean-madness",
-            "japanese-lounge", "classical", "retro-renegade",
-            "metal-mix", "hip-hop", "electro-swing",
-            "purely-pop", "rock-n-roll", "coffee-house-jazz"
+            "electro hub", "chill corner", "korean madness",
+            "japanese lounge", "classical", "retro renegade",
+            "metal mix", "hip hop", "electro swing", "christmas", "halloween",
+            "purely pop", "rock n roll", "coffee house jazz", "funk",
     };
 
     private static Map<String, List<String>> cache = new HashMap<>(LIBRARIES.length);
 
     public DiscordFM() {
         for (String lib : LIBRARIES) {
-            try (InputStream is = DiscordFM.class.getResourceAsStream("/dfm/" + lib + ".json")) {
+            try (InputStream is = DiscordFM.class.getResourceAsStream("/dfm/" + lib + ".txt")) {
                 for (String s : IOUtils.toString(is, StandardCharsets.UTF_8).trim().split("\n")) {
                     List<String> collect = Arrays.stream(s.split("\n"))
                             .parallel()
