@@ -1,6 +1,11 @@
 package xyz.gnarbot.gnar.listeners
 
+import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.ChannelType
+import net.dv8tion.jda.api.entities.GuildChannel
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.*
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
@@ -10,7 +15,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.Context
+import java.awt.Color
 import java.util.concurrent.TimeUnit
+import java.util.function.Predicate
 
 class BotListener(private val bot: Bot) : ListenerAdapter() {
     override fun onGuildJoin(event: GuildJoinEvent) {
@@ -26,6 +33,24 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             }
             return
         }
+
+        //Greet message start.
+        val embedBuilder = EmbedBuilder()
+                .setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
+                .setColor(Color.PINK)
+                .setDescription("Hello")
+                .addField("Important Links",
+                        "Links go here", true)
+                .setFooter("Something quirky")
+
+
+        //Find the first channel we can talk to.
+        val channel = event.guild.channels.stream()
+                .filter { guildChannel: GuildChannel -> guildChannel.type == ChannelType.TEXT && (guildChannel as TextChannel).canTalk() }
+                .findFirst()
+                .get() as TextChannel
+
+        channel.sendMessage(embedBuilder.build()).queue { m: Message -> m.delete().queueAfter(1, TimeUnit.MINUTES) }
 
         if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(BotLoader.BOT.configuration.prefix) && (event.message.contentRaw.endsWith(BotLoader.BOT.configuration.prefix)))) {
             return

@@ -11,7 +11,6 @@ import xyz.gnarbot.gnar.commands.media.*;
 import xyz.gnarbot.gnar.commands.music.*;
 import xyz.gnarbot.gnar.commands.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.music.dj.StopCommand;
-import xyz.gnarbot.gnar.commands.music.search.DiscordFMCommand;
 import xyz.gnarbot.gnar.commands.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.music.search.YoutubeCommand;
@@ -70,14 +69,7 @@ public class CommandRegistry {
         //End Fun Commands
 
         //Mod Commands
-//        register(new PrefixCommand());
-//        register(new ManageCommandsCommand());
-//        register(new IgnoreCommand());
-//        register(new AutoDeleteCommand());
         register(new PruneCommand());
-//        register(new AutoRoleCommand());
-//        register(new SelfRoleCommand());
-//        register(new MusicSettingsCommand());
         register(new SettingsDelegateCommand());
         //End Mod Commands
 
@@ -102,7 +94,6 @@ public class CommandRegistry {
         //End Media Commands
 
         // Administrator commands
-//        register(new SaveCommand());
         register(new ShutdownCommand());
         register(new RestartShardsCommand());
         register(new EvalCommand());
