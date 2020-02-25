@@ -11,6 +11,7 @@ import xyz.gnarbot.gnar.commands.media.*;
 import xyz.gnarbot.gnar.commands.music.*;
 import xyz.gnarbot.gnar.commands.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.music.dj.StopCommand;
+import xyz.gnarbot.gnar.commands.music.search.DiscordFMCommand;
 import xyz.gnarbot.gnar.commands.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.music.search.YoutubeCommand;
@@ -121,8 +122,7 @@ public class CommandRegistry {
             register(new VolumeCommand());
             register(new JumpCommand());
             register(new BassBoostedCommand());
-            //TODO: fix
-            //register(new DiscordFMCommand());
+            register(new DiscordFMCommand());
             register(new SoundboardCommand());
             register(new SoundboardListCommand());
         } else {

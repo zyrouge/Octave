@@ -102,7 +102,7 @@ public class Bot {
         countUpdater = new CountUpdater(this);
 
         // SETUP APIs
-        discordFM = new DiscordFM(this);
+        discordFM = new DiscordFM();
 
         //patreon = new PatreonAPI(credentials.getPatreonToken());
         //System.out.println("Patreon Established.");
