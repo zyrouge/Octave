@@ -89,6 +89,7 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
 
         try {
             cmd.execute(context, label, args)
+            context.bot.datadog.incrementCounter("bot.commands_ran")
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
