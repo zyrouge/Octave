@@ -47,6 +47,9 @@ public class PlayerRegistry {
         executor.scheduleAtFixedRate(() -> clear(false), 20, 10, TimeUnit.MINUTES);
 
         this.playerManager = new DefaultAudioPlayerManager();
+        playerManager.setFrameBufferDuration(800);
+        playerManager.getConfiguration().setFilterHotSwapEnabled(true);
+
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
 
         Configuration config = bot.getConfiguration();
