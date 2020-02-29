@@ -1,4 +1,4 @@
-/* package xyz.gnarbot.gnar.listeners
+package xyz.gnarbot.gnar.listeners
 
 import com.patreon.resources.Pledge
 import kotlinx.coroutines.GlobalScope
@@ -115,4 +115,3 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
         return pledges
     }
 }
-*/

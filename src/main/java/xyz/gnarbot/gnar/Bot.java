@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
+import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -22,6 +23,7 @@ import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
 import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listeners.BotListener;
+import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.utils.CountUpdater;
@@ -48,7 +50,7 @@ public class Bot {
     private final MyAnimeListAPI myAnimeListAPI;
     private final RiotApi riotApi;
     private final DiscordFM discordFM;
-    //private final PatreonAPI patreon;
+    private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
     private final CommandDispatcher commandDispatcher;
     private final EventWaiter eventWaiter;
@@ -92,7 +94,7 @@ public class Bot {
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory())
-                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this))
+                .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
@@ -107,7 +109,7 @@ public class Bot {
         // SETUP APIs
         discordFM = new DiscordFM();
 
-        //patreon = new PatreonAPI(credentials.getPatreonToken());
+        patreon = new PatreonAPI(credentials.getPatreonToken());
         //System.out.println("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
@@ -207,10 +209,9 @@ public class Bot {
         return credentials;
     }
 
-    //Commented for now, might be the cause of some issues?
-    /* public PatreonAPI getPatreon() {
+    public PatreonAPI getPatreon() {
         return patreon;
-    } */
+    }
 
     public SoundManager getSoundManager() {
         return soundManager;
