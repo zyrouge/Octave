@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.commands.Context
 import java.lang.management.ManagementFactory
 
 @Command(
-        aliases = ["about", "info", "botinfo"],
+        aliases = ["about", "info", "botinfo", "stats"],
         description = "Show information about the context.bot."
 )
 @BotInfo(

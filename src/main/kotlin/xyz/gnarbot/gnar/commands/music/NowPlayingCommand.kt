@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
-        aliases = ["nowplaying", "np"],
+        aliases = ["nowplaying", "np", "playing"],
         description = "Shows what's currently playing."
 )
 @BotInfo(

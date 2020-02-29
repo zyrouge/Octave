@@ -7,7 +7,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 @Command(
-        aliases = ["remove"],
+        aliases = ["remove", "removesong"],
         description = "Remove a song from the queue.",
         usage = "(first|last|all|start..end|#)"
 )
