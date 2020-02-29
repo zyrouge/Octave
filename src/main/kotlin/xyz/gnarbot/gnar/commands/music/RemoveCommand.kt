@@ -14,7 +14,8 @@ import java.util.regex.Pattern
 @BotInfo(
         id = 79,
         category = Category.MUSIC,
-        scope = Scope.VOICE
+        scope = Scope.VOICE,
+        roleRequirement = "DJ"
 )
 class RemoveCommand : MusicCommandExecutor(true, false) {
     private val pattern = Pattern.compile("(\\d+)?\\s*?\\.\\.\\s*(\\d+)?")
