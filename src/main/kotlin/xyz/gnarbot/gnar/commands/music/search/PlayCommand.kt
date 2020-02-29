@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(
-        aliases = ["play"],
+        aliases = ["play", "p"],
         usage = "[url|YT search]",
         description = "Joins and play music in a channel."
 )

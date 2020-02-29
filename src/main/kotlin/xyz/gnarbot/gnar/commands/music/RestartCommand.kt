@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
-        aliases = ["restart"],
+        aliases = ["restart", "replay"],
         description = "Restart the current song."
 )
 @BotInfo(

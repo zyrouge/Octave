@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(
-        aliases = ["bass"],
+        aliases = ["bass", "bassboost", "bb"],
         description = "Boost the bass of the music"
 )
 @BotInfo(

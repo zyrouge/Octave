@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
-        aliases = ["queue", "list"],
+        aliases = ["queue", "list", "q"],
         description = "Shows the music that's currently queued."
 )
 @BotInfo(

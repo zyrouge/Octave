@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
-        aliases = ["volume"],
+        aliases = ["volume", "v"],
         description = "Set the volume of the music player.",
         usage = "(loudness %)"
 )
