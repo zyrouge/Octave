@@ -63,7 +63,7 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.google.guava', name: 'guava', version: '23.2-jre'
 
-    compile group: "com.github.jasminb", name: "jsonapi-converter", version: "0.9-SNAPSHOT"
+    implementation 'com.github.jasminb:jsonapi-converter:0.10'
 
     // Logger
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'

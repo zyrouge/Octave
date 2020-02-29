@@ -101,14 +101,14 @@ class PatreonListener(private val bot: Bot) : ListenerAdapter() {
     }
 
     private fun getPledges(): List<Pledge> {
-        val campaign = bot.patreon.fetchCampaigns().get().first()
+        val campaign = bot.patreon.fetchCampaigns().get()!!.first()
 
         val pledges = mutableListOf<Pledge>()
 
         var cursor: String? = null
         do {
             val document = bot.patreon.fetchPageOfPledges(campaign.id, 100, cursor)
-            pledges += document.get()
+            pledges += document.get()!!
             cursor = bot.patreon.getNextCursorFromDocument(document)
         } while (cursor != null)
 
