@@ -33,7 +33,7 @@ class QueueCommand : CommandExecutor() {
             for (track in queue) {
                 entry {
                     buildString {
-                        track.getUserData(TrackContext::class.java)?.requester?.let {
+                        track.getUserData(TrackContext::class.java)?.requester?.let { it ->
                             context.guild.getMemberById(it)?.let {
                                 append(it.asMention)
                                 append(' ')

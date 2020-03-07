@@ -5,7 +5,6 @@ import gnu.trove.set.hash.TIntHashSet;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.admin.*;
 import xyz.gnarbot.gnar.commands.fun.*;
-import xyz.gnarbot.gnar.commands.games.OverwatchLookupCommand;
 import xyz.gnarbot.gnar.commands.general.*;
 import xyz.gnarbot.gnar.commands.media.*;
 import xyz.gnarbot.gnar.commands.music.*;
@@ -74,7 +73,6 @@ public class CommandRegistry {
         //End Mod Commands
 
         //Game Commands
-        register(new OverwatchLookupCommand());
 //        register(new PokemonCommand());
         //End Game Commands
 
