@@ -13,16 +13,11 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 @BotInfo(
         id = 73,
         category = Category.MUSIC,
-        scope = Scope.VOICE
+        scope = Scope.VOICE,
+        roleRequirement = "DJ"
 )
 class SkipCommand : MusicCommandExecutor(true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
-        if (!(context.member.hasAnyRoleNamed("DJ") || context.member.hasPermission(Permission.ADMINISTRATOR)
-                        || manager.player.playingTrack.getUserData(TrackContext::class.java)?.requester == context.user.idLong)) {
-            context.send().error("You did not request this track.").queue()
-            return
-        }
-
         manager.scheduler.nextTrack()
 
         context.send().info("The track was skipped.").queue()
