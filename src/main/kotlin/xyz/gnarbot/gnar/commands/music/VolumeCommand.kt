@@ -36,7 +36,7 @@ class VolumeCommand : MusicCommandExecutor(false, false) {
                                 append("\u25AC")
                                 append("]()")
                             } else {
-                                append("\u25AC")
+                                append("\u2015")
                             }
                         }
                         append(" **%.0f**%%".format(percent * max))

@@ -75,7 +75,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true) {
                             append("\u25AC")
                             append("]()")
                         } else {
-                            append("\u25AC")
+                            append("\u2015")
                         }
                     }
                     append(" **%.1f**%%".format(percent * 100))
