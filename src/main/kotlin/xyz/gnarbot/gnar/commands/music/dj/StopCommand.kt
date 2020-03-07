@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         scope = Scope.VOICE,
         roleRequirement = "DJ"
 )
-class StopCommand : MusicCommandExecutor(false, false) {
+class StopCommand : MusicCommandExecutor(false, false, false) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         manager.discordFMTrack = null
         context.guild.audioManager.closeAudioConnection()

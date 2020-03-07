@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         category = Category.MUSIC,
         scope = Scope.VOICE
 )
-class PauseCommand : MusicCommandExecutor(true, true) {
+class PauseCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         manager.player.isPaused = !manager.player.isPaused
 

@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         category = Category.MUSIC,
         scope = Scope.VOICE
 )
-class RestartCommand : MusicCommandExecutor(true, false) {
+class RestartCommand : MusicCommandExecutor(true, false, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val track = manager.player.playingTrack ?: manager.scheduler.lastTrack
 

@@ -17,7 +17,7 @@ import java.util.regex.Pattern
         scope = Scope.VOICE,
         roleRequirement = "DJ"
 )
-class RemoveCommand : MusicCommandExecutor(true, false) {
+class RemoveCommand : MusicCommandExecutor(true, false, false) {
     private val pattern = Pattern.compile("(\\d+)?\\s*?\\.\\.\\s*(\\d+)?")
 
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

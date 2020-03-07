@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         scope = Scope.VOICE,
         donor = true
 )
-class VolumeCommand : MusicCommandExecutor(false, false) {
+class VolumeCommand : MusicCommandExecutor(false, false, true) {
     private val totalBlocks = 20
 
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

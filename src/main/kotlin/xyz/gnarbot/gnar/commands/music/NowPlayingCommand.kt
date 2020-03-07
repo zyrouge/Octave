@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.utils.Utils
         id = 67,
         category = Category.MUSIC
 )
-class NowPlayingCommand : MusicCommandExecutor(false, true) {
+class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
     private val totalBlocks = 20
 
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

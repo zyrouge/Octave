@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.music.TrackContext
         roleRequirement = "DJ"
 )
 
-class BassBoostedCommand : MusicCommandExecutor(true, true) {
+class BassBoostedCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         if (args.isEmpty()) {
             context.send().embed {

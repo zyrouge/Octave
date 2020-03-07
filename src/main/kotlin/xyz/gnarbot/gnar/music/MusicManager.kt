@@ -108,6 +108,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 playerRegistry.destroy(guild)
                 return false
             }
+
             channel.userLimit != 0
                     && guild.selfMember.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
                     && channel.members.size >= channel.userLimit -> {

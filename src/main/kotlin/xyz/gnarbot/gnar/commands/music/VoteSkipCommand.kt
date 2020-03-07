@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
         scope = Scope.VOICE,
         category = Category.MUSIC
 )
-class VoteSkipCommand : MusicCommandExecutor(true, true) {
+class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         if (context.member.voiceState!!.isDeafened) {
             context.send().error("You actually have to be listening to the song to start a vote.").queue()

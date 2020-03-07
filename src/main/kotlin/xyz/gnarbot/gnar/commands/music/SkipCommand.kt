@@ -16,7 +16,7 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
         scope = Scope.VOICE,
         roleRequirement = "DJ"
 )
-class SkipCommand : MusicCommandExecutor(true, true) {
+class SkipCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         manager.scheduler.nextTrack()
 

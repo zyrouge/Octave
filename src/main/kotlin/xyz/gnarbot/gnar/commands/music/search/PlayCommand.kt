@@ -78,20 +78,6 @@ class PlayCommand : CommandExecutor() {
 
             val query = args.joinToString(" ").trim()
 
-//            if (query.startsWith("ytsearch:", ignoreCase = true)) {
-//                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("ytsearch:", "", true)))
-//                return
-//            } else if (query.startsWith("scsearch:", ignoreCase = true)) {
-//                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("scsearch:", "", true)))
-//                return
-//            } else if (query.startsWith("youtube ", ignoreCase = true)) {
-//                Bot.getCommandRegistry().getCommand("youtube").execute(context, arrayOf(query.replaceFirst("youtube ", "", true)))
-//                return
-//            } else if (query.startsWith("soundcloud ", ignoreCase = true)) {
-//                Bot.getCommandRegistry().getCommand("soundcloud").execute(context, arrayOf(query.replaceFirst("soundcloud ", "", true)))
-//                return
-//            }
-
             context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
                 if (results.isEmpty()) {
                     context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()

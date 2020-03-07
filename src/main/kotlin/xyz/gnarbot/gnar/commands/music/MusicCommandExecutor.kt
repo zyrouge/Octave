@@ -4,7 +4,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.music.MusicManager
 
-abstract class MusicCommandExecutor(private val sameChannel: Boolean, private val requirePlayingTrack: Boolean) : CommandExecutor() {
+abstract class MusicCommandExecutor(private val sameChannel: Boolean, private val requirePlayingTrack: Boolean, private val requirePlayer: Boolean) : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
@@ -13,7 +13,7 @@ abstract class MusicCommandExecutor(private val sameChannel: Boolean, private va
         }
 
         val botChannel = context.selfMember.voiceState?.channel
-        if (botChannel == null) {
+        if (botChannel == null && requirePlayer) {
             context.send().error("The bot is not currently in a voice channel.\n$PLAY_MESSAGE").queue()
             return
         }

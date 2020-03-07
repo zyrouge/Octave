@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.music.RepeatOption
         category = Category.MUSIC,
         scope = Scope.VOICE
 )
-class RepeatCommand : MusicCommandExecutor(true, false) {
+class RepeatCommand : MusicCommandExecutor(true, false, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         if (args.isEmpty()) {
             context.send().error("Valid options are `${RepeatOption.values().joinToString()}`").queue()
