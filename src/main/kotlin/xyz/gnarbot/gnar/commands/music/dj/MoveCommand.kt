@@ -15,7 +15,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         scope = Scope.VOICE,
         roleRequirement = "DJ"
 )
-class MoveCommand : MusicCommandExecutor(false, false) {
+class MoveCommand : MusicCommandExecutor(false, false, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val targetChannel = if (args.isEmpty()) {
             context.voiceChannel
