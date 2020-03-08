@@ -28,11 +28,13 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
         val embedBuilder = EmbedBuilder()
                 .setThumbnail(event.jda.selfUser.effectiveAvatarUrl)
                 .setColor(Color.BLUE)
-                .setDescription("Welcome to Octave! The fast and complete Discord bot!\n" +
+                .setDescription("Welcome to Octave! The highest quality Discord music bot!\n" +
                         "Please check the links below to get help, and use `_help` to get started!")
                 .addField("Important Links",
-                        "[Support Server](https://discord.gg/musicbot) - Support server.\n" +
-                                "[Patreon](https://patreon.com/octane) - Patreon.", true)
+                        "[Support Server](https://discord.gg/musicbot)\n" +
+                                "[Website](https://octave.gg) \n" +
+                                "[Invite Link](https://invite.octave.gg)\n" +
+                                "[Patreon](https://patreon.com/octave)", true)
                 .setFooter("Thanks for using Octave!")
 
 
@@ -46,7 +48,8 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
 
         bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
         bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
-        Bot.getLogger().info("✅ Joined `" + event.guild.name + "`")
+        bot.datadog.gauge("octave_bot.players", bot.players.size())
+        bot.datadog.incrementCounter("octave_bot.guildJoin")
     }
 
     override fun onGuildMessageReceived(event: GuildMessageReceivedEvent) {
@@ -101,22 +104,27 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
         bot.players.destroy(event.guild)
         bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
         bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
-        Bot.getLogger().info("❌ Left `" + event.guild.name + "`")
+        bot.datadog.gauge("octave_bot.players", bot.players.size())
+        bot.datadog.incrementCounter("octave_bot.guildLeave")
     }
 
     override fun onReady(event: ReadyEvent) {
         Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " is ready.")
+        bot.datadog.incrementCounter("octave_bot.shardReady")
     }
 
     override fun onResume(event: ResumedEvent) {
+        bot.datadog.incrementCounter("octave_bot.shardResume")
         Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has resumed.")
     }
 
     override fun onReconnect(event: ReconnectedEvent) {
+        bot.datadog.incrementCounter("octave_bot.shardReconnect")
         Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has reconnected.")
     }
 
     override fun onDisconnect(event: DisconnectEvent) {
+        bot.datadog.incrementCounter("octave_bot.shardDisconnect")
         if (event.isClosedByServer) {
             Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has disconnected (closed by server). "
                     + "Code: " + event.serviceCloseFrame?.closeCode + " " + event.closeCode)
@@ -145,6 +153,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
     }
 
     override fun onException(event: ExceptionEvent) {
+        bot.datadog.incrementCounter("octave_bot.exception")
         if (!event.isLogged) Bot.getLogger().error("Error thrown by JDA.", event.cause)
     }
 }

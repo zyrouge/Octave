@@ -23,7 +23,7 @@ class VideoCommand : CommandExecutor() {
 
         context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
             if (results.isEmpty()) {
-                context.send().error("No search results for `$query`.").queue()
+                context.send().issue("No search results for `$query`.").queue()
                 return@search
             }
 
