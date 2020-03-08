@@ -48,7 +48,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
 
         bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
         bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
-        bot.datadog.gauge("octave_bot.players", bot.players.size())
+        bot.datadog.gauge("octave_bot.players", bot.players.size().toLong())
         bot.datadog.incrementCounter("octave_bot.guildJoin")
     }
 
