@@ -122,6 +122,7 @@ public class CommandRegistry {
             register(new DiscordFMCommand());
             register(new SoundboardCommand());
             register(new SoundboardListCommand());
+            register(new CleanupCommand());
         } else {
             register(new DisabledPlayCommand());
         }
