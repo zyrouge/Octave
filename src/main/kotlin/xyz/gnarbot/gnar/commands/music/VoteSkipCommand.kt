@@ -18,19 +18,19 @@ import java.util.concurrent.TimeUnit
 class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         if (context.member.voiceState!!.isDeafened) {
-            context.send().error("You actually have to be listening to the song to start a vote.").queue()
+            context.send().issue("You actually have to be listening to the song to start a vote.").queue()
             return
         }
         if (manager.isVotingToSkip) {
-            context.send().error("There is already a vote going on!").queue()
+            context.send().issue("There is already a vote going on!").queue()
             return
         }
         if (System.currentTimeMillis() - manager.lastVoteTime < context.bot.configuration.voteSkipCooldown.toMillis()) {
-            context.send().error("You must wait ${context.bot.configuration.voteSkipCooldownText} before starting a new vote.").queue()
+            context.send().issue("You must wait ${context.bot.configuration.voteSkipCooldownText} before starting a new vote.").queue()
             return
         }
         if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= context.bot.configuration.voteSkipDuration.toMillis()) {
-            context.send().error("By the time the vote finishes in ${context.bot.configuration.voteSkipDurationText}, the song will be over.").queue()
+            context.send().issue("By the time the vote finishes in ${context.bot.configuration.voteSkipDurationText}, the song will be over.").queue()
             return
         }
 

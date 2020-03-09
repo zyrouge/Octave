@@ -28,7 +28,7 @@ public class PremiumKeyCommand extends CommandTemplate {
         long duration = Utils.parseTime(durationTxt);
 
         if (duration < 0) {
-            context.send().error("Negative duration, we get it you vape.").queue();
+            context.send().error("Why is negative duration a check you have in an admin command").queue();
             return;
         }
 

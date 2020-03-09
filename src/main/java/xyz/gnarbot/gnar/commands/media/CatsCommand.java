@@ -43,7 +43,7 @@ public class CatsCommand extends CommandExecutor {
                     .setImage(jso.getString("url"))
                     .action().queue();
         } catch (Exception e) {
-            context.send().error("Unable to find cats to sooth the darkness of your soul.").queue();
+            context.send().error("Unable to find cats, there was an issue.").queue();
             e.printStackTrace();
         }
     }

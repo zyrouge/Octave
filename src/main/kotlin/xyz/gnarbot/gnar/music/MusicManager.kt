@@ -104,7 +104,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 return false
             }
             !guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT) -> {
-                context.send().error("The bot can't connect to this channel due to a lack of permission.").queue()
+                context.send().issue("The bot can't connect to this channel due to a lack of permission.").queue()
                 playerRegistry.destroy(guild)
                 return false
             }
@@ -112,7 +112,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             channel.userLimit != 0
                     && guild.selfMember.hasPermission(channel, Permission.VOICE_MOVE_OTHERS)
                     && channel.members.size >= channel.userLimit -> {
-                context.send().error("The bot can't join due to the user limit.").queue()
+                context.send().issue("The bot can't join due to the user limit.").queue()
                 playerRegistry.destroy(guild)
                 return false
             }
@@ -135,7 +135,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             }
 
             if (!guild.selfMember.hasPermission(channel, Permission.VOICE_CONNECT)) {
-                currentRequestChannel?.respond()?.error("I don't have permission to join `${channel.name}`.")?.queue()
+                currentRequestChannel?.respond()?.issue("I don't have permission to join `${channel.name}`.")?.queue()
                 playerRegistry.destroy(guild)
                 return
             }
@@ -189,13 +189,13 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 }
 
                 if (scheduler.queue.size >= bot.configuration.queueLimit) {
-                    context.send().error("The queue can not exceed ${bot.configuration.queueLimit} songs.").queue()
+                    context.send().issue("The queue can not exceed ${bot.configuration.queueLimit} songs.").queue()
                     return
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
                     if (track.duration > bot.configuration.durationLimit.toMillis()) {
-                        context.send().error("The track can not exceed ${bot.configuration.durationLimitText}.").queue()
+                        context.send().issue("The track can not exceed ${bot.configuration.durationLimitText}.").queue()
                         return
                     }
                 }
@@ -218,7 +218,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
 
                 if (!guild.selfMember.voiceState!!.inVoiceChannel()) {
                     if (!context.member.voiceState!!.inVoiceChannel()) {
-                        context.send().error("You left the channel before the track is loaded.").queue()
+                        context.send().issue("You left the channel before the track is loaded.").queue()
 
                         // Track is not supposed to load and the queue is empty
                         // destroy player
@@ -268,7 +268,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 if (scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }
-                context.send().error("Nothing found by `$trackUrl`.").queue()
+                context.send().issue("Nothing found by `$trackUrl`.").queue()
             }
 
             override fun loadFailed(e: FriendlyException) {

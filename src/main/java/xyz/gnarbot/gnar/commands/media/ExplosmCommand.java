@@ -32,7 +32,7 @@ public class ExplosmCommand extends CommandExecutor {
                     input = Integer.valueOf(args[0]);
 
                     if (input > max || input < 100) {
-                        context.send().error("Explosm does not have a comic for that number.").queue();
+                        context.send().issue("Explosm does not have a comic for that number.").queue();
                     }
 
                     rand = String.valueOf(input);

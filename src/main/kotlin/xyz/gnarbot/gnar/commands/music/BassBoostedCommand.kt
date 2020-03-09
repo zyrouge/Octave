@@ -37,7 +37,7 @@ class BassBoostedCommand : MusicCommandExecutor(true, true, true) {
             "earrape" -> manager.boostBass(1F, 0.75F)
 
             else -> {
-                context.send().error("$query is not an option.").queue()
+                context.send().issue("$query is not an option.").queue()
                 return
             }
         }

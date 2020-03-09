@@ -8,7 +8,7 @@ abstract class MusicCommandExecutor(private val sameChannel: Boolean, private va
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this server.\n$PLAY_MESSAGE").queue()
+            context.send().issue("There's no music player in this server.\n$PLAY_MESSAGE").queue()
             return
         }
 
