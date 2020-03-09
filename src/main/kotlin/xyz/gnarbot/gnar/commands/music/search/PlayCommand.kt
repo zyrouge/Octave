@@ -22,14 +22,14 @@ class PlayCommand : CommandExecutor() {
         val userChannel = context.voiceChannel
 
         if (botChannel != null && botChannel != userChannel) {
-            context.send().error("The bot is already playing music in another channel.").queue()
+            context.send().issue("The bot is already playing music in another channel.").queue()
             return
         }
 
         if (args.isEmpty()) {
             val manager = context.bot.players.getExisting(context.guild)
             if (manager == null) {
-                context.send().error("There's no music player in this guild.\n" +
+                context.send().issue("There's no music player in this guild.\n" +
                         "\uD83C\uDFB6` _play (song/url)` to start playing some music!").queue()
                 return
             }
@@ -38,11 +38,11 @@ class PlayCommand : CommandExecutor() {
                 manager.player.isPaused -> {
                     manager.player.isPaused = false
                     context.send().embed("Play Music") {
-                        desc { "Music is now playing." }
+                        desc { "Music is no longer paused." }
                     }.action().queue()
                 }
                 manager.player.playingTrack != null -> {
-                    context.send().error("Music is already playing.").queue()
+                    context.send().error("Music is already playing. Are you trying to queue a track? Try adding a search term with this command!").queue()
                 }
                 manager.scheduler.queue.isEmpty() -> {
                     context.send().embed("Empty Queue") {
@@ -72,7 +72,7 @@ class PlayCommand : CommandExecutor() {
             )
         } else {
             if (!context.bot.configuration.searchEnabled) {
-                context.send().error("Search is currently disabled. Try direct links instead.").queue()
+                context.send().issue("Search is currently disabled. Try direct links instead.").queue()
                 return
             }
 
@@ -80,7 +80,7 @@ class PlayCommand : CommandExecutor() {
 
             context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
                 if (results.isEmpty()) {
-                    context.send().error("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
                     return@search
                 }
 

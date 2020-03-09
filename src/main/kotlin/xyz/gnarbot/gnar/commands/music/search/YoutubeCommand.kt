@@ -21,12 +21,12 @@ import java.awt.Color
 class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (!context.bot.configuration.searchEnabled) {
-            context.send().error("Search is currently disabled. Try direct links instead.").queue()
+            context.send().issue("Search is currently disabled. Try direct links instead.").queue()
             return
         }
 
         if (args.isEmpty()) {
-            context.send().error("Input a query to search YouTube.").queue()
+            context.send().issue("Input a query to search YouTube.").queue()
             return
         }
 
@@ -34,7 +34,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
 
         context.bot.players.get(context.guild).search("ytsearch:$query", 5) { results ->
             if (results.isEmpty()) {
-                context.send().error("No search results for `$query`.").queue()
+                context.send().issue("No search results for `$query`.").queue()
                 return@search
             }
 
@@ -92,7 +92,7 @@ class YoutubeCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                                         )
                                 )
                             } else {
-                                context.send().error("You're not in a voice channel anymore!").queue()
+                                context.send().issue("You're not in a voice channel anymore!").queue()
                             }
                         }
                     }

@@ -36,12 +36,12 @@ public class RollCommand extends CommandExecutor {
                 maxValue = Integer.valueOf(parts[1]);
             }
         } catch (NumberFormatException e) {
-            context.send().error("That wasn't a number or a valid dice configuration. `_roll 5` or `_roll 2d6`").queue();
+            context.send().issue("That wasn't a number or a valid dice configuration. `_roll 5` or `_roll 2d6`").queue();
             return;
         }
 
         if (maxValue <= 0) {
-            context.send().error("Max value need to be greater than 0.").queue();
+            context.send().issue("Max value need to be greater than 0.").queue();
             return;
         } else if (maxValue > 10000) {
             maxValue = 10000;

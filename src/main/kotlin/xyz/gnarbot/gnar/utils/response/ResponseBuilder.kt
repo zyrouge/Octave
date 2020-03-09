@@ -33,6 +33,20 @@ open class ResponseBuilder(private val channel: MessageChannel) {
     }
 
     /**
+     * Send a "minor issue" message.
+     *
+     * @param msg The text to send.
+     * @return The Message created by this function.
+     */
+    open fun issue(msg: String): RestAction<Message> {
+        return embed {
+            title { "Something is wrong here..." }
+            desc { msg }
+            color { Color.YELLOW }
+        }.action()
+    }
+
+    /**
      * Send a standard error message.
      *
      * @param msg The text to send.

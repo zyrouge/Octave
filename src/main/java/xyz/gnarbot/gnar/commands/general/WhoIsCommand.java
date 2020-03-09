@@ -32,7 +32,7 @@ public class WhoIsCommand extends CommandExecutor {
         }
 
         if (member == null) {
-            context.send().error("You did not mention a valid user.").queue();
+            context.send().issue("You did not mention a valid user.").queue();
             return;
         }
 

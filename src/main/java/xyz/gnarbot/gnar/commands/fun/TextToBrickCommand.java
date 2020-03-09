@@ -23,7 +23,7 @@ public class TextToBrickCommand extends CommandExecutor {
         char[] array = StringUtils.join(args, " ").toUpperCase().toCharArray();
 
         if (array.length > 100) {
-            context.send().error("Alright, that's way too long.").queue();
+            context.send().issue("Alright, that's way too long.").queue();
             return;
         }
 
@@ -41,7 +41,7 @@ public class TextToBrickCommand extends CommandExecutor {
         }
 
         if (sb.length() > 2000) {
-            context.send().error("Too many characters.").queue();
+            context.send().issue("Too many characters.").queue();
             return;
         }
 

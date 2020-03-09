@@ -37,7 +37,7 @@ public class MangaSearchCommand extends CommandExecutor {
             return;
         }
         if (!jso.has("manga")) {
-            context.send().error("Nothing found with that search term!").queue();
+            context.send().issue("Nothing found with that search term!").queue();
             return;
         }
 

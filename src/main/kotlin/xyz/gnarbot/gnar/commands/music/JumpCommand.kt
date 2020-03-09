@@ -51,28 +51,28 @@ class JumpCommand : CommandTemplate() {
     override fun execute(context: Context, label: String, args: Array<out String>) {
         val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
+            context.send().issue("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
         val botChannel = context.selfMember.voiceState?.channel
         if (botChannel == null) {
-            context.send().error("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
+            context.send().issue("The bot is not currently in a channel.\n$PLAY_MESSAGE").queue()
             return
         }
 
         if (context.voiceChannel != botChannel) {
-            context.send().error("You're not in the same channel as the context.bot.").queue()
+            context.send().issue("You're not in the same channel as the context.bot.").queue()
             return
         }
 
         if (manager.player.playingTrack == null) {
-            context.send().error("The player is not playing anything.").queue()
+            context.send().issue("The player is not playing anything.").queue()
             return
         }
 
         if (!manager.player.playingTrack.isSeekable) {
-            context.send().error("You can't change the time marker on this track.").queue()
+            context.send().issue("You can't change the time marker on this track.").queue()
             return
         }
 

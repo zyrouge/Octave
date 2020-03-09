@@ -71,12 +71,12 @@ public class ActionCommand extends CommandExecutor {
         } else if (args.length > 0) {
             action = args[0];
         } else {
-            context.send().error("Try one of these actions: `_action " + Arrays.toString(getInfo().aliases()) + "`").queue();
+            context.send().issue("Try one of these actions: `_action " + Arrays.toString(getInfo().aliases()) + "`").queue();
             return;
         }
 
         if (!Arrays.asList(getInfo().aliases()).contains(action)) {
-            context.send().error("This isn't one of the available actions.").queue();
+            context.send().issue("This isn't one of the available actions.").queue();
             return;
         }
 

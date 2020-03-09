@@ -69,7 +69,7 @@ public class MemeCommand extends CommandExecutor {
         }
 
         if (args.length == 0) {
-            context.send().error(
+            context.send().issue(
                     "Example Usage:\n\n"
                             + "`_meme (meme name) | (top text) | (bottom text)`\n"
                             + "`_meme spongegar | what in | tarnation`\n\n"
