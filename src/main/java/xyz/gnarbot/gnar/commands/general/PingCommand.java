@@ -20,6 +20,7 @@ public class PingCommand extends CommandExecutor {
         context.getJDA().getRestPing().queue(ping -> context.send().embed()
                 .field("Rest", true, ping)
                 .field("Web Socket", true, (int) context.getBot().getShardManager().getAverageGatewayPing())
+                .setFooter("Shard ID: " + context.getJDA().getShardInfo().getShardId(), null)
                 .action().queue());
     }
 }
