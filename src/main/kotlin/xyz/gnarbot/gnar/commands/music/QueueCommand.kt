@@ -28,7 +28,7 @@ class QueueCommand : CommandExecutor() {
             setUser(context.user)
             title { "Music Queue" }
             color { context.selfMember.color }
-            empty { "**Empty queue.** Add some music with `_play url|YT search`." }
+            empty { "**Empty queue.** Add some music with `${config.prefix}play url|YT search`." }
             for (track in queue) {
                 entry {
                     buildString {

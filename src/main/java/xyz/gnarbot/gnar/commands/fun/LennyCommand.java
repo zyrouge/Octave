@@ -45,7 +45,7 @@ public class LennyCommand extends CommandExecutor {
             try {
                 count = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                context.send().issue("That's not a number. `_lenny 10`").queue();
+                context.send().issue(String.format("That's not a number. %slenny 10`", context.getBot().getConfiguration().getPrefix())).queue();
                 return;
             }
             count = Math.min(Math.max(count, 1), 15);
