@@ -17,12 +17,12 @@ class CleanupCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
+            context.send().issue("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
         if (context.message.mentionedUsers.isEmpty() && args.isEmpty()) {
-            context.send().error("You must mention a user to purge silly!").queue()
+            context.send().issue("You must mention a user to purge their queue items.").queue()
             return
         }
 
