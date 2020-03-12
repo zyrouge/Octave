@@ -22,7 +22,7 @@ class CleanupCommand : CommandExecutor() {
         }
 
         if (context.message.mentionedUsers.isEmpty() && args.isEmpty()) {
-            context.send().issue("You must mention a user to purge their queue items.").queue()
+            context.send().issue("You must mention a user to purge their queue items, or use `cleanup left` to remove songs from users who left.").queue()
             return
         }
 
@@ -54,6 +54,10 @@ class CleanupCommand : CommandExecutor() {
         if(removeSongs.size > 0) queue.removeAll(removeSongs)
 
         if(purgeUser == "left") {
+            if(removeSongs.size == 0) {
+                context.send().error("There are no songs to clear.")
+                return
+            }
             context.send().info("Removed ${removeSongs.size} songs from users no longer in voice channel.").queue()
         } else {
             context.send().info("Removed ${removeSongs.size} songs from user ${context.message.mentionedUsers[0].name} from the queue").queue()
