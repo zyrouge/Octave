@@ -9,8 +9,14 @@ import java.util.function.BiPredicate
 
 class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
-        if (context.member.hasPermission(Permission.ADMINISTRATOR)
+        if (context.member.hasPermission(Permission.ADMINISTRATOR) || context.member.hasPermission(Permission.MANAGE_SERVER)
                 || !(cmd.botInfo.permissions.isNotEmpty() || cmd.botInfo.roleRequirement.isNotEmpty())) return true
+
+        if(cmd.botInfo.djLock) {
+            val memberSize = context.selfMember.voiceState?.channel?.members?.size
+            if(context.member.hasAnyRoleNamed("DJ") || (if (memberSize != null) memberSize <= 2 else false))
+                return true
+        }
 
         if (context.member.hasAnyRoleNamed(cmd.botInfo.roleRequirement)
                 && cmd.botInfo.scope.checkPermission(context, *cmd.botInfo.permissions)) {

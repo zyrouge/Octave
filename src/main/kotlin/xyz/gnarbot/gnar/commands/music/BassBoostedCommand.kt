@@ -12,7 +12,7 @@ import xyz.gnarbot.gnar.music.TrackContext
         id = 85,
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        roleRequirement = "DJ"
+        djLock = true
 )
 
 class BassBoostedCommand : MusicCommandExecutor(true, true, true) {

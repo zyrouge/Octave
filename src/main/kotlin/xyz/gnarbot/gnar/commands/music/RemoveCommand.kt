@@ -15,7 +15,7 @@ import java.util.regex.Pattern
         id = 79,
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        roleRequirement = "DJ"
+        djLock = true
 )
 class RemoveCommand : MusicCommandExecutor(true, false, false) {
     private val pattern = Pattern.compile("(\\d+)?\\s*?\\.\\.\\s*(\\d+)?")

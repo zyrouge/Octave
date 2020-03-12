@@ -11,7 +11,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 @BotInfo(
         id = 88,
         category = Category.MUSIC,
-        roleRequirement = "DJ"
+        djLock = true
 )
 class CleanupCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
