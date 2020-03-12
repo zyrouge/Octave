@@ -81,6 +81,8 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                     append(" **%.1f**%%".format(percent * 100))
                 }
             }
+
+            footer { "Use `_lyrics current` to see the lyrics of the song!" }
         }.action().queue()
     }
 }
