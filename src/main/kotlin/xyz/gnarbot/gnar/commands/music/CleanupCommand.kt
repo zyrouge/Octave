@@ -1,10 +1,8 @@
 package xyz.gnarbot.gnar.commands.music
 
-import com.jagrosh.jdautilities.paginator
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.TrackContext
-import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
         aliases = ["cleanup", "cu"],
@@ -28,7 +26,8 @@ class CleanupCommand : CommandExecutor() {
             return
         }
 
-        val purgeUser = if (context.message.mentionedUsers.isNotEmpty()) context.message.mentionedUsers[0].idLong else args[0]
+        val purgeUser = if (context.message.mentionedUsers.isNotEmpty())
+            context.message.mentionedUsers[0].idLong else args[0]
 
         val queue = manager.scheduler.queue
         val removeSongs = ArrayList<AudioTrack>() //Prevent Concurrent Modification Exception
