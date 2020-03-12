@@ -12,7 +12,8 @@ import xyz.gnarbot.gnar.music.MusicManager
         id = 74,
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        donor = true
+        donor = true,
+        roleRequirement = "DJ"
 )
 class VolumeCommand : MusicCommandExecutor(false, false, true) {
     private val totalBlocks = 20

@@ -10,7 +10,8 @@ import xyz.gnarbot.gnar.music.MusicManager
 @BotInfo(
         id = 68,
         category = Category.MUSIC,
-        scope = Scope.VOICE
+        scope = Scope.VOICE,
+        roleRequirement = "DJ"
 )
 class PauseCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

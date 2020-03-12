@@ -14,7 +14,8 @@ import java.time.Duration
 @BotInfo(
         id = 65,
         category = Category.MUSIC,
-        scope = Scope.VOICE
+        scope = Scope.VOICE,
+        roleRequirement = "DJ"
 )
 class JumpCommand : CommandTemplate() {
     @Description("Set the time marker of the player.")

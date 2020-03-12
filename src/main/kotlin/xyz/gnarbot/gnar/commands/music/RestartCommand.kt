@@ -10,7 +10,8 @@ import xyz.gnarbot.gnar.music.MusicManager
 @BotInfo(
         id = 71,
         category = Category.MUSIC,
-        scope = Scope.VOICE
+        scope = Scope.VOICE,
+        roleRequirement = "DJ"
 )
 class RestartCommand : MusicCommandExecutor(true, false, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
