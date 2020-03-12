@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.Permission
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.utils.hasAnyRoleId
 import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 import java.util.function.BiPredicate
 
@@ -14,7 +15,8 @@ class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
 
         if(cmd.botInfo.djLock) {
             val memberSize = context.selfMember.voiceState?.channel?.members?.size
-            if(context.member.hasAnyRoleNamed("DJ") || (if (memberSize != null) memberSize <= 2 else false))
+            val djRole = context.data.command.djRole
+            if(context.member.hasAnyRoleNamed("DJ") || (if(djRole != null) context.member.hasAnyRoleId(djRole) else false) || (if (memberSize != null) memberSize <= 2 else false))
                 return true
         }
 
