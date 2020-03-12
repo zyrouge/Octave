@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.music
 
 import okhttp3.Request
-import org.json.JSONException
 import org.json.JSONObject
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
@@ -38,12 +37,8 @@ class LyricsCommand : CommandTemplate() {
 
         val title = audioTrack.info.title
         val data : JSONObject = getSongData(title)
-
-        //This is wack but am tired
-        try {
-            data.getString("error")
-        } catch (ex: JSONException) {
-            context.send().info("No lyrics found for ${title}. Try with another song?");
+        if(!data.isNull("error")) {
+            context.send().info("No lyrics found for $title. Try with another song?")
         }
 
         val lyrics = data.getString("content")
@@ -61,12 +56,8 @@ class LyricsCommand : CommandTemplate() {
 
     fun search(context: Context, content: String) {
         val data : JSONObject = getSongData(content)
-
-        //This is wack but am tired
-        try {
-            data.getString("error")
-        } catch (ex: JSONException) {
-            context.send().info("No lyrics found for $content. Try with another song?");
+        if(!data.isNull("error")) {
+            context.send().info("No lyrics found for $content. Try with another song?")
         }
 
         val lyrics = data.getString("content")

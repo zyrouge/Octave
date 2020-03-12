@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils
 
+import io.sentry.Sentry
 import java.io.File
 
 class SoundManager {
@@ -13,6 +14,7 @@ class SoundManager {
                 map[s.name.replace(".mp3", "").replace("sounds\\", "")] = s.path
             }
         } catch (e: Exception) {
+            Sentry.capture(e)
             e.printStackTrace()
         }
     }

@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.music
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import io.sentry.Sentry
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.TrackContext
 
@@ -45,7 +46,7 @@ class CleanupCommand : CommandExecutor() {
                     }
                 } catch(e: Exception) { //User kicked or banned will result in above erroring out
                     removeSongs.add(song)
-
+                    Sentry.capture(e)
                     e.printStackTrace()
                 }
             }

@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.media;
 
+import io.sentry.Sentry;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,6 +36,7 @@ public class ExplosmRCGCommand extends CommandExecutor {
 
         } catch (Exception e) {
             context.send().error("Unable to grab random Cyanide and Happiness comic.").queue();
+            Sentry.capture(e);
             e.printStackTrace();
         }
     }

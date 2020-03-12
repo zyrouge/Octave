@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.`fun`
 
+import io.sentry.Sentry
 import org.apache.commons.lang3.StringUtils
 import org.apache.http.client.utils.URIBuilder
 import org.jsoup.Jsoup
@@ -40,6 +41,7 @@ class ASCIICommand : CommandExecutor() {
 
         } catch (e: Exception) {
             context.send().error("Unable to generate ASCII art.").queue()
+            Sentry.capture(e)
             e.printStackTrace()
         }
     }

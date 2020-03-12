@@ -5,6 +5,7 @@ import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
+import io.sentry.Sentry;
 import net.dean.jraw.http.UserAgent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
@@ -69,6 +70,8 @@ public class Bot {
         this.soundManager = new SoundManager();
         soundManager.loadSounds();
         reloadConfiguration();
+
+        Sentry.init(configuration.getSentryDsn());
 
         LOG.info("Initializing the Discord bot.");
 

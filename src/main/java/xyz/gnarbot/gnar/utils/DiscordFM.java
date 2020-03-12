@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils;
 
+import io.sentry.Sentry;
 import org.apache.commons.io.IOUtils;
 import xyz.gnarbot.gnar.Bot;
 
@@ -32,6 +33,7 @@ public class DiscordFM {
 
                 Bot.getLogger().info("(DiscordFM) Added " + collect.size() + " elements to playlist: " + lib);
             } catch (Exception e) {
+                Sentry.capture(e);
                 e.printStackTrace();
             }
         }

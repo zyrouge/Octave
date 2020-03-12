@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils;
 
+import io.sentry.Sentry;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -124,6 +125,7 @@ public class Utils {
             return "https://hastebin.com/" + jso.get("key");
         } catch (IOException e) {
             e.printStackTrace();
+            Sentry.capture(e);
             return null;
         }
     }

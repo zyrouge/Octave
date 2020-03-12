@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.dispatcher
 
+import io.sentry.Sentry
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
@@ -8,6 +9,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.dispatcher.predicates.*
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.Utils
 import java.util.concurrent.ExecutorService
 import java.util.function.BiPredicate
@@ -93,7 +95,10 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
-        } catch (e: Exception) {
+        } catch (e: MusicLimitException) {
+            e.sendToContext(context);
+        }
+        catch (e: Exception) {
             context.send().exception(e).queue()
             e.printStackTrace()
         }
