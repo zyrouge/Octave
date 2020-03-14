@@ -39,8 +39,10 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
             when {
                 //Markdown detection and prevention of bot displaying messages from blank commands
                 (it.startsWith(bot.configuration.prefix) && it.endsWith(bot.configuration.prefix)) -> return
+                //Avoid default prefix if a custom prefix it's set
+                !customPrefix.isNullOrEmpty() && it.startsWith(bot.configuration.prefix) -> return
 
-                it.startsWith(bot.configuration.prefix) && customPrefix != null -> it.substring(bot.configuration.prefix.length)
+                it.startsWith(bot.configuration.prefix) -> it.substring(bot.configuration.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {
                     if (customPrefix == null || !it.startsWith(customPrefix)) return

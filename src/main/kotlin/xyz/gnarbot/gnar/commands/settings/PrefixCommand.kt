@@ -59,7 +59,7 @@ class PrefixCommand : CommandTemplate() {
 
     override fun onWalkFail(context: Context, args: Array<String>, depth: Int) {
         onWalkFail(context, args, depth, null, buildString {
-            append("Default prefix will still be valid.\n")
+            append(" Default prefix will still be valid.\n")
             val prefix = context.data.command.prefix
             append("Current prefix: `").append(prefix).append('`')
         })
