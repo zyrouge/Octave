@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.commands.dispatcher
 
-import io.sentry.Sentry
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.exceptions.PermissionException
 import xyz.gnarbot.gnar.Bot
@@ -34,18 +33,18 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
             return
         }
 
+        val customPrefix = context.data.command.prefix
+
         val content = context.message.contentRaw.let {
             when {
                 //Markdown detection and prevention of bot displaying messages from blank commands
                 (it.startsWith(bot.configuration.prefix) && it.endsWith(bot.configuration.prefix)) -> return
 
-
-                it.startsWith(bot.configuration.prefix) -> it.substring(bot.configuration.prefix.length)
+                it.startsWith(bot.configuration.prefix) && customPrefix != null -> it.substring(bot.configuration.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {
-                    val prefix = context.data.command.prefix
-                    if (prefix == null || !it.startsWith(prefix)) return
-                    it.substring(prefix.length)
+                    if (customPrefix == null || !it.startsWith(customPrefix)) return
+                    it.substring(customPrefix.length)
                 }
             }
         }
