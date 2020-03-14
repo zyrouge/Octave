@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.template;
 
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;

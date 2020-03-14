@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.BotLoader;
 
 import static com.rethinkdb.RethinkDB.r;
 

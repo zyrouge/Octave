@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands;
 
 import xyz.gnarbot.gnar.Bot;
-import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.Configuration;
 
 /**

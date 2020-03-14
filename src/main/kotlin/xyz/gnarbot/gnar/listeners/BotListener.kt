@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.Context
 import java.awt.Color
 import java.time.OffsetDateTime
