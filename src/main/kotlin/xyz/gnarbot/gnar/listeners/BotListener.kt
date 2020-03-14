@@ -62,7 +62,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             return
         }
 
-        if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(BotLoader.BOT.configuration.prefix) && (event.message.contentRaw.endsWith(BotLoader.BOT.configuration.prefix)))) {
+        if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(Bot.getInstance().configuration.prefix) && (event.message.contentRaw.endsWith(Bot.getInstance().configuration.prefix)))) {
             return
         } //Prevent markdown responses
 

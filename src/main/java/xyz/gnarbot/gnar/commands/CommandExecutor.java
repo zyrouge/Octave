@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands;
 
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.Configuration;
 
@@ -19,6 +20,6 @@ public abstract class CommandExecutor implements ICommandExecutor<Context> {
     }
 
     public Configuration getConfig() {
-        return BotLoader.BOT.getConfiguration();
+        return Bot.getInstance().getConfiguration();
     }
 }

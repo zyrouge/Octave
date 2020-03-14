@@ -9,10 +9,10 @@ plugins {
 group 'xyz.gnarbot'
 version '5.0.4'
 
-mainClassName = 'xyz.gnarbot.gnar.BotLoader'
+mainClassName = 'xyz.gnarbot.gnar.Bot'
 
-sourceCompatibility = 9
-targetCompatibility = 9
+sourceCompatibility = 11
+targetCompatibility = 11
 
 repositories {
     jcenter()

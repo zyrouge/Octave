@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.template;
 
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Context;
@@ -68,7 +69,7 @@ public abstract class CommandTemplate extends CommandExecutor implements Templat
     @Override
     public void onWalkFail(Context context, String[] args, int depth, String title, String description) {
         Template.super.onWalkFail(context, args, depth,
-                title == null ? BotLoader.BOT.getConfiguration().getPrefix() + getInfo().aliases()[0] + " Command" : title,
+                title == null ? Bot.getInstance().getConfiguration().getPrefix() + getInfo().aliases()[0] + " Command" : title,
                 getInfo().description() + (description == null ? "" : description));
     }
 }

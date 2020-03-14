@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.admin
 
+import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.DiscordBotsVotes
@@ -44,7 +45,7 @@ class EvalCommand : CommandExecutor() {
 
         val variables = hashMapOf<String, Any>().apply {
             put("context", context)
-            put("Bot", BotLoader.BOT)
+            put("Bot", Bot.getInstance())
             put("DiscordBotsVotes", DiscordBotsVotes::class.java)
         }
 

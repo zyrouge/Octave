@@ -33,13 +33,14 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class Bot {
     private static final Logger LOG = LoggerFactory.getLogger("Bot");
-
+    private static Bot instance;
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
     private final UserAgent ua = new UserAgent("bot", "xyz.gnarbot.gnar", "5.1.2", "GnarDiscordBot");
@@ -61,14 +62,16 @@ public class Bot {
     private CountUpdater countUpdater;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
-    public Bot(
-            BotCredentials credentials,
-            Supplier<Configuration> configurationGenerator
-    ) throws LoginException {
+    public static void main(String[] args) throws LoginException {
+        new Bot(new BotCredentials(new File("credentials.conf")), () -> new Configuration(new File("bot.conf")));
+    }
+
+    public Bot(BotCredentials credentials, Supplier<Configuration> configurationGenerator) throws LoginException {
         this.credentials = credentials;
         this.configurationGenerator = configurationGenerator;
         this.soundManager = new SoundManager();
         soundManager.loadSounds();
+        instance = this;
         reloadConfiguration();
 
         Sentry.init(configuration.getSentryDsn());
@@ -129,6 +132,9 @@ public class Bot {
         LOG.info("Finish setting up bot internals.");
     }
 
+    public static Bot getInstance() {
+        return instance;
+    }
 
     public StatsDClient getDatadog() {
         return statsDClient;

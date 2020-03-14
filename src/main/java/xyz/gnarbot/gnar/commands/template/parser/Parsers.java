@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.BotLoader;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
@@ -39,10 +40,10 @@ public class Parsers {
         return list.isEmpty() ? null : list.get(0);
     });
     public static final Parser<CommandExecutor> COMMAND = new Parser<>("_command", "Command label", (c, s) -> {
-        if (s.startsWith(BotLoader.BOT.getConfiguration().getPrefix())) {
-            return BotLoader.BOT.getCommandRegistry().getCommand(s.substring(BotLoader.BOT.getConfiguration().getPrefix().length()));
+        if (s.startsWith(Bot.getInstance().getConfiguration().getPrefix())) {
+            return Bot.getInstance().getCommandRegistry().getCommand(s.substring(Bot.getInstance().getConfiguration().getPrefix().length()));
         } else {
-            return BotLoader.BOT.getCommandRegistry().getCommand(s);
+            return Bot.getInstance().getCommandRegistry().getCommand(s);
         }
     });
     public static final Map<Class<?>, Parser<?>> PARSER_MAP = new HashMap<>();
