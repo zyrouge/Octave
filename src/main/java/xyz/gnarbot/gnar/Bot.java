@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MiscUtil;
@@ -94,8 +95,7 @@ public class Bot {
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
         eventWaiter = new EventWaiter();
-        shardManager = new DefaultShardManagerBuilder()
-                .setToken(credentials.getToken())
+        shardManager = DefaultShardManagerBuilder.createDefault(credentials.getToken())
                 .setMaxReconnectDelay(32)
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
