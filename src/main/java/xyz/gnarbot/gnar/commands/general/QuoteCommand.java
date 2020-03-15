@@ -7,6 +7,8 @@ import xyz.gnarbot.gnar.commands.Command;
 import xyz.gnarbot.gnar.commands.CommandExecutor;
 import xyz.gnarbot.gnar.commands.Context;
 
+import java.time.format.DateTimeFormatter;
+
 @Command(
         aliases = {"quote", "quotemsg"},
         usage = "(message id) [#channel]",
@@ -16,6 +18,8 @@ import xyz.gnarbot.gnar.commands.Context;
         id = 19
 )
 public class QuoteCommand extends CommandExecutor {
+    private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     @Override
     public void execute(Context context, String label, String[] args) {
         if (args.length == 0) {
@@ -28,14 +32,24 @@ public class QuoteCommand extends CommandExecutor {
             targetChannel = context.getMessage().getMentionedChannels().get(0);
         }
 
+        final TextChannel _targetChannel = targetChannel;
+
         for (String id : args) {
-            final TextChannel _targetChannel = targetChannel;
-            context.getMessage().getChannel().retrieveMessageById(id).queue(msg ->
-                    _targetChannel.sendMessage(new EmbedBuilder()
-                            .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
-                            .setDescription(msg.getContentDisplay())
-                            .build()
-                    ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
+            try {
+                if(id.equals(targetChannel.getAsMention()))
+                    continue;
+
+                context.getMessage().getChannel().retrieveMessageById(id).queue(msg ->
+                        _targetChannel.sendMessage(new EmbedBuilder()
+                                .setAuthor(msg.getAuthor().getName(), null, msg.getAuthor().getAvatarUrl())
+                                .setDescription(msg.getContentDisplay())
+                                .addField("Sent At", fmt.format(msg.getTimeCreated()), false)
+                                .setFooter("ID: " + msg.getId())
+                                .build()
+                        ).queue(), t -> context.send().error("Invalid message ID `" + id + "`.").queue());
+            } catch (IllegalArgumentException e) {
+                context.send().error("Invalid message ID `" + id + "`.").queue();
+            }
         }
 
         context.send().info("Sent quotes to the " + targetChannel.getName() + " channel!").queue();
