@@ -11,7 +11,7 @@ import java.util.Arrays;
 @Command(
         aliases = "react",
         usage = "(message id) (emoji...)",
-        description = "Make GNAR react to something, against it's " + "will. You evil prick."
+        description = "Make Octave react to something, against it's " + "will. You evil prick."
 )
 @BotInfo(
         id = 20
