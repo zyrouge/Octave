@@ -39,25 +39,28 @@ class LyricsCommand : CommandTemplate() {
         val data : JSONObject = getSongData(title)
         if(!data.isNull("error")) {
             context.send().info("No lyrics found for $title. Try with another song?")
+            return
         }
 
         val lyrics = data.getString("content")
         val songObject = data.getJSONObject("song")
-
         val fullTitle = songObject.getString("full_title")
+
         val icon = songObject.getString("icon")
 
         context.send().embed("Lyrics for $fullTitle") {
             thumbnail { icon }
             desc { lyrics }
             footer { "Service provided by https://lyrics.tsu.sh. Thanks for using Octave!" }
-        }
+        }.action().queue()
     }
 
+    @Description("Searches lyrics.")
     fun search(context: Context, content: String) {
         val data : JSONObject = getSongData(content)
         if(!data.isNull("error")) {
             context.send().info("No lyrics found for $content. Try with another song?")
+            return
         }
 
         val lyrics = data.getString("content")
@@ -70,7 +73,7 @@ class LyricsCommand : CommandTemplate() {
             thumbnail { icon }
             desc { lyrics }
             footer { "Service provided by https://lyrics.tsu.sh. Thanks for using Octave!" }
-        }
+        }.action().queue()
     }
 }
 
