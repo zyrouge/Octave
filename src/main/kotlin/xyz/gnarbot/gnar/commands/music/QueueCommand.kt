@@ -58,10 +58,10 @@ class QueueCommand : CommandExecutor() {
             }
 
             manager.discordFMTrack?.let {
-                field("Discord.FM") {
+                field("Radio") {
                     val member = context.guild.getMemberById(it.requester)
                     buildString {
-                        append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
+                        append("Currently streaming music from radio station `${it.station.capitalize()}`")
                         member?.let {
                             append(", requested by ${member.asMention}")
                         }
