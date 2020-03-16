@@ -37,7 +37,7 @@ class CleanupCommand : CommandExecutor() {
             if (purgeUser == "left") {
                 try {
                     if (context.guild.getMemberById(song.getUserData(TrackContext::class.java)!!.requester)?.voiceState?.channel?.idLong
-                            != context.guild.selfMember.voiceState?.channel?.idLong) { //there seriously HAS to be a better way to do this what the fuck
+                            != context.voiceChannel.idLong) { //there seriously HAS to be a better way to do this what the fuck
                         removeSongs.add(song)
                     }
                 } catch (e: Exception) { //User kicked or banned will result in above erroring out
@@ -47,6 +47,7 @@ class CleanupCommand : CommandExecutor() {
                 }
             } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes") {
                 queue.filter { filteredSong -> (filteredSong.info.uri == song.info.uri && !removeSongs.contains(filteredSong)) }.map {removableSong -> removeSongs.add(removableSong)}
+                removeSongs.removeAt(0) // keep first index as to not purge all instances
             } else  {
                 if (song.getUserData(TrackContext::class.java)?.requester == purgeUser) {
                     removeSongs.add(song)
