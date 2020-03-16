@@ -42,9 +42,15 @@ class LyricsCommand : CommandTemplate() {
             return
         }
 
-        val lyrics = data.getString("content")
+        var lyrics = data.getString("content")
         val songObject = data.getJSONObject("song")
         val fullTitle = songObject.getString("full_title")
+
+        lyrics = if (lyrics.length > 900) {
+            lyrics.substring(0, 900) + "..."
+        } else {
+            lyrics
+        }
 
         val icon = songObject.getString("icon")
 
@@ -69,8 +75,8 @@ class LyricsCommand : CommandTemplate() {
         val icon = songObject.getString("icon")
 
 
-        lyrics = if (lyrics.length > 1300) {
-            lyrics.substring(0, 1300) + "..."
+        lyrics = if (lyrics.length > 900) {
+            lyrics.substring(0, 900) + "..."
         } else {
             lyrics
         }
