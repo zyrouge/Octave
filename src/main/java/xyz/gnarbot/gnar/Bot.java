@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.rithms.riot.api.ApiConfig;
@@ -93,6 +95,7 @@ public class Bot {
         LOG.info("Prefix:\t" + configuration.getPrefix());
         LOG.info("Admins:\t" + configuration.getAdmins());
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
+        reloadConfiguration();
 
         eventWaiter = new EventWaiter();
         shardManager = DefaultShardManagerBuilder.createDefault(credentials.getToken())
@@ -104,6 +107,8 @@ public class Bot {
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
+                .setChunkingFilter(ChunkingFilter.NONE)
+                .setMemberCachePolicy(MemberCachePolicy.ONLINE)
                 .build();
 
         LOG.info("The bot is now connecting to Discord.");

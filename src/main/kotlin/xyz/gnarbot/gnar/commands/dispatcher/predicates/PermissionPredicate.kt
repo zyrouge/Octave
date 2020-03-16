@@ -41,7 +41,7 @@ class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
             val permissionNotEmpty = cmd.botInfo.permissions.isNotEmpty()
 
             if(cmd.botInfo.djLock && context.data.command.djRole != null) {
-                append("a role named")
+                append("a role named ")
                 append(context.guild.getRoleById(context.data.command.djRole!!)?.name)
             } else if (cmd.botInfo.djLock && context.data.command.djRole == null) {
                 append("a role named DJ")
