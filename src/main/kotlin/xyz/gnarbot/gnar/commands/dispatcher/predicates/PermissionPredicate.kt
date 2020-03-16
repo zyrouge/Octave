@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
 import net.dv8tion.jda.api.Permission
+import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.Scope
@@ -10,8 +11,13 @@ import java.util.function.BiPredicate
 
 class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
-        if (context.member.hasPermission(Permission.ADMINISTRATOR) || context.member.hasPermission(Permission.MANAGE_SERVER)
-                || !(cmd.botInfo.permissions.isNotEmpty() || cmd.botInfo.roleRequirement.isNotEmpty())) return true
+        if (context.member.hasPermission(Permission.ADMINISTRATOR) || context.member.hasPermission(Permission.MANAGE_SERVER)) {
+            return true
+        }
+
+        if ((cmd.botInfo.permissions.isEmpty() && !cmd.botInfo.djLock && cmd.botInfo.roleRequirement.isEmpty())) {
+            return true
+        }
 
         if(cmd.botInfo.djLock) {
             val memberSize = context.selfMember.voiceState?.channel?.members?.size
@@ -29,6 +35,13 @@ class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
             append("This command requires ")
 
             val permissionNotEmpty = cmd.botInfo.permissions.isNotEmpty()
+
+            if(cmd.botInfo.djLock && context.data.command.djRole != null) {
+                append("a role named `")
+                append(context.guild.getRoleById(context.data.command.djRole!!)?.name)
+            } else if (cmd.botInfo.djLock && context.data.command.djRole == null){
+                append("a role named DJ`")
+            }
 
             if (cmd.botInfo.roleRequirement.isNotEmpty()) {
                 append("a role named `")

@@ -23,14 +23,14 @@ class DJRoleCommand : CommandTemplate() {
     @Description("Set a DJ role name to be used as the DJ role")
     fun set(context: Context, role: Role?) {
         if(role == null) {
-            context.send().error("The role doesn't exist.")
+            context.send().error("The role doesn't exist.").queue()
             return
         }
 
         context.data.command.djRole = role.id
         context.data.save()
 
-        context.send().info("Successfully set the DJ Role to ${role.name} (${role.id}).")
+        context.send().info("Successfully set the DJ Role to ${role.name} (${role.id}).").queue()
     }
 
     @Description("Reset the DJ role name")
@@ -38,6 +38,6 @@ class DJRoleCommand : CommandTemplate() {
         context.data.command.djRole = null
         context.data.save()
 
-        context.send().info("Successfully reset DJ role name.")
+        context.send().info("Successfully reset DJ role name.").queue()
     }
 }

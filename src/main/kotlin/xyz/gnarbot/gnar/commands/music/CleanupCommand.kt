@@ -47,6 +47,7 @@ class CleanupCommand : CommandExecutor() {
                 }
             } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes") {
                 queue.filter { filteredSong -> (filteredSong.info.uri == song.info.uri && !removeSongs.contains(filteredSong)) }.map {removableSong -> removeSongs.add(removableSong)}
+                removeSongs.removeAt(0) // keep first index as to not purge all instances
             } else  {
                 if (song.getUserData(TrackContext::class.java)?.requester == purgeUser) {
                     removeSongs.add(song)
