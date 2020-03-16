@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class CommandData {
     private String prefix;
+    private String djRole;
     private boolean autoDelete = false;
     private boolean adminBypass = false;
 
@@ -20,6 +21,15 @@ public class CommandData {
     @Nullable
     public String getPrefix() {
         return prefix;
+    }
+
+    @Nullable
+    public String getDJRole() {
+        return djRole;
+    }
+
+    public String setDJRole(String djRole) {
+        return this.djRole = djRole;
     }
 
     public void setPrefix(String prefix) {

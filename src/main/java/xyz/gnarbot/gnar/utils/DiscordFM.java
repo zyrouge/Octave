@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils;
 
+import io.sentry.Sentry;
 import org.apache.commons.io.IOUtils;
 import xyz.gnarbot.gnar.Bot;
 
@@ -24,16 +25,15 @@ public class DiscordFM {
     public DiscordFM() {
         for (String lib : LIBRARIES) {
             try (InputStream is = DiscordFM.class.getResourceAsStream("/dfm/" + lib + ".txt")) {
-                for (String s : IOUtils.toString(is, StandardCharsets.UTF_8).trim().split("\n")) {
-                    List<String> collect = Arrays.stream(s.split("\n"))
-                            .parallel()
-                            .filter(si -> si.startsWith("https://"))
-                            .collect(Collectors.toList());
-                    cache.put(lib, collect);
+                List<String> collect = Arrays.stream(IOUtils.toString(is, StandardCharsets.UTF_8).split("\n"))
+                        .parallel()
+                        .filter(si -> si.startsWith("https://"))
+                        .collect(Collectors.toList());
+                cache.put(lib, collect);
 
-                    Bot.getLogger().info("(DiscordFM) Added " + collect.size() + " elements to playlist: " + lib);
-                }
+                Bot.getLogger().info("(DiscordFM) Added " + collect.size() + " elements to playlist: " + lib);
             } catch (Exception e) {
+                Sentry.capture(e);
                 e.printStackTrace();
             }
         }

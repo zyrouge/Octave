@@ -123,6 +123,7 @@ public class CommandRegistry {
             register(new SoundboardCommand());
             register(new SoundboardListCommand());
             register(new CleanupCommand());
+            register(new LyricsCommand());
         } else {
             register(new DisabledPlayCommand());
         }

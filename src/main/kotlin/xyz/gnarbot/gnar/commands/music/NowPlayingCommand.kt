@@ -28,10 +28,10 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
             }
 
             manager.discordFMTrack?.let {
-                field("Discord.FM") {
+                field("Radio") {
                     val member = context.guild.getMemberById(it.requester)
                     buildString {
-                        append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
+                        append("Currently streaming music from radio station `${it.station.capitalize()}`")
                         member?.let {
                             append(", requested by ${member.asMention}")
                         }
@@ -52,7 +52,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                 } ?: "Not Found"
             }
 
-            field("Repeating", true) {
+            field("Repeating", false) {
                 manager.scheduler.repeatOption
             }
 
@@ -66,14 +66,12 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                 }
             }
 
-            field("Progress", true) {
+            field("Progress", false) {
                 val percent = track.position.toDouble() / track.duration
                 buildString {
-                    append("[")
                     for (i in 0 until totalBlocks) {
                         if ((percent * (totalBlocks - 1)).toInt() == i) {
-                            append("\u25AC")
-                            append("]()")
+                            append("__**\u25AC**__")
                         } else {
                             append("\u2015")
                         }
@@ -81,6 +79,8 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                     append(" **%.1f**%%".format(percent * 100))
                 }
             }
+
+            footer { "Use ${config.prefix}lyrics current to see the lyrics of the song!" }
         }.action().queue()
     }
 }

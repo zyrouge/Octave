@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.media
 
+import io.sentry.Sentry
 import org.json.JSONObject
 import xyz.gnarbot.gnar.commands.*
 
@@ -19,6 +20,7 @@ class DogCommand : CommandExecutor() {
                     .action().queue()
         } catch (e: Exception) {
             context.send().error("Unable to find dogs to sooth the darkness of your soul.").queue()
+            Sentry.capture(e)
             e.printStackTrace()
         }
 

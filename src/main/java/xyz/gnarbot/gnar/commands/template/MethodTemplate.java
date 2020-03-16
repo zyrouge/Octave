@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.template;
 
+import io.sentry.Sentry;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.commands.Context;
 import xyz.gnarbot.gnar.commands.template.annotations.Description;
@@ -117,6 +118,7 @@ public class MethodTemplate implements Template {
         try {
             method.invoke(command, arguments);
         } catch (IllegalAccessException | InvocationTargetException e) {
+            Sentry.capture(e);
             e.printStackTrace();
         }
     }

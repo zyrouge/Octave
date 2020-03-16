@@ -13,9 +13,8 @@ class Configuration(file: File) {
     private var config = loader.load()
 
     val name: String = config["bot", "name"].getString("Octave")
-    val game: String = config["bot", "game"].getString("_help | %d")
-
     val prefix: String = config["commands", "prefix"].getString("_")
+    val game: String = config["bot", "game"].getString("${prefix}help | %d")
 
     val admins: List<Long> = config["commands", "administrators"].getList(TypeToken.of(Long::class.javaObjectType))
 
@@ -35,4 +34,6 @@ class Configuration(file: File) {
 
     val ipv6Block: String = config["bot", "ipv6block"].getString(null)
     val ipv6Exclude: String = config["bot", "ipv6Exclude"].getString(null)
+
+    val sentryDsn: String = config["bot", "sentry"].getString(null)
 }

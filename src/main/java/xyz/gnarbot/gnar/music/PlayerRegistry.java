@@ -13,6 +13,7 @@ import com.sedmelluq.lava.extensions.youtuberotator.planner.AbstractRoutePlanner
 import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner;
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock;
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block;
+import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ public class PlayerRegistry {
                     planner = new RotatingNanoIpRoutePlanner(blocks, inetAddress -> !inetAddress.equals(blacklistedGW));
                 } catch (Exception ex) {
                     planner = new RotatingNanoIpRoutePlanner(blocks);
+                    Sentry.capture(ex);
                     ex.printStackTrace();
                 }
             }

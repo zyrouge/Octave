@@ -5,11 +5,13 @@ import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
+import io.sentry.Sentry;
 import net.dean.jraw.http.UserAgent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MiscUtil;
@@ -32,13 +34,14 @@ import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 public class Bot {
     private static final Logger LOG = LoggerFactory.getLogger("Bot");
-
+    private static Bot instance;
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
     private final UserAgent ua = new UserAgent("bot", "xyz.gnarbot.gnar", "5.1.2", "GnarDiscordBot");
@@ -60,15 +63,19 @@ public class Bot {
     private CountUpdater countUpdater;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
-    public Bot(
-            BotCredentials credentials,
-            Supplier<Configuration> configurationGenerator
-    ) throws LoginException {
+    public static void main(String[] args) throws LoginException {
+        new Bot(new BotCredentials(new File("credentials.conf")), () -> new Configuration(new File("bot.conf")));
+    }
+
+    public Bot(BotCredentials credentials, Supplier<Configuration> configurationGenerator) throws LoginException {
         this.credentials = credentials;
         this.configurationGenerator = configurationGenerator;
         this.soundManager = new SoundManager();
         soundManager.loadSounds();
+        instance = this;
         reloadConfiguration();
+
+        Sentry.init(configuration.getSentryDsn());
 
         LOG.info("Initializing the Discord bot.");
 
@@ -88,12 +95,11 @@ public class Bot {
         LOG.info("JDA v.:\t" + JDAInfo.VERSION);
 
         eventWaiter = new EventWaiter();
-        shardManager = new DefaultShardManagerBuilder()
-                .setToken(credentials.getToken())
+        shardManager = DefaultShardManagerBuilder.createDefault(credentials.getToken())
                 .setMaxReconnectDelay(32)
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
-                .setAudioSendFactory(new NativeAudioSendFactory())
+                .setAudioSendFactory(new NativeAudioSendFactory(800))
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
                 .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
@@ -126,6 +132,9 @@ public class Bot {
         LOG.info("Finish setting up bot internals.");
     }
 
+    public static Bot getInstance() {
+        return instance;
+    }
 
     public StatsDClient getDatadog() {
         return statsDClient;

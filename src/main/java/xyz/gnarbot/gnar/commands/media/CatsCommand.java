@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.media;
 
+import io.sentry.Sentry;
 import org.json.JSONObject;
 import xyz.gnarbot.gnar.commands.*;
 
@@ -44,6 +45,7 @@ public class CatsCommand extends CommandExecutor {
                     .action().queue();
         } catch (Exception e) {
             context.send().error("Unable to find cats, there was an issue.").queue();
+            Sentry.capture(e);
             e.printStackTrace();
         }
     }

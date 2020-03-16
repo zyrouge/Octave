@@ -25,11 +25,10 @@ class QueueCommand : CommandExecutor() {
         var queueLength = 0L
 
         context.bot.eventWaiter.paginator {
+            setUser(context.user)
             title { "Music Queue" }
             color { context.selfMember.color }
-
-            empty { "**Empty queue.** Add some music with `_play url|YT search`." }
-
+            empty { "**Empty queue.** Add some music with `${config.prefix}play url|YT search`." }
             for (track in queue) {
                 entry {
                     buildString {
@@ -59,10 +58,10 @@ class QueueCommand : CommandExecutor() {
             }
 
             manager.discordFMTrack?.let {
-                field("Discord.FM") {
+                field("Radio") {
                     val member = context.guild.getMemberById(it.requester)
                     buildString {
-                        append("Currently streaming music from Discord.FM station `${it.station.capitalize()}`")
+                        append("Currently streaming music from radio station `${it.station.capitalize()}`")
                         member?.let {
                             append(", requested by ${member.asMention}")
                         }

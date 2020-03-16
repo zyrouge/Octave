@@ -70,7 +70,7 @@ class AutoRoleCommand : CommandTemplate() {
             }
 
             val role = context.data.roles.autoRole
-            append("Current auto-role: ")
+            append(" Current auto-role: ")
             if (role == null) {
                 append("__None__")
             } else {

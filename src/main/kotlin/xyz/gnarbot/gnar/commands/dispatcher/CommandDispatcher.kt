@@ -8,6 +8,7 @@ import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.CommandRegistry
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.dispatcher.predicates.*
+import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.Utils
 import java.util.concurrent.ExecutorService
 import java.util.function.BiPredicate
@@ -32,18 +33,20 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
             return
         }
 
+        val customPrefix = context.data.command.prefix
+
         val content = context.message.contentRaw.let {
             when {
                 //Markdown detection and prevention of bot displaying messages from blank commands
                 (it.startsWith(bot.configuration.prefix) && it.endsWith(bot.configuration.prefix)) -> return
-
+                //Avoid default prefix if a custom prefix it's set
+                !customPrefix.isNullOrEmpty() && it.startsWith(bot.configuration.prefix) -> return
 
                 it.startsWith(bot.configuration.prefix) -> it.substring(bot.configuration.prefix.length)
                 it.startsWith(namePrefix, true) -> it.substring(namePrefix.length)
                 else -> {
-                    val prefix = context.data.command.prefix
-                    if (prefix == null || !it.startsWith(prefix)) return
-                    it.substring(prefix.length)
+                    if (customPrefix == null || !it.startsWith(customPrefix)) return
+                    it.substring(customPrefix.length)
                 }
             }
         }
@@ -93,7 +96,10 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
             return true
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
-        } catch (e: Exception) {
+        } catch (e: MusicLimitException) {
+            e.sendToContext(context);
+        }
+        catch (e: Exception) {
             context.send().exception(e).queue()
             e.printStackTrace()
         }

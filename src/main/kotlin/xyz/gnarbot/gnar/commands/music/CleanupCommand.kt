@@ -1,10 +1,9 @@
 package xyz.gnarbot.gnar.commands.music
 
-import com.jagrosh.jdautilities.paginator
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
+import io.sentry.Sentry
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.TrackContext
-import xyz.gnarbot.gnar.utils.Utils
 
 @Command(
         aliases = ["cleanup", "cu"],
@@ -13,22 +12,23 @@ import xyz.gnarbot.gnar.utils.Utils
 @BotInfo(
         id = 88,
         category = Category.MUSIC,
-        roleRequirement = "DJ"
+        djLock = true
 )
 class CleanupCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = context.bot.players.getExisting(context.guild)
         if (manager == null) {
-            context.send().error("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
+            context.send().issue("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
             return
         }
 
         if (context.message.mentionedUsers.isEmpty() && args.isEmpty()) {
-            context.send().error("You must mention a user to purge silly!").queue()
+            context.send().issue("You must mention a user to purge their queue items, or use `cleanup left` to remove songs from users who left.").queue()
             return
         }
 
-        val purgeUser = if (context.message.mentionedUsers.isNotEmpty()) context.message.mentionedUsers[0].idLong else args[0]
+        val purgeUser = if (context.message.mentionedUsers.isNotEmpty())
+            context.message.mentionedUsers[0].idLong else args[0]
 
         val queue = manager.scheduler.queue
         val removeSongs = ArrayList<AudioTrack>() //Prevent Concurrent Modification Exception
@@ -46,7 +46,7 @@ class CleanupCommand : CommandExecutor() {
                     }
                 } catch(e: Exception) { //User kicked or banned will result in above erroring out
                     removeSongs.add(song)
-
+                    Sentry.capture(e)
                     e.printStackTrace()
                 }
             }
@@ -55,6 +55,10 @@ class CleanupCommand : CommandExecutor() {
         if(removeSongs.size > 0) queue.removeAll(removeSongs)
 
         if(purgeUser == "left") {
+            if(removeSongs.size == 0) {
+                context.send().error("There are no songs to clear.")
+                return
+            }
             context.send().info("Removed ${removeSongs.size} songs from users no longer in voice channel.").queue()
         } else {
             context.send().info("Removed ${removeSongs.size} songs from user ${context.message.mentionedUsers[0].name} from the queue").queue()

@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.media;
 
+import io.sentry.Sentry;
 import org.apache.commons.lang3.StringUtils;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.*;
@@ -98,6 +99,7 @@ public class TrumpCommand extends CommandExecutor {
 
             context.getTextChannel().sendFile(imageInByte, "attachment.jpg").queue();
         } catch (IOException e) {
+            Sentry.capture(e);
             e.printStackTrace();
         }
     }

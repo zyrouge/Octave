@@ -1,12 +1,12 @@
 package xyz.gnarbot.gnar.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import xyz.gnarbot.gnar.BotLoader;
+import xyz.gnarbot.gnar.Bot;
 
 import static com.rethinkdb.RethinkDB.r;
 
 public abstract class ManagedObject<T> {
-    private static final Database db = BotLoader.BOT.db();
+    private static final Database db = Bot.getInstance().db();
     private final String id;
     @JsonIgnore
     private final String table;

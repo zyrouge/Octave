@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import xyz.gnarbot.gnar.Bot
-import xyz.gnarbot.gnar.BotLoader
 import xyz.gnarbot.gnar.commands.Context
 import java.awt.Color
 import java.time.OffsetDateTime
@@ -62,7 +61,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             return
         }
 
-        if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(BotLoader.BOT.configuration.prefix) && (event.message.contentRaw.endsWith(BotLoader.BOT.configuration.prefix)))) {
+        if ((event.message.contentRaw.startsWith('_') && event.message.contentRaw.endsWith('_')) || (event.message.contentRaw.startsWith(Bot.getInstance().configuration.prefix) && (event.message.contentRaw.endsWith(Bot.getInstance().configuration.prefix)))) {
             return
         } //Prevent markdown responses
 
@@ -104,7 +103,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
         bot.players.destroy(event.guild)
         bot.datadog.gauge("octave_bot.guilds", bot.shardManager.guildCache.size())
         bot.datadog.gauge("octave_bot.users", bot.shardManager.userCache.size())
-        bot.datadog.gauge("octave_bot.players", bot.players.size())
+        bot.datadog.gauge("octave_bot.players", bot.players.size().toLong())
         bot.datadog.incrementCounter("octave_bot.guildLeave")
     }
 

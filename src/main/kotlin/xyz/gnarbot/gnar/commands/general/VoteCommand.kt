@@ -18,7 +18,7 @@ class VoteCommand : CommandExecutor() {
             desc {
                 buildString {
                     append("Vote here to increase the visibility of the bot!\nIf you vote for Octave, you can get a normie box in Dank Memer everytime you vote too!\n")
-                    append("**[Vote by clicking here](https://discordbots.org/bot/gnar/vote)**\n")
+                    append("**[Vote by clicking here](https://discordbots.org/bot/octave/vote)**\n")
                 }
             }
         }.action().queue()

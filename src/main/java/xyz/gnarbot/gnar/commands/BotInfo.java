@@ -48,4 +48,6 @@ public @interface BotInfo {
     Permission[] permissions() default {};
 
     String roleRequirement() default "";
+
+    boolean djLock() default false;
 }

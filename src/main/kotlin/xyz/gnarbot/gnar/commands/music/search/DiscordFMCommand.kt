@@ -8,9 +8,9 @@ import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.DiscordFM
 
 @Command(
-        aliases = ["discordfm", "dfm"],
+        aliases = ["radio"],
         usage = "(station name)|stop",
-        description = "Stream random songs from DiscordFM stations!"
+        description = "Stream random songs from radio stations!"
 )
 @BotInfo(
         id = 82,
@@ -20,12 +20,12 @@ import xyz.gnarbot.gnar.utils.DiscordFM
 class DiscordFMCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         if (args.isEmpty()) {
-            context.send().embed("Discord FM") {
+            context.send().embed("Radio") {
                 desc {
                     buildString {
-                        append("Stream random songs from DiscordFM stations!\n")
-                        append("Select and stream a station using `_dfm (station name)`.\n")
-                        append("Stop streaming songs from a station with `_dfm stop`,")
+                        append("Stream random songs from radio stations!\n")
+                        append("Select and stream a station using `${config.prefix}radio (station name)`.\n")
+                        append("Stop streaming songs from a station with `${config.prefix}radio stop`,")
                     }
                 }
 
@@ -49,14 +49,14 @@ class DiscordFMCommand : CommandExecutor() {
             }
 
             if (manager.discordFMTrack == null) {
-                context.send().error("I'm not streaming random songs from a Discord.FM station.").queue()
+                context.send().error("I'm not streaming random songs from a radio station.").queue()
                 return
             }
 
             val station = manager.discordFMTrack!!.station.capitalize()
             manager.discordFMTrack = null
 
-            context.send().embed("Discord.FM") {
+            context.send().embed("Radio") {
                 desc { "No longer streaming random songs from the `$station` station." }
             }.action().queue()
         }
@@ -87,7 +87,7 @@ class DiscordFMCommand : CommandExecutor() {
             manager.loadAndPlay(context,
                     context.bot.discordFM.getRandomSong(library),
                     it,
-                    "Now streaming random tracks from the `$library` Discord.FM station!"
+                    "Now streaming random tracks from the `$library` radio station!"
             )
         }
     }

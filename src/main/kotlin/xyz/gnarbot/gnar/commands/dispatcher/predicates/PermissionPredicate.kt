@@ -4,13 +4,21 @@ import net.dv8tion.jda.api.Permission
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.Scope
+import xyz.gnarbot.gnar.utils.hasAnyRoleId
 import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
 import java.util.function.BiPredicate
 
 class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
     override fun test(cmd: CommandExecutor, context: Context): Boolean {
-        if (context.member.hasPermission(Permission.ADMINISTRATOR)
+        if (context.member.hasPermission(Permission.ADMINISTRATOR) || context.member.hasPermission(Permission.MANAGE_SERVER)
                 || !(cmd.botInfo.permissions.isNotEmpty() || cmd.botInfo.roleRequirement.isNotEmpty())) return true
+
+        if(cmd.botInfo.djLock) {
+            val memberSize = context.selfMember.voiceState?.channel?.members?.size
+            val djRole = context.data.command.djRole
+            if(context.member.hasAnyRoleNamed("DJ") || (if(djRole != null) context.member.hasAnyRoleId(djRole) else false) || (if (memberSize != null) memberSize <= 2 else false))
+                return true
+        }
 
         if (context.member.hasAnyRoleNamed(cmd.botInfo.roleRequirement)
                 && cmd.botInfo.scope.checkPermission(context, *cmd.botInfo.permissions)) {

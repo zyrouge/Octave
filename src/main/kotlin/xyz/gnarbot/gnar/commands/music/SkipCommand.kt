@@ -14,7 +14,7 @@ import xyz.gnarbot.gnar.utils.hasAnyRoleNamed
         id = 73,
         category = Category.MUSIC,
         scope = Scope.VOICE,
-        roleRequirement = "DJ"
+        djLock = true
 )
 class SkipCommand : MusicCommandExecutor(true, true, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {

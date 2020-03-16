@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils.response
 
+import io.sentry.Sentry
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.requests.RestAction
@@ -67,6 +68,7 @@ open class ResponseBuilder(private val channel: MessageChannel) {
      */
     open fun exception(exception: Exception): RestAction<Message> {
         exception.printStackTrace()
+        Sentry.capture(exception)
 
         return embed {
             title { "Exception" }

@@ -1,5 +1,8 @@
 package xyz.gnarbot.gnar.commands;
 
+import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.Configuration;
+
 /**
  * Abstract class that is extended when creating a command.
  */
@@ -13,5 +16,9 @@ public abstract class CommandExecutor implements ICommandExecutor<Context> {
 
     public BotInfo getBotInfo() {
         return botInfo;
+    }
+
+    public Configuration getConfig() {
+        return Bot.getInstance().getConfiguration();
     }
 }
