@@ -59,6 +59,7 @@ class DiscordFMCommand : CommandExecutor() {
             context.send().embed("Radio") {
                 desc { "No longer streaming random songs from the `$station` station." }
             }.action().queue()
+            return
         }
 
         val query = args.joinToString(" ").toLowerCase()
