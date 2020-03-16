@@ -25,13 +25,13 @@ class LyricsCommand : CommandTemplate() {
     fun current(context: Context) {
         val manager = context.bot.players.getExisting(context.guild)
         if(manager == null) {
-            context.send().info("There's no player to be seen here.");
+            context.send().info("There's no player to be seen here.")
             return
         }
 
-        val audioTrack = manager.player.playingTrack;
+        val audioTrack = manager.player.playingTrack
         if(audioTrack == null) {
-            context.send().info("There's no song playing currently.");
+            context.send().info("There's no song playing currently.")
             return
         }
 

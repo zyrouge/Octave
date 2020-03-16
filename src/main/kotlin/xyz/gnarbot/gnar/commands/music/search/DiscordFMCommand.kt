@@ -72,7 +72,7 @@ class DiscordFMCommand : CommandExecutor() {
         }
 
         if (library == null) {
-            context.send().error("Library $query doesn't exist. Available stations: `${DiscordFM.LIBRARIES.contentToString()}`.").queue()
+            context.send().error("Library $query doesn't exist. Available stations: `${DiscordFM.LIBRARIES!!.contentToString()}`.").queue()
             return
         }
 

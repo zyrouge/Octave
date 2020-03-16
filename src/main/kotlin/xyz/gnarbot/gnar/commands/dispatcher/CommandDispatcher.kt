@@ -16,7 +16,7 @@ import java.util.function.BiPredicate
 class CommandDispatcher(private val bot: Bot, private val commandRegistry: CommandRegistry, private val executor: ExecutorService) {
     private val namePrefix = "${bot.configuration.name.toLowerCase()} "
 
-    private val predicates = listOf<BiPredicate<CommandExecutor, Context>>(
+    private val predicates = listOf(
             IgnoredPredicate(), // is the user ignored
             AdministratorPredicate(), // does the command require admin rights
             SettingsPredicate(), // command settings
@@ -97,7 +97,7 @@ class CommandDispatcher(private val bot: Bot, private val commandRegistry: Comma
         } catch (e: PermissionException) {
             context.send().error("The bot lacks the permission `${e.permission.getName()}` required to perform this command.").queue()
         } catch (e: MusicLimitException) {
-            e.sendToContext(context);
+            e.sendToContext(context)
         }
         catch (e: Exception) {
             context.send().exception(e).queue()

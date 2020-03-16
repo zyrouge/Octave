@@ -4,6 +4,7 @@ import io.sentry.Sentry
 import xyz.gnarbot.gnar.Bot
 import java.sql.Connection
 import java.sql.DriverManager
+import kotlin.system.exitProcess
 
 class DatabaseManager(val bot: Bot, private val mainTable: String) {
 
@@ -15,10 +16,10 @@ class DatabaseManager(val bot: Bot, private val mainTable: String) {
         } catch (e: Exception) {
             Sentry.capture(e)
             e.printStackTrace()
-            System.exit(0)
+            exitProcess(0)
         }
         if (c == null) {
-            System.exit(0)
+            exitProcess(0)
         } else {
             return c
         }

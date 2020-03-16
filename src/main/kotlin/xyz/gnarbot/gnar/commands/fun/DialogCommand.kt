@@ -30,7 +30,7 @@ class DialogCommand : CommandExecutor() {
                     lines.map(String::trim)
                             .map {
                                 it + buildString {
-                                    kotlin.repeat(25 - it.length) { append(' ') }
+                                    repeat(25 - it.length) { append(' ') }
                                 }
                             }
                             .map { "║ $it ║" }

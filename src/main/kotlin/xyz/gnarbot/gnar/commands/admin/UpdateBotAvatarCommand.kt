@@ -15,7 +15,7 @@ import kotlin.use
 )
 class UpdateBotAvatarCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
-        if (!args.isEmpty()) {
+        if (args.isNotEmpty()) {
             URL(args.joinToString(" ")).openStream().use {
                 context.bot.shardManager.shards[0].selfUser.manager.setAvatar(Icon.from(it)).queue()
             }

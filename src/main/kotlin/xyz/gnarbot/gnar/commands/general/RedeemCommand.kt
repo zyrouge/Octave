@@ -13,7 +13,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-@Command(aliases = arrayOf("redeem"), usage = "(code)", description = "Redeem a key for your server.")
+@Command(aliases = ["redeem"], usage = "(code)", description = "Redeem a key for your server.")
 @BotInfo(id = 21)
 class RedeemCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

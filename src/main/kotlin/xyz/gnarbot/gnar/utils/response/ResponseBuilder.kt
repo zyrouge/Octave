@@ -4,9 +4,7 @@ import io.sentry.Sentry
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.api.requests.RestAction
-import org.apache.commons.lang3.exception.ExceptionUtils
 import xyz.gnarbot.gnar.utils.EmbedProxy
-import xyz.gnarbot.gnar.utils.Utils
 import java.awt.Color
 import javax.annotation.CheckReturnValue
 

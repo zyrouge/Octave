@@ -1,12 +1,9 @@
 package xyz.gnarbot.gnar.utils
 
 import com.github.natanbc.discordbotsapi.DiscordBotsAPI
-import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.sharding.ShardManager
-import okhttp3.*
-import org.json.JSONObject
+import okhttp3.OkHttpClient
 import xyz.gnarbot.gnar.Bot
-import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -16,7 +13,7 @@ class CountUpdater(private val bot: Bot) {
     val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
     var discordBotsAPI = DiscordBotsAPI.Builder()
             .setToken(bot.credentials.discordBots)
-            .build();
+            .build()
 
     init {
         executor.scheduleAtFixedRate({
@@ -30,8 +27,8 @@ class CountUpdater(private val bot: Bot) {
     }
 
     private fun updateGuildCount(shardManager: ShardManager) {
-        val count = shardManager.guildCache.size().toInt();
-        discordBotsAPI.postStats(count).execute();
+        val count = shardManager.guildCache.size().toInt()
+        discordBotsAPI.postStats(count).execute()
         Bot.getLogger().info("Updated count, current: $count")
     }
 }
