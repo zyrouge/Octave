@@ -79,7 +79,7 @@ class LyricsCommand : CommandTemplate() {
 
 fun getSongData(content: String): JSONObject {
     val request: Request = Request.Builder()
-            .url("https://lyrics.tsu.sh/v1/?q=${URLEncoder.encode(content, StandardCharsets.UTF_8.toString())}")
+            .url("https://lyrics.tsu.sh/v1/?q=${URLEncoder.encode(content, StandardCharsets.UTF_8)}")
             .addHeader("User-Agent", "Octave")
             .build()
 
