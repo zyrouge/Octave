@@ -63,11 +63,18 @@ class LyricsCommand : CommandTemplate() {
             return
         }
 
-        val lyrics = data.getString("content")
+        var lyrics = data.getString("content")
         val songObject = data.getJSONObject("song")
 
         val fullTitle = songObject.getString("full_title")
         val icon = songObject.getString("icon")
+
+
+        lyrics = if (lyrics.length > 1300) {
+            lyrics.substring(0, 1300) + "..."
+        } else {
+            lyrics
+        }
 
         context.send().embed("Lyrics for $fullTitle") {
             thumbnail { icon }

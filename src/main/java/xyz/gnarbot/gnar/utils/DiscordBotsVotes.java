@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.utils;
 
+import io.sentry.Sentry;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -37,7 +38,8 @@ public class DiscordBotsVotes {
                     for (int i = 0; i < jsa.length(); i++) {
                         voteIDs.add(jsa.getString(i));
                     }
-                } catch (IOException ignore) {
+                } catch (IOException e) {
+                    Sentry.capture(e);
                 }
             }, 5, 10, TimeUnit.MINUTES);
         }
