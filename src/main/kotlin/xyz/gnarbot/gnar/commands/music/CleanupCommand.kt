@@ -34,20 +34,22 @@ class CleanupCommand : CommandExecutor() {
         val removeSongs = ArrayList<AudioTrack>() //Prevent Concurrent Modification Exception
 
         for (song in queue) {
-            if(purgeUser != "left") {
-                if (song.getUserData(TrackContext::class.java)?.requester == purgeUser) {
-                    removeSongs.add(song)
-                }
-            } else {
+            if (purgeUser == "left") {
                 try {
                     if (context.guild.getMemberById(song.getUserData(TrackContext::class.java)!!.requester)?.voiceState?.channel?.idLong
                             != context.guild.selfMember.voiceState?.channel?.idLong) { //there seriously HAS to be a better way to do this what the fuck
                         removeSongs.add(song)
                     }
-                } catch(e: Exception) { //User kicked or banned will result in above erroring out
+                } catch (e: Exception) { //User kicked or banned will result in above erroring out
                     removeSongs.add(song)
                     Sentry.capture(e)
                     e.printStackTrace()
+                }
+            } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes") {
+                queue.filter { filteredSong -> (filteredSong.info.uri == song.info.uri && !removeSongs.contains(filteredSong)) }.map {removableSong -> removeSongs.add(removableSong)}
+            } else  {
+                if (song.getUserData(TrackContext::class.java)?.requester == purgeUser) {
+                    removeSongs.add(song)
                 }
             }
 
@@ -55,13 +57,19 @@ class CleanupCommand : CommandExecutor() {
         if(removeSongs.size > 0) queue.removeAll(removeSongs)
 
         if(purgeUser == "left") {
-            if(removeSongs.size == 0) {
-                context.send().error("There are no songs to clear.")
+            if (removeSongs.size == 0) {
+                context.send().error("There are no songs to clear.").queue()
                 return
             }
             context.send().info("Removed ${removeSongs.size} songs from users no longer in voice channel.").queue()
+        } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes"){
+            if (removeSongs.size == 0) {
+                context.send().error("There were no duplicates.").queue()
+                return
+            }
+            context.send().info("Removed ${removeSongs.size} duplicate songs from the queue.").queue()
         } else {
-            context.send().info("Removed ${removeSongs.size} songs from user ${context.message.mentionedUsers[0].name} from the queue").queue()
+            context.send().info("Removed ${removeSongs.size} songs from user ${context.message.mentionedUsers[0].name} from the queue.").queue()
         }
     }
 }
