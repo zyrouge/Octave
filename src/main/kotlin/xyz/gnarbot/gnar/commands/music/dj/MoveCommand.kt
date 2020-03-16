@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
-        aliases = ["move"],
+        aliases = ["change"],
         description = "Move the bot to another channel."
 )
 @BotInfo(
@@ -15,6 +15,7 @@ import xyz.gnarbot.gnar.music.MusicManager
         scope = Scope.VOICE,
         djLock = true
 )
+//Honestly this is never used, should probably just delete it
 class MoveCommand : MusicCommandExecutor(false, false, true) {
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val targetChannel = if (args.isEmpty()) {
