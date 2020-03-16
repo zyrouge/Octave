@@ -1,7 +1,6 @@
 package xyz.gnarbot.gnar.commands.dispatcher.predicates
 
 import net.dv8tion.jda.api.Permission
-import xyz.gnarbot.gnar.commands.Category
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.Scope
@@ -22,8 +21,13 @@ class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
         if(cmd.botInfo.djLock) {
             val memberSize = context.selfMember.voiceState?.channel?.members?.size
             val djRole = context.data.command.djRole
-            if(context.member.hasAnyRoleNamed("DJ") || (if(djRole != null) context.member.hasAnyRoleId(djRole) else false) || (if (memberSize != null) memberSize <= 2 else false))
+
+            val djRolePresent = if(djRole != null) context.member.hasAnyRoleId(djRole) else false
+            val memberAmount = if(memberSize != null) memberSize <= 2 else false
+
+            if(context.member.hasAnyRoleNamed("DJ") || djRolePresent || memberAmount) {
                 return true
+            }
         }
 
         if (context.member.hasAnyRoleNamed(cmd.botInfo.roleRequirement)
@@ -37,16 +41,15 @@ class PermissionPredicate : BiPredicate<CommandExecutor, Context> {
             val permissionNotEmpty = cmd.botInfo.permissions.isNotEmpty()
 
             if(cmd.botInfo.djLock && context.data.command.djRole != null) {
-                append("a role named `")
+                append("a role named")
                 append(context.guild.getRoleById(context.data.command.djRole!!)?.name)
-            } else if (cmd.botInfo.djLock && context.data.command.djRole == null){
-                append("a role named DJ`")
+            } else if (cmd.botInfo.djLock && context.data.command.djRole == null) {
+                append("a role named DJ")
             }
 
             if (cmd.botInfo.roleRequirement.isNotEmpty()) {
-                append("a role named `")
+                append("a role named")
                 append(cmd.botInfo.roleRequirement)
-                append('`')
 
                 if (permissionNotEmpty) {
                     append(" and ")

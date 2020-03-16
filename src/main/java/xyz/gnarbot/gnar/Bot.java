@@ -116,7 +116,7 @@ public class Bot {
         discordFM = new DiscordFM();
 
         patreon = new PatreonAPI(credentials.getPatreonToken());
-        //System.out.println("Patreon Established.");
+        System.out.println("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
@@ -152,9 +152,9 @@ public class Bot {
         return shardManager;
     }
 
-    //public CountUpdater getCountUpdater() {
-    //    return countUpdater;
-    //}
+    public CountUpdater getCountUpdater() {
+        return countUpdater;
+    }
 
     public Guild getGuildById(long id) {
         return getJDA(MiscUtil.getShardForGuild(id, credentials.getTotalShards())).getGuildById(id);
