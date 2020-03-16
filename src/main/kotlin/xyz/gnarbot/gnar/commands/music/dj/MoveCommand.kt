@@ -6,7 +6,7 @@ import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
-        aliases = ["change"],
+        aliases = ["move"],
         description = "Move the bot to another channel."
 )
 @BotInfo(
