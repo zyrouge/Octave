@@ -51,7 +51,6 @@ class LyricsCommand : CommandTemplate() {
         context.send().embed("Lyrics for $fullTitle") {
             thumbnail { icon }
             desc { lyrics }
-            footer { "Service provided by https://lyrics.tsu.sh. Thanks for using Octave!" }
         }.action().queue()
     }
 
@@ -79,7 +78,6 @@ class LyricsCommand : CommandTemplate() {
         context.send().embed("Lyrics for $fullTitle") {
             thumbnail { icon }
             desc { lyrics }
-            footer { "Service provided by https://lyrics.tsu.sh. Thanks for using Octave!" }
         }.action().queue()
     }
 }
