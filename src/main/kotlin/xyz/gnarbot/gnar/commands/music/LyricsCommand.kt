@@ -24,22 +24,16 @@ class LyricsCommand : CommandTemplate() {
     @Description("Lyrics of the current song.")
     fun current(context: Context) {
         val manager = context.bot.players.getExisting(context.guild)
-        if(manager == null) {
-            context.send().info("There's no player to be seen here.")
-            return
-        }
+            ?: return context.send().info("There's no player to be seen here.").queue()
 
         val audioTrack = manager.player.playingTrack
-        if(audioTrack == null) {
-            context.send().info("There's no song playing currently.")
-            return
-        }
+            ?: return context.send().info("There's no song playing currently.").queue()
 
         val title = audioTrack.info.title
         val data : JSONObject = getSongData(title)
+
         if(!data.isNull("error")) {
-            context.send().info("No lyrics found for $title. Try with another song?")
-            return
+            return context.send().info("No lyrics found for $title. Try with another song?").queue()
         }
 
         var lyrics = data.getString("content")
@@ -63,9 +57,9 @@ class LyricsCommand : CommandTemplate() {
     @Description("Searches lyrics.")
     fun search(context: Context, content: String) {
         val data : JSONObject = getSongData(content)
+
         if(!data.isNull("error")) {
-            context.send().info("No lyrics found for $content. Try with another song?")
-            return
+            return context.send().info("No lyrics found for $content. Try with another song?").queue()
         }
 
         var lyrics = data.getString("content")
@@ -73,7 +67,6 @@ class LyricsCommand : CommandTemplate() {
 
         val fullTitle = songObject.getString("full_title")
         val icon = songObject.getString("icon")
-
 
         lyrics = if (lyrics.length > 900) {
             lyrics.substring(0, 900) + "..."
