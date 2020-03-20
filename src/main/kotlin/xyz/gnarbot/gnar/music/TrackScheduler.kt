@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import io.sentry.Sentry
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.music.embedTitle
 import xyz.gnarbot.gnar.utils.response.respond
@@ -84,6 +85,8 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         track.getUserData(TrackContext::class.java).requestedChannel.let {
             manager.guild.getTextChannelById(it)
         }?.respond()?.exception(exception)?.queue()
+
+        Sentry.capture(exception)
     }
 
     private fun announceNext(track: AudioTrack) {
