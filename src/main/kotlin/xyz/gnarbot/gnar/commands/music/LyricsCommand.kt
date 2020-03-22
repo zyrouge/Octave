@@ -53,7 +53,7 @@ class LyricsCommand : CommandTemplate() {
 
             val songObject = it.getJSONObject("song")
             val fullTitle = songObject.getString("full_title")
-            val icon = songObject.getString("icon")
+            //val icon = songObject.getString("icon")
 
             ctx.bot.eventWaiter.paginator {
                 setEmptyMessage("There should be something here 👀")

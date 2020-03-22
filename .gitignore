@@ -13,3 +13,4 @@ build/*
 .ds_store
 
 Octave.iml
+out/*

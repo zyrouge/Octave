@@ -17,60 +17,65 @@ import xyz.gnarbot.gnar.music.TrackContext
 class CleanupCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
         val manager = context.bot.players.getExisting(context.guild)
-        if (manager == null) {
-            context.send().issue("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
-            return
-        }
+            ?: return context.send().issue("There's no music player in this guild.\n$PLAY_MESSAGE").queue()
 
         if (context.message.mentionedUsers.isEmpty() && args.isEmpty()) {
-            context.send().issue("You must mention a user to purge their queue items, or use `cleanup left` to remove songs from users who left.").queue()
-            return
+            return context.send()
+                .issue("You must mention a user to purge their queue items, or use `cleanup left` to remove songs from users who left.")
+                .queue()
         }
 
-        val purgeUser = if (context.message.mentionedUsers.isNotEmpty())
-            context.message.mentionedUsers[0].idLong else args[0]
+        val purge = context.message.mentionedUsers.firstOrNull()?.id
+            ?: args[0]
 
-        val queue = manager.scheduler.queue
-        val removeSongs = ArrayList<AudioTrack>() //Prevent Concurrent Modification Exception
+        val oldSize = manager.scheduler.queue.size
 
-        for (song in queue) {
-            if (purgeUser == "left") {
-                try {
-                    if (context.guild.getMemberById(song.getUserData(TrackContext::class.java)!!.requester)?.voiceState?.channel?.idLong
-                            != context.guild.selfMember.voiceState?.channel?.idLong) { //there seriously HAS to be a better way to do this what the fuck
-                        removeSongs.add(song)
-                    }
-                } catch (e: Exception) { //User kicked or banned will result in above erroring out
-                    removeSongs.add(song)
-                    Sentry.capture(e)
-                    e.printStackTrace()
+        when (purge) {
+            "left" -> {
+                // Return Boolean: True if track should be removed
+                val predicate: (AudioTrack) -> Boolean = check@{
+                    val req = context.guild.getMemberById(it.getUserData(TrackContext::class.java)!!.requester)
+                        ?: return@check true
+
+                    return@check req.voiceState?.channel?.idLong != context.guild.selfMember.voiceState?.channel?.idLong
                 }
-            } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes") {
-                queue.filter { filteredSong -> (filteredSong.info.uri == song.info.uri && !removeSongs.contains(filteredSong)) }.map {removableSong -> removeSongs.add(removableSong)}
-                removeSongs.removeAt(0) // keep first index as to not purge all instances
-            } else  {
-                if (song.getUserData(TrackContext::class.java)?.requester == purgeUser) {
-                    removeSongs.add(song)
-                }
+                manager.scheduler.queue.removeIf(predicate)
             }
-
+            "duplicates", "d", "dupes" -> {
+                val tracks = mutableSetOf<String>()
+                // Return Boolean: True if track should be removed (could not add to set: already exists).
+                val predicate: (AudioTrack) -> Boolean = { !tracks.add(it.identifier) }
+                manager.scheduler.queue.removeIf(predicate)
+            }
+            else -> {
+                val userId = purge.toLong()
+                val predicate: (AudioTrack) -> Boolean = { it.getUserData(TrackContext::class.java)?.requester == userId }
+                manager.scheduler.queue.removeIf(predicate)
+            }
         }
-        if(removeSongs.size > 0) queue.removeAll(removeSongs)
 
-        if(purgeUser == "left") {
-            if (removeSongs.size == 0) {
-                context.send().error("There are no songs to clear.").queue()
-                return
+        val newSize = manager.scheduler.queue.size
+        val removed = oldSize - newSize
+
+        when (purge) {
+            "left" -> {
+                if (removed == 0) {
+                    return context.send().error("There are no songs to clear.").queue()
+                }
+
+                context.send().info("Removed $removed songs from users no longer in the voice channel.").queue()
             }
-            context.send().info("Removed ${removeSongs.size} songs from users no longer in voice channel.").queue()
-        } else if (purgeUser == "duplicates" || purgeUser == "d" || purgeUser == "dupes"){
-            if (removeSongs.size == 0) {
-                context.send().error("There were no duplicates.").queue()
-                return
+            "duplicates", "d", "dupes" -> {
+                if (removed == 0) {
+                    return context.send().error("There were no duplicates.").queue()
+                }
+
+                context.send().info("Removed $removed duplicate songs from the queue.").queue()
             }
-            context.send().info("Removed ${removeSongs.size} duplicate songs from the queue.").queue()
-        } else {
-            context.send().info("Removed ${removeSongs.size} songs from user ${context.message.mentionedUsers[0].name} from the queue.").queue()
+            else -> {
+                val user = context.guild.getMemberById(purge)?.user?.name ?: "Unknown User"
+                context.send().info("Removed $removed songs queued by **$user**.").queue()
+            }
         }
     }
 }
