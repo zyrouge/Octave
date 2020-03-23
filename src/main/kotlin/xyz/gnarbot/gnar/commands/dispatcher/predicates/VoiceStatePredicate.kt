@@ -23,7 +23,7 @@ class VoiceStatePredicate : BiPredicate<CommandExecutor, Context> {
                     .mapNotNull(context.guild::getVoiceChannelById)
                     .map(VoiceChannel::getName)
 
-            context.send().error("Music can only be played in: `$channels`.").queue()
+            context.send().error("Music can only be played in: `$channels`, since this server has set it/them as a designated voice channel.").queue()
             return false
         }
 
