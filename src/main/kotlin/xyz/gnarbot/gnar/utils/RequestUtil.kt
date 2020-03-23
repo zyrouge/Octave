@@ -8,7 +8,10 @@ import java.util.concurrent.CompletableFuture
 object RequestUtil {
     private val httpClient = OkHttpClient()
 
-    fun get(options: Request.Builder.() -> Unit): PendingRequest {
+    /* Media Types */
+    val APPLICATION_JSON = MediaType.get("application/json")
+
+    fun request(options: Request.Builder.() -> Unit): PendingRequest {
         val request = Request.Builder()
             .apply(options)
             .build()
@@ -17,7 +20,7 @@ object RequestUtil {
     }
 
     fun jsonObject(options: Request.Builder.() -> Unit): CompletableFuture<JSONObject> {
-        return get(options).submit()
+        return request(options).submit()
             .thenApply { it.body()?.string() ?: throw IllegalStateException("ResponseBody was null!") }
             .thenApply { JSONObject(it) }
     }

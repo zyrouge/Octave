@@ -19,6 +19,7 @@ import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.apis.patreon.PatreonAPI;
+import xyz.gnarbot.gnar.apis.statsposter.StatsPoster;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
@@ -26,7 +27,6 @@ import xyz.gnarbot.gnar.db.OptionsRegistry;
 import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
-import xyz.gnarbot.gnar.utils.CountUpdater;
 import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
@@ -35,6 +35,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class Bot {
@@ -56,8 +57,8 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final SoundManager soundManager;
+    private final StatsPoster statsPoster;
     private Configuration configuration;
-    private CountUpdater countUpdater;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     public static void main(String[] args) throws LoginException {
@@ -109,7 +110,6 @@ public class Bot {
 
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
-        countUpdater = new CountUpdater(this);
 
         // SETUP APIs
         discordFM = new DiscordFM();
@@ -122,6 +122,9 @@ public class Bot {
         ApiConfig apiConfig = new ApiConfig();
         if (riotApiKey != null)
             apiConfig.setKey(riotApiKey);
+
+        statsPoster = new StatsPoster(shardManager.getShardById(0).getSelfUser().getId());
+        //statsPoster.postEvery(30, TimeUnit.MINUTES);
 
         riotApi = new RiotApi(new ApiConfig());
 
@@ -149,10 +152,6 @@ public class Bot {
 
     public ShardManager getShardManager() {
         return shardManager;
-    }
-
-    public CountUpdater getCountUpdater() {
-        return countUpdater;
     }
 
     public Guild getGuildById(long id) {
