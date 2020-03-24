@@ -36,4 +36,6 @@ class Configuration(file: File) {
     val ipv6Exclude: String = config["bot", "ipv6Exclude"].getString(null)
 
     val sentryDsn: String = config["bot", "sentry"].getString(null)
+
+    val bucketFactor: Int = config["bot", "bucketFactor"].getInt(8)
 }

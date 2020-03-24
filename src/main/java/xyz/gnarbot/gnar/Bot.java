@@ -30,6 +30,7 @@ import xyz.gnarbot.gnar.listeners.BotListener;
 import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
+import xyz.gnarbot.gnar.sharding.BucketedController;
 import xyz.gnarbot.gnar.utils.CountUpdater;
 import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
@@ -99,6 +100,7 @@ public class Bot {
 
         eventWaiter = new EventWaiter();
         shardManager = DefaultShardManagerBuilder.createDefault(credentials.getToken())
+                .setSessionController(new BucketedController(configuration.getBucketFactor(), 215616923168276480L))
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .setMaxReconnectDelay(32)
                 .setShardsTotal(credentials.getTotalShards())
@@ -109,7 +111,7 @@ public class Bot {
                 .setBulkDeleteSplittingEnabled(false)
                 .build();
 
-        LOG.info("The bot is now connecting to Discord.");
+        LOG.info("The bot is now connecting to Discord. Bucket factor: " + configuration.getBucketFactor());
 
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
