@@ -124,6 +124,7 @@ public class CommandRegistry {
             register(new SoundboardListCommand());
             register(new CleanupCommand());
             register(new LyricsCommand());
+            //register(new SpeedCommand());
         } else {
             register(new DisabledPlayCommand());
         }

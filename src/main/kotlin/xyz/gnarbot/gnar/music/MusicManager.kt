@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.music
 
+import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
@@ -268,7 +269,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             override fun noMatches() {
                 // No track found and queue is empty
                 // destroy player
-                if (scheduler.queue.isEmpty()) {
+                if (player.playingTrack == null && scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }
                 context.send().issue("Nothing found by `$trackUrl`.").queue()
@@ -282,7 +283,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                     return
                 }
 
-                if (scheduler.queue.isEmpty()) {
+                if (player.playingTrack == null && scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }
                 context.send().exception(e).queue()
@@ -315,6 +316,14 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             equalizer.setGain(1, 0F)
             player.setFilterFactory(null)
             equalizerEnabled = false
+        }
+    }
+
+    fun setSpeed(speed: Double) {
+        player.setFilterFactory { track, format, output ->
+            val timescale = TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
+            timescale.pitch = speed
+            return@setFilterFactory listOf(timescale)
         }
     }
 
