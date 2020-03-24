@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.requests.RestAction
 import xyz.gnarbot.gnar.utils.embed
-import xyz.gnarbot.gnar.utils.extensions.composeStep
 import java.awt.Color
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit

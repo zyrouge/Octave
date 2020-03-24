@@ -1,11 +1,14 @@
 package xyz.gnarbot.gnar.commands.general
 
+import com.sun.management.OperatingSystemMXBean
 import net.dv8tion.jda.api.JDAInfo
 import xyz.gnarbot.gnar.commands.BotInfo
 import xyz.gnarbot.gnar.commands.Command
 import xyz.gnarbot.gnar.commands.CommandExecutor
 import xyz.gnarbot.gnar.commands.Context
+import xyz.gnarbot.gnar.utils.Capacity
 import java.lang.management.ManagementFactory
+import java.text.DecimalFormat
 
 @Command(
         aliases = ["about", "info", "botinfo", "stats"],
@@ -15,6 +18,8 @@ import java.lang.management.ManagementFactory
         id = 42
 )
 class BotInfoCommand : CommandExecutor() {
+    private val dpFormatter = DecimalFormat("0.00")
+
     override fun execute(context: Context, label: String, args: Array<String>) {
         val registry = context.bot.commandRegistry
 
@@ -24,18 +29,15 @@ class BotInfoCommand : CommandExecutor() {
         val h = m / 60
         val d = h / 24
 
-        var textChannels = 0L
-        var voiceChannels = 0L
-        var guilds = 0L
-
-        var users = 0L
-
-        for (shard in context.bot.shardManager.shardCache) {
-            guilds += shard.guildCache.size()
-            users += shard.userCache.size()
-            textChannels += shard.textChannelCache.size()
-            voiceChannels += shard.voiceChannelCache.size()
-        }
+        val osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean::class.java)
+        val procCpuUsage = dpFormatter.format(osBean.processCpuLoad * 100)
+        val sysCpuUsage = dpFormatter.format(osBean.systemCpuLoad * 100)
+        val ramUsedBytes = Runtime.getRuntime().let { it.totalMemory() - it.freeMemory() }
+        val ramUsedCalculated = Capacity.calculate(ramUsedBytes)
+        val ramUsedFormatted = dpFormatter.format(ramUsedCalculated.amount)
+        val ramUsedPercent = dpFormatter.format(ramUsedBytes.toDouble() / Runtime.getRuntime().totalMemory() * 100)
+        val guilds = context.bot.shardManager.guildCache.size()
+        val users = context.bot.shardManager.userCache.size()
 
         val commandSize = registry.entries.count { it.botInfo.category.show }
 
@@ -43,8 +45,8 @@ class BotInfoCommand : CommandExecutor() {
             thumbnail { context.jda.selfUser.avatarUrl }
             desc { "Never miss a beat with Octave, a simple and easy to use Discord music bot delivering high quality audio to hundreds of thousands of servers. We support Youtube, Soundcloud, and more!" }
 
-            field("Text Channels", true) { textChannels }
-            field("Voice Channels", true) { voiceChannels }
+            field("CPU Usage", true) { "${procCpuUsage}% JVM\n${sysCpuUsage}% SYS" }
+            field("RAM Usage", true) { "$ramUsedFormatted${ramUsedCalculated.unit} (${ramUsedPercent}%)" }
 
             field("Guilds", true) { guilds }
             field("Voice Connections", true) { context.bot.players.size() }
