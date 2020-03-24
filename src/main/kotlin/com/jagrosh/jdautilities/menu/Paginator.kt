@@ -106,7 +106,10 @@ class Paginator(waiter: EventWaiter,
 
     private fun initialize(action: RestAction<Message>, page: Int) {
         action.submit()
-            .composeStep { addButtons(it, list.size > 1) }
+            .thenCompose {
+                addButtons(it, list.size > 1)
+                CompletableFuture.completedFuture(it)
+            }
             .thenAccept { message ->
                 waiter.waitFor(MessageReactionAddEvent::class.java) {
                     val pageNew = when (it.reactionEmote.name) {
