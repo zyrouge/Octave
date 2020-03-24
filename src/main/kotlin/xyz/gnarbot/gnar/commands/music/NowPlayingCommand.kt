@@ -24,7 +24,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
 
         context.send().embed("Now Playing") {
             desc {
-                "**[${track.info.embedTitle}](${track.info.uri})**"
+                "**[${track.info.embedTitle}](${track.info.embedUri})**"
             }
 
             manager.discordFMTrack?.let {
