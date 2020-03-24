@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.music
 
-import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
@@ -25,9 +24,7 @@ import java.util.concurrent.TimeUnit
 class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry, val playerManager: AudioPlayerManager) {
     fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
         playerManager.loadItem(query, object : AudioLoadResultHandler {
-            override fun trackLoaded(track: AudioTrack) {
-                callback(listOf(track))
-            }
+            override fun trackLoaded(track: AudioTrack) = callback(listOf(track))
 
             override fun playlistLoaded(playlist: AudioPlaylist) {
                 if (!playlist.isSearchResult) {
@@ -41,13 +38,8 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 }
             }
 
-            override fun noMatches() {
-                callback(emptyList())
-            }
-
-            override fun loadFailed(e: FriendlyException) {
-                callback(emptyList())
-            }
+            override fun noMatches() = callback(emptyList())
+            override fun loadFailed(e: FriendlyException) = callback(emptyList())
         })
     }
 
@@ -62,6 +54,8 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
     val player: AudioPlayer = playerManager.createPlayer().also {
         it.volume = bot.options.ofGuild(guild).music.volume
     }
+
+    //val dspFilter = DSPFilter(player)
 
     /**  @return Track scheduler for the player.*/
     val scheduler: TrackScheduler = TrackScheduler(bot, this, player).also(player::addListener)
@@ -97,6 +91,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
 
     fun destroy() {
         player.destroy()
+        //dspFilter.clearFilters()
         disableBass()
         closeAudioConnection()
     }
@@ -317,14 +312,6 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             equalizer.setGain(1, 0F)
             player.setFilterFactory(null)
             equalizerEnabled = false
-        }
-    }
-
-    fun setSpeed(speed: Double) {
-        player.setFilterFactory { track, format, output ->
-            val timescale = TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
-            timescale.pitch = speed
-            return@setFilterFactory listOf(timescale)
         }
     }
 
