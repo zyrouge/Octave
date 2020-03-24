@@ -52,8 +52,18 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                 } ?: "Not Found"
             }
 
-            field("Repeating", false) {
+            addBlankField(true)
+
+            field("Repeating", true) {
                 manager.scheduler.repeatOption
+            }
+
+            field("Volume", true) {
+                "${manager.player.volume}%"
+            }
+
+            field("Bass Boost", true) {
+                manager.boostSetting.name.toLowerCase().capitalize()
             }
 
             field("Time", true) {
