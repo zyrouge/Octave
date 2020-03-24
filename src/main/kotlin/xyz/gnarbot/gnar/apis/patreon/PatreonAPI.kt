@@ -13,9 +13,9 @@ class PatreonAPI(var accessToken: String) {
         request {
             addPathSegments("current_user/campaigns")
         }.thenAccept { println(it) }
-
-        fetchPledgesOfCampaign("750822").thenAccept { println(it.size) }
     }
+
+    fun fetchPledges() = fetchPledgesOfCampaign("754103")
 
     fun fetchPledgesOfCampaign(campaignId: String) = fetchPledgesOfCampaign0(campaignId)
 

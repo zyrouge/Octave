@@ -1,70 +1,40 @@
 package xyz.gnarbot.gnar.listeners
-//
-//import com.patreon.resources.Pledge
-//import kotlinx.coroutines.GlobalScope
-//import kotlinx.coroutines.launch
-//import net.dv8tion.jda.api.entities.PrivateChannel
-//import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
-//import net.dv8tion.jda.api.hooks.ListenerAdapter
-//import xyz.gnarbot.gnar.Bot
-//import xyz.gnarbot.gnar.db.PatreonEntry
-//import xyz.gnarbot.gnar.db.PremiumKey
-//import xyz.gnarbot.gnar.utils.Utils
-//import xyz.gnarbot.gnar.utils.response.respond
-//import java.awt.Color
-//import java.io.IOException
-//import java.time.Duration
-//import java.time.Instant
-//import java.time.OffsetDateTime
-//import java.time.ZoneId
-//import java.time.format.DateTimeFormatter
-//import java.util.*
-//
-//class PatreonListener(private val bot: Bot) : ListenerAdapter() {
-//    override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
-//        if (event.author.isBot) return
-//
-//        val parts = Utils.stringSplit(event.message.contentRaw)
-//
-//        if (parts.isEmpty()) {
-//            return
-//        }
-//
-//        when (parts[0]) {
-//            "_patreon", "_patron" -> {
-//                val user = event.author
-//                val name = parts.copyOfRange(1, parts.size).joinToString(" ")
-//
-//                event.channel.respond().info("Looking you up from the Patron list...").queue {
-//                    GlobalScope.launch {
-//                        val pledges = try {
-//                            getPledges()
-//                        } catch (e: IOException) {
-//                            it.delete().queue()
-//                            it.privateChannel.respond().exception(e).queue()
-//                            return@launch
-//                        }
-//                        val pledge = pledges.find {
-//                            user.id == it.patron.discordId || name.equals(it.patron.fullName, true)
-//                        }
-//
-//                        it.delete().queue()
-//
-//                        if (pledge != null) {
-//                            processPledge(event.channel, pledge)
-//                        } else {
-//                            event.channel.respond().issue("**Sorry! I don't recognize you as a patron.**\n" +
-//                                    "You can support Octave's development on our __**[Patreon](https://www.patreon.com/octavebot)**__.\n" +
-//                                    "If you are a patron, make sure you either link your Discord account or enter your Patreon name, ie. `_patron Bill Gates`").queue()
-//                        }
-//                    }
-//                }
-//            }
-//            else -> {
-//                event.message.privateChannel.respond().error("Invalid command. If you're a patron, use `_patreon` or `_patron.`").queue()
-//            }
-//        }
-//    }
+
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent
+import net.dv8tion.jda.api.hooks.ListenerAdapter
+import xyz.gnarbot.gnar.Bot
+import xyz.gnarbot.gnar.utils.response.respond
+
+class PatreonListener(private val bot: Bot) : ListenerAdapter() {
+    override fun onPrivateMessageReceived(event: PrivateMessageReceivedEvent) {
+        if (event.author.isBot) return
+
+        if (event.message.contentRaw != "_patreon" && event.message.contentRaw != "_patron") {
+            return
+        }
+
+        event.channel.respond().info("Looking for your pledge, this may take a minute...")
+            .submit()
+            .thenCompose { bot.patreon.fetchPledges() }
+            .thenAccept { pledges ->
+                val pledge = pledges.firstOrNull { it.discordId != null && it.discordId == event.author.idLong }
+                    ?: return@thenAccept event.channel.respond().info("No pledge.").queue()
+
+                // we have pledge, insert user into database
+
+                // if (pledge != null) {
+                //   processPledge(event.channel, pledge)
+                // } else {
+                //   event.channel.respond().issue("**Sorry! I don't recognize you as a patron.**\n" +
+                //                                 "You can support Octave's development on our __**[Patreon](https://www.patreon.com/octavebot)**__.\n" +
+                //                                 "If you are a patron, make sure you either link your Discord account or enter your Patreon name, ie. `_patron Bill Gates`").queue()
+                // }
+            }
+            .exceptionally {
+                event.channel.respond().error(it.localizedMessage).queue()
+                return@exceptionally null
+            }
+    }
 //
 //    private fun processPledge(channel: PrivateChannel, pledge: Pledge) {
 //        val entry = bot.db().getPatreonEntry(pledge.patron.id)
@@ -99,21 +69,6 @@ package xyz.gnarbot.gnar.listeners
 //        key.save()
 //        return key.id
 //    }
-//
-//    private fun getPledges(): List<Pledge> {
-//        val campaign = bot.patreon.fetchCampaigns().get()!!.first()
-//
-//        val pledges = mutableListOf<Pledge>()
-//
-//        var cursor: String? = null
-//        do {
-//            val document = bot.patreon.fetchPageOfPledges(campaign.id, 100, cursor)
-//            pledges += document.get()!!
-//            cursor = bot.patreon.getNextCursorFromDocument(document)
-//        } while (cursor != null)
-//
-//        return pledges
-//    }
-//}
+}
 
 /* TODO */
