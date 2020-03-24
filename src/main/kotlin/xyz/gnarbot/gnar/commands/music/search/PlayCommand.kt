@@ -96,7 +96,6 @@ class PlayCommand : CommandExecutor() {
                     return@search
                 }
 
-                println(result.info.uri)
                 manager.loadAndPlay(
                         context,
                         result.info.uri,
