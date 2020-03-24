@@ -99,15 +99,14 @@ public class Bot {
 
         eventWaiter = new EventWaiter();
         shardManager = DefaultShardManagerBuilder.createDefault(credentials.getToken())
+                .enableIntents(GatewayIntent.GUILD_MEMBERS)
                 .setMaxReconnectDelay(32)
                 .setShardsTotal(credentials.getTotalShards())
                 .setShards(credentials.getShardStart(), credentials.getShardEnd() - 1)
                 .setAudioSendFactory(new NativeAudioSendFactory(800))
                 .addEventListeners(eventWaiter, new BotListener(this), new VoiceListener(this), new PatreonListener(this))
-                .setDisabledCacheFlags(EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS))
                 .setActivityProvider(i -> Activity.playing(String.format(configuration.getGame(), i)))
                 .setBulkDeleteSplittingEnabled(false)
-                .setMemberCachePolicy(MemberCachePolicy.ONLINE)
                 .build();
 
         LOG.info("The bot is now connecting to Discord.");
