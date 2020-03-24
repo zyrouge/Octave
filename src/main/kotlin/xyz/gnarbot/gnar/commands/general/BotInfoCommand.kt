@@ -51,7 +51,7 @@ class BotInfoCommand : CommandExecutor() {
             field("Guilds", true) { guilds }
             field("Voice Connections", true) { context.bot.players.size() }
 
-            field("Users", true) { users }
+            field("Cached Users", true) { users }
             field("Uptime", true) { "${d}d ${h % 24}h ${m % 60}m ${s % 60}s" }
 
             field("General", true) {
