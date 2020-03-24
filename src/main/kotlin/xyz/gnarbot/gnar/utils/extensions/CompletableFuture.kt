@@ -15,3 +15,8 @@ fun <T> CompletableFuture<T>.assert(check: (T) -> Boolean, lazyMessage: (T) -> S
     }
     return this
 }
+
+fun <T, U> CompletableFuture<T>.composeStep(step: (T) -> CompletableFuture<U>): CompletableFuture<T> {
+    return thenCompose { step(it) }
+        .thenCompose { this }
+}

@@ -10,7 +10,9 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.requests.RestAction
 import xyz.gnarbot.gnar.utils.embed
+import xyz.gnarbot.gnar.utils.extensions.composeStep
 import java.awt.Color
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
 class Paginator(waiter: EventWaiter,
@@ -87,52 +89,63 @@ class Paginator(waiter: EventWaiter,
         initialize(message.editMessage(msg), pageNum)
     }
 
-    private fun initialize(action: RestAction<Message>, page: Int) {
-        action.queue { message ->
-            if (list.size > 1) {
-                message.addReaction(LEFT).queue()
-                message.addReaction(STOP).queue()
-                message.addReaction(RIGHT).queue {
-                    waiter.waitFor(MessageReactionAddEvent::class.java) {
-                        val pageNew = when (it.reactionEmote.name) {
-                            LEFT -> page - 1
-                            RIGHT -> page + 1
-                            STOP -> {
-                                finally(message)
-                                return@waitFor
-                            }
-                            else -> {
-                                finally(message)
-                                error("Internal pagination error")
-                            }
-                        }
-
-                        it.reaction.removeReaction(it.user!!).queue()
-
-                        if (pageNew != page) {
-                            message?.editMessage(renderPage(pageNew))?.queue {
-                                paginate(it, pageNew)
-                            }
-                        }
-                    }.predicate {
-                        when {
-                            it.messageIdLong != message?.idLong -> false
-                            it.user!!.isBot -> false
-                            user != null && it.user != user -> {
-                                it.reaction.removeReaction(it.user!!).queue()
-                                false
-                            }
-                            else -> when (it.reactionEmote.name) {
-                                LEFT, STOP, RIGHT -> true
-                                else -> false
-                            }
-                        }
-                    }.timeout(timeout, unit) {
-                        finally(message)
-                    }
-                }
+    private fun addButtons(message: Message, directions: Boolean): CompletableFuture<Void> {
+        return when (directions) {
+            true -> {
+                message.addReaction(LEFT).submit()
+                    .thenCompose { message.addReaction(STOP).submit() }
+                    .thenCompose { message.addReaction(RIGHT).submit() }
+                    .thenAccept {}
+            }
+            false -> {
+                message.addReaction(STOP).submit()
+                    .thenAccept {}
             }
         }
+    }
+
+    private fun initialize(action: RestAction<Message>, page: Int) {
+        action.submit()
+            .composeStep { addButtons(it, list.size > 1) }
+            .thenAccept { message ->
+                waiter.waitFor(MessageReactionAddEvent::class.java) {
+                    val pageNew = when (it.reactionEmote.name) {
+                        LEFT -> page - 1
+                        RIGHT -> page + 1
+                        STOP -> {
+                            finally(message)
+                            return@waitFor
+                        }
+                        else -> {
+                            finally(message)
+                            error("Internal pagination error")
+                        }
+                    }
+
+                    it.reaction.removeReaction(it.user!!).queue()
+
+                    if (pageNew != page) {
+                        message?.editMessage(renderPage(pageNew))?.queue {
+                            paginate(it, pageNew)
+                        }
+                    }
+                }.predicate {
+                    when {
+                        it.messageIdLong != message?.idLong -> false
+                        it.user!!.isBot -> false
+                        user != null && it.user != user -> {
+                            it.reaction.removeReaction(it.user!!).queue()
+                            false
+                        }
+                        else -> when (it.reactionEmote.name) {
+                            LEFT, STOP, RIGHT -> true
+                            else -> false
+                        }
+                    }
+                }.timeout(timeout, unit) {
+                    finally(message)
+                }
+            }
     }
 
     private fun renderPage(page: Int): Message {
