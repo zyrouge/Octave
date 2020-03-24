@@ -55,7 +55,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
             addBlankField(true)
 
             field("Repeating", true) {
-                manager.scheduler.repeatOption
+                manager.scheduler.repeatOption.name.toLowerCase().capitalize()
             }
 
             field("Volume", true) {
