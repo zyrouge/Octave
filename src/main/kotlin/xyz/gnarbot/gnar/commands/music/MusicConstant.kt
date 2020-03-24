@@ -9,3 +9,4 @@ internal val PLAY_MESSAGE = "\uD83C\uDFB6 `${prefix}play (song/url)` in a voice 
 
 private val markdownCharacters = "[*_`~]".toRegex()
 val AudioTrackInfo.embedTitle: String get() = markdownCharacters.replace(title) { "\\${it.value}" }
+val AudioTrackInfo.embedUri: String get() = markdownCharacters.replace(uri) { "\\${it.value}" }

@@ -41,7 +41,7 @@ class QueueCommand : CommandExecutor() {
 
                         append("`[").append(Utils.getTimestamp(track.duration)).append("]` __[")
                         append(track.info.embedTitle)
-                        append("](").append(track.info.uri).append(")__")
+                        append("](").append(track.info.embedUri).append(")__")
                     }
                 }
 
@@ -72,7 +72,7 @@ class QueueCommand : CommandExecutor() {
 
             field("Entries", true) { queue.size }
             field("Total Duration", true) { Utils.getTimestamp(queueLength) }
-            field("Repeating", true) { manager.scheduler.repeatOption }
+            field("Repeating", true) { manager.scheduler.repeatOption.name.toLowerCase().capitalize() }
         }.display(context.textChannel)
     }
 }

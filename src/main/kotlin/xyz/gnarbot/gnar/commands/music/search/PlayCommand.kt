@@ -81,31 +81,31 @@ class PlayCommand : CommandExecutor() {
 
             val query = args.joinToString(" ").trim()
 
-            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
-                if (results.isEmpty()) {
-                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
-                    return@search
-                }
-
-                val result = results[0]
+//            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
+//                if (results.isEmpty()) {
+//                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+//                    return@search
+//                }
+//
+//                val result = results[0]
 
                 val manager = try {
                     context.bot.players.get(context.guild)
                 } catch (e: MusicLimitException) {
                     e.sendToContext(context)
-                    return@search
+                    return
                 }
 
                 manager.loadAndPlay(
                         context,
-                        result.info.uri,
+                        "ytsearch:$query",
                         TrackContext(
                                 context.member.user.idLong,
                                 context.textChannel.idLong
                         ),
                         footnote
                 )
-            }
+//            }
         }
     }
 }

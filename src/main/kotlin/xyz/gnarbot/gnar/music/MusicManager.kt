@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.music.embedTitle
+import xyz.gnarbot.gnar.commands.music.embedUri
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -209,7 +210,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    desc { "Added __**[${track.info.embedTitle}](${track.info.uri})**__ to queue." }
+                    desc { "Added __**[${track.info.embedTitle}](${track.info.embedUri})**__ to queue." }
                     footer { footnote }
                 }.action().queue()
             }
