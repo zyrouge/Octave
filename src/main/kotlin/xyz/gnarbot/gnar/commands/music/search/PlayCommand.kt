@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.music.search
 
+import org.jetbrains.kotlin.backend.common.onlyIf
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.TrackContext
@@ -54,6 +55,8 @@ class PlayCommand : CommandExecutor() {
         }
 
         if ("https://" in args[0] || "http://" in args[0]) {
+            val link = args[0].removePrefix("<").removeSuffix(">")
+
             val manager = try {
                 context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
@@ -63,7 +66,7 @@ class PlayCommand : CommandExecutor() {
 
             manager.loadAndPlay(
                     context,
-                    args[0],
+                    link,
                     TrackContext(
                             context.member.user.idLong,
                             context.textChannel.idLong
@@ -93,6 +96,7 @@ class PlayCommand : CommandExecutor() {
                     return@search
                 }
 
+                println(result.info.uri)
                 manager.loadAndPlay(
                         context,
                         result.info.uri,
