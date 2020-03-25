@@ -20,7 +20,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotCredentials;
 import xyz.gnarbot.gnar.Configuration;
+import xyz.gnarbot.gnar.music.sources.spotify.SpotifyAudioSourceManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,6 +58,7 @@ public class PlayerRegistry {
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
 
         Configuration config = bot.getConfiguration();
+        BotCredentials credentials = bot.getCredentials();
         if (!config.getIpv6Block().isEmpty()) {
             AbstractRoutePlanner planner;
             String block = config.getIpv6Block();
@@ -79,6 +82,13 @@ public class PlayerRegistry {
                     .setup();
         }
 
+        SpotifyAudioSourceManager spotifyAudioSourceManager = new SpotifyAudioSourceManager(
+                credentials.getSpotifyClientId(),
+                credentials.getSpotifyClientSecret(),
+                youtubeAudioSourceManager
+        );
+
+        playerManager.registerSourceManager(spotifyAudioSourceManager);
         playerManager.registerSourceManager(youtubeAudioSourceManager);
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());

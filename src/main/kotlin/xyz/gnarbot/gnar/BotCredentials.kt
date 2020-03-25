@@ -31,6 +31,9 @@ class BotCredentials(file: File) {
     val malUsername: String? = config["mal credentials", "username"].string
     val malPassword: String? = config["mal credentials", "password"].string
 
+    val spotifyClientId: String? = config["spotify", "clientid"].string
+    val spotifyClientSecret: String? = config["spotify", "clientsecret"].string
+
     val weebSh: String? = config["weebsh"].string
     val discordFM: String? = config["discordfm"].string
 
