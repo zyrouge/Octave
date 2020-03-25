@@ -34,6 +34,11 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         if (queue.isEmpty()) {
             manager.discordFMTrack?.let {
                 it.nextDiscordFMTrack(manager)
+
+                //This basically forces it to poll the next track immediately, they skipped it.
+                val track = queue.poll()
+                player.startTrack(track, false)
+
                 return
             }
 
