@@ -19,12 +19,15 @@ import xyz.gnarbot.gnar.music.sources.spotify.loaders.SpotifyTrackLoader
 import java.io.DataInput
 import java.io.DataOutput
 import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class SpotifyAudioSourceManager(
     private val clientId: String?,
     private val clientSecret: String?,
     private val youtubeAudioSourceManager: YoutubeAudioSourceManager
 ) : AudioSourceManager {
+    private val sched = Executors.newSingleThreadScheduledExecutor()
     private val httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager()!!
     internal var accessToken: String = ""
         private set
@@ -110,7 +113,7 @@ class SpotifyAudioSourceManager(
         }.use {
             if (it.statusLine.statusCode != HttpStatus.SC_OK) {
                 log.warn("Received code ${it.statusLine.statusCode} from Spotify while trying to update access token!")
-                //Helpers.schedule(::refreshAccessToken, 1, TimeUnit.MINUTES)
+                sched.schedule(::refreshAccessToken, 1, TimeUnit.MINUTES)
                 return
             }
 
@@ -125,7 +128,7 @@ class SpotifyAudioSourceManager(
 
             val refreshIn = json.getInt("expires_in")
             accessToken = json.getString("access_token")
-            //Helpers.schedule(::refreshAccessToken, (refreshIn * 1000) - 10000, TimeUnit.MILLISECONDS)
+            sched.schedule(::refreshAccessToken, ((refreshIn * 1000) - 10000).toLong(), TimeUnit.MILLISECONDS)
 
             val snippet = accessToken.substring(0..4).padEnd(accessToken.length - 5, '*') // lol imagine printing the entire token
             log.info("Updated access token to $snippet")
