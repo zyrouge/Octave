@@ -142,17 +142,26 @@ public class PlayerRegistry {
     public void clear(boolean force) {
         LOG.info("Cleaning up players (forceful: " + force + ")");
         Iterator<Map.Entry<Long, MusicManager>> iterator = registry.entrySet().iterator();
+
         while (iterator.hasNext()) {
             Map.Entry<Long, MusicManager> entry = iterator.next();
             try {
+                //Guild was long gone, dangling manager,
+                if(Bot.getInstance().getShardManager().getGuildById(entry.getValue().getGuildId()) == null) {
+                    iterator.remove();
+                    return;
+                }
+
                 if (entry.getValue() == null) {
                     iterator.remove();
                     LOG.warn("Null manager for id " + entry.getKey());
-                } else if (force
-                        || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
-                        || entry.getValue().getPlayer().getPlayingTrack() == null) {
-                    entry.getValue().destroy();
-                    iterator.remove();
+                } else {
+                    if (force
+                            || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
+                            || entry.getValue().getPlayer().getPlayingTrack() == null) {
+                        entry.getValue().destroy();
+                        iterator.remove();
+                    }
                 }
             } catch (Exception e) {
                 LOG.warn("Exception occured while trying to clean up id " + entry.getKey(), e);

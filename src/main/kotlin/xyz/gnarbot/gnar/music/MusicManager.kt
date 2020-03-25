@@ -21,6 +21,8 @@ import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerRegistry, val playerManager: AudioPlayerManager) {
+    public var guildId = guild.id;
+
     fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
         playerManager.loadItem(query, object : AudioLoadResultHandler {
             override fun trackLoaded(track: AudioTrack) {
