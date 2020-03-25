@@ -164,6 +164,7 @@ public class PlayerRegistry {
                 } else if (force
                         || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
                         || entry.getValue().getPlayer().getPlayingTrack() == null) {
+                    LOG.debug("Cleaning player {}", entry.getValue().getGuild().getId());
                     entry.getValue().destroy();
                     iterator.remove();
                 }
