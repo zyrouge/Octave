@@ -26,6 +26,8 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
             "status" -> context.send().info("https://serux.pro/355ec8e43e.png").queue()
             else -> context.send().info("Invalid filter. Pick one of $filterString, or `status` to view filter status.").queue()
         }
+
+        // TODO: Provide min/max values for each property.
     }
 
     fun modifyTimescale(ctx: Context, label: String, args: List<String>, manager: MusicManager) {
@@ -38,9 +40,9 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
         }
 
         when (args[0]) {
-            "pitch" -> manager.dspFilter.tsPitch = args[1].toDouble()
-            "speed" -> manager.dspFilter.tsSpeed = args[1].toDouble()
-            "rate" -> manager.dspFilter.tsRate = args[1].toDouble()
+            //"pitch" -> manager.dspFilter.tsPitch = args[1].toDouble()
+            //"speed" -> manager.dspFilter.tsSpeed = args[1].toDouble()
+            //"rate" -> manager.dspFilter.tsRate = args[1].toDouble()
             else -> ctx.send().info("Invalid choice `${args[0]}`, pick one of `pitch`/`speed`/`rate`.")
         }
 
@@ -57,8 +59,8 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
         }
 
         when (args[0]) {
-            "depth" -> manager.dspFilter.tDepth = args[1].toFloat()
-            "frequency" -> manager.dspFilter.tFrequency = args[1].toFloat()
+            //"depth" -> manager.dspFilter.tDepth = args[1].toFloat()
+            //"frequency" -> manager.dspFilter.tFrequency = args[1].toFloat()
             else -> ctx.send().info("Invalid choice `${args[0]}`, pick one of `depth`/`frequency`.")
         }
     }
@@ -73,9 +75,9 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
         }
 
         when (args[0]) {
-            "level" -> manager.dspFilter.kLevel = args[1].toFloat()
-            "band" -> manager.dspFilter.kFilterBand = args[1].toFloat()
-            "width" -> manager.dspFilter.kFilterWidth = args[1].toFloat()
+            //"level" -> manager.dspFilter.kLevel = args[1].toFloat()
+            //"band" -> manager.dspFilter.kFilterBand = args[1].toFloat()
+            //"width" -> manager.dspFilter.kFilterWidth = args[1].toFloat()
             else -> ctx.send().info("Invalid choice `${args[0]}`, pick one of `level`/`band`/`width`.")
         }
     }

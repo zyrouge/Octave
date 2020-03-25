@@ -115,6 +115,7 @@ class DSPFilter(private val player: AudioPlayer) {
         }
 
     fun applyFilters() {
+        // TODO: Support bass boost
         player.setFilterFactory { track, format, output ->
             val filters = mutableListOf<AudioFilter>()
 
