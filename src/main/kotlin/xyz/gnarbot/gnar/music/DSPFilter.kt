@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.music
 
-import com.github.natanbc.lavadsp.distortion.DistortionPcmAudioFilter
 import com.github.natanbc.lavadsp.karaoke.KaraokePcmAudioFilter
 import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
 import com.github.natanbc.lavadsp.tremolo.TremoloPcmAudioFilter
@@ -8,53 +7,6 @@ import com.sedmelluq.discord.lavaplayer.filter.AudioFilter
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 
 class DSPFilter(private val player: AudioPlayer) {
-    // Distortion properties
-    var distortionEnable = false
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dCosOffset = 0f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dCosScale = 1f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dOffset = 0f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dScale = 1f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dSinOffset = 0f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dSinScale = 1f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dTanOffset = 0f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var dTanScale = 1f
-        set(value) {
-            field = value
-            applyFilters()
-        }
-
     // Karaoke properties
     var karaokeEnable = false
         set(value) {
@@ -116,22 +68,8 @@ class DSPFilter(private val player: AudioPlayer) {
 
     fun applyFilters() {
         // TODO: Support bass boost
-        player.setFilterFactory { track, format, output ->
+        player.setFilterFactory { _, format, output ->
             val filters = mutableListOf<AudioFilter>()
-
-            if (distortionEnable) {
-                val filter = DistortionPcmAudioFilter(output, format.channelCount).apply {
-                    cosOffset = dCosOffset
-                    cosScale = dCosScale
-                    offset = dOffset
-                    scale = dScale
-                    sinOffset = dSinOffset
-                    sinScale = dSinScale
-                    tanOffset = dTanOffset
-                    tanScale = dTanScale
-                }
-                filters.add(filter)
-            }
 
             if (karaokeEnable) {
                 val filter = KaraokePcmAudioFilter(output, format.channelCount, format.sampleRate).apply {

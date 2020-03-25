@@ -55,7 +55,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
         it.volume = bot.options.ofGuild(guild).music.volume
     }
 
-    //val dspFilter = DSPFilter(player)
+    val dspFilter = DSPFilter(player)
 
     /**  @return Track scheduler for the player.*/
     val scheduler: TrackScheduler = TrackScheduler(bot, this, player).also(player::addListener)
