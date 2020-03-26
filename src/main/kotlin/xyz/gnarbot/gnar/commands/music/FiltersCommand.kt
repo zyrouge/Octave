@@ -25,10 +25,17 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
 
     override fun execute(context: Context, label: String, args: Array<String>, manager: MusicManager) {
         val filter = args.firstOrNull()
-            ?: return context.send().info("Invalid filter. Pick one of $filterString, or `status` to view filter status.").queue()
+            ?: return context.send().info("Invalid filter. Pick one of $filterString\n" +
+                "- or `status` to view filter status.\n" +
+                "- or `clear` to disable all filters.").queue()
 
         if (filter == "status") {
             return status(context, manager)
+        }
+
+        if (filter == "clear") {
+            manager.dspFilter.clearFilters()
+            return context.send().info("Filters disabled.").queue()
         }
 
         filters[filter]?.invoke(context, label, args.drop(1), manager)
