@@ -1,12 +1,10 @@
 package xyz.gnarbot.gnar;
 
 import com.jagrosh.jdautilities.waiter.EventWaiter;
-import com.patreon.PatreonAPI;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import io.sentry.Sentry;
-import net.dean.jraw.http.UserAgent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Activity;
@@ -14,7 +12,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.MiscUtil;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -22,6 +19,8 @@ import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.gnarbot.gnar.apis.patreon.PatreonAPI;
+import xyz.gnarbot.gnar.apis.statsposter.StatsPoster;
 import xyz.gnarbot.gnar.commands.CommandRegistry;
 import xyz.gnarbot.gnar.commands.dispatcher.CommandDispatcher;
 import xyz.gnarbot.gnar.db.Database;
@@ -40,6 +39,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class Bot {
@@ -47,7 +47,6 @@ public class Bot {
     private static Bot instance;
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
-    private final UserAgent ua = new UserAgent("bot", "xyz.gnarbot.gnar", "5.1.2", "GnarDiscordBot");
     private final Bot bot = this; //strictly there for counter
     private final Database database;
     //private final RedditClient redditClient;
@@ -62,8 +61,8 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final SoundManager soundManager;
+    private final StatsPoster statsPoster;
     private Configuration configuration;
-    private CountUpdater countUpdater;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
     public static void main(String[] args) throws LoginException {
@@ -115,19 +114,21 @@ public class Bot {
 
         optionsRegistry = new OptionsRegistry(this);
         playerRegistry = new PlayerRegistry(this, Executors.newSingleThreadScheduledExecutor());
-        countUpdater = new CountUpdater(this);
 
         // SETUP APIs
         discordFM = new DiscordFM();
 
         patreon = new PatreonAPI(credentials.getPatreonToken());
-        System.out.println("Patreon Established.");
+        LOG.info("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
         String riotApiKey = credentials.getRiotAPIKey();
         ApiConfig apiConfig = new ApiConfig();
         if (riotApiKey != null)
             apiConfig.setKey(riotApiKey);
+
+        statsPoster = new StatsPoster(shardManager.getShardById(0).getSelfUser().getId());
+        //statsPoster.postEvery(30, TimeUnit.MINUTES);
 
         riotApi = new RiotApi(new ApiConfig());
 
@@ -155,10 +156,6 @@ public class Bot {
 
     public ShardManager getShardManager() {
         return shardManager;
-    }
-
-    public CountUpdater getCountUpdater() {
-        return countUpdater;
     }
 
     public Guild getGuildById(long id) {

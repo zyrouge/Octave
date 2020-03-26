@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.admin
 
+import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactory
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.DiscordBotsVotes
@@ -7,7 +8,7 @@ import javax.script.*
 
 @Command(
         aliases = ["eval"],
-        description = "Run Groovy scripts."
+        description = "Run Kotlin scripts."
 )
 @BotInfo(
         id = 35,
@@ -15,59 +16,33 @@ import javax.script.*
         category = Category.NONE
 )
 class EvalCommand : CommandExecutor() {
-    private val scriptEngines: Map<String, ScriptEngine> = ScriptEngineManager().let {
-        mapOf(
-                "js" to it.getEngineByName("javascript"),
-//                "kt" to it.getEngineByName("kotlin"),
-                "gv" to it.getEngineByName("groovy")
-        )
-    }
+    private val engine = KotlinJsr223JvmLocalScriptEngineFactory().scriptEngine
 
     override fun execute(context: Context, label: String, args: Array<String>) {
-        if (args.isEmpty()) {
-            context.send().error("Available engines: `${scriptEngines.keys}`").queue()
-            return
+        val script = context.message.contentRaw.substringAfter("eval").trim()
+
+        if (script.isEmpty()) {
+            return context.send().error("Script can not be empty.").queue()
         }
 
-        val scriptEngine = scriptEngines[args[0]]
-        if (scriptEngine == null) {
-            context.send().error("Not a valid engine: `${scriptEngines.keys}`.").queue()
-            return
-        }
+        val bindings = mapOf(
+            "ctx" to context,
+            "jda" to context.jda,
+            "sm" to context.jda.shardManager!!,
+            "bot" to Bot.getInstance()
+        )
 
-        if (args.size == 1) {
-            context.send().error("Script can not be empty.").queue()
-            return
-        }
+        val bindString = bindings.map { "val ${it.key} = bindings[\"${it.key}\"] as ${it.value.javaClass.kotlin.qualifiedName}" }.joinToString("\n")
+        val bind = engine.createBindings()
+        bind.putAll(bindings)
 
-        val script = args.copyOfRange(1, args.size).joinToString(" ")
+        try {
+            val result = engine.eval("$bindString\n${script}", bind)
+                ?: return context.message.addReaction("👌").queue()
 
-        val variables = hashMapOf<String, Any>().apply {
-            put("context", context)
-            put("Bot", Bot.getInstance())
-            put("DiscordBotsVotes", DiscordBotsVotes::class.java)
-        }
-
-        val scope = SimpleScriptContext().apply {
-            getBindings(ScriptContext.ENGINE_SCOPE).apply {
-                variables.forEach { k, o -> this[k] = o }
-
-//                if (args[0] == "kt") {
-//                    variables.forEach { k, _ -> script = "val $k = bindings[\"$k\"]\n$script" }
-//                }
-            }
-        }
-
-        val result = try {
-            scriptEngine.eval(script, scope)
-        } catch (e: ScriptException) {
-            return context.send().exception(e).queue()
-        }
-
-        if (result != null) {
-            context.send().text(result.toString()).queue()
-        } else {
-            context.message.addReaction("\uD83D\uDC4C").queue()
+            context.send().text("```\n${result.toString().take(1950)}```").queue()
+        } catch (e: Exception) {
+            context.send().text("An exception occurred.\n```\n${e.localizedMessage}```").queue()
         }
     }
 }

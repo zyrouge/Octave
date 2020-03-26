@@ -1,9 +1,11 @@
 package xyz.gnarbot.gnar.music;
 
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
@@ -18,7 +20,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.Bot;
+import xyz.gnarbot.gnar.BotCredentials;
 import xyz.gnarbot.gnar.Configuration;
+import xyz.gnarbot.gnar.music.sources.spotify.SpotifyAudioSourceManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,6 +58,7 @@ public class PlayerRegistry {
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
 
         Configuration config = bot.getConfiguration();
+        BotCredentials credentials = bot.getCredentials();
         if (!config.getIpv6Block().isEmpty()) {
             AbstractRoutePlanner planner;
             String block = config.getIpv6Block();
@@ -77,12 +82,20 @@ public class PlayerRegistry {
                     .setup();
         }
 
+        SpotifyAudioSourceManager spotifyAudioSourceManager = new SpotifyAudioSourceManager(
+                credentials.getSpotifyClientId(),
+                credentials.getSpotifyClientSecret(),
+                youtubeAudioSourceManager
+        );
+
+        playerManager.registerSourceManager(spotifyAudioSourceManager);
         playerManager.registerSourceManager(youtubeAudioSourceManager);
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
         playerManager.registerSourceManager(new VimeoAudioSourceManager());
         playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
         playerManager.registerSourceManager(new BeamAudioSourceManager());
+        playerManager.registerSourceManager(new HttpAudioSourceManager(MediaContainerRegistry.DEFAULT_REGISTRY));
     }
 
     public ScheduledExecutorService getExecutor() {
@@ -155,13 +168,12 @@ public class PlayerRegistry {
                 if (entry.getValue() == null) {
                     iterator.remove();
                     LOG.warn("Null manager for id " + entry.getKey());
-                } else {
-                    if (force
-                            || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
-                            || entry.getValue().getPlayer().getPlayingTrack() == null) {
-                        entry.getValue().destroy();
-                        iterator.remove();
-                    }
+                } else if (force
+                        || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
+                        || entry.getValue().getPlayer().getPlayingTrack() == null) {
+                    LOG.debug("Cleaning player {}", entry.getValue().getGuild().getId());
+                    entry.getValue().destroy();
+                    iterator.remove();
                 }
             } catch (Exception e) {
                 LOG.warn("Exception occured while trying to clean up id " + entry.getKey(), e);

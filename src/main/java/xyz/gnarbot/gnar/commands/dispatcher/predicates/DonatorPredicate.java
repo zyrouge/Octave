@@ -16,6 +16,10 @@ public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
 
     @Override
     public boolean test(CommandExecutor cmd, Context context) {
+        if (context.getBot().getConfiguration().getAdmins().contains(context.getUser().getIdLong())) {
+            return true;
+        }
+
         if (cmd.getBotInfo().donor() && !context.getData().isPremium()) {
             context.send().embed("Donators Only")
                     .setColor(Color.ORANGE)

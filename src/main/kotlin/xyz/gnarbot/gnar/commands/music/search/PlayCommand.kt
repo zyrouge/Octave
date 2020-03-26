@@ -1,5 +1,6 @@
 package xyz.gnarbot.gnar.commands.music.search
 
+import org.jetbrains.kotlin.backend.common.onlyIf
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.TrackContext
@@ -54,6 +55,8 @@ class PlayCommand : CommandExecutor() {
         }
 
         if ("https://" in args[0] || "http://" in args[0]) {
+            val link = args[0].removePrefix("<").removeSuffix(">")
+
             val manager = try {
                 context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
@@ -63,7 +66,7 @@ class PlayCommand : CommandExecutor() {
 
             manager.loadAndPlay(
                     context,
-                    args[0],
+                    link,
                     TrackContext(
                             context.member.user.idLong,
                             context.textChannel.idLong
@@ -78,31 +81,31 @@ class PlayCommand : CommandExecutor() {
 
             val query = args.joinToString(" ").trim()
 
-            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
-                if (results.isEmpty()) {
-                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
-                    return@search
-                }
-
-                val result = results[0]
+//            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
+//                if (results.isEmpty()) {
+//                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
+//                    return@search
+//                }
+//
+//                val result = results[0]
 
                 val manager = try {
                     context.bot.players.get(context.guild)
                 } catch (e: MusicLimitException) {
                     e.sendToContext(context)
-                    return@search
+                    return
                 }
 
                 manager.loadAndPlay(
                         context,
-                        result.info.uri,
+                        "ytsearch:$query",
                         TrackContext(
                                 context.member.user.idLong,
                                 context.textChannel.idLong
                         ),
                         footnote
                 )
-            }
+//            }
         }
     }
 }

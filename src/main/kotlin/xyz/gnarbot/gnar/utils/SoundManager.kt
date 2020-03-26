@@ -4,7 +4,6 @@ import io.sentry.Sentry
 import java.io.File
 
 class SoundManager {
-
     var map: HashMap<String, String> = HashMap()
 
     fun loadSounds() {
