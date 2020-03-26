@@ -63,7 +63,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
             }
 
             field("Bass Boost", true) {
-                manager.boostSetting.name.toLowerCase().capitalize()
+                manager.dspFilter.bassBoost.name.toLowerCase().capitalize()
             }
 
             field("Time", true) {

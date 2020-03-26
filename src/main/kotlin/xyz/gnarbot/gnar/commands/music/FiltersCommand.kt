@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.music
 
 import xyz.gnarbot.gnar.commands.*
+import xyz.gnarbot.gnar.music.BoostSetting
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
@@ -27,11 +28,24 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
             ?: return context.send().info("Invalid filter. Pick one of $filterString, or `status` to view filter status.").queue()
 
         if (filter == "status") {
-            return context.send().text("https://serux.pro/355ec8e43e.png").queue()
+            return status(context, manager)
         }
 
         filters[filter]?.invoke(context, label, args.drop(1), manager)
             ?: return context.send().info("Invalid filter. Pick one of $filterString, or `status` to view filter status.").queue()
+    }
+
+    fun status(ctx: Context, manager: MusicManager) {
+        val karaokeStatus = "Disabled"
+        val tremoloStatus = "Disabled"
+        val timescaleStatus = if (manager.dspFilter.timescaleEnable) "Enabled" else "Disabled"
+
+        ctx.send().embed("Music Effects") {
+            field("Karaoke", true) { karaokeStatus }
+            field("Timescale", true) { timescaleStatus }
+            field("Tremolo", true) { tremoloStatus }
+            setFooter("Due to how effects work, only one can be applied at a time.")
+        }.action().queue()
     }
 
     fun modifyTimescale(ctx: Context, label: String, args: List<String>, manager: MusicManager) {
@@ -40,7 +54,7 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
         }
 
         val value = args.getOrNull(1)?.toDoubleOrNull()?.coerceIn(0.1, 3.0)
-            ?: return ctx.send().info("You need to specify a number for `${args[0].toLowerCase()}`").queue()
+            ?: return ctx.send().info("`pitch`/`speed`/`rate` `<number>`").queue()
 
         when (args[0]) {
             "pitch" -> manager.dspFilter.tsPitch = value

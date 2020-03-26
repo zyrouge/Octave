@@ -4,9 +4,23 @@ import com.github.natanbc.lavadsp.karaoke.KaraokePcmAudioFilter
 import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
 import com.github.natanbc.lavadsp.tremolo.TremoloPcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.AudioFilter
+import com.sedmelluq.discord.lavaplayer.filter.FilterChainBuilder
+import com.sedmelluq.discord.lavaplayer.filter.FloatPcmAudioFilter
+import com.sedmelluq.discord.lavaplayer.filter.UniversalPcmAudioFilter
+import com.sedmelluq.discord.lavaplayer.filter.converter.ToFloatAudioFilter
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer
+import com.sedmelluq.discord.lavaplayer.format.AudioDataFormat
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
+import xyz.gnarbot.gnar.music.filters.*
 
 class DSPFilter(private val player: AudioPlayer) {
+    // Equalizer properties
+    var bassBoost = BoostSetting.OFF
+        set(value) {
+            field = value
+            applyFilters()
+        }
+
     // Karaoke properties
     var karaokeEnable = false
         set(value) {
@@ -66,38 +80,68 @@ class DSPFilter(private val player: AudioPlayer) {
             applyFilters()
         }
 
+    fun buildFilters(configs: List<FilterConfig<*>>, format: AudioDataFormat,
+                     output: UniversalPcmAudioFilter): List<AudioFilter> {
+        if (configs.isEmpty()) {
+            println("No configs!")
+            return emptyList()
+        }
+
+        val filters = mutableListOf<FloatPcmAudioFilter>()
+
+        for (filter in configs) { // Last filter writes to output.
+            val pipeTo = if (filters.isEmpty()) "Output" else filters.last()::class.simpleName
+            println("${filter::class.simpleName} piping to $pipeTo")
+            val built = if (filters.isEmpty()) { // First (read: last) filter
+                filter.build(output, format)
+            } else {
+                filter.build(filters.last(), format)
+            }
+            filters.add(built)
+        }
+
+        return filters.reversed()
+    }
+
     fun applyFilters() {
-        // TODO: Support bass boost
         player.setFilterFactory { _, format, output ->
-            val filters = mutableListOf<AudioFilter>()
+            val filterConfigs = mutableListOf<FilterConfig<*>>()
 
             if (karaokeEnable) {
-                val filter = KaraokePcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
+                val config = KaraokeFilter().configure {
                     level = kLevel
                     filterBand = kFilterBand
                     filterWidth = kFilterWidth
                 }
-                filters.add(filter)
+                filterConfigs.add(config)
             }
 
             if (timescaleEnable) {
-                val filter = TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
+                val config = TimescaleFilter().configure {
                     pitch = tsPitch
                     speed = tsSpeed
                     rate = tsRate
                 }
-                filters.add(filter)
+                filterConfigs.add(config)
             }
 
             if (tremoloEnable) {
-                val filter = TremoloPcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
+                val config = TremoloFilter().configure {
                     depth = tDepth
                     frequency = tFrequency
                 }
-                filters.add(filter)
+                filterConfigs.add(config)
             }
 
-            return@setFilterFactory filters.toList()
+            if (bassBoost != BoostSetting.OFF) {
+                val config = EqualizerFilter().configure {
+                    setGain(0, bassBoost.band1)
+                    setGain(1, bassBoost.band2)
+                }
+                filterConfigs.add(config)
+            }
+
+            return@setFilterFactory buildFilters(filterConfigs, format, output)
         }
     }
 
