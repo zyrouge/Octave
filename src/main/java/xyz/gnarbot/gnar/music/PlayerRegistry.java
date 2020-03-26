@@ -155,13 +155,11 @@ public class PlayerRegistry {
                 if (entry.getValue() == null) {
                     iterator.remove();
                     LOG.warn("Null manager for id " + entry.getKey());
-                } else {
-                    if (force
+                } else if (force
                             || !entry.getValue().getGuild().getSelfMember().getVoiceState().inVoiceChannel()
                             || entry.getValue().getPlayer().getPlayingTrack() == null) {
                         entry.getValue().destroy();
                         iterator.remove();
-                    }
                 }
             } catch (Exception e) {
                 LOG.warn("Exception occured while trying to clean up id " + entry.getKey(), e);
