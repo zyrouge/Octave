@@ -223,8 +223,4 @@ public class Bot {
     public SoundManager getSoundManager() {
         return soundManager;
     }
-
-    //public RedditClient getRedditClient() {
-    //    return redditClient;
-    //}
 }
