@@ -59,7 +59,7 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final SoundManager soundManager;
-    private final StatsPoster statsPoster;
+    private StatsPoster statsPoster;
     private Configuration configuration;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
@@ -124,8 +124,10 @@ public class Bot {
         if (riotApiKey != null)
             apiConfig.setKey(riotApiKey);
 
-        statsPoster = new StatsPoster(shardManager.getShardById(0).getSelfUser().getId());
-        //statsPoster.postEvery(30, TimeUnit.MINUTES);
+        shardManager.retrieveApplicationInfo().queue(su -> {
+            statsPoster = new StatsPoster(su.getId());
+            statsPoster.postEvery(30, TimeUnit.MINUTES);
+        });
 
         riotApi = new RiotApi(new ApiConfig());
 
