@@ -12,9 +12,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.MiscUtil;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import net.rithms.riot.api.ApiConfig;
 import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
@@ -30,16 +28,13 @@ import xyz.gnarbot.gnar.listeners.PatreonListener;
 import xyz.gnarbot.gnar.listeners.VoiceListener;
 import xyz.gnarbot.gnar.music.PlayerRegistry;
 import xyz.gnarbot.gnar.sharding.BucketedController;
-import xyz.gnarbot.gnar.utils.CountUpdater;
 import xyz.gnarbot.gnar.utils.DiscordFM;
 import xyz.gnarbot.gnar.utils.MyAnimeListAPI;
 import xyz.gnarbot.gnar.utils.SoundManager;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.EnumSet;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 public class Bot {
