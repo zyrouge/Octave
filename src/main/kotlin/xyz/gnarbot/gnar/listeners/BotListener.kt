@@ -65,7 +65,7 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
             return
         } //Prevent markdown responses
 
-        bot.commandDispatcher.handle(Context(bot, event))
+        bot.commandDispatcher?.handle(Context(bot, event))
     }
 
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent) {
