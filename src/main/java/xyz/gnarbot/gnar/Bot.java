@@ -43,9 +43,7 @@ public class Bot {
     private static Bot instance;
     private final BotCredentials credentials;
     private final Supplier<Configuration> configurationGenerator;
-    private final Bot bot = this; //strictly there for counter
     private final Database database;
-    //private final RedditClient redditClient;
     private final OptionsRegistry optionsRegistry;
     private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
