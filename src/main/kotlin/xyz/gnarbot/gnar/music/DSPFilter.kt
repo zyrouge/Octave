@@ -1,14 +1,8 @@
 package xyz.gnarbot.gnar.music
 
-import com.github.natanbc.lavadsp.karaoke.KaraokePcmAudioFilter
-import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
-import com.github.natanbc.lavadsp.tremolo.TremoloPcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.AudioFilter
-import com.sedmelluq.discord.lavaplayer.filter.FilterChainBuilder
 import com.sedmelluq.discord.lavaplayer.filter.FloatPcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.UniversalPcmAudioFilter
-import com.sedmelluq.discord.lavaplayer.filter.converter.ToFloatAudioFilter
-import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer
 import com.sedmelluq.discord.lavaplayer.format.AudioDataFormat
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import xyz.gnarbot.gnar.music.filters.*
@@ -83,15 +77,12 @@ class DSPFilter(private val player: AudioPlayer) {
     fun buildFilters(configs: List<FilterConfig<*>>, format: AudioDataFormat,
                      output: UniversalPcmAudioFilter): List<AudioFilter> {
         if (configs.isEmpty()) {
-            println("No configs!")
             return emptyList()
         }
 
         val filters = mutableListOf<FloatPcmAudioFilter>()
 
         for (filter in configs) { // Last filter writes to output.
-            val pipeTo = if (filters.isEmpty()) "Output" else filters.last()::class.simpleName
-            println("${filter::class.simpleName} piping to $pipeTo")
             val built = if (filters.isEmpty()) { // First (read: last) filter
                 filter.build(output, format)
             } else {
@@ -147,6 +138,14 @@ class DSPFilter(private val player: AudioPlayer) {
 
     fun clearFilters() {
         player.setFilterFactory(null)
+
+        bassBoost = BoostSetting.OFF
+        karaokeEnable = false
+        tremoloEnable = false
+
+        tsPitch = 1.0
+        tsRate = 1.0
+        tsSpeed = 1.0
     }
 
 }
