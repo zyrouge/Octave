@@ -4,9 +4,7 @@ import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.admin.*;
-import xyz.gnarbot.gnar.commands.fun.*;
 import xyz.gnarbot.gnar.commands.general.*;
-import xyz.gnarbot.gnar.commands.media.*;
 import xyz.gnarbot.gnar.commands.music.*;
 import xyz.gnarbot.gnar.commands.music.dj.MoveCommand;
 import xyz.gnarbot.gnar.commands.music.dj.StopCommand;
@@ -41,8 +39,6 @@ public class CommandRegistry {
         register(new PingCommand());
         register(new SupportCommand());
         register(new VoteCommand());
-        register(new VideoCommand());
-        register(new UrbanDictionaryCommand());
         register(new UptimeCommand());
         register(new WhoIsCommand());
         register(new GuildInfoCommand());
@@ -53,43 +49,14 @@ public class CommandRegistry {
         register(new QuoteCommand());
         //End General Commands
 
-        //Fun Commands
-
-        register(new ASCIICommand());
-        register(new CoinFlipCommand());
-        register(new DialogCommand());
-        register(new RollCommand());
-        register(new EightBallCommand());
-        register(new LeetifyCommand());
-        register(new LennyCommand());
-        register(new TextToBrickCommand());
-        register(new TextToSpeechCommand());
-        register(new ReactCommand());
-        //End Fun Commands
-
         //Mod Commands
         register(new PruneCommand());
         register(new SettingsDelegateCommand());
         //End Mod Commands
 
-        //Game Commands
-//        register(new PokemonCommand());
-        //End Game Commands
-
         //Poll Commands
         register(new PollCommand());
         //End Poll Commands
-
-        //Media Commands
-        register(new MemeCommand());
-        register(new TrumpCommand());
-        register(new CatsCommand());
-        register(new DogCommand());
-        register(new ExplosmCommand());
-        register(new ExplosmRCGCommand());
-        register(new XKCDCommand());
-        register(new ActionCommand());
-        //End Media Commands
 
         // Administrator commands
         register(new ShutdownCommand());
@@ -120,8 +87,6 @@ public class CommandRegistry {
             register(new JumpCommand());
             register(new BassBoostedCommand());
             register(new DiscordFMCommand());
-            register(new SoundboardCommand());
-            register(new SoundboardListCommand());
             register(new CleanupCommand());
             register(new LyricsCommand());
             register(new FiltersCommand());

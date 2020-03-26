@@ -9,7 +9,7 @@ import xyz.gnarbot.gnar.commands.*
 )
 @BotInfo(
         id = 87,
-        category = Category.FUN
+        category = Category.MUSIC
 )
 class SoundboardListCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {

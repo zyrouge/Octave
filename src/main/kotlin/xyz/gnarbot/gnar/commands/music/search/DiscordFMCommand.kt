@@ -8,9 +8,9 @@ import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.utils.DiscordFM
 
 @Command(
-        aliases = ["radio"],
+        aliases = ["radio", "dfm"],
         usage = "(station name)|stop",
-        description = "Stream random songs from radio stations!"
+        description = "Stream random songs from some radio stations."
 )
 @BotInfo(
         id = 82,

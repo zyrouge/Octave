@@ -8,7 +8,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 @Command(
         aliases = ["play", "p"],
         usage = "[url|YT search]",
-        description = "Joins and play music in a channel."
+        description = "Plays music in a voice channel"
 )
 @BotInfo(
         id = 62,

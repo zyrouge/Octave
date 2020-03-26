@@ -7,7 +7,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(
         aliases = ["cleanup", "cu"],
-        description = "Clear songs queued by a certain user"
+        description = "Clear songs based on a specific user, duplicates, or if a user left"
 )
 @BotInfo(
         id = 88,

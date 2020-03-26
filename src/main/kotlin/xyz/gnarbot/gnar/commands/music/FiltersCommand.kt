@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
     aliases = ["filter", "filters", "fx", "effects"],
-    description = "Apply filters to the music"
+    description = "Apply audio filters to the music such as speed and pitch"
 )
 @BotInfo(
     id = 666,
