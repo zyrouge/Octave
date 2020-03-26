@@ -111,7 +111,7 @@ public class PlayerRegistry {
                 throw new MusicLimitException();
             }
 
-            manager = new MusicManager(bot, guild, this, playerManager);
+            manager = new MusicManager(bot, guild.getId(), this, playerManager);
             registry.put(guild.getIdLong(), manager);
         }
 
