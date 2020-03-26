@@ -135,20 +135,6 @@ class BotListener(private val bot: Bot) : ListenerAdapter() {
                 Bot.getLogger().info("JDA " + event.jda.shardInfo.shardId + " has disconnected. CCF Null. Code: " + event.closeCode)
             }
         }
-
-        // Clean up all of the MusicManagers associated with that shard.
-        val iterator = bot.players.registry.entries.iterator()
-        while (iterator.hasNext()) {
-            val entry = iterator.next()
-            if (entry.value == null) {
-                iterator.remove()
-                Bot.getLogger().warn("Null manager for id " + entry.key)
-            } else if (entry.value.guild.jda === event.jda) {
-                entry.value.destroy()
-                iterator.remove()
-            }
-        }
-
     }
 
     override fun onException(event: ExceptionEvent) {
