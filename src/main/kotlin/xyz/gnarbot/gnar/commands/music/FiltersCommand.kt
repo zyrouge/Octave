@@ -51,7 +51,6 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
             field("Karaoke", true) { karaokeStatus }
             field("Timescale", true) { timescaleStatus }
             field("Tremolo", true) { tremoloStatus }
-            setFooter("Due to how effects work, only one can be applied at a time.")
         }.action().queue()
     }
 
