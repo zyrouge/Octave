@@ -28,7 +28,7 @@ class ShardInfoCommand : CommandExecutor() {
                                 "${it.gatewayPing}ms",
                                 it.guildCache.size(),
                                 it.userCache.size(),
-                                context.bot.players.registry.values.count { m -> m.guild.jda == it }
+                                context.bot.players.registry.values.count { m -> m.getGuild()?.jda == it }
                         )
                 )
             }

@@ -56,6 +56,7 @@ class LyricsCommand : CommandTemplate() {
             //val icon = songObject.getString("icon")
 
             ctx.bot.eventWaiter.paginator {
+                setUser(ctx.user)
                 setEmptyMessage("There should be something here 👀")
                 setItemsPerPage(1)
                 title { "Lyrics for $fullTitle" }

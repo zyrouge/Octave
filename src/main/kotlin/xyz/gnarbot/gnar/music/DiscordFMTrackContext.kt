@@ -32,13 +32,13 @@ class DiscordFMTrackContext(
 
             override fun noMatches() {
                 // Already confirmed that the list is empty.
-                bot.players.destroy(musicManager.guild)
+                bot.players.destroy(musicManager.getGuild())
             }
 
             override fun loadFailed(exception: FriendlyException) {
                 if (errorDepth >= errorTolerance) {
                     // Already confirmed that the list is empty.
-                    bot.players.destroy(musicManager.guild)
+                    bot.players.destroy(musicManager.getGuild())
                     return
                 } else {
                     nextDiscordFMTrack(musicManager, errorDepth + 1)

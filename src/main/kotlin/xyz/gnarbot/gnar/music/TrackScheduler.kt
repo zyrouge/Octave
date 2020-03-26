@@ -44,7 +44,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
                 return
             }
 
-            manager.playerRegistry.executor.execute { manager.playerRegistry.destroy(manager.guild) }
+            manager.playerRegistry.executor.execute { manager.playerRegistry.destroy(manager.getGuild()) }
             return
         }
 
@@ -52,7 +52,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         player.startTrack(track, false)
 
         // fixme DI point
-        if (bot.options.ofGuild(manager.guild).music.announce) {
+        if (bot.options.ofGuild(manager.getGuild()).music.announce) {
             announceNext(track)
         }
     }
@@ -78,7 +78,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
 
     override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
         track.getUserData(TrackContext::class.java).requestedChannel.let {
-            manager.guild.getTextChannelById(it)
+            manager.getGuild()?.getTextChannelById(it)
         }?.respond()?.error(
                 "The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold."
         )?.queue()
@@ -89,7 +89,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
             return
         }
         track.getUserData(TrackContext::class.java).requestedChannel.let {
-            manager.guild.getTextChannelById(it)
+            manager.getGuild()?.getTextChannelById(it)
         }?.respond()?.exception(exception)?.queue()
 
         Sentry.capture(exception)
@@ -103,7 +103,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
                         append("Now playing __**[").append(track.info.embedTitle)
                         append("](").append(track.info.embedUri).append(")**__")
 
-                        track.getUserData(TrackContext::class.java)?.requester?.let(manager.guild::getMemberById)?.let {
+                        track.getUserData(TrackContext::class.java)?.requester?.let{it -> manager.getGuild()?.getMemberById(it)}?.let {
                             append(" requested by ")
                             append(it.asMention)
                         }
