@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.music.embedTitle
+import xyz.gnarbot.gnar.commands.music.embedUri
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -25,9 +26,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
 
     fun search(query: String, maxResults: Int = -1, callback: (results: List<AudioTrack>) -> Unit) {
         playerManager.loadItem(query, object : AudioLoadResultHandler {
-            override fun trackLoaded(track: AudioTrack) {
-                callback(listOf(track))
-            }
+            override fun trackLoaded(track: AudioTrack) = callback(listOf(track))
 
             override fun playlistLoaded(playlist: AudioPlaylist) {
                 if (!playlist.isSearchResult) {
@@ -41,13 +40,8 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 }
             }
 
-            override fun noMatches() {
-                callback(emptyList())
-            }
-
-            override fun loadFailed(e: FriendlyException) {
-                callback(emptyList())
-            }
+            override fun noMatches() = callback(emptyList())
+            override fun loadFailed(e: FriendlyException) = callback(emptyList())
         })
     }
 
@@ -62,6 +56,8 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
     val player: AudioPlayer = playerManager.createPlayer().also {
         it.volume = bot.options.ofGuild(guild).music.volume
     }
+
+    val dspFilter = DSPFilter(player)
 
     /**  @return Track scheduler for the player.*/
     val scheduler: TrackScheduler = TrackScheduler(bot, this, player).also(player::addListener)
@@ -79,6 +75,9 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
      */
     var isVotingToSkip = false
 
+    var boostSetting = BoostSetting.OFF
+        private set
+
     val currentRequestChannel: TextChannel?
         get() {
             return (player.playingTrack ?: scheduler.lastTrack)
@@ -94,6 +93,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
 
     fun destroy() {
         player.destroy()
+        //dspFilter.clearFilters()
         disableBass()
         closeAudioConnection()
     }
@@ -207,7 +207,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                 scheduler.queue(track)
 
                 context.send().embed("Music Queue") {
-                    desc { "Added __**[${track.info.embedTitle}](${track.info.uri})**__ to queue." }
+                    desc { "Added __**[${track.info.embedTitle}](${track.info.embedUri})**__ to queue." }
                     footer { footnote }
                 }.action().queue()
             }
@@ -267,7 +267,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
             override fun noMatches() {
                 // No track found and queue is empty
                 // destroy player
-                if (scheduler.queue.isEmpty()) {
+                if (player.playingTrack == null && scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }
                 context.send().issue("Nothing found by `$trackUrl`.").queue()
@@ -281,7 +281,7 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
                     return
                 }
 
-                if (scheduler.queue.isEmpty()) {
+                if (player.playingTrack == null && scheduler.queue.isEmpty()) {
                     playerRegistry.destroy(guild)
                 }
                 context.send().exception(e).queue()
@@ -289,7 +289,15 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
         })
     }
 
-    fun boostBass(b1: Float, b2: Float) {
+    fun boostBass(setting: BoostSetting) {
+        boostSetting = setting
+        boostBass(setting.band1, setting.band2, false)
+    }
+
+    fun boostBass(b1: Float, b2: Float, isCustom: Boolean = true) {
+        if (isCustom) {
+            boostSetting = BoostSetting.CUSTOM
+        }
         equalizer.setGain(0, b1)
         equalizer.setGain(1, b2)
 
@@ -300,11 +308,23 @@ class MusicManager(val bot: Bot, val guild: Guild, val playerRegistry: PlayerReg
     }
 
     fun disableBass() {
+        boostSetting = BoostSetting.OFF
         if (equalizerEnabled) {
             equalizer.setGain(0, 0F)
             equalizer.setGain(1, 0F)
             player.setFilterFactory(null)
             equalizerEnabled = false
+        }
+    }
+
+    companion object {
+        enum class BoostSetting(val band1: Float, val band2: Float) {
+            OFF(0.0F, 0.0F),
+            SOFT(0.25F, 0.15F),
+            HARD(0.50F, 0.25F),
+            EXTREME(0.75F, 0.50F),
+            EARRAPE(1F, 0.75F),
+            CUSTOM(0.0F, 0.0F)
         }
     }
 }

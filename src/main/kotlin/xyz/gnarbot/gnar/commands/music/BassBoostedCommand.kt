@@ -30,10 +30,15 @@ class BassBoostedCommand : MusicCommandExecutor(true, true, true) {
 
         when (query) {
             "off" -> manager.disableBass()
-            "soft" -> manager.boostBass(0.25F, 0.15F)
-            "hard" -> manager.boostBass(0.50F, 0.25F)
-            "extreme" -> manager.boostBass(0.75F, 0.50F)
-            "earrape" -> manager.boostBass(1F, 0.75F)
+            "soft" -> manager.boostBass(MusicManager.Companion.BoostSetting.SOFT)
+            "hard" -> manager.boostBass(MusicManager.Companion.BoostSetting.HARD)
+            "extreme" -> manager.boostBass(MusicManager.Companion.BoostSetting.EXTREME)
+            "earrape" -> manager.boostBass(MusicManager.Companion.BoostSetting.EARRAPE)
+
+//            "soft" -> manager.boostBass(0.25F, 0.15F)
+//            "hard" -> manager.boostBass(0.50F, 0.25F)
+//            "extreme" -> manager.boostBass(0.75F, 0.50F)
+//            "earrape" -> manager.boostBass(1F, 0.75F)
 
             else -> {
                 context.send().issue("$query is not an option.").queue()

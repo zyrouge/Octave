@@ -24,7 +24,7 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
 
         context.send().embed("Now Playing") {
             desc {
-                "**[${track.info.embedTitle}](${track.info.uri})**"
+                "**[${track.info.embedTitle}](${track.info.embedUri})**"
             }
 
             manager.discordFMTrack?.let {
@@ -52,8 +52,18 @@ class NowPlayingCommand : MusicCommandExecutor(false, true, true) {
                 } ?: "Not Found"
             }
 
-            field("Repeating", false) {
-                manager.scheduler.repeatOption
+            addBlankField(true)
+
+            field("Repeating", true) {
+                manager.scheduler.repeatOption.name.toLowerCase().capitalize()
+            }
+
+            field("Volume", true) {
+                "${manager.player.volume}%"
+            }
+
+            field("Bass Boost", true) {
+                manager.boostSetting.name.toLowerCase().capitalize()
             }
 
             field("Time", true) {

@@ -81,6 +81,6 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
             }
         }
 
-        context.send().info("Removed __[${track.info.embedTitle}](${track.info.uri})__ from the queue.").queue()
+        context.send().info("Removed __[${track.info.embedTitle}](${track.info.embedUri})__ from the queue.").queue()
     }
 }

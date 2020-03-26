@@ -1,13 +1,12 @@
 package xyz.gnarbot.gnar.commands.music
 
-import okhttp3.Request
-import org.json.JSONObject
+import com.jagrosh.jdautilities.paginator
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.commands.template.CommandTemplate
 import xyz.gnarbot.gnar.commands.template.annotations.Description
-import xyz.gnarbot.gnar.utils.HttpUtils
+import xyz.gnarbot.gnar.utils.RequestUtil
+import xyz.gnarbot.gnar.utils.TextSplitter
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Command(
         aliases = ["lyrics"],
@@ -24,75 +23,50 @@ class LyricsCommand : CommandTemplate() {
     @Description("Lyrics of the current song.")
     fun current(context: Context) {
         val manager = context.bot.players.getExisting(context.guild)
-        if(manager == null) {
-            context.send().info("There's no player to be seen here.")
-            return
-        }
+            ?: return context.send().info("There's no player to be seen here.").queue()
 
         val audioTrack = manager.player.playingTrack
-        if(audioTrack == null) {
-            context.send().info("There's no song playing currently.")
-            return
-        }
+            ?: return context.send().info("There's no song playing currently.").queue()
 
         val title = audioTrack.info.title
-        val data : JSONObject = getSongData(title)
-        if(!data.isNull("error")) {
-            context.send().info("No lyrics found for $title. Try with another song?")
-            return
-        }
-
-        var lyrics = data.getString("content")
-        val songObject = data.getJSONObject("song")
-        val fullTitle = songObject.getString("full_title")
-
-        lyrics = if (lyrics.length > 900) {
-            lyrics.substring(0, 900) + "..."
-        } else {
-            lyrics
-        }
-
-        val icon = songObject.getString("icon")
-
-        context.send().embed("Lyrics for $fullTitle") {
-            thumbnail { icon }
-            desc { lyrics }
-        }.action().queue()
+        sendLyricsFor(context, title)
     }
 
     @Description("Searches lyrics.")
     fun search(context: Context, content: String) {
-        val data : JSONObject = getSongData(content)
-        if(!data.isNull("error")) {
-            context.send().info("No lyrics found for $content. Try with another song?")
-            return
-        }
-
-        var lyrics = data.getString("content")
-        val songObject = data.getJSONObject("song")
-
-        val fullTitle = songObject.getString("full_title")
-        val icon = songObject.getString("icon")
-
-
-        lyrics = if (lyrics.length > 900) {
-            lyrics.substring(0, 900) + "..."
-        } else {
-            lyrics
-        }
-
-        context.send().embed("Lyrics for $fullTitle") {
-            thumbnail { icon }
-            desc { lyrics }
-        }.action().queue()
+        sendLyricsFor(context, content)
     }
-}
 
-fun getSongData(content: String): JSONObject {
-    val request: Request = Request.Builder()
-            .url("https://lyrics.tsu.sh/v1/?q=${URLEncoder.encode(content, StandardCharsets.UTF_8)}")
-            .addHeader("User-Agent", "Octave")
-            .build()
+    private fun sendLyricsFor(ctx: Context, title: String) {
+        val encodedTitle = URLEncoder.encode(title, Charsets.UTF_8)
 
-    HttpUtils.CLIENT.newCall(request).execute().use { response -> return JSONObject(response.body()?.string()) }
+        RequestUtil.jsonObject {
+            url("https://lyrics.tsu.sh/v1/?q=$encodedTitle")
+            header("User-Agent", "Octave (DiscordBot, https://github.com/DankMemer/Octave")
+        }.thenAccept {
+            if (!it.isNull("error")) {
+                return@thenAccept ctx.send().info("No lyrics found for `$title`. Try another song?").queue()
+            }
+
+            val lyrics = it.getString("content")
+            val pages = TextSplitter.split(lyrics, 1000)
+
+            val songObject = it.getJSONObject("song")
+            val fullTitle = songObject.getString("full_title")
+            //val icon = songObject.getString("icon")
+
+            ctx.bot.eventWaiter.paginator {
+                setEmptyMessage("There should be something here 👀")
+                setItemsPerPage(1)
+                title { "Lyrics for $fullTitle" }
+
+                for (page in pages) {
+                    entry { page }
+                }
+            }.display(ctx.textChannel)
+        }.exceptionally {
+            ctx.send().error(it.localizedMessage).queue()
+            return@exceptionally null
+        }
+    }
 }

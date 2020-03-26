@@ -9,20 +9,14 @@ import kotlin.system.exitProcess
 class DatabaseManager(val bot: Bot, private val mainTable: String) {
 
     fun establishConnection(): Connection? {
-        var c: Connection? = null
-        try {
+        return try {
             Class.forName("org.postgresql.Driver")
-            c = DriverManager.getConnection(bot.credentials.databaseURL, bot.credentials.databaseUsername, bot.credentials.databasePassword)
+            DriverManager.getConnection(bot.credentials.databaseURL, bot.credentials.databaseUsername, bot.credentials.databasePassword)
         } catch (e: Exception) {
             Sentry.capture(e)
             e.printStackTrace()
             exitProcess(0)
         }
-        if (c == null) {
-            exitProcess(0)
-        } else {
-            return c
-        }
-        return null
     }
+
 }
