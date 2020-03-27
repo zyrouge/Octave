@@ -43,8 +43,8 @@ class FiltersCommand : MusicCommandExecutor(true, true, true) {
     }
 
     fun status(ctx: Context, manager: MusicManager) {
-        val karaokeStatus = "Disabled"
-        val tremoloStatus = "Disabled"
+        val karaokeStatus = if (manager.dspFilter.karaokeEnable) "Enabled" else "Disabled"
+        val tremoloStatus = if (manager.dspFilter.tremoloEnable) "Enabled" else "Disabled"
         val timescaleStatus = if (manager.dspFilter.timescaleEnable) "Enabled" else "Disabled"
 
         ctx.send().embed("Music Effects") {
