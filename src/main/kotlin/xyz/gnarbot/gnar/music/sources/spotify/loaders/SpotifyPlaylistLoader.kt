@@ -73,7 +73,7 @@ class SpotifyPlaylistLoader : Loader {
             }
 
             tasks.filterNot { t -> t.isCompletedExceptionally }
-                .map { t -> t.get() }
+                .mapNotNull { t -> t.get() }
         }
     }
 
