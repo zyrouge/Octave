@@ -44,22 +44,14 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
                 if (matcher.find()) {
                     val start = matcher.group(1).let {
                         if (it == null) 1
-                        else try {
-                            it.toInt().coerceAtLeast(1)
-                        } catch (e: NumberFormatException) {
-                            context.send().error("Invalid start of range.").queue()
-                            return
-                        }
+                        else it.toIntOrNull()?.coerceAtLeast(1)
+                            ?: return context.send().error("Invalid start of range").queue()
                     }
 
                     val end = matcher.group(2).let {
                         if (it == null) queue.size
-                        else try {
-                            it.toInt().coerceAtMost(queue.size)
-                        } catch (e: NumberFormatException) {
-                            context.send().error("Invalid end of range.").queue()
-                            return
-                        }
+                        else it.toIntOrNull()?.coerceAtMost(queue.size)
+                            ?: return context.send().error("Invalid end of range").queue()
                     }
 
                     for (i in (end downTo start)) {
@@ -71,11 +63,8 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
                 }
 
                 val num = arg.toIntOrNull()
-
-                if (num == null || num !in 1..queue.size) {
-                    context.send().error("That is not a valid track number. Try `1`, `1..${queue.size}`, `first`, or `last`.").queue()
-                    return
-                }
+                    ?.takeIf { it >= 1 && it <= queue.size }
+                    ?: return context.send().error("That is not a valid track number. Try `1`, `1..${queue.size}`, `first`, or `last`.").queue()
 
                 queue.removeAt(num - 1)
             }
