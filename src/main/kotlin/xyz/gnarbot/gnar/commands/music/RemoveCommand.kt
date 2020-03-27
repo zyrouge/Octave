@@ -54,7 +54,7 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
                             ?: return context.send().error("Invalid end of range").queue()
                     }
 
-                    for (i in (end downTo start)) {
+                    for (i in end downTo start) {
                         queue.removeAt(i - 1)
                     }
 
