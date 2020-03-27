@@ -48,7 +48,8 @@ class CleanupCommand : CommandExecutor() {
                 manager.scheduler.queue.removeIf(predicate)
             }
             else -> {
-                val userId = purge.toLong()
+                val userId = purge.toLongOrNull()
+                    ?: return context.send().issue("You need to mention a user, or pass a user ID.").queue()
                 val predicate: (AudioTrack) -> Boolean = { it.getUserData(TrackContext::class.java)?.requester == userId }
                 manager.scheduler.queue.removeIf(predicate)
             }
