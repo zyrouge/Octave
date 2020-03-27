@@ -16,12 +16,10 @@ class DSPFilter(private val player: AudioPlayer) {
         }
 
     // Karaoke properties
-    var karaokeEnable = false
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var kLevel = 1.0f
+    val karaokeEnable: Boolean
+        get() = kLevel > 0.0f
+
+    var kLevel = 0.0f
         set(value) {
             field = value
             applyFilters()
@@ -58,12 +56,10 @@ class DSPFilter(private val player: AudioPlayer) {
         }
 
     // Tremolo properties
-    var tremoloEnable = false
-        set(value) {
-            field = value
-            applyFilters()
-        }
-    var tDepth = 0.5f
+    val tremoloEnable: Boolean
+        get() = tDepth > 0.0f
+
+    var tDepth = 0.0f
         set(value) {
             field = value
             applyFilters()
@@ -140,8 +136,8 @@ class DSPFilter(private val player: AudioPlayer) {
         player.setFilterFactory(null)
 
         bassBoost = BoostSetting.OFF
-        karaokeEnable = false
-        tremoloEnable = false
+        kLevel = 0.0f
+        tDepth = 0.0f
 
         tsPitch = 1.0
         tsRate = 1.0
