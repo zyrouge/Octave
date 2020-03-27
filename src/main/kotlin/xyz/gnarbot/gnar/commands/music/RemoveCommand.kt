@@ -58,7 +58,7 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
                         queue.removeAt(i - 1)
                     }
 
-                    context.send().info("Removed track number `$start..$end` from the queue.").queue()
+                    context.send().info("Removed tracks `$start-$end` from the queue.").queue()
                     return
                 }
 
