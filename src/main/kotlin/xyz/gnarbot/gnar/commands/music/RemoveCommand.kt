@@ -42,6 +42,10 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
 
                 val matcher = pattern.matcher(arg)
                 if (matcher.find()) {
+                    if (matcher.group(1) == null && matcher.group(2) == null) {
+                        return context.send().error("You must specify start range and/or end range.").queue()
+                    }
+
                     val start = matcher.group(1).let {
                         if (it == null) 1
                         else it.toIntOrNull()?.coerceAtLeast(1)
