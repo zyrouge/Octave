@@ -61,6 +61,8 @@ class BotInfoCommand : CommandExecutor() {
                     append("Library: **[JDA ${JDAInfo.VERSION}](${JDAInfo.GITHUB})**\n")
                 }
             }
+
+            footer { "${Thread.activeCount()} threads" }
         }.action().queue()
     }
 }
