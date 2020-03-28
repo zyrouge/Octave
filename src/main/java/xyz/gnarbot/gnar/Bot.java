@@ -121,10 +121,8 @@ public class Bot {
         if (riotApiKey != null)
             apiConfig.setKey(riotApiKey);
 
-        shardManager.retrieveApplicationInfo().queue(su -> {
-            statsPoster = new StatsPoster(su.getId());
-            statsPoster.postEvery(30, TimeUnit.MINUTES);
-        });
+        statsPoster = new StatsPoster("201503408652419073"); // Config option? @Kodehawa
+        statsPoster.postEvery(30, TimeUnit.MINUTES);
 
         riotApi = new RiotApi(new ApiConfig());
 
