@@ -25,12 +25,32 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             context.send().issue("There is already a vote going on!").queue()
             return
         }
-        if (System.currentTimeMillis() - manager.lastVoteTime < context.bot.configuration.voteSkipCooldown.toMillis()) {
-            context.send().issue("You must wait ${context.bot.configuration.voteSkipCooldownText} before starting a new vote.").queue()
+
+        val voteSkipCooldown = if(context.data.music.voteSkipCooldown <= 0) {
+            context.bot.configuration.voteSkipCooldown.toMillis()
+        } else {
+            context.data.music.voteSkipCooldown
+        }
+
+        if (System.currentTimeMillis() - manager.lastVoteTime < voteSkipCooldown) {
+            context.send().issue("You must wait $voteSkipCooldown before starting a new vote.").queue()
             return
         }
-        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= context.bot.configuration.voteSkipDuration.toMillis()) {
-            context.send().issue("By the time the vote finishes in ${context.bot.configuration.voteSkipDurationText}, the song will be over.").queue()
+
+        val voteSkipDuration = if(context.data.music.voteSkipDuration <= 0) {
+            context.bot.configuration.voteSkipDuration.toMillis()
+        } else {
+            context.data.music.voteSkipDuration
+        }
+
+        val voteSkipDurationText = if(context.data.music.voteSkipDuration <= 0) {
+            context.bot.configuration.voteSkipDuration.toMinutes().toString() + " minutes"
+        } else {
+            context.bot.configuration.voteSkipDurationText
+        }
+
+        if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= voteSkipDuration) {
+            context.send().issue("By the time the vote finishes in $voteSkipDurationText, the song will be over.").queue()
             return
         }
 
@@ -53,7 +73,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             it.editMessage(EmbedBuilder(it.embeds[0]).apply {
                 desc { "Voting has ended! Check the newer messages for results." }
                 clearFields()
-            }.build()).queueAfter(context.bot.configuration.voteSkipDuration.seconds, TimeUnit.SECONDS) {
+            }.build()).queueAfter(voteSkipDuration, TimeUnit.MILLISECONDS) {
                 var skip = 0
                 var stay = 0
 

@@ -184,14 +184,26 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                     }
                 }
 
+                val queueLimit = if (context.data.music.maxQueueSize != 0) {
+                    context.data.music.maxQueueSize
+                } else {
+                    bot.configuration.queueLimit
+                }
+
                 if (scheduler.queue.size >= bot.configuration.queueLimit) {
-                    context.send().issue("The queue can not exceed ${bot.configuration.queueLimit} songs.").queue()
+                    context.send().issue("The queue can not exceed $queueLimit songs.").queue()
                     return
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    if (track.duration > bot.configuration.durationLimit.toMillis()) {
-                        context.send().issue("The track can not exceed ${bot.configuration.durationLimitText}.").queue()
+                    val durationLimit = if(context.data.music.maxSongLength <= 0) {
+                        context.data.music.maxSongLength
+                    } else {
+                        bot.configuration.durationLimit.toMillis()
+                    }
+
+                    if (track.duration > durationLimit) {
+                        context.send().issue("The track can not exceed ${durationLimit}.").queue()
                         return
                     }
                 }
@@ -210,6 +222,12 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                 if (playlist.isSearchResult) {
                     trackLoaded(playlist.tracks.first())
                     return
+                }
+
+                val queueLimit = if(context.data.music.maxQueueSize != 0) {
+                    context.data.music.maxQueueSize
+                } else {
+                    bot.configuration.queueLimit
                 }
 
                 if (!getGuild()?.selfMember!!.voiceState!!.inVoiceChannel()) {
@@ -233,7 +251,7 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
 
                 var added = 0
                 for (track in tracks) {
-                    if (scheduler.queue.size + 1 >= bot.configuration.queueLimit) {
+                    if (scheduler.queue.size + 1 >= queueLimit) {
                         ignored = tracks.size - added
                         break
                     }
