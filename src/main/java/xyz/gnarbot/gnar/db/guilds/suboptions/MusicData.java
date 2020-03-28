@@ -11,11 +11,31 @@ public class MusicData {
     private Set<String> musicChannels;
     private int volume = 100;
     private boolean announce = true;
+    private int maxQueueSize;
+    private long maxSongLength;
+    private long voteSkipCooldown;
+    private long voteSkipDuration;
 
     @NotNull
     public final Set<String> getChannels() {
         if (musicChannels == null) musicChannels = new HashSet<>();
         return musicChannels;
+    }
+
+    public int getMaxQueueSize() {
+        return maxQueueSize;
+    }
+
+    public void setMaxQueueSize(int maxQueueSize) {
+        this.maxQueueSize = maxQueueSize;
+    }
+
+    public void setMaxSongLength(long maxSongLength) {
+        this.maxSongLength = maxSongLength;
+    }
+
+    public long getMaxSongLength() {
+        return maxSongLength;
     }
 
     public int getVolume() {
@@ -32,5 +52,21 @@ public class MusicData {
 
     public void setAnnounce(boolean announce) {
         this.announce = announce;
+    }
+
+    public long getVoteSkipCooldown() {
+        return voteSkipCooldown;
+    }
+
+    public void setVoteSkipCooldown(long voteSkipCooldown) {
+        this.voteSkipCooldown = voteSkipCooldown;
+    }
+
+    public long getVoteSkipDuration() {
+        return voteSkipDuration;
+    }
+
+    public void setVoteSkipDuration(long voteSkipDuration) {
+        this.voteSkipDuration = voteSkipDuration;
     }
 }

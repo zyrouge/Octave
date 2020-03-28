@@ -22,7 +22,11 @@ class SettingsDelegateCommand : CommandExecutor() {
             "autodelete" to AutoDeleteCommand(),
             "music" to MusicSettingsCommand(),
             "prefix" to PrefixCommand(),
-            "djrole" to DJRoleCommand()
+            "djrole" to DJRoleCommand(),
+            "queuesize" to QueueSizeCommand(),
+            "songlength" to SongLengthCommand(),
+            "voteskipcooldown" to VoteSkipCooldownCommand(),
+            "voteskipduration" to VoteSkipDurationCommand()
     )
 
     override fun execute(context: Context, label: String, args: Array<String>) {
