@@ -21,15 +21,7 @@ class SettingsDelegateCommand : CommandExecutor() {
             "commands" to ManageCommandsCommand(),
             "autodelete" to AutoDeleteCommand(),
             "music" to MusicSettingsCommand(),
-            "prefix" to PrefixCommand(),
-            "djrole" to DJRoleCommand(),
-            "queuesize" to QueueSizeCommand(),
-            "songlength" to SongLengthCommand(),
-            "voteskipcooldown" to VoteSkipCooldownCommand(),
-            "voteskipduration" to VoteSkipDurationCommand(),
-            "votequeue" to VoteQueueCommand(),
-            "voteplaycooldown" to VoteQueueCooldownCommand(),
-            "voteplayduration" to VoteQueueDurationCommand()
+            "prefix" to PrefixCommand()
     )
 
     override fun execute(context: Context, label: String, args: Array<String>) {

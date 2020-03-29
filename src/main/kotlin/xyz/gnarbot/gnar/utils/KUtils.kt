@@ -58,6 +58,14 @@ fun parseDuration(input: String): Long {
 
 }
 
+fun getDisplayValue(ms: Long): String {
+    val duration = Duration.ofMillis(ms)
+    val minutes = duration.toMinutes()
+    val seconds = duration.minusMinutes(minutes).seconds
+
+    return "$minutes minutes $seconds seconds"
+}
+
 private fun getUnits(s: String): String {
     var i = s.length - 1
     while (i >= 0) {

@@ -6,6 +6,7 @@ import xyz.gnarbot.gnar.music.MusicLimitException
 import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
 import xyz.gnarbot.gnar.utils.desc
+import xyz.gnarbot.gnar.utils.getDisplayValue
 import java.util.concurrent.TimeUnit
 
 @Command(
@@ -126,16 +127,16 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            val voteSkipDuration = if(context.data.music.votePlayDuration <= 0) {
-                context.bot.configuration.votePlayDuration.toMillis()
-            } else {
+            val voteSkipDuration = if(context.data.music.votePlayDuration == 0L) {
                 context.data.music.votePlayDuration
+            } else {
+                context.bot.configuration.votePlayDuration.toMillis()
             }
 
-            val voteSkipDurationText = if(context.data.music.votePlayDuration <= 0) {
-                context.bot.configuration.votePlayDuration.toMinutes().toString() + " minutes"
-            } else {
+            val voteSkipDurationText = if(context.data.music.votePlayDuration == 0L) {
                 context.bot.configuration.votePlayDurationText
+            } else {
+                getDisplayValue(context.data.music.votePlayDuration)
             }
 
             manager.lastPlayVoteTime = System.currentTimeMillis()

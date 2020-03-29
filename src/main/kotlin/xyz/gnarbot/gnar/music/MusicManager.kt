@@ -17,6 +17,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.music.embedTitle
 import xyz.gnarbot.gnar.commands.music.embedUri
+import xyz.gnarbot.gnar.utils.getDisplayValue
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -206,8 +207,14 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                         context.data.music.maxSongLength
                     }
 
+                    val durationLimitText = if(context.data.music.maxSongLength == 0L) {
+                        bot.configuration.durationLimitText
+                    } else {
+                        getDisplayValue(context.data.music.votePlayDuration)
+                    }
+
                     if (track.duration > durationLimit) {
-                        context.send().issue("The track can not exceed ${durationLimit}.").queue()
+                        context.send().issue("The track can not exceed ${durationLimitText}.").queue()
                         return
                     }
                 }

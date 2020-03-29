@@ -13,7 +13,6 @@ import xyz.gnarbot.gnar.commands.music.search.PlayCommand;
 import xyz.gnarbot.gnar.commands.music.search.SoundcloudCommand;
 import xyz.gnarbot.gnar.commands.music.search.YoutubeCommand;
 import xyz.gnarbot.gnar.commands.polls.PollCommand;
-import xyz.gnarbot.gnar.commands.settings.PruneCommand;
 import xyz.gnarbot.gnar.commands.settings.SettingsDelegateCommand;
 
 import java.util.LinkedHashMap;
@@ -50,7 +49,6 @@ public class CommandRegistry {
         //End General Commands
 
         //Mod Commands
-        register(new PruneCommand());
         register(new SettingsDelegateCommand());
         //End Mod Commands
 
