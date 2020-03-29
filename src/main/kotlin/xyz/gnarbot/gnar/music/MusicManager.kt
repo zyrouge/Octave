@@ -201,9 +201,9 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
                     val durationLimit = if(context.data.music.maxSongLength == 0L) {
-                        context.data.music.maxSongLength
-                    } else {
                         bot.configuration.durationLimit.toMillis()
+                    } else {
+                        context.data.music.maxSongLength
                     }
 
                     if (track.duration > durationLimit) {
