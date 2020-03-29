@@ -235,7 +235,7 @@ class MusicSettingsCommand : CommandTemplate() {
         context.send().info("Successfully set vote play duration to $content.").queue()
     }
 
-    @Description("Changes the vote skip duration.")
+    @Description("Changes the vote skip cooldown.")
     fun voteskip_cooldown(context: Context, content: String) {
         if (content == "reset") {
             context.data.music.voteSkipCooldown = 0
