@@ -55,7 +55,7 @@ public class Bot {
     private final EventWaiter eventWaiter;
     private final ShardManager shardManager;
     private final SoundManager soundManager;
-    private StatsPoster statsPoster;
+    final StatsPoster statsPoster;
     private Configuration configuration;
     private StatsDClient statsDClient = new NonBlockingStatsDClient("statsd", "localhost", 8125);
 
