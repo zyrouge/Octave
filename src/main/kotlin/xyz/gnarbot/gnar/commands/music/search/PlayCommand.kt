@@ -1,9 +1,12 @@
 package xyz.gnarbot.gnar.commands.music.search
 
-import org.jetbrains.kotlin.backend.common.onlyIf
+import net.dv8tion.jda.api.EmbedBuilder
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.music.MusicLimitException
+import xyz.gnarbot.gnar.music.MusicManager
 import xyz.gnarbot.gnar.music.TrackContext
+import xyz.gnarbot.gnar.utils.desc
+import java.util.concurrent.TimeUnit
 
 @Command(
         aliases = ["play", "p"],
@@ -16,8 +19,6 @@ import xyz.gnarbot.gnar.music.TrackContext
         category = Category.MUSIC
 )
 class PlayCommand : CommandExecutor() {
-    private val footnote = "You can search and pick results using ${config.prefix}youtube or ${config.prefix}soundcloud while in a channel."
-
     override fun execute(context: Context, label: String, args: Array<String>) {
         val botChannel = context.selfMember.voiceState?.channel
         val userChannel = context.voiceChannel
@@ -26,9 +27,9 @@ class PlayCommand : CommandExecutor() {
             context.send().issue("The bot is already playing music in another channel.").queue()
             return
         }
+        val manager = context.bot.players.getExisting(context.guild)
 
         if (args.isEmpty()) {
-            val manager = context.bot.players.getExisting(context.guild)
             if (manager == null) {
                 context.send().issue("There's no music player in this guild.\n" +
                         "\uD83C\uDFB6` ${config.prefix}play (song/url)` to start playing some music!").queue()
@@ -54,9 +55,17 @@ class PlayCommand : CommandExecutor() {
             return
         }
 
-        if ("https://" in args[0] || "http://" in args[0]) {
-            val link = args[0].removePrefix("<").removeSuffix(">")
+        if(context.data.music.isVotePlay) {
+            startPlayVote(context, manager, args, false, "")
+            return
+        }
 
+        play(context, args, false, "")
+    }
+
+    companion object {
+        fun play(context: Context, args: Array<String>, isSearchResult: Boolean, uri: String) {
+            val config = context.bot.configuration
             val manager = try {
                 context.bot.players.get(context.guild)
             } catch (e: MusicLimitException) {
@@ -64,48 +73,117 @@ class PlayCommand : CommandExecutor() {
                 return
             }
 
-            manager.loadAndPlay(
-                    context,
-                    link,
-                    TrackContext(
-                            context.member.user.idLong,
-                            context.textChannel.idLong
-                    ),
-                    footnote
-            )
-        } else {
-            if (!context.bot.configuration.searchEnabled) {
-                context.send().issue("Search is currently disabled. Try direct links instead.").queue()
-                return
-            }
+            if ("https://" in args[0] || "http://" in args[0]) {
+                val link = args[0].removePrefix("<").removeSuffix(">")
 
-            val query = args.joinToString(" ").trim()
-
-//            context.bot.players.get(context.guild).search("ytsearch:$query", 1) { results ->
-//                if (results.isEmpty()) {
-//                    context.send().issue("No YouTube results returned for `${query.replace('+', ' ')}`.").queue()
-//                    return@search
-//                }
-//
-//                val result = results[0]
-
-                val manager = try {
-                    context.bot.players.get(context.guild)
-                } catch (e: MusicLimitException) {
-                    e.sendToContext(context)
+                manager.loadAndPlay(
+                        context,
+                        link,
+                        TrackContext(
+                                context.member.user.idLong,
+                                context.textChannel.idLong
+                        ), "You can search and pick results using ${config.prefix}youtube or ${config.prefix}soundcloud while in a channel.")
+            } else if (isSearchResult) { //As in, it comes from SoundcloudCommand or YoutubeCommand
+                manager.loadAndPlay(
+                        context,
+                        uri,
+                        TrackContext(
+                                context.member.user.idLong,
+                                context.textChannel.idLong
+                        )
+                )
+            } else {
+                if (!context.bot.configuration.searchEnabled) {
+                    context.send().issue("Search is currently disabled. Try direct links instead.").queue()
                     return
                 }
 
+                val query = args.joinToString(" ").trim()
                 manager.loadAndPlay(
                         context,
                         "ytsearch:$query",
                         TrackContext(
                                 context.member.user.idLong,
                                 context.textChannel.idLong
-                        ),
-                        footnote
-                )
-//            }
+                        ), "You can search and pick results using ${config.prefix}youtube or ${config.prefix}soundcloud while in a channel.")
+            }
+        }
+
+        fun startPlayVote(context: Context, manager: MusicManager?, args: Array<String>, isSearchResult: Boolean, uri: String) {
+            if (manager!!.isVotingToPlay) {
+                context.send().issue("There is already a vote going on!").queue()
+                return
+            }
+
+            val voteSkipCooldown = if(context.data.music.votePlayCooldown <= 0) {
+                context.bot.configuration.votePlayCooldown.toMillis()
+            } else {
+                context.data.music.votePlayCooldown
+            }
+
+            if (System.currentTimeMillis() - manager.lastPlayVoteTime < voteSkipCooldown) {
+                context.send().issue("You must wait $voteSkipCooldown before starting a new vote.").queue()
+                return
+            }
+
+            val voteSkipDuration = if(context.data.music.votePlayDuration <= 0) {
+                context.bot.configuration.votePlayDuration.toMillis()
+            } else {
+                context.data.music.votePlayDuration
+            }
+
+            val voteSkipDurationText = if(context.data.music.votePlayDuration <= 0) {
+                context.bot.configuration.votePlayDuration.toMinutes().toString() + " minutes"
+            } else {
+                context.bot.configuration.votePlayDurationText
+            }
+
+            manager.lastPlayVoteTime = System.currentTimeMillis()
+            manager.isVotingToPlay = true
+
+            context.send().embed("Play Vote") {
+                desc {
+                    buildString {
+                        append(context.message.author.asMention)
+                        append(" has voted to **play** this track!")
+                        append(" React with :thumbsup: or :thumbsdown:\n")
+                        append("Whichever has the most votes in $voteSkipDurationText will win!")
+                    }
+                }
+            }.action().queue {
+                it.addReaction("👍").queue()
+                it.addReaction("👎").queue()
+
+                it.editMessage(EmbedBuilder(it.embeds[0]).apply {
+                    desc { "Voting has ended! Check the newer messages for results." }
+                    clearFields()
+                }.build()).queueAfter(voteSkipDuration, TimeUnit.MILLISECONDS) {
+                    var skip = 0
+                    var stay = 0
+
+                    it.reactions.forEach {
+                        if (it.reactionEmote.name == "👍") skip = it.count - 1
+                        if (it.reactionEmote.name == "👎") stay = it.count - 1
+                    }
+
+                    context.send().embed("Vote Play") {
+                        desc {
+                            buildString {
+                                if (skip > stay) {
+                                    appendln("The vote has passed! The song will be queued!")
+                                    play(context, args, isSearchResult, uri)
+                                } else {
+                                    appendln("The vote has failed! The song will not be queued.")
+                                }
+                            }
+                        }
+                        field("Results") {
+                            "__$skip Play Votes__ — __$stay No Play Votes__"
+                        }
+                    }.action().queue()
+                    manager.isVotingToPlay = false
+                }
+            }
         }
     }
 }

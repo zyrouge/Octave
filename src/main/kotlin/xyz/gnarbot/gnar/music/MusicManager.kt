@@ -69,6 +69,10 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
      */
     var isVotingToSkip = false
 
+    var isVotingToPlay = false;
+
+    var lastPlayVoteTime: Long = 0L
+
     val currentRequestChannel: TextChannel?
         get() {
             return (player.playingTrack ?: scheduler.lastTrack)
