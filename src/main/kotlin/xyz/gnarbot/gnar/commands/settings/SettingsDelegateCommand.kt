@@ -26,7 +26,10 @@ class SettingsDelegateCommand : CommandExecutor() {
             "queuesize" to QueueSizeCommand(),
             "songlength" to SongLengthCommand(),
             "voteskipcooldown" to VoteSkipCooldownCommand(),
-            "voteskipduration" to VoteSkipDurationCommand()
+            "voteskipduration" to VoteSkipDurationCommand(),
+            "votequeue" to VoteQueueCommand(),
+            "voteplaycooldown" to VoteQueueCooldownCommand(),
+            "voteplayduration" to VoteQueueDurationCommand()
     )
 
     override fun execute(context: Context, label: String, args: Array<String>) {

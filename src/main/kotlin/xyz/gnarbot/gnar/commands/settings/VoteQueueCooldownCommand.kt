@@ -6,17 +6,17 @@ import xyz.gnarbot.gnar.commands.template.parser.Parsers
 import java.time.Duration
 
 @Command(
-        aliases = ["voteskipduration"],
+        aliases = ["voteplaycooldown"],
         usage = "30 minutes 20 seconds",
-        description = "Sets the voteskip cooldown."
+        description = "Sets the vote play cooldown."
 )
 @BotInfo(
-        id = 9342,
+        id = 9349,
         category = Category.SETTINGS,
         scope = Scope.TEXT,
         permissions = [Permission.MANAGE_SERVER]
 )
-class VoteSkipDurationCommand : CommandExecutor() {
+class VoteQueueCooldownCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<out String>) {
         if (args.isEmpty()) {
             context.bot.commandDispatcher.sendHelp(context, info)
@@ -24,10 +24,10 @@ class VoteSkipDurationCommand : CommandExecutor() {
         }
 
         if (args[0] == "reset") {
-            context.data.music.voteSkipDuration = 0
+            context.data.music.votePlayCooldown = 0
             context.data.save()
 
-            context.send().info("Reset voteskip duration.")
+            context.send().info("Reset vote play cooldown.")
             return
         }
 
@@ -38,13 +38,13 @@ class VoteSkipDurationCommand : CommandExecutor() {
             return
         }
 
-        if(amount > config.voteSkipDuration) {
-            context.send().error("This is too much. The limit is ${config.voteSkipDurationText}.")
+        if(amount > config.votePlayCooldown) {
+            context.send().error("This is too much. The limit is ${config.votePlayCooldownText}.")
             return
         }
 
-        context.data.music.voteSkipDuration = amount.toMillis()
+        context.data.music.votePlayCooldown = amount.toMillis()
         context.data.save()
-        context.send().info("Successfully set vote skip duration to ${args[0]}.")
+        context.send().info("Successfully set vote play cooldown to ${args[0]}.")
     }
 }
