@@ -15,12 +15,10 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.util.EntityUtils
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
-import xyz.gnarbot.gnar.music.sources.spotify.loaders.SpotifyPlaylistLoader
 import xyz.gnarbot.gnar.music.sources.spotify.loaders.SpotifyTrackLoader
 import java.io.DataInput
 import java.io.DataOutput
 import java.util.*
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -30,8 +28,6 @@ class SpotifyAudioSourceManager(
     private val youtubeAudioSourceManager: YoutubeAudioSourceManager
 ) : AudioSourceManager {
     private val sched = Executors.newSingleThreadScheduledExecutor()
-    private val trackLoaderPool = Executors.newFixedThreadPool(10)
-
     private val httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager()!!
     internal var accessToken: String = ""
         private set
@@ -99,23 +95,6 @@ class SpotifyAudioSourceManager(
         return youtubeAudioSourceManager.loadItem(manager, reference)
     }
 
-    internal fun queueYoutubeSearch(manager: DefaultAudioPlayerManager, identifier: String): CompletableFuture<AudioItem?> {
-        val future = CompletableFuture<AudioItem?>()
-
-        trackLoaderPool.submit {
-            val reference = AudioReference(identifier, null)
-
-            try {
-                val result = youtubeAudioSourceManager.loadItem(manager, reference)
-                future.complete(result)
-            } catch (e: Exception) {
-                future.completeExceptionally(e)
-            }
-        }
-
-        return future
-    }
-
 
     /**
      * Spotify shizzle
@@ -174,8 +153,8 @@ class SpotifyAudioSourceManager(
         private val log = LoggerFactory.getLogger(SpotifyAudioSourceManager::class.java)
 
         private val loaders = listOf(
-            SpotifyTrackLoader(),
-            SpotifyPlaylistLoader()
+            SpotifyTrackLoader()
+            //SpotifyPlaylistLoader()
         )
     }
 

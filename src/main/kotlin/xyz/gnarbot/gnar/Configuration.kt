@@ -32,13 +32,6 @@ class Configuration(file: File) {
     val voteSkipDurationText: String = config["music", "vote skip duration"].getString("20 seconds")
     val voteSkipDuration: Duration = voteSkipDurationText.toDuration()
 
-    val votePlayCooldownText: String = config["music", "vote play cooldown"].getString("35 seconds")
-    val votePlayCooldown: Duration = voteSkipCooldownText.toDuration()
-
-    val votePlayDurationText: String = config["music", "vote play duration"].getString("20 seconds")
-    val votePlayDuration: Duration = voteSkipDurationText.toDuration()
-
-
     val ipv6Block: String = config["bot", "ipv6block"].getString(null)
     val ipv6Exclude: String = config["bot", "ipv6Exclude"].getString(null)
 

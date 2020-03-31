@@ -84,11 +84,14 @@ class SoundcloudCommand : xyz.gnarbot.gnar.commands.CommandExecutor() {
                                     return@addOption
                                 }
 
-                                if(context.data.music.isVotePlay) {
-                                    PlayCommand.startPlayVote(context, manager, args, true, result.info.uri)
-                                } else {
-                                    PlayCommand.play(context, args, true, result.info.uri)
-                                }
+                                manager.loadAndPlay(
+                                        context,
+                                        result.info.uri,
+                                        TrackContext(
+                                                context.member.user.idLong,
+                                                context.textChannel.idLong
+                                        )
+                                )
                             } else {
                                 context.send().issue("You're not in a voice channel anymore!").queue()
                             }

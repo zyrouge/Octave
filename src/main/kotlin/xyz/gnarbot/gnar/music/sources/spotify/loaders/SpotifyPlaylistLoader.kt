@@ -2,7 +2,6 @@ package xyz.gnarbot.gnar.music.sources.spotify.loaders
 
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.track.AudioItem
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.BasicAudioPlaylist
 import org.apache.http.HttpStatus
@@ -19,7 +18,7 @@ class SpotifyPlaylistLoader : Loader {
     override fun load(manager: DefaultAudioPlayerManager, sourceManager: SpotifyAudioSourceManager, matcher: Matcher): AudioItem {
         val playlistId = matcher.group(1)
         val playlistInfo = fetchPlaylistInfo(sourceManager, playlistId)
-        val playlistTracks = fetchPlaylistTracks(manager, sourceManager, playlistId)
+        val playlistTracks = fetchPlaylistTracks(sourceManager, playlistId)
         val playlistName = playlistInfo.optString("name")
 
         return BasicAudioPlaylist(playlistName, playlistTracks, null, false)
@@ -38,8 +37,7 @@ class SpotifyPlaylistLoader : Loader {
         }
     }
 
-    private fun fetchPlaylistTracks(manager: DefaultAudioPlayerManager,
-                                    sourceManager: SpotifyAudioSourceManager, playlistId: String): List<AudioTrack> {
+    private fun fetchPlaylistTracks(sourceManager: SpotifyAudioSourceManager, playlistId: String): List<AudioTrack> {
         return sourceManager.request("https://api.spotify.com/v1/playlists/$playlistId/tracks") {
             addHeader("Authorization", "Bearer ${sourceManager.accessToken}")
         }.use {
@@ -61,10 +59,7 @@ class SpotifyPlaylistLoader : Loader {
                 val track = (jTrack as JSONObject).getJSONObject("track")
                 val title = track.getString("name")
                 val artist = track.getJSONArray("artists").getJSONObject(0).getString("name")
-
-                val task = sourceManager.queueYoutubeSearch(manager, "ytsearch:$title $artist")
-                    .thenApply { ai -> if (ai is AudioPlaylist) ai.tracks.first() else ai as AudioTrack }
-                tasks.add(task)
+                //tasks.add(search("$title $artist"))
             }
 
             try {
@@ -73,12 +68,12 @@ class SpotifyPlaylistLoader : Loader {
             }
 
             tasks.filterNot { t -> t.isCompletedExceptionally }
-                .mapNotNull { t -> t.get() }
+                .map { t -> t.get() }
         }
     }
 
     companion object {
-        private val PLAYLIST_PATTERN = "^https?://(?:open\\.)?spotify\\.com/(?:user/[a-zA-Z0-9_]+/)?playlist/([a-zA-Z0-9]+)".toPattern()
+        private val PLAYLIST_PATTERN = "^https?://(?:open\\.)?spotify\\.com/(?:user/[a-zA-Z0-9_]+/)?playlist/([a-zA-Z0-9]+).*".toPattern()
     }
 
 }

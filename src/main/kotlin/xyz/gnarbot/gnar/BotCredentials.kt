@@ -9,7 +9,6 @@ class BotCredentials(file: File) {
 
     private val config = loader.load()
 
-    /* Discord */
     val token = config["token"].string.takeIf { !it.isNullOrBlank() }
             ?: error("Bot token can't be null or blank.")
 
@@ -22,31 +21,26 @@ class BotCredentials(file: File) {
 
     val webHookURL: String? = config["webhook url"].string
 
-    /* Bot Lists */
     val carbonitex: String? = config["server counts", "carbonitex"].string
-    val topGg: String? = config["server counts", "discordbots"].string
-    val botsGg: String? = config["server counts", "botsgg"].string
-    val botsForDiscord: String? = config["server counts", "bfd"].string
-    val botsOnDiscord: String? = config["server counts", "bod"].string
+    val discordBots: String? = config["server counts", "discordbots"].string
 
-    /* External APIs */
     val cat: String? = config["cat"].string
     val imgFlip: String? = config["imgflip"].string
     val mashape: String? = config["mashape"].string
-    val weebSh: String? = config["weebsh"].string
-    val riotAPIKey: String? = config["riot", "apiKey"].string
-    val patreonToken: String? = config["patreon", "token"].string
 
-    /* MyAnimeList */
     val malUsername: String? = config["mal credentials", "username"].string
     val malPassword: String? = config["mal credentials", "password"].string
 
-    /* Audio */
     val spotifyClientId: String? = config["spotify", "clientid"].string
     val spotifyClientSecret: String? = config["spotify", "clientsecret"].string
+
+    val weebSh: String? = config["weebsh"].string
     val discordFM: String? = config["discordfm"].string
 
-    /* Database */
+    val patreonToken: String? = config["patreon", "token"].string
+
+    val riotAPIKey: String? = config["riot", "apiKey"].string
+
     val databaseURL: String? = config["db", "url"].string
     val databaseUsername: String? = config["db", "username"].string
     val databasePassword: String? = config["db", "password"].string

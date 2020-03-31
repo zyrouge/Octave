@@ -1,25 +1,19 @@
 package xyz.gnarbot.gnar.music
 
+import com.github.natanbc.lavadsp.karaoke.KaraokePcmAudioFilter
+import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter
+import com.github.natanbc.lavadsp.tremolo.TremoloPcmAudioFilter
 import com.sedmelluq.discord.lavaplayer.filter.AudioFilter
-import com.sedmelluq.discord.lavaplayer.filter.FloatPcmAudioFilter
-import com.sedmelluq.discord.lavaplayer.filter.UniversalPcmAudioFilter
-import com.sedmelluq.discord.lavaplayer.format.AudioDataFormat
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
-import xyz.gnarbot.gnar.music.filters.*
 
 class DSPFilter(private val player: AudioPlayer) {
-    // Equalizer properties
-    var bassBoost = BoostSetting.OFF
+    // Karaoke properties
+    var karaokeEnable = false
         set(value) {
             field = value
             applyFilters()
         }
-
-    // Karaoke properties
-    val karaokeEnable: Boolean
-        get() = kLevel > 0.0f
-
-    var kLevel = 0.0f
+    var kLevel = 1.0f
         set(value) {
             field = value
             applyFilters()
@@ -56,10 +50,12 @@ class DSPFilter(private val player: AudioPlayer) {
         }
 
     // Tremolo properties
-    val tremoloEnable: Boolean
-        get() = tDepth > 0.0f
-
-    var tDepth = 0.0f
+    var tremoloEnable = false
+        set(value) {
+            field = value
+            applyFilters()
+        }
+    var tDepth = 0.5f
         set(value) {
             field = value
             applyFilters()
@@ -70,78 +66,43 @@ class DSPFilter(private val player: AudioPlayer) {
             applyFilters()
         }
 
-    fun buildFilters(configs: List<FilterConfig<*>>, format: AudioDataFormat,
-                     output: UniversalPcmAudioFilter): List<AudioFilter> {
-        if (configs.isEmpty()) {
-            return emptyList()
-        }
-
-        val filters = mutableListOf<FloatPcmAudioFilter>()
-
-        for (filter in configs) { // Last filter writes to output.
-            val built = if (filters.isEmpty()) { // First (read: last) filter
-                filter.build(output, format)
-            } else {
-                filter.build(filters.last(), format)
-            }
-            filters.add(built)
-        }
-
-        return filters.reversed()
-    }
-
     fun applyFilters() {
+        // TODO: Support bass boost
         player.setFilterFactory { _, format, output ->
-            val filterConfigs = mutableListOf<FilterConfig<*>>()
+            val filters = mutableListOf<AudioFilter>()
 
             if (karaokeEnable) {
-                val config = KaraokeFilter().configure {
+                val filter = KaraokePcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
                     level = kLevel
                     filterBand = kFilterBand
                     filterWidth = kFilterWidth
                 }
-                filterConfigs.add(config)
+                filters.add(filter)
             }
 
             if (timescaleEnable) {
-                val config = TimescaleFilter().configure {
+                val filter = TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
                     pitch = tsPitch
                     speed = tsSpeed
                     rate = tsRate
                 }
-                filterConfigs.add(config)
+                filters.add(filter)
             }
 
             if (tremoloEnable) {
-                val config = TremoloFilter().configure {
+                val filter = TremoloPcmAudioFilter(output, format.channelCount, format.sampleRate).apply {
                     depth = tDepth
                     frequency = tFrequency
                 }
-                filterConfigs.add(config)
+                filters.add(filter)
             }
 
-            if (bassBoost != BoostSetting.OFF) {
-                val config = EqualizerFilter().configure {
-                    setGain(0, bassBoost.band1)
-                    setGain(1, bassBoost.band2)
-                }
-                filterConfigs.add(config)
-            }
-
-            return@setFilterFactory buildFilters(filterConfigs, format, output)
+            return@setFilterFactory filters.toList()
         }
     }
 
     fun clearFilters() {
         player.setFilterFactory(null)
-
-        bassBoost = BoostSetting.OFF
-        kLevel = 0.0f
-        tDepth = 0.0f
-
-        tsPitch = 1.0
-        tsRate = 1.0
-        tsSpeed = 1.0
     }
 
 }

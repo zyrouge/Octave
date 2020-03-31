@@ -20,7 +20,7 @@ public class DiscordBotsVotes {
 
     public DiscordBotsVotes(Bot bot, ScheduledExecutorService executor) {
         this.executor = executor;
-        String auth = bot.getCredentials().getTopGg();
+        String auth = bot.getCredentials().getDiscordBots();
         if (auth != null) {
             Request request = new Request.Builder()
                     .url("https://discordbots.org/api/bots/201503408652419073/votes?onlyids=true")
