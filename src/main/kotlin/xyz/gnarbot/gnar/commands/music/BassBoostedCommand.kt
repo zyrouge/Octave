@@ -1,6 +1,7 @@
 package xyz.gnarbot.gnar.commands.music
 
 import xyz.gnarbot.gnar.commands.*
+import xyz.gnarbot.gnar.music.BoostSetting
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
@@ -29,21 +30,12 @@ class BassBoostedCommand : MusicCommandExecutor(true, true, true) {
         val query = args[0].toLowerCase()
 
         when (query) {
-            "off" -> manager.disableBass()
-            "soft" -> manager.boostBass(MusicManager.Companion.BoostSetting.SOFT)
-            "hard" -> manager.boostBass(MusicManager.Companion.BoostSetting.HARD)
-            "extreme" -> manager.boostBass(MusicManager.Companion.BoostSetting.EXTREME)
-            "earrape" -> manager.boostBass(MusicManager.Companion.BoostSetting.EARRAPE)
-
-//            "soft" -> manager.boostBass(0.25F, 0.15F)
-//            "hard" -> manager.boostBass(0.50F, 0.25F)
-//            "extreme" -> manager.boostBass(0.75F, 0.50F)
-//            "earrape" -> manager.boostBass(1F, 0.75F)
-
-            else -> {
-                context.send().issue("$query is not an option.").queue()
-                return
-            }
+            "off" -> manager.dspFilter.bassBoost = BoostSetting.OFF
+            "soft" -> manager.dspFilter.bassBoost = BoostSetting.SOFT
+            "hard" -> manager.dspFilter.bassBoost = BoostSetting.HARD
+            "extreme" -> manager.dspFilter.bassBoost = BoostSetting.EXTREME
+            "earrape" -> manager.dspFilter.bassBoost = BoostSetting.EARRAPE
+            else -> return context.send().issue("$query is not an option.").queue()
         }
 
         context.send().embed {

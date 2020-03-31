@@ -56,6 +56,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
 
         manager.lastVoteTime = System.currentTimeMillis()
         manager.isVotingToSkip = true
+        val halfPeople = (context.selfMember.voiceState!!.channel!!.members.count() / 2 + 1)
 
         context.send().embed("Vote Skip") {
             desc {
@@ -63,7 +64,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                     append(context.message.author.asMention)
                     append(" has voted to **skip** the current track!")
                     append(" React with :thumbsup: or :thumbsdown:\n")
-                    append("Whichever has the most votes in ${context.bot.configuration.voteSkipDurationText} will win!")
+                    append("Whichever has the most votes in ${context.bot.configuration.voteSkipDurationText} will win! This requires at least half of the people on the VC to vote to skip.")
                 }
             }
         }.action().queue {
@@ -85,7 +86,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                 context.send().embed("Vote Skip") {
                     desc {
                         buildString {
-                            if (skip > stay) {
+                            if (skip > halfPeople) {
                                 appendln("The vote has passed! The song has been skipped.")
                                 manager.scheduler.nextTrack()
                             } else {

@@ -5,7 +5,7 @@ import xyz.gnarbot.gnar.commands.music.MusicCommandExecutor
 import xyz.gnarbot.gnar.music.MusicManager
 
 @Command(
-        aliases = ["stop", "leave", "end"],
+        aliases = ["stop", "leave", "end", "st"],
         description = "Stop and clear the music player."
 )
 @BotInfo(

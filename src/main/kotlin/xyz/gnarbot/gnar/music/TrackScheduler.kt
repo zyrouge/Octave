@@ -76,12 +76,23 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         }
     }
 
-    override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long) {
+    override fun onTrackStuck(player: AudioPlayer, track: AudioTrack, thresholdMs: Long, stackTrace: Array<out StackTraceElement>) {
         track.getUserData(TrackContext::class.java).requestedChannel.let {
             manager.getGuild()?.getTextChannelById(it)
         }?.respond()?.error(
                 "The track ${track.info.embedTitle} is stuck longer than ${thresholdMs}ms threshold."
         )?.queue()
+
+        val exc = buildString {
+            append("AudioTrack (id: ${track.info.identifier}) surpassed stuck threshold $thresholdMs\n")
+            for (line in stackTrace) {
+                append(line.toString())
+                append("\n")
+            }
+        }
+
+        Sentry.capture(exc)
+        nextTrack()
     }
 
     override fun onTrackException(player: AudioPlayer, track: AudioTrack, exception: FriendlyException) {

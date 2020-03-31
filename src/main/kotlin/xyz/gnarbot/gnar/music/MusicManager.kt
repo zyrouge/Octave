@@ -17,6 +17,7 @@ import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.Context
 import xyz.gnarbot.gnar.commands.music.embedTitle
 import xyz.gnarbot.gnar.commands.music.embedUri
+import xyz.gnarbot.gnar.utils.getDisplayValue
 import xyz.gnarbot.gnar.utils.response.respond
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
@@ -46,10 +47,6 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
     @Volatile
     private var leaveTask: Future<*>? = null
 
-    private var equalizer: EqualizerFactory = EqualizerFactory()
-
-    private var equalizerEnabled = false
-
     /** @return Audio player for the guild. */
     val player: AudioPlayer = playerManager.createPlayer().also {
         it.volume = bot.options.ofGuild(getGuild()).music.volume
@@ -73,8 +70,9 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
      */
     var isVotingToSkip = false
 
-    var boostSetting = BoostSetting.OFF
-        private set
+    var isVotingToPlay = false;
+
+    var lastPlayVoteTime: Long = 0L
 
     val currentRequestChannel: TextChannel?
         get() {
@@ -91,8 +89,7 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
 
     fun destroy() {
         player.destroy()
-        //dspFilter.clearFilters()
-        disableBass()
+        dspFilter.clearFilters()
         closeAudioConnection()
     }
 
@@ -204,14 +201,20 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    val durationLimit = if(context.data.music.maxSongLength <= 0) {
-                        context.data.music.maxSongLength
-                    } else {
+                    val durationLimit = if(context.data.music.maxSongLength == 0L) {
                         bot.configuration.durationLimit.toMillis()
+                    } else {
+                        context.data.music.maxSongLength
+                    }
+
+                    val durationLimitText = if(context.data.music.maxSongLength == 0L) {
+                        bot.configuration.durationLimitText
+                    } else {
+                        getDisplayValue(context.data.music.votePlayDuration)
                     }
 
                     if (track.duration > durationLimit) {
-                        context.send().issue("The track can not exceed ${durationLimit}.").queue()
+                        context.send().issue("The track can not exceed ${durationLimitText}.").queue()
                         return
                     }
                 }
@@ -307,44 +310,5 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                 context.send().exception(e).queue()
             }
         })
-    }
-
-    fun boostBass(setting: BoostSetting) {
-        boostSetting = setting
-        boostBass(setting.band1, setting.band2, false)
-    }
-
-    fun boostBass(b1: Float, b2: Float, isCustom: Boolean = true) {
-        if (isCustom) {
-            boostSetting = BoostSetting.CUSTOM
-        }
-        equalizer.setGain(0, b1)
-        equalizer.setGain(1, b2)
-
-        if (!equalizerEnabled) {
-            player.setFilterFactory(equalizer)
-            equalizerEnabled = true
-        }
-    }
-
-    fun disableBass() {
-        boostSetting = BoostSetting.OFF
-        if (equalizerEnabled) {
-            equalizer.setGain(0, 0F)
-            equalizer.setGain(1, 0F)
-            player.setFilterFactory(null)
-            equalizerEnabled = false
-        }
-    }
-
-    companion object {
-        enum class BoostSetting(val band1: Float, val band2: Float) {
-            OFF(0.0F, 0.0F),
-            SOFT(0.25F, 0.15F),
-            HARD(0.50F, 0.25F),
-            EXTREME(0.75F, 0.50F),
-            EARRAPE(1F, 0.75F),
-            CUSTOM(0.0F, 0.0F)
-        }
     }
 }

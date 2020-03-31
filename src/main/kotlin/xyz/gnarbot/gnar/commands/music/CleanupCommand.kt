@@ -7,7 +7,7 @@ import xyz.gnarbot.gnar.music.TrackContext
 
 @Command(
         aliases = ["cleanup", "cu"],
-        description = "Clear songs queued by a certain user"
+        description = "Clear songs based on a specific user, duplicates, or if a user left"
 )
 @BotInfo(
         id = 88,
@@ -21,7 +21,11 @@ class CleanupCommand : CommandExecutor() {
 
         if (context.message.mentionedUsers.isEmpty() && args.isEmpty()) {
             return context.send()
-                .issue("You must mention a user to purge their queue items, or use `cleanup left` to remove songs from users who left.")
+                .issue("`cleanup <left/duplicates/exceeds/@user>`\n\n" +
+                    "`left` - Removes tracks by users no longer in the voice channel\n" +
+                    "`duplicates` - Removes copies of tracks that are already queued\n" +
+                    "`exceeds` - Removes tracks that exceeds the given duration (e.g.: `4:05`)\n" +
+                    "`@user` - Removes all tracks added by the mentioned user")
                 .queue()
         }
 
@@ -47,8 +51,38 @@ class CleanupCommand : CommandExecutor() {
                 val predicate: (AudioTrack) -> Boolean = { !tracks.add(it.identifier) }
                 manager.scheduler.queue.removeIf(predicate)
             }
+            "exceeds", "longerthan", "duration", "time" -> {
+                val duration = args.getOrNull(1)
+                    ?: return context.send().error("You need to specify a duration. Example: `cleanup exceeds 4:05`").queue()
+
+                val parts = duration.split(':').mapNotNull { it.toIntOrNull() }
+
+                when (parts.size) {
+                    3 -> { // Hours, Minutes, Seconds
+                        val (hours, minutes, seconds) = parts
+                        val durationMillis = (hours * 3600000) + (minutes * 60000) + (seconds * 1000)
+                        manager.scheduler.queue.removeIf { it.duration > durationMillis }
+                    }
+                    2 -> { // Minutes, Seconds
+                        val (minutes, seconds) = parts
+                        val durationMillis = (minutes * 60000) + (seconds * 1000)
+                        manager.scheduler.queue.removeIf { it.duration > durationMillis }
+                    }
+                    1 -> { // Seconds
+                        val durationMillis = parts[0] * 1000
+                        manager.scheduler.queue.removeIf { it.duration > durationMillis }
+                    }
+                    else -> {
+                        return context.send().error("The duration needs to be formatted as `00:00`. Examples:\n" +
+                            "`cleanup exceeds 35` - Removes tracks longer than 35 seconds\n" +
+                            "`cleanup exceeds 01:20` - Removes tracks longer than 1 minute and 20 seconds\n" +
+                            "`cleanup exceeds 01:30:00` - Removes tracks longer than 1 hour and 30 minutes.").queue()
+                    }
+                }
+            }
             else -> {
-                val userId = purge.toLong()
+                val userId = purge.toLongOrNull()
+                    ?: return context.send().issue("You need to mention a user, or pass a user ID.").queue()
                 val predicate: (AudioTrack) -> Boolean = { it.getUserData(TrackContext::class.java)?.requester == userId }
                 manager.scheduler.queue.removeIf(predicate)
             }
@@ -71,6 +105,13 @@ class CleanupCommand : CommandExecutor() {
                 }
 
                 context.send().info("Removed $removed duplicate songs from the queue.").queue()
+            }
+            "exceeds", "longerthan", "duration", "time" -> {
+                if (removed == 0) {
+                    return context.send().error("There were no tracks that exceeded the given duration.").queue()
+                }
+
+                context.send().info("Removed $removed tracks from the queue.").queue()
             }
             else -> {
                 val user = context.guild.getMemberById(purge)?.user?.name ?: "Unknown User"

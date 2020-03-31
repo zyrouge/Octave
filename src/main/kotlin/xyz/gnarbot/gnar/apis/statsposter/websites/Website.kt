@@ -17,14 +17,13 @@ abstract class Website(
         return postUrl.isNotEmpty() && countHeader.isNotEmpty() && authorization.isNotEmpty()
     }
 
-    fun update(count: Long): CompletableFuture<Nothing> {
+    fun update(count: Long): CompletableFuture<Response> {
         return RequestUtil.request {
             url(postUrl)
             post(RequestBody.create(RequestUtil.APPLICATION_JSON, "{\"$countHeader\": $count}"))
             header("Authorization", authorization)
         }.submit()
             .assert(Response::isSuccessful) { "Posting to $name failed: ${it.code()} ${it.message()}" }
-            .thenApply { null }
     }
 
 }

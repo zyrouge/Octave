@@ -30,7 +30,7 @@ class HelpCommand : CommandExecutor() {
                         it.botInfo.category == category
                     }
 
-                    field("Commands") {
+                    desc {
                         buildString {
                             filtered.forEach {
                                 append('`')
@@ -48,10 +48,10 @@ class HelpCommand : CommandExecutor() {
             val cmd = registry.getCommand(target)
             if (cmd != null) {
                 context.send().embed("Command Information") {
-                    field("Aliases") { cmd.info.aliases.joinToString(separator = ", ${context.bot.configuration.prefix}", prefix = context.bot.configuration.prefix) }
+                    field("Aliases") { cmd.info.aliases.joinToString(separator = ", ") }
                     field("Usage") { "_${cmd.info.aliases[0].toLowerCase()} ${cmd.info.usage}" }
                     if (cmd.botInfo.donor) {
-                        field("Donator") { "This command is exclusive to donators' guilds. Donate to our Patreon or PayPal to gain access to them." }
+                        field("Donator") { "This command is exclusive to premium guilds. Become a patron to access them." }
                     }
 
                     if (cmd.botInfo.permissions.isNotEmpty()) {
@@ -69,12 +69,11 @@ class HelpCommand : CommandExecutor() {
 
         val commands = registry.entries
 
-        context.send().embed("Guides") {
+        context.send().embed("Bot Commands") {
             desc {
                 buildString {
                     append("The prefix of the bot on this server is `").append(context.data.command.prefix
-                            ?: context.bot.configuration.prefix).append("`.\n")
-                    append("Donations: **[Patreon](https://octave.gg/donate)**\n")
+                            ?: context.bot.configuration.prefix).append("`\n")
                 }
             }
 
@@ -89,7 +88,7 @@ class HelpCommand : CommandExecutor() {
                 }
             }
 
-            footer { "For more information try _help (command) or _help (category), ex: _help ttb or _help Music" }
+            footer { "For more information try _help (command) or _help (category), ex: _help bassboost or _help play" }
         }.action().queue()
     }
 }

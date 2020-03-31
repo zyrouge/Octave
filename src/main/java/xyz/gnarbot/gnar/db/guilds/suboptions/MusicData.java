@@ -15,6 +15,9 @@ public class MusicData {
     private long maxSongLength;
     private long voteSkipCooldown;
     private long voteSkipDuration;
+    private boolean isVotePlay;
+    private long votePlayCooldown;
+    private long votePlayDuration;
 
     @NotNull
     public final Set<String> getChannels() {
@@ -68,5 +71,29 @@ public class MusicData {
 
     public void setVoteSkipDuration(long voteSkipDuration) {
         this.voteSkipDuration = voteSkipDuration;
+    }
+
+    public boolean isVotePlay() {
+        return isVotePlay;
+    }
+
+    public void setVotePlay(boolean votePlay) {
+        isVotePlay = votePlay;
+    }
+
+    public long getVotePlayCooldown() {
+        return votePlayCooldown;
+    }
+
+    public void setVotePlayCooldown(long votePlayCooldown) {
+        this.votePlayCooldown = votePlayCooldown;
+    }
+
+    public long getVotePlayDuration() {
+        return votePlayDuration;
+    }
+
+    public void setVotePlayDuration(long votePlayDuration) {
+        this.votePlayDuration = votePlayDuration;
     }
 }

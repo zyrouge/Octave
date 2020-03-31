@@ -28,7 +28,8 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
             return
         }
 
-        val track = when (args[0]) {
+        val track = when (args.firstOrNull()) {
+            null -> return context.send().issue("You need to specify what to remove.").queue()
             "first" -> queue.removeFirst()
             "last" -> queue.removeLast()
             "all" -> {
@@ -41,41 +42,33 @@ class RemoveCommand : MusicCommandExecutor(true, false, false) {
 
                 val matcher = pattern.matcher(arg)
                 if (matcher.find()) {
+                    if (matcher.group(1) == null && matcher.group(2) == null) {
+                        return context.send().error("You must specify start range and/or end range.").queue()
+                    }
+
                     val start = matcher.group(1).let {
                         if (it == null) 1
-                        else try {
-                            it.toInt().coerceAtLeast(1)
-                        } catch (e: NumberFormatException) {
-                            context.send().error("Invalid start of range.").queue()
-                            return
-                        }
+                        else it.toIntOrNull()?.coerceAtLeast(1)
+                            ?: return context.send().error("Invalid start of range").queue()
                     }
 
                     val end = matcher.group(2).let {
                         if (it == null) queue.size
-                        else try {
-                            it.toInt().coerceAtMost(queue.size)
-                        } catch (e: NumberFormatException) {
-                            context.send().error("Invalid end of range.").queue()
-                            return
-                        }
+                        else it.toIntOrNull()?.coerceAtMost(queue.size)
+                            ?: return context.send().error("Invalid end of range").queue()
                     }
 
-                    for (i in start..end) {
+                    for (i in end downTo start) {
                         queue.removeAt(i - 1)
                     }
 
-                    context.send().info("Removed track number `$start..$end` from the queue.").queue()
-
+                    context.send().info("Removed tracks `$start-$end` from the queue.").queue()
                     return
                 }
 
                 val num = arg.toIntOrNull()
-
-                if (num == null || num !in 1..queue.size) {
-                    context.send().error("That is not a valid track number. Try `1`, `1..${queue.size}`, `first`, or `last`.").queue()
-                    return
-                }
+                    ?.takeIf { it >= 1 && it <= queue.size }
+                    ?: return context.send().error("That is not a valid track number. Try `1`, `1..${queue.size}`, `first`, or `last`.").queue()
 
                 queue.removeAt(num - 1)
             }
