@@ -15,6 +15,7 @@ import java.lang.management.ManagementFactory
 )
 class UptimeCommand : CommandExecutor() {
     override fun execute(context: Context, label: String, args: Array<String>) {
+        //do we need this
         val s = ManagementFactory.getRuntimeMXBean().uptime / 1000
         val m = s / 60
         val h = m / 60
