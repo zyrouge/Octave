@@ -141,6 +141,7 @@ class PlayCommand : CommandExecutor() {
 
             manager.lastPlayVoteTime = System.currentTimeMillis()
             manager.isVotingToPlay = true
+            val halfPeople = (context.selfMember.voiceState!!.channel!!.members.count() / 2 + 1)
 
             context.send().embed("Play Vote") {
                 desc {
@@ -148,7 +149,7 @@ class PlayCommand : CommandExecutor() {
                         append(context.message.author.asMention)
                         append(" has voted to **play** this track!")
                         append(" React with :thumbsup: or :thumbsdown:\n")
-                        append("Whichever has the most votes in $voteSkipDurationText will win!")
+                        append("Whichever has the most votes in $voteSkipDurationText will win! This requires at least half of the people in the VC to agree!")
                     }
                 }
             }.action().queue {
@@ -170,7 +171,7 @@ class PlayCommand : CommandExecutor() {
                     context.send().embed("Vote Play") {
                         desc {
                             buildString {
-                                if (skip > stay) {
+                                if (skip > halfPeople) {
                                     appendln("The vote has passed! The song will be queued!")
                                     play(context, args, isSearchResult, uri)
                                 } else {
