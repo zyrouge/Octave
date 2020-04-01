@@ -141,7 +141,7 @@ class PlayCommand : CommandExecutor() {
 
             manager.lastPlayVoteTime = System.currentTimeMillis()
             manager.isVotingToPlay = true
-            val halfPeople = (context.selfMember.voiceState!!.channel!!.members.count() / 2 + 1)
+            val halfPeople = (context.selfMember.voiceState!!.channel!!.members.filter { member -> !member.user.isBot  }.count() / 2) + 1
 
             context.send().embed("Play Vote") {
                 desc {
