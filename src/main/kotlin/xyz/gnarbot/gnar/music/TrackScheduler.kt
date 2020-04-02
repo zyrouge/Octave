@@ -84,13 +84,14 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         )?.queue()
 
         val exc = buildString {
-            append("AudioTrack (id: ${track.info.identifier}) surpassed stuck threshold $thresholdMs\n")
+            append("AudioTrack (${track.info.identifier}) stuck >=${thresholdMs}ms\n")
             for (line in stackTrace) {
                 append(line.toString())
                 append("\n")
             }
         }
 
+        print(exc)
         Sentry.capture(exc)
         nextTrack()
     }
