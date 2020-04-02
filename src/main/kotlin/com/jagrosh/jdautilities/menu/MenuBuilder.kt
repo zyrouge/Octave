@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 abstract class MenuBuilder<T : MenuBuilder<T>>(val waiter: EventWaiter) {
     companion object {
         @JvmStatic
-        val DEFAULT_FINALLY: (Message?) -> Unit = { it?.delete()?.queue() }
+        val DEFAULT_FINALLY: (Message?) -> Unit = {} //{ it?.delete()?.queue() }
     }
 
     protected var user: User? = null
