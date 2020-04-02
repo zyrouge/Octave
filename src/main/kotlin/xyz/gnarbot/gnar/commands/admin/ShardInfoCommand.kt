@@ -2,9 +2,7 @@ package xyz.gnarbot.gnar.commands.admin
 
 import com.google.common.collect.Lists
 import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.utils.MiscUtil
 import xyz.gnarbot.gnar.commands.*
-import java.util.*
 
 @Command(
         aliases = ["shards", "shard", "shardinfo"],
