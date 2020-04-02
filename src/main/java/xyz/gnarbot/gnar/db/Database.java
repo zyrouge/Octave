@@ -2,10 +2,13 @@ package xyz.gnarbot.gnar.db;
 
 import com.rethinkdb.gen.exc.ReqlDriverError;
 import com.rethinkdb.net.Connection;
+import com.rethinkdb.net.Cursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
+import xyz.gnarbot.gnar.db.premium.PremiumGuild;
 import xyz.gnarbot.gnar.db.guilds.UserData;
+import xyz.gnarbot.gnar.db.premium.PremiumUser;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -66,6 +69,29 @@ public class Database {
     @Nullable
     public PatreonEntry getPatreonEntry(String id) {
         return get("patreon", id, PatreonEntry.class);
+    }
+
+    public PremiumUser getPremiumUser(String id) {
+        if (!isOpen()) {
+            return null;
+        }
+
+        return r.table("premiumusers")
+                .get(id)
+                .default_(r.hashMap("id", id).with("pledgeAmount", "0.0"))
+                .run(conn, PremiumUser.class);
+    }
+
+    @Nullable
+    public PremiumGuild getPremiumGuild(String id) {
+        return get("premiumguilds", id, PremiumGuild.class);
+    }
+
+    @Nullable
+    public Cursor<PremiumGuild> getPremiumGuilds(String id) {
+        return isOpen()
+                ? r.table("premiumguilds").filter(guild -> guild.g("redeemer").eq(id)).run(conn, PremiumGuild.class)
+                : null;
     }
 
     @Nullable
