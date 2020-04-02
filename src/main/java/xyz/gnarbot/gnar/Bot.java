@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MiscUtil;
-import net.rithms.riot.api.ApiConfig;
-import net.rithms.riot.api.RiotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.gnarbot.gnar.apis.patreon.PatreonAPI;
@@ -47,7 +45,6 @@ public class Bot {
     private final OptionsRegistry optionsRegistry;
     private final PlayerRegistry playerRegistry;
     private final MyAnimeListAPI myAnimeListAPI;
-    private final RiotApi riotApi;
     private final DiscordFM discordFM;
     private final PatreonAPI patreon;
     private final CommandRegistry commandRegistry;
@@ -116,15 +113,9 @@ public class Bot {
         LOG.info("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
-        String riotApiKey = credentials.getRiotAPIKey();
-        ApiConfig apiConfig = new ApiConfig();
-        if (riotApiKey != null)
-            apiConfig.setKey(riotApiKey);
 
         statsPoster = new StatsPoster("201503408652419073"); // Config option? @Kodehawa
         statsPoster.postEvery(30, TimeUnit.MINUTES);
-
-        riotApi = new RiotApi(new ApiConfig());
 
         commandRegistry = new CommandRegistry(this);
         commandDispatcher = new CommandDispatcher(this, commandRegistry, Executors.newWorkStealingPool());
@@ -190,10 +181,6 @@ public class Bot {
 
     public JDA getJDA(int id) {
         return shardManager.getShardById(id);
-    }
-
-    public RiotApi getRiotAPI() {
-        return riotApi;
     }
 
     public void restart() {

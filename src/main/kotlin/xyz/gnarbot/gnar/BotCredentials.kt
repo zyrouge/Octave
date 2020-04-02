@@ -34,7 +34,6 @@ class BotCredentials(file: File) {
     val imgFlip: String? = config["imgflip"].string
     val mashape: String? = config["mashape"].string
     val weebSh: String? = config["weebsh"].string
-    val riotAPIKey: String? = config["riot", "apiKey"].string
     val patreonToken: String? = config["patreon", "token"].string
 
     /* MyAnimeList */
