@@ -83,8 +83,8 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                     }.build()
                 ).submitAfter(voteSkipDuration, TimeUnit.MILLISECONDS)
             }.thenAccept { m ->
-                val skip = m.reactions.firstOrNull { it.reactionEmote.name == "👍" }?.count ?: 0
-                val stay = m.reactions.firstOrNull { it.reactionEmote.name == "👎" }?.count ?: 0
+                val skip = m.reactions.firstOrNull { it.reactionEmote.name == "👍" }?.count?.minus(1) ?: 0
+                val stay = m.reactions.firstOrNull { it.reactionEmote.name == "👎" }?.count?.minus(1) ?: 0
 
                 context.send().embed("Vote Skip") {
                     desc {
