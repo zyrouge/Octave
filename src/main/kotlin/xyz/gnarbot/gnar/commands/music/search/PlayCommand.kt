@@ -133,7 +133,7 @@ class PlayCommand : CommandExecutor() {
                 context.bot.configuration.votePlayDuration.toMillis()
             }
 
-            val voteSkipDurationText = if(context.data.music.votePlayDuration == 0L) {
+            val votePlayDurationText = if(context.data.music.votePlayDuration == 0L) {
                 context.bot.configuration.votePlayDurationText
             } else {
                 getDisplayValue(context.data.music.votePlayDuration)
@@ -143,49 +143,53 @@ class PlayCommand : CommandExecutor() {
             manager.isVotingToPlay = true
             val halfPeople = context.selfMember.voiceState!!.channel!!.members.filter { member -> !member.user.isBot  }.size / 2
 
-            context.send().embed("Play Vote") {
+            context.send().embed("Vote Play") {
                 desc {
                     buildString {
                         append(context.message.author.asMention)
-                        append(" has voted to **play** this track!")
+                        append(" has voted to **play** the current track!")
                         append(" React with :thumbsup: or :thumbsdown:\n")
-                        append("Whichever has the most votes in $voteSkipDurationText will win! This requires at least $halfPeople in the VC to agree!")
+                        append("Whichever has the most votes in $votePlayDurationText will win! This requires at least $halfPeople on the VC to vote to skip.")
                     }
                 }
-            }.action().queue {
-                it.addReaction("👍").queue()
-                it.addReaction("👎").queue()
-
-                it.editMessage(EmbedBuilder(it.embeds[0]).apply {
-                    desc { "Voting has ended! Check the newer messages for results." }
-                    clearFields()
-                }.build()).queueAfter(voteSkipDuration, TimeUnit.MILLISECONDS) {
-                    var skip = 0
-                    var stay = 0
-
-                    it.reactions.forEach {
-                        if (it.reactionEmote.name == "👍") skip = it.count - 1
-                        if (it.reactionEmote.name == "👎") stay = it.count - 1
+            }.action()
+                    .submit()
+                    .thenCompose { m ->
+                        m.addReaction("👍")
+                                .submit()
+                                .thenCompose { m.addReaction("👎").submit() }
+                                .thenApply { m }
                     }
+                    .thenCompose {
+                        it.editMessage(EmbedBuilder(it.embeds[0])
+                                .apply {
+                                    desc { "Voting has ended! Check the newer messages for results." }
+                                    clearFields()
+                                }.build()
+                        ).submitAfter(voteSkipDuration, TimeUnit.MILLISECONDS)
+                    }.thenAccept { m ->
+                        val skip = m.reactions.firstOrNull { it.reactionEmote.name == "👍" }?.count?.minus(1) ?: 0
+                        val stay = m.reactions.firstOrNull { it.reactionEmote.name == "👎" }?.count?.minus(1) ?: 0
 
-                    context.send().embed("Vote Play") {
-                        desc {
-                            buildString {
-                                if (skip > halfPeople) {
-                                    appendln("The vote has passed! The song will be queued!")
-                                    play(context, args, isSearchResult, uri)
-                                } else {
-                                    appendln("The vote has failed! The song will not be queued.")
+                        context.send().embed("Vote Skip") {
+                            desc {
+                                buildString {
+                                    if (skip > halfPeople) {
+                                        appendln("The vote has passed! The song will be queued.")
+                                        play(context, args, isSearchResult, uri)
+                                    } else {
+                                        appendln("The vote has failed! The song will not be queued.")
+                                    }
                                 }
                             }
-                        }
-                        field("Results") {
-                            "__$skip Play Votes__ — __$stay No Play Votes__"
-                        }
-                    }.action().queue()
-                    manager.isVotingToPlay = false
-                }
-            }
+                            field("Results") {
+                                "__$skip Play Votes__ — __$stay No Play Votes__"
+                            }
+                        }.action().queue()
+                    }
+                    .whenComplete { _, _ ->
+                        manager.isVotingToPlay = false
+                    }
         }
     }
 }
