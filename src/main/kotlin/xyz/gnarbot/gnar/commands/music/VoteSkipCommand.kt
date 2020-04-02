@@ -56,7 +56,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
 
         manager.lastVoteTime = System.currentTimeMillis()
         manager.isVotingToSkip = true
-        val halfPeople = context.selfMember.voiceState!!.channel!!.members.filter { member -> !member.user.isBot  }.size / 2
+        val halfPeople = context.selfMember.voiceState!!.channel!!.members.filterNot { it.user.isBot  }.size / 2
 
         context.send().embed("Vote Skip") {
             desc {
