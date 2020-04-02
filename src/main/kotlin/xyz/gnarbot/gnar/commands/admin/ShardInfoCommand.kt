@@ -1,6 +1,8 @@
 package xyz.gnarbot.gnar.commands.admin
 
 import com.google.common.collect.Lists
+import net.dv8tion.jda.api.JDA
+import net.dv8tion.jda.api.utils.MiscUtil
 import xyz.gnarbot.gnar.commands.*
 import java.util.*
 
@@ -18,23 +20,27 @@ class ShardInfoCommand : CommandExecutor() {
         context.send().text("```prolog\n ID |    STATUS |    PING | GUILDS |  USERS | REQUESTS |  VC\n```").queue()
 
         Lists.partition(context.bot.shardManager.shards, 20).forEach {
-            val joiner = StringJoiner("\n", "```prolog\n", "```")
-
-            it.forEach {
-                joiner.add(
-                        "%3d | %9.9s | %7.7s | %6d | %6d | ---- WIP | %3d".format(
-                                it.shardInfo.shardId,
-                                it.status,
-                                "${it.gatewayPing}ms",
-                                it.guildCache.size(),
-                                it.userCache.size(),
-                                context.bot.players.registry.values.count { m -> m.getGuild()?.jda == it }
-                        )
-                )
-            }
-
-            context.send().text(joiner.toString()).queue()
+            val page = it.joinToString("\n", prefix = "```prolog\n", postfix = "```") { shard -> formatInfo(context, shard) }
+            context.send().text(page).queue()
         }
+    }
+
+    private fun formatInfo(ctx: Context, jda: JDA): String {
+        val shardId = jda.shardInfo.shardId
+        val totalShards = jda.shardInfo.shardTotal
+
+        return "%3d | %9.9s | %7.7s | %6d | %6d | ---- WIP | %3d".format(
+            shardId,
+            jda.status,
+            "${jda.gatewayPing}ms",
+            jda.guildCache.size(),
+            jda.userCache.size(),
+            ctx.bot.players.registry.values.count { getShardIdForGuild(it.guildId, totalShards) == shardId }
+        )
+    }
+
+    private fun getShardIdForGuild(guildId: String, shardCount: Int): Int {
+        return ((guildId.toLong() shr 22) % shardCount).toInt()
     }
 
 }

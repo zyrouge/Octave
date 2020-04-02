@@ -1,7 +1,5 @@
 package xyz.gnarbot.gnar.commands;
 
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.commands.admin.*;
 import xyz.gnarbot.gnar.commands.general.*;
@@ -29,8 +27,6 @@ public class CommandRegistry {
      * The mapped registry of invoking key to the classes.
      */
     private final Map<String, CommandExecutor> commandEntryMap = new LinkedHashMap<>();
-
-    private final TIntSet idSet = new TIntHashSet();
 
     public CommandRegistry(Bot bot) {
         register(new HelpCommand());
@@ -94,6 +90,8 @@ public class CommandRegistry {
 
         register(new YoutubeCommand());
         register(new SoundcloudCommand());
+
+        register(new PremTestCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {
@@ -104,12 +102,6 @@ public class CommandRegistry {
         Class<? extends CommandExecutor> cls = cmd.getClass();
         if (!cls.isAnnotationPresent(Command.class)) {
             throw new IllegalStateException("@Command annotation not found for class: " + cls.getName());
-        }
-
-        if (idSet.contains(cmd.getBotInfo().id())) {
-            throw new IllegalStateException("@Command duplicate ID for class: " + cls.getName());
-        } else {
-            idSet.add(cmd.getBotInfo().id());
         }
 
         for (String alias : cmd.getInfo().aliases()) {
