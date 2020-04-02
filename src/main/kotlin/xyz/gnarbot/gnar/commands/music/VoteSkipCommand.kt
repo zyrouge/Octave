@@ -63,8 +63,8 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                 buildString {
                     append(context.message.author.asMention)
                     append(" has voted to **skip** the current track!")
-                    append(" React with :thumbsup: or :thumbsdown:\n")
-                    append("Whichever has the most votes in $voteSkipDurationText will win! This requires at least $halfPeople on the VC to vote to skip.")
+                    append(" React with :thumbsup:\n")
+                    append("If at least **$halfPeople** vote(s) from listeners are obtained within $voteSkipDurationText, the song will be skipped!")
                 }
             }
         }.action()
