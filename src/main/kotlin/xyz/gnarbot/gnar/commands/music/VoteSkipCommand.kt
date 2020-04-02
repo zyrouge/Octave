@@ -72,7 +72,6 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             .thenCompose { m ->
                 m.addReaction("👍")
                     .submit()
-                    .thenCompose { m.addReaction("👎").submit() }
                     .thenApply { m }
             }
             .thenCompose {
@@ -84,7 +83,6 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                 ).submitAfter(voteSkipDuration, TimeUnit.MILLISECONDS)
             }.thenAccept { m ->
                 val skip = m.reactions.firstOrNull { it.reactionEmote.name == "👍" }?.count?.minus(1) ?: 0
-                val stay = m.reactions.firstOrNull { it.reactionEmote.name == "👎" }?.count?.minus(1) ?: 0
 
                 context.send().embed("Vote Skip") {
                     desc {
@@ -98,7 +96,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                         }
                     }
                     field("Results") {
-                        "__$skip Skip Votes__ — __$stay Stay Votes__"
+                        "__$skip Skip Votes__"
                     }
                 }.action().queue()
             }
