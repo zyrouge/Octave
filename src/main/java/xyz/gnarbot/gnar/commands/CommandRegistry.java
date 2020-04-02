@@ -90,8 +90,6 @@ public class CommandRegistry {
 
         register(new YoutubeCommand());
         register(new SoundcloudCommand());
-
-        //register(new PremTestCommand());
     }
 
     public Map<String, CommandExecutor> getCommandMap() {

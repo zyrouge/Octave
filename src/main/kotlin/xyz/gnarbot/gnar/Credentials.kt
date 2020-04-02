@@ -50,8 +50,6 @@ class Credentials(file: File) {
 
     val patreonToken: String? = config["patreon", "token"].string
 
-    val riotAPIKey: String? = config["riot", "apiKey"].string
-
     val sentryPubDsn: String? = config["sentry", "pubDsn"].string
 
     //Database stuffs
