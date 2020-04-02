@@ -67,21 +67,24 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                     append("Whichever has the most votes in ${context.bot.configuration.voteSkipDurationText} will win! This requires at least half of the people on the VC to vote to skip.")
                 }
             }
-        }.action().queue {
-            it.addReaction("👍").queue()
-            it.addReaction("👎").queue()
-
-            it.editMessage(EmbedBuilder(it.embeds[0]).apply {
-                desc { "Voting has ended! Check the newer messages for results." }
-                clearFields()
-            }.build()).queueAfter(voteSkipDuration, TimeUnit.MILLISECONDS) {
-                var skip = 0
-                var stay = 0
-
-                it.reactions.forEach {
-                    if (it.reactionEmote.name == "👍") skip = it.count - 1
-                    if (it.reactionEmote.name == "👎") stay = it.count - 1
-                }
+        }.action()
+            .submit()
+            .thenCompose { m ->
+                m.addReaction("👍")
+                    .submit()
+                    .thenCompose { m.addReaction("👎").submit() }
+                    .thenApply { m }
+            }
+            .thenCompose {
+                it.editMessage(EmbedBuilder(it.embeds[0])
+                    .apply {
+                        desc { "Voting has ended! Check the newer messages for results." }
+                        clearFields()
+                    }.build()
+                ).submitAfter(voteSkipDuration, TimeUnit.MILLISECONDS)
+            }.thenAccept { m ->
+                val skip = m.reactions.firstOrNull { it.reactionEmote.name == "👍" }?.count ?: 0
+                val stay = m.reactions.firstOrNull { it.reactionEmote.name == "👎" }?.count ?: 0
 
                 context.send().embed("Vote Skip") {
                     desc {
@@ -100,6 +103,9 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                 }.action().queue()
                 manager.isVotingToSkip = false
             }
-        }
+            .exceptionally {
+                manager.isVotingToSkip = false
+                return@exceptionally null
+            }
     }
 }
