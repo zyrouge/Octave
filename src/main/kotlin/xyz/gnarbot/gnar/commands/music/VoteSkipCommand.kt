@@ -37,16 +37,20 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             return
         }
 
-        val voteSkipDuration = if(context.data.music.voteSkipDuration <= 0) {
+        val voteSkipDuration = if(context.data.music.voteSkipDuration == 0L) {
             context.bot.configuration.voteSkipDuration.toMillis()
         } else {
             context.data.music.voteSkipDuration
         }
 
-        val voteSkipDurationText = if(context.data.music.voteSkipDuration <= 0) {
-            context.bot.configuration.voteSkipDuration.toMinutes().toString() + " minutes"
-        } else {
+        val voteSkipDurationText = if(context.data.music.voteSkipDuration == 0L) {
             context.bot.configuration.voteSkipDurationText
+        } else {
+            val durationMinutes = context.bot.configuration.voteSkipDuration.toMinutes();
+            if(durationMinutes > 0)
+                "$durationMinutes minutes"
+            else
+                "${context.bot.configuration.voteSkipDuration.toSeconds()} seconds"
         }
 
         if (manager.player.playingTrack.duration - manager.player.playingTrack.position <= voteSkipDuration) {
