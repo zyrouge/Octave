@@ -101,11 +101,9 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
                         "__$skip Skip Votes__ — __$stay Stay Votes__"
                     }
                 }.action().queue()
-                manager.isVotingToSkip = false
             }
-            .exceptionally {
+            .whenComplete { _, _ ->
                 manager.isVotingToSkip = false
-                return@exceptionally null
             }
     }
 }
