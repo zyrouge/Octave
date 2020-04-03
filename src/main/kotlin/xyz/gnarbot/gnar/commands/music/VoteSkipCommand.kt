@@ -43,7 +43,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             context.data.music.voteSkipDuration
         }
 
-        val voteSkipDurationText = if(context.data.music.voteSkipDuration == 0L) {""
+        val voteSkipDurationText = if(context.data.music.voteSkipDuration == 0L) {
             context.bot.configuration.voteSkipDurationText
         } else {
             val durationMinutes = context.bot.configuration.voteSkipDuration.toMinutes();
