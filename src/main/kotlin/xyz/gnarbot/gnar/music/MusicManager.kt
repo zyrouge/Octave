@@ -201,8 +201,13 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                     }
                 }
 
-                if (scheduler.queue.size >= bot.configuration.queueLimit) {
-                    context.send().issue("The queue can not exceed $queueLimit songs.").queue()
+                val queueLimitDisplay = when (queueLimit) {
+                    Integer.MAX_VALUE -> "unlimited"
+                    else -> queueLimit
+                }
+
+                if (scheduler.queue.size >= queueLimit) {
+                    context.send().issue("The queue can not exceed $queueLimitDisplay songs.").queue()
                     return
                 }
 
