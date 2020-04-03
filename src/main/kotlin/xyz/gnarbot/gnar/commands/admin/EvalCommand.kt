@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.script.jsr223.KotlinJsr223JvmLocalScriptEngineFactor
 import xyz.gnarbot.gnar.Bot
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.utils.DiscordBotsVotes
+import java.util.concurrent.CompletableFuture
 import javax.script.*
 
 @Command(
@@ -40,7 +41,18 @@ class EvalCommand : CommandExecutor() {
             val result = engine.eval("$bindString\n${script}", bind)
                 ?: return context.message.addReaction("👌").queue()
 
-            context.send().text("```\n${result.toString().take(1950)}```").queue()
+            if (result is CompletableFuture<*>) {
+                context.send().text("```\nCompletableFuture<Pending>```").queue { m ->
+                    result.thenAccept {
+                        m.editMessage("```\n$it```").queue()
+                    }.exceptionally {
+                        m.editMessage("```\n$it```").queue()
+                        return@exceptionally null
+                    }
+                }
+            } else {
+                context.send().text("```\n${result.toString().take(1950)}```").queue()
+            }
         } catch (e: Exception) {
             context.send().text("An exception occurred.\n```\n${e.localizedMessage}```").queue()
         }
