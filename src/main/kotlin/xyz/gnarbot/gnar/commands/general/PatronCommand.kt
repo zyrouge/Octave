@@ -63,7 +63,7 @@ class PatronCommand : CommandExecutor() {
                         "You can have up to **${user.totalPremiumGuildQuota}** premium servers, which can be " +
                         "added and removed with the `${ctx.bot.configuration.prefix}patron servers` command.")
                     setThumbnail("https://cdn.discordapp.com/attachments/690754397486973021/695724606115545098/pledge-lemon-enhancing-polish-orange-clean.png")
-                    setFooter("Thankies for supporting Octave <3")
+                    setFooter("❤")
                 }.action().queue()
             }
             .exceptionally {
