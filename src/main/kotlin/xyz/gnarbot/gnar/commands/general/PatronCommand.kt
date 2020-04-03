@@ -42,7 +42,7 @@ class PatronCommand : CommandExecutor() {
             return ctx.send().info("Invalid user ID provided.").queue()
         }
 
-        val userId =args.firstOrNull()
+        val userId = args.firstOrNull()
             ?: ctx.user.id
 
         if (!ctx.bot.db().hasPremiumUser(userId)) {
