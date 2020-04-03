@@ -26,7 +26,7 @@ class VoteSkipCommand : MusicCommandExecutor(true, true, true) {
             return
         }
 
-        val voteSkipCooldown = if(context.data.music.voteSkipCooldown <= 0) {
+        val voteSkipCooldown = if(context.data.music.voteSkipCooldown == 0L) {
             context.bot.configuration.voteSkipCooldown.toMillis()
         } else {
             context.data.music.voteSkipCooldown

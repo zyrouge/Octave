@@ -30,7 +30,7 @@ public class PremiumUser extends ManagedObject {
     }
 
     @JsonIgnore
-    public Double getPledgeAmount() {
+    public double getPledgeAmount() {
         return pledgeAmount;
     }
 
@@ -76,23 +76,12 @@ public class PremiumUser extends ManagedObject {
     }
 
     @JsonIgnore
-    public int getQueueSizeQuota() {
-        if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId())) || pledgeAmount >= 10) {
-            return Integer.MAX_VALUE;
-        } else if (pledgeAmount >= 5) {
-            return 500;
-        } else {
-            return Bot.getInstance().getConfiguration().getQueueLimit();
-        }
-    }
-
-    @JsonIgnore
     public boolean isPremium() {
         return pledgeAmount >= 2;
     }
 
     @JsonIgnore
-    public Integer getRemainingPremiumGuildQuota() {
+    public int getRemainingPremiumGuildQuota() {
         Cursor<PremiumGuild> cursor = getPremiumGuilds();
 
         if (cursor == null) {

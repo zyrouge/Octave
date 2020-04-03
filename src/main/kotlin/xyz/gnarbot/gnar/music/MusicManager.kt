@@ -190,8 +190,8 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                 }
 
                 val queueLimit = when {
-                    context.premium.isPremium -> {
-                        context.premium.queueSizeQuota
+                    context.isGuildPremium -> {
+                        context.premiumGuild.queueSizeQuota
                     }
                     context.data.music.maxQueueSize == 0 -> {
                         bot.configuration.queueLimit

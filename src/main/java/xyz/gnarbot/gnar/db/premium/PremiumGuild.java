@@ -3,6 +3,7 @@ package xyz.gnarbot.gnar.db.premium;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.db.ManagedObject;
 
 import java.beans.ConstructorProperties;
@@ -40,6 +41,23 @@ public class PremiumGuild extends ManagedObject {
     @JsonIgnore
     public String getRedeemerId() {
         return redeemer;
+    }
+
+    @JsonIgnore
+    public PremiumUser getRedeemer() {
+        return Bot.getInstance().db().getPremiumUser(getRedeemerId());
+    }
+
+    @JsonIgnore
+    public int getQueueSizeQuota() {
+        double pledgeAmount = getRedeemer().getPledgeAmount();
+        if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId())) || pledgeAmount >= 10) {
+            return Integer.MAX_VALUE;
+        } else if (pledgeAmount >= 5) {
+            return 500;
+        } else {
+            return Bot.getInstance().getConfiguration().getQueueLimit();
+        }
     }
 
     @JsonIgnore
