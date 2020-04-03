@@ -1,6 +1,5 @@
 package xyz.gnarbot.gnar.music
 
-import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
@@ -213,8 +212,8 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
                     val durationLimit = when {
-                        context.premium.isPremium -> {
-                            context.premium.songSizeQuota
+                        context.premiumUser.isPremium -> {
+                            context.premiumUser.songSizeQuota
                         }
                         context.data.music.maxSongLength == 0L -> {
                             bot.configuration.durationLimit.toMillis()

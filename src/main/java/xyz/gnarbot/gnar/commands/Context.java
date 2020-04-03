@@ -81,7 +81,7 @@ public class Context {
         return new GuildResponseBuilder(getTextChannel());
     }
 
-    public PremiumUser getPremium() {
+    public PremiumUser getPremiumUser() {
         return premiumUser;
     }
 
