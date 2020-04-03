@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.db.ManagedObject;
 import javax.annotation.Nullable;
 import java.beans.ConstructorProperties;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PremiumUser extends ManagedObject {
     // The ID of the user that enabled premium for the guild.
@@ -45,6 +46,7 @@ public class PremiumUser extends ManagedObject {
         return cursor == null ? List.of() : cursor.toList();
     }
 
+    @JsonIgnore
     public int getTotalPremiumGuildQuota() {
         if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId()))) {
             return 99999;
@@ -60,18 +62,20 @@ public class PremiumUser extends ManagedObject {
         }
     }
 
+    @JsonIgnore
     public long getSongSizeQuota() {
         if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId()))) {
             return Integer.MAX_VALUE;
         } else if (pledgeAmount >= 10) {
-            return 43200000;
+            return TimeUnit.MINUTES.toMillis(720);
         } else if (pledgeAmount >= 5) {
-            return 21600000;
+            return TimeUnit.MINUTES.toMillis(360);
         } else {
             return Bot.getInstance().getConfiguration().getDurationLimit().toMillis();
         }
     }
 
+    @JsonIgnore
     public int getQueueSizeQuota() {
         if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId())) || pledgeAmount >= 10) {
             return Integer.MAX_VALUE;
@@ -82,10 +86,12 @@ public class PremiumUser extends ManagedObject {
         }
     }
 
+    @JsonIgnore
     public boolean isPremium() {
         return pledgeAmount >= 2;
     }
 
+    @JsonIgnore
     public Integer getRemainingPremiumGuildQuota() {
         Cursor<PremiumGuild> cursor = getPremiumGuilds();
 
