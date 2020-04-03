@@ -86,7 +86,8 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
         val exc = buildString {
             append("AudioTrack (${track.info.identifier}) stuck >=${thresholdMs}ms\n")
             for (line in stackTrace) {
-                append(line.toString())
+                val trace = line.toString().split('/').last() // java.base@<version>/<info>
+                append(trace)
                 append("\n")
             }
         }
