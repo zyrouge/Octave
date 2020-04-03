@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
 import xyz.gnarbot.gnar.commands.*
 import xyz.gnarbot.gnar.db.premium.PremiumGuild
+import xyz.gnarbot.gnar.db.premium.PremiumUser
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
@@ -45,8 +46,25 @@ class PatronCommand : CommandExecutor() {
                             "[Re-link your account](https://support.patreon.com/hc/en-us/articles/212052266-Get-my-Discord-role) and try again."
                         ).queue()
 
-                ctx.send().info("owo a pledge")
-                // parse pledge amount and convert it into server quota.
+                if (pledge.isDeclined || pledge.pledgeCents <= 0) {
+                    return@thenAccept ctx.send().info("It looks like your pledge was declined, or your pledge is too low!\n" +
+                        "We are unable to link your account until this is resolved.").queue()
+                }
+
+                val pledgeAmount = pledge.pledgeCents.toDouble() / 100
+
+                val user = PremiumUser(ctx.user.id)
+                    .setPledgeAmount(pledgeAmount)
+
+                user.save()
+
+                ctx.send().embed("Thank you, ${ctx.user.name}!") {
+                    setDescription("Thanks for pledging $${String.format("%1$,.2f", pledgeAmount)}!\n" +
+                        "You can have up to **${user.totalPremiumGuildQuota}** premium servers, which can be " +
+                        "added and removed with the `${ctx.bot.configuration.prefix}patron servers` command.")
+                    setThumbnail("https://cdn.discordapp.com/attachments/690754397486973021/695724606115545098/pledge-lemon-enhancing-polish-orange-clean.png")
+                    setFooter("Thankies for supporting Octave <3")
+                }.action().queue()
             }
             .exceptionally {
                 if (it is ErrorResponseException && (it.isServerError || it.errorResponse in ignore)) {
@@ -55,9 +73,7 @@ class PatronCommand : CommandExecutor() {
 
                 Sentry.capture(it)
                 ctx.send().error(
-                    "An unknown error occurred while looking for your pledge.\n" +
-                    "`${it.localizedMessage}`\n" +
-                    "This error has been logged."
+                    "An unknown error occurred while looking for your pledge.\n`${it.localizedMessage}`"
                 ).queue()
                 return@exceptionally null
             }

@@ -116,7 +116,7 @@ class TrackScheduler(private val bot: Bot, private val manager: MusicManager, pr
                         append("Now playing __**[").append(track.info.embedTitle)
                         append("](").append(track.info.embedUri).append(")**__")
 
-                        track.getUserData(TrackContext::class.java)?.requester?.let{it -> manager.getGuild()?.getMemberById(it)}?.let {
+                        track.getUserData(TrackContext::class.java)?.requester?.let { manager.getGuild()?.getMemberById(it) }?.let {
                             append(" requested by ")
                             append(it.asMention)
                         }

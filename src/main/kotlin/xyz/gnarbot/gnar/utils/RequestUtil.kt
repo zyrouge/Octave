@@ -19,8 +19,22 @@ object RequestUtil {
         return PendingRequest(request)
     }
 
-    fun jsonObject(options: Request.Builder.() -> Unit): CompletableFuture<JSONObject> {
+    fun jsonObject(options: Request.Builder.() -> Unit) = jsonObject(options, false)
+
+    fun jsonObject(options: Request.Builder.() -> Unit, checkStatus: Boolean): CompletableFuture<JSONObject> {
         return request(options).submit()
+            .thenApply {
+                if (checkStatus && !it.isSuccessful) {
+                    val extra = if (it.header("content-type") == "application/json") {
+                        it.body()?.string() ?: "{}"
+                    } else {
+                        "{}"
+                    }
+                    throw IllegalStateException("Received invalid status code from Patreon API: " +
+                        "${it.code()} - $extra")
+                }
+                it
+            }
             .thenApply { it.body()?.string() ?: throw IllegalStateException("ResponseBody was null!") }
             .thenApply { JSONObject(it) }
     }

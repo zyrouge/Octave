@@ -109,7 +109,7 @@ public class Bot {
         // SETUP APIs
         discordFM = new DiscordFM();
 
-        patreon = new PatreonAPI(credentials.getPatreonToken());
+        patreon = new PatreonAPI(credentials.getPatreonAccessToken());
         LOG.info("Patreon Established.");
 
         myAnimeListAPI = new MyAnimeListAPI(credentials.getMalUsername(), credentials.getMalPassword());
