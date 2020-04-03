@@ -32,8 +32,33 @@ class PatronCommand : CommandExecutor() {
         when (args.firstOrNull()?.toLowerCase()) {
             "link" -> link(context)
             "servers" -> servers(context, args.drop(1))
-            else -> return context.send().info("`${context.bot.configuration.prefix}$label <link/servers>`").queue()
+            "status" -> status(context, args.drop(1))
+            else -> return context.send().info("`${context.bot.configuration.prefix}$label <link/servers/status>`").queue()
         }
+    }
+
+    fun status(ctx: Context, args: List<String>) {
+        if (args.isNotEmpty() && args.first().toLongOrNull() == null) {
+            return ctx.send().info("Invalid user ID provided.").queue()
+        }
+
+        val userId =args.firstOrNull()
+            ?: ctx.user.id
+
+        if (!ctx.bot.db().hasPremiumUser(userId)) {
+            return ctx.send().info("There is no entry for that user (not premium).").queue()
+        }
+
+        val premiumUser = ctx.bot.db().getPremiumUser(userId)
+        val totalServers = premiumUser.totalPremiumGuildQuota
+        val premiumServers = totalServers - premiumUser.remainingPremiumGuildQuota
+
+        ctx.send().embed("Premium Status") {
+            desc { "Status for <@$userId>" }
+            field("Is Premium?", true) { if (!premiumUser.isPremium) "No" else "Yes" }
+            field("Pledge Amount", true) { String.format("$%1$,.2f", premiumUser.pledgeAmount) }
+            field("Premium Servers", true) { "$premiumServers/$totalServers" }
+        }.action().queue()
     }
 
     fun link(ctx: Context) {

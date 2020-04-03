@@ -71,6 +71,10 @@ public class Database {
         return get("patreon", id, PatreonEntry.class);
     }
 
+    public boolean hasPremiumUser(String id) {
+        return isOpen() ? r.table("premiumusers").get(id).coerceTo("bool").run(conn) : false;
+    }
+
     public PremiumUser getPremiumUser(String id) {
         if (!isOpen()) {
             return null;
