@@ -43,11 +43,9 @@ class EvalCommand : CommandExecutor() {
 
             if (result is CompletableFuture<*>) {
                 context.send().text("```\nCompletableFuture<Pending>```").queue { m ->
-                    result.thenAccept {
-                        m.editMessage("```\n$it```").queue()
-                    }.exceptionally {
-                        m.editMessage("```\n$it```").queue()
-                        return@exceptionally null
+                    result.whenComplete { r, ex ->
+                        val post = ex ?: r
+                        m.editMessage("```\n$post```").queue()
                     }
                 }
             } else {
