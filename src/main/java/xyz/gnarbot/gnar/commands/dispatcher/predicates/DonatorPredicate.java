@@ -20,7 +20,7 @@ public class DonatorPredicate implements BiPredicate<CommandExecutor, Context> {
             return true;
         }
 
-        if (cmd.getBotInfo().donor() && !context.getData().isPremium()) {
+        if (cmd.getBotInfo().donor() && (!context.getData().isPremium() && !context.getPremium().isPremium())) {
             context.send().embed("Donators Only")
                     .setColor(Color.ORANGE)
                     .description(donatorMessage)

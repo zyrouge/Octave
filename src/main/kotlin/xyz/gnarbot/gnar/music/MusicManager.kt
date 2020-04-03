@@ -189,10 +189,16 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                     }
                 }
 
-                val queueLimit = if (context.data.music.maxQueueSize != 0) {
-                    context.data.music.maxQueueSize
-                } else {
-                    bot.configuration.queueLimit
+                val queueLimit = when {
+                    context.premium.isPremium -> {
+                        context.premium.queueSizeQuota
+                    }
+                    context.data.music.maxQueueSize == 0 -> {
+                        bot.configuration.queueLimit
+                    }
+                    else -> {
+                        context.data.music.maxQueueSize
+                    }
                 }
 
                 if (scheduler.queue.size >= bot.configuration.queueLimit) {
@@ -201,10 +207,16 @@ class MusicManager(val bot: Bot, val guildId: String, val playerRegistry: Player
                 }
 
                 if (track !is TwitchStreamAudioTrack && track !is BeamAudioTrack) {
-                    val durationLimit = if(context.data.music.maxSongLength == 0L) {
-                        bot.configuration.durationLimit.toMillis()
-                    } else {
-                        context.data.music.maxSongLength
+                    val durationLimit = when {
+                        context.premium.isPremium -> {
+                            context.premium.songSizeQuota
+                        }
+                        context.data.music.maxSongLength == 0L -> {
+                            bot.configuration.durationLimit.toMillis()
+                        }
+                        else -> {
+                            context.data.music.maxSongLength
+                        }
                     }
 
                     val durationLimitText = if(context.data.music.maxSongLength == 0L) {

@@ -5,12 +5,14 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import xyz.gnarbot.gnar.Bot;
 import xyz.gnarbot.gnar.db.guilds.GuildData;
+import xyz.gnarbot.gnar.db.premium.PremiumUser;
 import xyz.gnarbot.gnar.utils.response.GuildResponseBuilder;
 import xyz.gnarbot.gnar.utils.response.ResponseBuilder;
 
 public class Context {
     private final Bot bot;
     private final GuildData guildOptions;
+    private final PremiumUser premiumUser;
     private final Message message;
     private final TextChannel textChannel;
     private final Guild guild;
@@ -29,6 +31,7 @@ public class Context {
         this.guild = event.getGuild();
         this.member = event.getMember();
         this.guildOptions = bot.getOptions().ofGuild(getGuild());
+        this.premiumUser = bot.db().getPremiumUser(event.getAuthor().getId());
     }
 
     public Bot getBot() {
@@ -73,5 +76,9 @@ public class Context {
 
     public ResponseBuilder send() {
         return new GuildResponseBuilder(getTextChannel());
+    }
+
+    public PremiumUser getPremium() {
+        return premiumUser;
     }
 }

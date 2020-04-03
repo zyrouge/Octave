@@ -45,7 +45,7 @@ public class PremiumUser extends ManagedObject {
         return cursor == null ? List.of() : cursor.toList();
     }
 
-    public Integer getTotalPremiumGuildQuota() {
+    public int getTotalPremiumGuildQuota() {
         if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId()))) {
             return 99999;
         } else if (pledgeAmount >= 20.0) {  // base: 5 servers + 1 for every extra $3
@@ -58,6 +58,32 @@ public class PremiumUser extends ManagedObject {
         } else {
             return 0;
         }
+    }
+
+    public long getSongSizeQuota() {
+        if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId()))) {
+            return Integer.MAX_VALUE;
+        } else if (pledgeAmount >= 10) {
+            return 43200000;
+        } else if (pledgeAmount >= 5) {
+            return 21600000;
+        } else {
+            return Bot.getInstance().getConfiguration().getDurationLimit().toMillis();
+        }
+    }
+
+    public int getQueueSizeQuota() {
+        if (Bot.getInstance().getConfiguration().getAdmins().contains(Long.parseLong(getId())) || pledgeAmount >= 10) {
+            return Integer.MAX_VALUE;
+        } else if (pledgeAmount >= 5) {
+            return 500;
+        } else {
+            return Bot.getInstance().getConfiguration().getQueueLimit();
+        }
+    }
+
+    public boolean isPremium() {
+        return pledgeAmount >= 2;
     }
 
     public Integer getRemainingPremiumGuildQuota() {
