@@ -10,6 +10,7 @@ import xyz.gnarbot.gnar.db.premium.PremiumUser
 import java.time.Instant
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 @Command(
     aliases = ["patron", "patreon"],
@@ -103,7 +104,7 @@ class PatronCommand : CommandExecutor() {
                     }
 
                     appendln()
-                    append("You can have $remainingServers more premium server${plural(remainingServers)}.")
+                    append("You can have ${max(remainingServers, 0)} more premium server${plural(remainingServers)}.")
                     append("```")
                 }
 
@@ -165,15 +166,16 @@ class PatronCommand : CommandExecutor() {
 
         val guildId = args.firstOrNull() ?: ctx.guild.id
         val guild = ctx.bot.shardManager.getGuildById(guildId)?.name ?: "Unknown Server"
+        val hasDevOverride = ctx.bot.configuration.admins.contains(ctx.user.idLong)
 
         val premiumGuild = ctx.bot.db().getPremiumGuild(guildId)
             ?: return ctx.send().info("The server does not have premium status.").queue()
 
-        if (premiumGuild.redeemerId != ctx.user.id) {
+        if (premiumGuild.redeemerId != ctx.user.id && !hasDevOverride) {
             return ctx.send().info("You may not remove premium status for the server.").queue()
         }
 
-        if (premiumGuild.daysSinceAdded < 28) {
+        if (premiumGuild.daysSinceAdded < 28 && !hasDevOverride) {
             return ctx.send().info(
                 "You must wait 28 days before removing the premium status for the server.\n" +
                     "If there is a valid reason for early removal, please contact the developers."
