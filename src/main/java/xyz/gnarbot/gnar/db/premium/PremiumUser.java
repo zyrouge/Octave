@@ -77,7 +77,7 @@ public class PremiumUser extends ManagedObject {
 
     @JsonIgnore
     public boolean isPremium() {
-        return pledgeAmount >= 2;
+        return pledgeAmount >= 5;
     }
 
     @JsonIgnore
